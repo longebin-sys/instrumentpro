@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>InstrumentPro</title>
+<!-- Tailwind CSS (No installation needed) -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- Font Awesome for Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif; background-color: #f8f9fa; }
+  .card { @apply bg-white rounded-2xl shadow-sm border border-gray-100 p-5 transition-all; }
+  .nav-active { @apply text-blue-600 bg-blue-50; }
+  .hide { display: none; }
+  .fade-in { animation: fadeIn 0.3s ease-in-out; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+</head>
+<body class="text-gray-800">
+
+  <!-- SIDEBAR (Desktop) -->
+  <aside id="sidebar" class="hidden md:flex flex-col w-64 bg-white border-r border-gray-200 h-screen fixed left-0 top-0 z-20">
+    <div class="p-6 border-b border-gray-100 flex justify-between items-center">
+      <h1 class="text-xl font-bold text-blue-600 flex items-center gap-2"><i class="fas fa-wrench"></i> InstrumentPro</h1>
+      <button onclick="toggleSidebar()" class="md:hidden text-gray-500"><i class="fas fa-times"></i></button>
+    </div>
+    <nav class="flex-1 p-4 space-y-1">
+      <button onclick="showPage('home')" class="w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium hover:bg-gray-50 text-gray-600"><i class="fas fa-home w-5"></i> Dashboard</button>
+      <button onclick="showPage('instruments')" class="w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium hover:bg-gray-50 text-gray-600"><i class="fas fa-database w-5"></i> Instruments</button>
+      <button onclick="showPage('level')" class="w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium hover:bg-gray-50 text-gray-600"><i class="fas fa-tint w-5"></i> Level DP Calc</button>
+      <button onclick="showPage('troubleshoot')" class="w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium hover:bg-gray-50 text-gray-600"><i class="fas fa-stethoscope w-5"></i> Troubleshoot</button>
+      <button onclick="showPage('upload')" class="w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium hover:bg-gray-50 text-gray-600"><i class="fas fa-cloud-upload-alt w-5"></i> Upload Data</button>
+    </nav>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="md:ml-64 pb-24 md:pb-6 min-h-screen">
+    
+    <!-- HOME PAGE -->
+    <div id="page-home" class="page fade-in p-6">
+      <header class="mb-6">
+        <h1 class="text-2xl font-bold text-gray-900">Good Morning! 👋</h1>
+        <p class="text-gray-500 mt-1">What do you want to work on today?</p>
+      </header>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+        <div onclick="showPage('instruments')" class="card cursor-pointer hover:border-blue-300 border-l-4 border-l-blue-500">
+          <div class="flex items-center gap-3 mb-2"><div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600"><i class="fas fa-database"></i></div><h3 class="font-bold">Instruments</h3></div>
+          <p class="text-sm text-gray-500">View tag database & JB lists</p>
+        </div>
+        <div onclick="showPage('level')" class="card cursor-pointer hover:border-orange-300 border-l-4 border-l-orange-500">
+          <div class="flex items-center gap-3 mb-2"><div class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center text-orange-600"><i class="fas fa-tint"></i></div><h3 class="font-bold">Level DP Calc</h3></div>
+          <p class="text-sm text-gray-500">Wet/Dry leg LRV & URV</p>
+        </div>
+        <div onclick="showPage('troubleshoot')" class="card cursor-pointer hover:border-green-300 border-l-4 border-l-green-500">
+          <div class="flex items-center gap-3 mb-2"><div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center text-green-600"><i class="fas fa-stethoscope"></i></div><h3 class="font-bold">Troubleshoot</h3></div>
+          <p class="text-sm text-gray-500">AI-assisted fault finding</p>
+        </div>
+        <div onclick="showPage('upload')" class="card cursor-pointer hover:border-purple-300 border-l-4 border-l-purple-500">
+          <div class="flex items-center gap-3 mb-2"><div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center text-purple-600"><i class="fas fa-cloud-upload-alt"></i></div><h3 class="font-bold">Upload Data</h3></div>
+          <p class="text-sm text-gray-500">Add P&IDs, manuals, lists</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- LEVEL DP PAGE -->
+    <div id="page-level" class="page hide fade-in p-6">
+      <header class="mb-6">
+        <h1 class="text-2xl font-bold text-gray-900">Level DP Calculator</h1>
+        <p class="text-gray-500 mt-1">Calculate LRV & URV for installations</p>
+      </header>
+      
+      <div class="card mb-6">
+        <div class="flex bg-gray-100 rounded-xl p-1 mb-4">
+          <button class="flex-1 py-2 rounded-lg bg-white shadow-sm text-sm font-semibold text-gray-800">Simple Mode</button>
+          <button class="flex-1 py-2 rounded-lg text-sm font-medium text-gray-500">Advanced Mode</button>
+        </div>
+        
+        <div class="bg-blue-50 border border-blue-100 rounded-xl p-4 mb-6 flex gap-3">
+          <i class="fas fa-info-circle text-blue-500 mt-1"></i>
+          <p class="text-sm text-blue-800">Simple mode assumes fill fluid SG = 1.0. Use Advanced Mode for different SG.</p>
+        </div>
+
+        <!-- Interactive Diagram Placeholder -->
+        <div class="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center mb-6 bg-gray-50">
+          <i class="fas fa-drafting-compass text-4xl text-gray-400 mb-3"></i>
+          <p class="text-gray-600 font-medium">Interactive Tank Diagram</p>
+          <p class="text-sm text-gray-400 mt-1">(Tap fields to enter Span, SG, and Leg heights)</p>
+        </div>
+
+        <div class="space-y-3">
+          <div class="bg-red-50 border border-red-100 rounded-xl p-4 flex gap-3">
+            <div class="w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center font-bold flex-shrink-0">H</div>
+            <div><h3 class="font-bold text-red-700 text-sm">High Side → Bottom Port</h3><p class="text-xs text-red-600 mt-1">Connect process side (tank bottom) here. Sees full fluid head pressure.</p></div>
+          </div>
+          <div class="bg-green-50 border border-green-100 rounded-xl p-4 flex gap-3">
+            <div class="w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center font-bold flex-shrink-0">L</div>
+            <div><h3 class="font-bold text-green-700 text-sm">Low Side → Top Port</h3><p class="text-xs text-green-600 mt-1">Connect wet leg or dry reference (tank top) here.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- UPLOAD PAGE -->
+    <div id="page-upload" class="page hide fade-in p-6">
+      <header class="mb-6">
+        <h1 class="text-2xl font-bold text-gray-900">Upload Documentation</h1>
+        <p class="text-gray-500 mt-1">Add instrument lists, JB lists, and P&IDs.</p>
+      </header>
+      <div class="border-2 border-dashed border-blue-300 bg-blue-50 rounded-2xl p-10 text-center">
+        <i class="fas fa-cloud-upload-alt text-4xl text-blue-400 mb-3"></i>
+        <h3 class="text-lg font-semibold text-gray-900 mb-2">Drag & drop files here</h3>
+        <p class="text-gray-500 mb-4 text-sm">or click to browse (PDF, Excel, CSV, Images)</p>
+        <button class="bg-blue-600 text-white px-6 py-2.5 rounded-xl font-medium hover:bg-blue-700 transition">Select Files</button>
+      </div>
+    </div>
+
+    <!-- TROUBLESHOOT PAGE -->
+    <div id="page-troubleshoot" class="page hide fade-in p-6">
+      <header class="mb-6">
+        <h1 class="text-2xl font-bold text-gray-900 flex items-center gap-2"><i class="fas fa-robot text-blue-600"></i> AI Assistant</h1>
+        <p class="text-gray-500 mt-1">Describe the symptom, and I'll check your uploaded data.</p>
+      </header>
+      <div class="bg-gray-100 rounded-2xl p-4 h-64 mb-4 overflow-y-auto">
+        <div class="bg-white p-3 rounded-xl rounded-tl-none shadow-sm max-w-[85%] text-sm text-gray-700">
+          Hello! I'm your InstrumentPro assistant. Tell me the instrument tag and the symptom (e.g., "PT-101 reading 22mA").
+        </div>
+      </div>
+      <div class="flex gap-2">
+        <input type="text" placeholder="E.g., LT-205 reading erratic..." class="flex-1 px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+        <button class="bg-blue-600 text-white px-4 rounded-xl hover:bg-blue-700"><i class="fas fa-paper-plane"></i></button>
+      </div>
+    </div>
+
+    <!-- INSTRUMENTS PAGE -->
+    <div id="page-instruments" class="page hide fade-in p-6">
+      <header class="mb-6 flex justify-between items-center">
+        <div>
+          <h1 class="text-2xl font-bold text-gray-900">Instruments</h1>
+          <p class="text-gray-500 mt-1">Your master tag database.</p>
+        </div>
+        <button class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium"><i class="fas fa-plus mr-1"></i> Add</button>
+      </header>
+      <div class="bg-white rounded-xl border border-gray-200 p-8 text-center text-gray-400">
+        <i class="fas fa-database text-3xl mb-3"></i>
+        <p>No instruments loaded yet.</p>
+        <p class="text-sm mt-1">Go to <strong>Upload Data</strong> to add your Excel/CSV instrument lists.</p>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- BOTTOM NAV (Mobile) -->
+  <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-2 py-2 flex justify-around z-30 pb-safe">
+    <button onclick="showPage('home')" class="nav-btn flex flex-col items-center gap-1 p-2 rounded-lg text-gray-400 w-16" data-page="home">
+      <i class="fas fa-home text-xl"></i><span class="text-[10px] font-medium">Home</span>
+    </button>
+    <button onclick="showPage('instruments')" class="nav-btn flex flex-col items-center gap-1 p-2 rounded-lg text-gray-400 w-16" data-page="instruments">
+      <i class="fas fa-database text-xl"></i><span class="text-[10px] font-medium">Tags</span>
+    </button>
+    <button onclick="showPage('level')" class="nav-btn flex flex-col items-center gap-1 p-2 rounded-lg text-gray-400 w-16" data-page="level">
+      <i class="fas fa-tint text-xl"></i><span class="text-[10px] font-medium">Level</span>
+    </button>
+    <button onclick="showPage('troubleshoot')" class="nav-btn flex flex-col items-center gap-1 p-2 rounded-lg text-gray-400 w-16" data-page="troubleshoot">
+      <i class="fas fa-stethoscope text-xl"></i><span class="text-[10px] font-medium">Fix</span>
+    </button>
+    <button onclick="showPage('upload')" class="nav-btn flex flex-col items-center gap-1 p-2 rounded-lg text-gray-400 w-16" data-page="upload">
+      <i class="fas fa-cloud-upload-alt text-xl"></i><span class="text-[10px] font-medium">Upload</span>
+    </button>
+  </nav>
+
+  <script>
+    // Simple Page Router
+    function showPage(pageId) {
+      // Hide all pages
+      document.querySelectorAll('.page').forEach(page => page.classList.add('hide'));
+      // Show target page
+      document.getElementById('page-' + pageId).classList.remove('hide');
+      
+      // Update mobile nav active state
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        if(btn.dataset.page === pageId) {
+          btn.classList.remove('text-gray-400');
+          btn.classList.add('text-blue-600');
+        } else {
+          btn.classList.add('text-gray-400');
+          btn.classList.remove('text-blue-600');
+        }
+      });
+      
+      // Close sidebar on mobile if open
+      document.getElementById('sidebar').classList.add('hidden');
+      window.scrollTo(0, 0);
+    }
+
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      sidebar.classList.toggle('hidden');
+      sidebar.classList.toggle('flex');
+      sidebar.classList.toggle('fixed');
+      sidebar.classList.toggle('inset-0');
+      sidebar.classList.toggle('z-50');
+    }
+
+    // Initialize
+    showPage('home');
+  </script>
+</ body>
+</html>
