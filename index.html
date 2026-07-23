@@ -45,7 +45,9 @@
         body.dark .recent-item,
         body.dark .upload-zone,
         body.dark .analytical-card,
-        body.dark .gc-panel {
+        body.dark .gc-panel,
+        body.dark .fault-panel,
+        body.dark .sub-tab {
             background: #1e293b;
             border-color: #334155;
             color: #e2e8f0;
@@ -116,6 +118,10 @@
         body.dark .theme-option.active {
             border-color: #60a5fa;
             box-shadow: 0 0 0 2px #2563eb;
+        }
+        body.dark .sub-tab.active {
+            background: #2563eb;
+            color: white;
         }
 
         /* ============================================================
@@ -283,6 +289,44 @@
                 opacity: 1;
                 transform: translateY(0);
             }
+        }
+
+        /* ============================================================
+               SUB TABS (for converter, calibration, analytical)
+               ============================================================ */
+        .sub-tabs {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding: 4px 0 12px 0;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
+        .sub-tabs::-webkit-scrollbar {
+            display: none;
+        }
+        .sub-tab {
+            white-space: nowrap;
+            background: #f1f5f9;
+            padding: 6px 16px;
+            border-radius: 60px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: #475569;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: 0.15s;
+        }
+        .sub-tab.active {
+            background: #1e3a5f;
+            color: white;
+            border-color: #1e3a5f;
+        }
+        .sub-panel {
+            display: none;
+        }
+        .sub-panel.active {
+            display: block;
         }
 
         /* ============================================================
@@ -1038,7 +1082,7 @@
         <a class="nav-item active" data-page="home"><i class="fas fa-home"></i> Home</a>
         <a class="nav-item" data-page="converter"><i class="fas fa-arrows-alt-h"></i> Converter</a>
         <a class="nav-item" data-page="calibration"><i class="fas fa-sliders-h"></i> Calibration</a>
-        <a class="nav-item" data-page="tempcal"><i class="fas fa-thermometer-half"></i> Temperature Cal</a>
+        <a class="nav-item" data-page="tempcal"><i class="fas fa-thermometer-half"></i> Temp Cal</a>
         <a class="nav-item" data-page="dp"><i class="fas fa-tachometer-alt"></i> Level DP</a>
         <a class="nav-item" data-page="flow"><i class="fas fa-water"></i> Flow</a>
         <a class="nav-item" data-page="analytical"><i class="fas fa-flask"></i> Analytical</a>
@@ -1055,7 +1099,7 @@
         <a class="nav-item" data-page="report"><i class="fas fa-file-alt"></i> Report</a>
         <a class="nav-item" data-page="settings"><i class="fas fa-cog"></i> Settings</a>
         <hr />
-        <div style="font-size:0.7rem;color:#94a3b8;padding:10px 12px;">v5.0 · Advanced Edition</div>
+        <div style="font-size:0.7rem;color:#94a3b8;padding:10px 12px;">v6.0 · Ultimate Edition</div>
     </div>
 
     <!-- ============================================================
@@ -1068,7 +1112,7 @@
             <button class="dark-toggle" id="darkToggle"><i class="fas fa-moon"></i></button>
         </div>
         <div class="sub"><i class="fas fa-sun" id="greetingIcon"></i> <span id="greetingText">Good Morning</span></div>
-        <div class="version">Advanced · QR/NFC · Fault Codes · Theme Colors</div>
+        <div class="version">Ultimate Edition · QR/NFC · Fault Codes · Theme Colors</div>
     </div>
 
     <!-- ============================================================
@@ -1116,71 +1160,90 @@
         </div>
 
         <!-- ==========================================================
-        PAGE: CONVERTER
+        PAGE: CONVERTER (with sub-tabs)
         ========================================================== -->
         <div class="page" id="page-converter">
             <div class="page-title"><i class="fas fa-arrows-alt-h"></i> Unit Converter</div>
+
+            <!-- Sub Tabs -->
             <div class="card">
-                <div class="card-header"><i class="fas fa-weight"></i><h3>Pressure</h3><span>psi · bar · kPa</span></div>
-                <div class="row">
-                    <label>From</label>
-                    <select id="fromUnit">
-                        <option value="psi">PSI</option><option value="bar" selected>bar</option>
-                        <option value="kpa">kPa</option><option value="mpa">MPa</option><option value="atm">atm</option>
-                    </select>
-                    <input type="number" id="inputVal" value="1" step="any" />
+                <div class="sub-tabs" id="converterTabs">
+                    <div class="sub-tab active" data-tab="conv-pressure">Pressure</div>
+                    <div class="sub-tab" data-tab="conv-temp">Temperature</div>
+                    <div class="sub-tab" data-tab="conv-ma">4-20mA</div>
                 </div>
-                <div class="row">
-                    <label>To</label>
-                    <select id="toUnit">
-                        <option value="psi">PSI</option><option value="bar">bar</option>
-                        <option value="kpa" selected>kPa</option><option value="mpa">MPa</option><option value="atm">atm</option>
-                    </select>
-                    <button class="btn" id="convertBtn"><i class="fas fa-sync-alt"></i> Convert</button>
+
+                <!-- Pressure -->
+                <div class="sub-panel active" id="conv-pressure">
+                    <div class="row">
+                        <label>From</label>
+                        <select id="fromUnit">
+                            <option value="psi">PSI</option><option value="bar" selected>bar</option>
+                            <option value="kpa">kPa</option><option value="mpa">MPa</option><option value="atm">atm</option>
+                        </select>
+                        <input type="number" id="inputVal" value="1" step="any" />
+                    </div>
+                    <div class="row">
+                        <label>To</label>
+                        <select id="toUnit">
+                            <option value="psi">PSI</option><option value="bar">bar</option>
+                            <option value="kpa" selected>kPa</option><option value="mpa">MPa</option><option value="atm">atm</option>
+                        </select>
+                        <button class="btn" id="convertBtn"><i class="fas fa-sync-alt"></i> Convert</button>
+                    </div>
+                    <div class="result-box"><span>Result</span><span id="pressureResult">100.000 kPa</span></div>
                 </div>
-                <div class="result-box"><span>Result</span><span id="pressureResult">100.000 kPa</span></div>
-            </div>
-            <div class="card">
-                <div class="card-header"><i class="fas fa-thermometer-half"></i><h3>Temperature</h3><span>°C · °F · K</span></div>
-                <div class="row">
-                    <label>°C</label>
-                    <input type="number" id="tempC" value="25" step="any" />
-                    <button class="btn" id="tempConvertBtn"><i class="fas fa-arrow-right"></i> Convert</button>
+
+                <!-- Temperature -->
+                <div class="sub-panel hidden" id="conv-temp">
+                    <div class="row">
+                        <label>°C</label>
+                        <input type="number" id="tempC" value="25" step="any" />
+                        <button class="btn" id="tempConvertBtn"><i class="fas fa-arrow-right"></i> Convert</button>
+                    </div>
+                    <div class="result-box"><span>°F</span><span id="tempFResult">77.00</span></div>
+                    <div class="result-box"><span>Kelvin</span><span id="tempKResult">298.15</span></div>
+                    <div class="result-box"><span>°R</span><span id="tempRResult">536.67</span></div>
                 </div>
-                <div class="result-box"><span>°F</span><span id="tempFResult">77.00</span></div>
-                <div class="result-box"><span>Kelvin</span><span id="tempKResult">298.15</span></div>
-            </div>
-            <div class="card">
-                <div class="card-header"><i class="fas fa-tachometer-alt"></i><h3>4‑20 mA Signal</h3><span>Live</span></div>
-                <div class="row">
-                    <label>mA</label>
-                    <input type="number" id="mAInput" value="12" step="0.01" />
-                    <button class="btn" id="mAConvertBtn"><i class="fas fa-exchange-alt"></i> To PV</button>
+
+                <!-- 4-20mA -->
+                <div class="sub-panel hidden" id="conv-ma">
+                    <div class="row">
+                        <label>mA</label>
+                        <input type="number" id="mAInput" value="12" step="0.01" />
+                        <button class="btn" id="mAConvertBtn"><i class="fas fa-exchange-alt"></i> To PV</button>
+                    </div>
+                    <div class="row">
+                        <label>Range</label>
+                        <input type="number" id="mA_RangeLow" value="0" step="any" style="flex:0.6;" />
+                        <span style="font-size:0.8rem;">to</span>
+                        <input type="number" id="mA_RangeHigh" value="100" step="any" style="flex:0.6;" />
+                    </div>
+                    <div class="result-box"><span>Process Value (PV)</span><span id="mA_Result">50.00</span></div>
+                    <div class="result-box"><span>Loop Status</span><span id="mA_LoopStatus" style="color:#059669;">✓ Normal (4‑20mA)</span></div>
                 </div>
-                <div class="row">
-                    <label>Range</label>
-                    <input type="number" id="mA_RangeLow" value="0" step="any" style="flex:0.6;" />
-                    <span style="font-size:0.8rem;">to</span>
-                    <input type="number" id="mA_RangeHigh" value="100" step="any" style="flex:0.6;" />
-                </div>
-                <div class="result-box"><span>Process Value (PV)</span><span id="mA_Result">50.00</span></div>
-                <div class="result-box"><span>Loop Status</span><span id="mA_LoopStatus" style="color:#059669;">✓ Normal (4‑20mA)</span></div>
             </div>
         </div>
 
         <!-- ==========================================================
-        PAGE: CALIBRATION (Pressure)
+        PAGE: CALIBRATION (Pressure with unit selection)
         ========================================================== -->
         <div class="page" id="page-calibration">
             <div class="page-title"><i class="fas fa-sliders-h"></i> Pressure Calibration</div>
             <div class="card">
-                <div class="card-header"><i class="fas fa-bullseye"></i><h3>5‑Point Calibration</h3><span>Pressure</span></div>
+                <div class="card-header"><i class="fas fa-bullseye"></i><h3>5‑Point Calibration</h3><span>Simulate</span></div>
                 <div class="row">
                     <label>Range</label>
-                    <input type="number" id="calLow" value="0" step="any" style="flex:0.6;" />
+                    <input type="number" id="calLow" value="0" step="any" style="flex:0.5;" />
                     <span>to</span>
-                    <input type="number" id="calHigh" value="100" step="any" style="flex:0.6;" />
-                    <span class="chip">PSI</span>
+                    <input type="number" id="calHigh" value="100" step="any" style="flex:0.5;" />
+                    <select id="calUnit" style="flex:0.6;">
+                        <option value="psi">PSI</option>
+                        <option value="bar" selected>bar</option>
+                        <option value="kpa">kPa</option>
+                        <option value="mpa">MPa</option>
+                        <option value="kpag">kPag</option>
+                    </select>
                     <button class="btn btn-sm" id="calUpdateBtn"><i class="fas fa-sync"></i></button>
                 </div>
                 <div id="calPointsContainer" class="cal-points-grid"></div>
@@ -1197,9 +1260,7 @@
                     ✅ Allow temperature stabilization before calibration<br />
                     ✅ Perform at least 3 up/down cycles to check hysteresis<br />
                     ✅ Record As-Found and As-Left values<br />
-                    ✅ Use appropriate pressure medium (air, oil, water)<br />
-                    ✅ Ensure all fittings are leak-free<br />
-                    ✅ Document environmental conditions
+                    ✅ Use appropriate pressure medium (air, oil, water)
                 </div>
             </div>
         </div>
@@ -1210,12 +1271,11 @@
         <div class="page" id="page-tempcal">
             <div class="page-title"><i class="fas fa-thermometer-half"></i> Temperature Calibration</div>
 
-            <!-- Thermocouple Types -->
             <div class="card">
                 <div class="card-header"><i class="fas fa-fire"></i><h3>Thermocouple Types</h3><span>IEC 60584</span></div>
                 <div class="table-wrap">
                     <table>
-                        <thead><tr><th>Type</th><th>Range (°C)</th><th>Accuracy (Standard)</th><th>Color (+)</th></tr></thead>
+                        <thead><tr><th>Type</th><th>Range (°C)</th><th>Accuracy</th><th>Color (+)</th></tr></thead>
                         <tbody>
                             <tr><td>J</td><td>-40 to 750</td><td>±2.2°C or 0.75%</td><td>White</td></tr>
                             <tr><td>K</td><td>-200 to 1250</td><td>±2.2°C or 0.75%</td><td>Green</td></tr>
@@ -1223,14 +1283,11 @@
                             <tr><td>E</td><td>-200 to 900</td><td>±1.7°C or 0.5%</td><td>Purple</td></tr>
                             <tr><td>N</td><td>-200 to 1250</td><td>±2.2°C or 0.75%</td><td>Orange</td></tr>
                             <tr><td>S</td><td>0 to 1450</td><td>±0.6°C (Special)</td><td>Black</td></tr>
-                            <tr><td>R</td><td>0 to 1450</td><td>±0.6°C (Special)</td><td>Black</td></tr>
                         </tbody>
                     </table>
                 </div>
-                <div style="font-size:0.65rem;color:#64748b;margin-top:4px;">* Special Limits of Error available for higher accuracy [citation:2]</div>
             </div>
 
-            <!-- RTD Types -->
             <div class="card">
                 <div class="card-header"><i class="fas fa-microchip"></i><h3>RTD Types</h3><span>IEC 60751</span></div>
                 <div class="table-wrap">
@@ -1240,13 +1297,11 @@
                             <tr><td>Pt100</td><td>-200 to 850</td><td>±0.06°C (Class A)</td><td>3850</td></tr>
                             <tr><td>Pt500</td><td>-200 to 850</td><td>±0.06°C (Class A)</td><td>3850</td></tr>
                             <tr><td>Pt1000</td><td>-200 to 850</td><td>±0.06°C (Class A)</td><td>3850</td></tr>
-                            <tr><td>Ni120</td><td>-60 to 180</td><td>±0.1°C</td><td>6720</td></tr>
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- Temperature Calibration Calculator -->
             <div class="card">
                 <div class="card-header"><i class="fas fa-calculator"></i><h3>RTD to Temperature</h3><span>Pt100</span></div>
                 <div class="row">
@@ -1256,33 +1311,6 @@
                 </div>
                 <div class="result-box"><span>Temperature</span><span id="rtdResult">0.00 °C</span></div>
                 <div class="result-box"><span>Temperature</span><span id="rtdResultF">32.00 °F</span></div>
-            </div>
-
-            <!-- Calibration Best Practices -->
-            <div class="card">
-                <div class="card-header"><i class="fas fa-check-circle"></i><h3>Calibration Best Practices</h3></div>
-                <div style="font-size:0.75rem;padding:4px 0;line-height:1.7;">
-                    <strong>Equipment Required:</strong> [citation:2][citation:15]<br />
-                    • Reference probe (SPRT, PRT, or reference TC)<br />
-                    • Precision readout (e.g., Fluke 1523/1524)<br />
-                    • Temperature source (dry-well, bath, or furnace)<br />
-                    • Ice bath for reference junction (0°C)<br />
-                    <strong>Procedure:</strong><br />
-                    1. Stabilize temperature source at set-point<br />
-                    2. Insert reference probe and UUT in close proximity<br />
-                    3. Allow sufficient stabilization time (varies by temperature)<br />
-                    4. Record reference and UUT readings<br />
-                    5. Calculate deviation = UUT - Reference<br />
-                    6. Adjust if necessary and re-verify<br />
-                    7. Document As-Found and As-Left values<br />
-                    <strong>Immersion Depth:</strong><br />
-                    • Minimum 15x probe diameter for liquids<br />
-                    • Minimum 10x probe diameter for dry-wells<br />
-                    • Insufficient depth causes conduction errors<br />
-                    <strong>Reference Junction:</strong><br />
-                    • Use ice bath for highest accuracy<br />
-                    • Electronic compensation is convenient but less accurate [citation:2]
-                </div>
             </div>
         </div>
 
@@ -1336,20 +1364,31 @@
         </div>
 
         <!-- ==========================================================
-        PAGE: FLOW
+        PAGE: FLOW (with unit selection)
         ========================================================== -->
         <div class="page" id="page-flow">
             <div class="page-title"><i class="fas fa-water"></i> Flow Calculator</div>
             <div class="card">
                 <div class="card-header"><i class="fas fa-circle"></i><h3>Orifice Plate</h3><span>Square-root</span></div>
                 <div class="row">
-                    <label>DP (inH₂O)</label>
-                    <input type="number" id="flowDP" value="100" step="any" />
+                    <label>DP</label>
+                    <input type="number" id="flowDP" value="100" step="any" style="flex:0.6;" />
+                    <select id="flowDPUnit" style="flex:0.5;">
+                        <option value="inH2O">inH₂O</option>
+                        <option value="psi">PSI</option>
+                        <option value="kpa">kPa</option>
+                        <option value="mmH2O">mmH₂O</option>
+                    </select>
                 </div>
                 <div class="row">
                     <label>Max Flow</label>
-                    <input type="number" id="flowMax" value="1000" step="any" />
-                    <span class="unit-label">GPM</span>
+                    <input type="number" id="flowMax" value="1000" step="any" style="flex:0.6;" />
+                    <select id="flowOutUnit" style="flex:0.5;">
+                        <option value="GPM">GPM</option>
+                        <option value="L/min">L/min</option>
+                        <option value="m3/hr">m³/hr</option>
+                        <option value="kg/hr">kg/hr</option>
+                    </select>
                 </div>
                 <button class="btn" id="flowCalcBtn"><i class="fas fa-calculator"></i> Calculate Flow</button>
                 <div class="result-box"><span>Flow Rate</span><span id="flowResult">1000.00 GPM</span></div>
@@ -1357,82 +1396,85 @@
         </div>
 
         <!-- ==========================================================
-        PAGE: ANALYTICAL (Advanced)
+        PAGE: ANALYTICAL (with sub-tabs)
         ========================================================== -->
         <div class="page" id="page-analytical">
             <div class="page-title"><i class="fas fa-flask"></i> Analytical Instruments</div>
 
-            <!-- pH -->
             <div class="card">
-                <div class="card-header"><i class="fas fa-vial"></i><h3>pH Analyzer</h3><span>Calibration</span></div>
-                <div class="analytical-grid">
-                    <div class="analytical-card"><i class="fas fa-flask" style="color:#7c3aed;"></i><div class="label">pH</div><div class="value" id="phDisplay">7.00</div></div>
-                    <div class="analytical-card"><i class="fas fa-bolt" style="color:#b45309;"></i><div class="label">ORP</div><div class="value" id="orpDisplay">220 mV</div></div>
-                    <div class="analytical-card"><i class="fas fa-wave-square" style="color:#2563eb;"></i><div class="label">Conductivity</div><div class="value" id="condDisplay">250 µS/cm</div></div>
-                    <div class="analytical-card"><i class="fas fa-cloud" style="color:#0891b2;"></i><div class="label">Turbidity</div><div class="value" id="turbDisplay">1.2 NTU</div></div>
-                    <div class="analytical-card"><i class="fas fa-water" style="color:#059669;"></i><div class="label">Dissolved O₂</div><div class="value" id="doDisplay">8.2 mg/L</div></div>
-                    <div class="analytical-card"><i class="fas fa-exclamation-triangle" style="color:#dc2626;"></i><div class="label">Gas Detection</div><div class="value" id="gasDisplay">0 ppm</div></div>
+                <div class="sub-tabs" id="analyticalTabs">
+                    <div class="sub-tab active" data-tab="ana-ph">pH</div>
+                    <div class="sub-tab" data-tab="ana-orp">ORP</div>
+                    <div class="sub-tab" data-tab="ana-cond">Conductivity</div>
+                    <div class="sub-tab" data-tab="ana-do">Dissolved O₂</div>
+                    <div class="sub-tab" data-tab="ana-gas">Gas Detection</div>
                 </div>
 
-                <!-- pH Calibration -->
-                <div class="row mt-1">
-                    <label>pH Buffer</label>
-                    <select id="phBuffer"><option value="4.01">4.01</option><option value="7.00" selected>7.00</option><option value="10.01">10.01</option></select>
-                    <input type="number" id="phMeasured" value="7.02" step="0.01" placeholder="Measured" />
-                    <button class="btn btn-sm" id="phCalBtn"><i class="fas fa-check"></i> Calibrate</button>
+                <!-- pH -->
+                <div class="sub-panel active" id="ana-ph">
+                    <div class="row">
+                        <label>pH Buffer</label>
+                        <select id="phBuffer"><option value="4.01">4.01</option><option value="7.00" selected>7.00</option><option value="10.01">10.01</option></select>
+                        <input type="number" id="phMeasured" value="7.02" step="0.01" placeholder="Measured" />
+                        <button class="btn btn-sm" id="phCalBtn"><i class="fas fa-check"></i> Calibrate</button>
+                    </div>
+                    <div class="result-box"><span>pH Slope</span><span id="phSlopeResult">98.2% (Pass)</span></div>
+                    <div style="font-size:0.65rem;color:#64748b;">Acceptable slope: 95-105% · Asymmetry: ±30 mV</div>
                 </div>
-                <div class="result-box"><span>pH Slope</span><span id="phSlopeResult">98.2% (Pass)</span></div>
-                <div style="font-size:0.65rem;color:#64748b;margin-top:4px;">Acceptable slope: 95-105% · Asymmetry potential: ±30 mV [citation:5]</div>
 
                 <!-- ORP -->
-                <hr />
-                <div class="row">
-                    <label>ORP Standard</label>
-                    <select id="orpStandard"><option value="220">220 mV (Zobell)</option><option value="470">470 mV (Light)</option></select>
-                    <input type="number" id="orpMeasured" value="218" step="any" placeholder="Measured" />
-                    <button class="btn btn-sm" id="orpCalBtn"><i class="fas fa-check"></i> Calibrate</button>
+                <div class="sub-panel hidden" id="ana-orp">
+                    <div class="row">
+                        <label>ORP Standard</label>
+                        <select id="orpStandard"><option value="220">220 mV (Zobell)</option><option value="470">470 mV (Light)</option></select>
+                        <input type="number" id="orpMeasured" value="218" step="any" placeholder="Measured" />
+                        <button class="btn btn-sm" id="orpCalBtn"><i class="fas fa-check"></i> Calibrate</button>
+                    </div>
+                    <div class="result-box"><span>ORP Error</span><span id="orpError">-2.0 mV</span></div>
+                    <div style="font-size:0.65rem;color:#64748b;">Acceptable error: ±10 mV · Zobell @ 25°C = 220 mV</div>
                 </div>
-                <div class="result-box"><span>ORP Error</span><span id="orpError">-2.0 mV</span></div>
-                <div style="font-size:0.65rem;color:#64748b;margin-top:4px;">Acceptable error: ±10 mV · Zobell solution at 25°C = 220 mV [citation:13]</div>
 
                 <!-- Conductivity -->
-                <hr />
-                <div class="row">
-                    <label>Conductivity</label>
-                    <input type="number" id="condInput" value="250" step="any" /><span class="chip">µS/cm</span>
-                    <button class="btn btn-sm" id="condCalcBtn"><i class="fas fa-calculator"></i> TDS</button>
+                <div class="sub-panel hidden" id="ana-cond">
+                    <div class="row">
+                        <label>Conductivity</label>
+                        <input type="number" id="condInput" value="250" step="any" /><span class="chip">µS/cm</span>
+                        <button class="btn btn-sm" id="condCalcBtn"><i class="fas fa-calculator"></i> TDS</button>
+                    </div>
+                    <div class="result-box"><span>TDS (ppm)</span><span id="tdsResult">125.0</span></div>
+                    <div style="font-size:0.65rem;color:#64748b;">TDS ≈ 0.5 × Conductivity · Cell constant: 1.0 cm⁻¹</div>
                 </div>
-                <div class="result-box"><span>TDS (ppm)</span><span id="tdsResult">125.0</span></div>
-                <div style="font-size:0.65rem;color:#64748b;margin-top:4px;">TDS ≈ 0.5 × Conductivity · Cell constant: 1.0 cm⁻¹ [citation:5]</div>
 
                 <!-- DO -->
-                <hr />
-                <div class="row">
-                    <label>Temp (°C)</label>
-                    <input type="number" id="doTemp" value="25" step="any" style="flex:0.6;" />
-                    <label>Salinity</label>
-                    <input type="number" id="doSalinity" value="0" step="any" style="flex:0.6;" />
+                <div class="sub-panel hidden" id="ana-do">
+                    <div class="row">
+                        <label>Temp (°C)</label>
+                        <input type="number" id="doTemp" value="25" step="any" style="flex:0.6;" />
+                        <label>Salinity</label>
+                        <input type="number" id="doSalinity" value="0" step="any" style="flex:0.6;" />
+                    </div>
+                    <button class="btn" id="doCalcBtn"><i class="fas fa-calculator"></i> Calculate DO</button>
+                    <div class="result-box"><span>DO Saturation</span><span id="doSaturation">100.0%</span></div>
+                    <div class="result-box"><span>DO Concentration</span><span id="doConcentration">8.26 mg/L</span></div>
+                    <div style="font-size:0.65rem;color:#64748b;">Calibration: 100% water-saturated air</div>
                 </div>
-                <button class="btn" id="doCalcBtn"><i class="fas fa-calculator"></i> Calculate DO</button>
-                <div class="result-box"><span>DO Saturation</span><span id="doSaturation">100.0%</span></div>
-                <div class="result-box"><span>DO Concentration</span><span id="doConcentration">8.26 mg/L</span></div>
-                <div style="font-size:0.65rem;color:#64748b;margin-top:4px;">Calibration: 100% water-saturated air or air-calibration [citation:5]</div>
 
                 <!-- Gas Detection -->
-                <hr />
-                <div class="row">
-                    <label>Gas Type</label>
-                    <select id="gasType"><option value="LEL">LEL (%)</option><option value="O2">O₂ (%)</option><option value="H2S">H₂S (ppm)</option><option value="CO">CO (ppm)</option></select>
-                    <input type="number" id="gasInput" value="0" step="any" placeholder="Reading" />
-                    <button class="btn btn-sm" id="gasCheckBtn"><i class="fas fa-shield-alt"></i> Check</button>
+                <div class="sub-panel hidden" id="ana-gas">
+                    <div class="row">
+                        <label>Gas Type</label>
+                        <select id="gasType"><option value="LEL">LEL (%)</option><option value="O2">O₂ (%)</option><option value="H2S">H₂S (ppm)</option><option value="CO">CO (ppm)</option></select>
+                        <input type="number" id="gasInput" value="0" step="any" placeholder="Reading" />
+                        <button class="btn btn-sm" id="gasCheckBtn"><i class="fas fa-shield-alt"></i> Check</button>
+                    </div>
+                    <div class="result-box"><span>Status</span><span id="gasStatus" style="color:#059669;">✓ Safe</span></div>
+                    <div class="result-box"><span>Alarm Level</span><span id="gasAlarm">10% LEL</span></div>
                 </div>
-                <div class="result-box"><span>Status</span><span id="gasStatus" style="color:#059669;">✓ Safe</span></div>
-                <div class="result-box"><span>Alarm Level</span><span id="gasAlarm">10% LEL</span></div>
             </div>
         </div>
 
         <!-- ==========================================================
-        PAGE: GAS CHROMATOGRAPHY
+        PAGE: GAS CHROMATOGRAPHY (Enhanced)
         ========================================================== -->
         <div class="page" id="page-gc">
             <div class="page-title"><i class="fas fa-chart-bar"></i> Gas Chromatography</div>
@@ -1447,137 +1489,100 @@
                 <div id="gcContent">
                     <div class="gc-panel" id="gc-daniel">
                         <div><strong>Daniel 700 Series GC</strong> </div>
-                        <div class="chip">Model 700 (C6+ 4 min)</div>
-                        <div class="chip">Model 700 (C9+ 5 min)</div>
                         <div class="chip">Heating Value: 400-1200 Btu/ft³</div>
-                        <div class="chip">Relative Density: 0.500-1.035</div>
-                        <div class="table-wrap mt-1">
-                            <table>
-                                <thead><tr><th>Analysis</th><th>Time</th><th>Column P/N</th></tr></thead>
-                                <tbody>
-                                    <tr><td>C6+</td><td>12 min</td><td>3-0560-020</td></tr>
-                                    <tr><td>C6+</td><td>4 min</td><td>3-0520-101</td></tr>
-                                    <tr><td>C9+</td><td>5 min</td><td>3-0520-101 / 111</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div><strong>Specifications:</strong></div>
-                        <div class="chip">Power: 24VDC Standard / 90-264VAC Optional</div>
                         <div class="chip">Carrier: Helium @ 90 psig</div>
                         <div class="chip">Temp: -29°C to +55°C</div>
                         <div class="chip">Detector: TCD</div>
+                        <div style="font-size:0.75rem;margin-top:6px;"><strong>Calibration:</strong> Use certified gas standards · Multi-point calibration recommended · Calibration frequency: monthly or after maintenance</div>
                     </div>
                     <div class="gc-panel hidden" id="gc-siemens">
                         <div><strong>Siemens Maxum II GC</strong> </div>
                         <div class="chip">Airless Oven (50-260°C)</div>
-                        <div class="chip">TCD Detectors (4-cell)</div>
                         <div class="chip">Dynamic Range: 10⁵</div>
-                        <div class="chip">Repeatability: ±0.5% (2-100% range)</div>
-                        <div class="table-wrap mt-1">
-                            <table><thead><tr><th>Range</th><th>Repeatability</th></tr></thead>
-                                <tbody>
-                                    <tr><td>2-100%</td><td>±0.5%</td></tr>
-                                    <tr><td>0.05-2%</td><td>±1%</td></tr>
-                                    <tr><td>50-500 ppm</td><td>±2%</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div><strong>Gas Requirements:</strong></div>
-                        <div class="chip">Carrier: H₂/N₂/He/Ar (4.6 purity)</div>
-                        <div class="chip">EPC Pressure: 35-700 kPa</div>
+                        <div class="chip">Repeatability: ±0.5%</div>
+                        <div style="font-size:0.75rem;margin-top:6px;"><strong>Carrier Gas:</strong> H₂/N₂/He/Ar (4.6 purity) · EPC Pressure: 35-700 kPa · Oven stabilization: 30 minutes</div>
                     </div>
                     <div class="gc-panel hidden" id="gc-abb">
                         <div><strong>ABB PGC5000 Series</strong> </div>
-                        <div class="chip">PGC5000A Master Controller</div>
                         <div class="chip">DBDID Detector (ppb detection)</div>
                         <div class="chip">Smart Oven™ Technology</div>
-                        <div class="table-wrap mt-1">
-                            <table><thead><tr><th>Model</th><th>Application</th></tr></thead>
-                                <tbody>
-                                    <tr><td>PGC5000B</td><td>Basic configurations</td></tr>
-                                    <tr><td>PGC5000C</td><td>Complex multi-stream</td></tr>
-                                    <tr><td>PGC5007</td><td>Total Sulfur/H₂S/COS</td></tr>
-                                    <tr><td>PGC5009</td><td>Fast GC (C1-C36)</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
+                        <div style="font-size:0.75rem;margin-top:6px;"><strong>Calibration:</strong> Auto-calibration with internal standards · Multi-stream capability · DBDID requires zero gas calibration</div>
                     </div>
                     <div class="gc-panel hidden" id="gc-agilent">
                         <div><strong>Agilent 8890 GC</strong> </div>
-                        <div class="chip">Standard or Fast-Ramp Oven</div>
                         <div class="chip">Multiple Detectors: FID, TCD, µECD</div>
-                        <div><strong>Site Prep Requirements:</strong></div>
-                        <div class="chip">Temp: 15-35°C · Humidity: 5-95%</div>
-                        <div class="chip">Dedicated Circuit: 10-20A</div>
-                        <div class="chip">Carrier Gas: H₂/He/N₂ (high purity)</div>
+                        <div style="font-size:0.75rem;margin-top:6px;"><strong>Site Prep:</strong> Temp: 15-35°C · Humidity: 5-95% · Dedicated Circuit: 10-20A · Carrier Gas: H₂/He/N₂ (high purity)</div>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- ==========================================================
-        PAGE: ELECTRICAL
+        PAGE: ELECTRICAL (with sub-tabs)
         ========================================================== -->
         <div class="page" id="page-electrical">
             <div class="page-title"><i class="fas fa-bolt"></i> Electrical Tools</div>
             <div class="card">
-                <div class="card-header"><i class="fas fa-ohm"></i><h3>Ohm's Law</h3><span>V · I · R · P</span></div>
-                <div class="row">
-                    <label>Voltage</label>
-                    <input type="number" id="ohmV" value="24" step="any" /><span class="chip">V</span>
+                <div class="sub-tabs" id="electricalTabs">
+                    <div class="sub-tab active" data-tab="elec-ohm">Ohm's Law</div>
+                    <div class="sub-tab" data-tab="elec-vd">Voltage Drop</div>
+                    <div class="sub-tab" data-tab="elec-amp">Ampacity</div>
                 </div>
-                <div class="row">
-                    <label>Current</label>
-                    <input type="number" id="ohmI" value="20" step="any" /><span class="chip">mA</span>
+
+                <div class="sub-panel active" id="elec-ohm">
+                    <div class="row">
+                        <label>Voltage</label>
+                        <input type="number" id="ohmV" value="24" step="any" /><span class="chip">V</span>
+                    </div>
+                    <div class="row">
+                        <label>Current</label>
+                        <input type="number" id="ohmI" value="20" step="any" /><span class="chip">mA</span>
+                    </div>
+                    <button class="btn" id="ohmCalcBtn"><i class="fas fa-calculator"></i> Calculate</button>
+                    <div class="result-box"><span>Resistance</span><span id="ohmResult">1200.00 Ω</span></div>
+                    <div class="result-box"><span>Power</span><span id="powerResult">0.48 W</span></div>
                 </div>
-                <button class="btn" id="ohmCalcBtn"><i class="fas fa-calculator"></i> Calculate</button>
-                <div class="result-box"><span>Resistance</span><span id="ohmResult">1200.00 Ω</span></div>
-                <div class="result-box"><span>Power</span><span id="powerResult">0.48 W</span></div>
-            </div>
-            <div class="card">
-                <div class="card-header"><i class="fas fa-arrow-down"></i><h3>Voltage Drop</h3><span>AWG Select</span></div>
-                <div class="row">
-                    <label>Voltage</label>
-                    <input type="number" id="vdVoltage" value="480" step="any" />
+
+                <div class="sub-panel hidden" id="elec-vd">
+                    <div class="row">
+                        <label>Voltage</label>
+                        <input type="number" id="vdVoltage" value="480" step="any" />
+                    </div>
+                    <div class="row">
+                        <label>Current</label>
+                        <input type="number" id="vdCurrent" value="10" step="any" />
+                    </div>
+                    <div class="row">
+                        <label>Distance</label>
+                        <input type="number" id="vdDistance" value="200" step="any" /><span class="chip">ft</span>
+                    </div>
+                    <div class="row">
+                        <label>AWG</label>
+                        <select id="vdAwg">
+                            <option value="14">14</option><option value="12" selected>12</option>
+                            <option value="10">10</option><option value="8">8</option><option value="6">6</option>
+                        </select>
+                    </div>
+                    <button class="btn" id="vdBtn"><i class="fas fa-calculator"></i> Calculate Drop</button>
+                    <div class="result-box"><span>Voltage Drop</span><span id="vdResult">5.12 V (1.07%)</span></div>
+                    <div class="result-box"><span>Status</span><span id="vdStatus" style="color:#059669;">✓ Acceptable</span></div>
                 </div>
-                <div class="row">
-                    <label>Current</label>
-                    <input type="number" id="vdCurrent" value="10" step="any" />
-                </div>
-                <div class="row">
-                    <label>Distance</label>
-                    <input type="number" id="vdDistance" value="200" step="any" /><span class="chip">ft</span>
-                </div>
-                <div class="row">
-                    <label>AWG</label>
-                    <select id="vdAwg">
-                        <option value="14">14</option><option value="12" selected>12</option>
-                        <option value="10">10</option><option value="8">8</option><option value="6">6</option>
-                    </select>
-                </div>
-                <button class="btn" id="vdBtn"><i class="fas fa-calculator"></i> Calculate Drop</button>
-                <div class="result-box"><span>Voltage Drop</span><span id="vdResult">5.12 V (1.07%)</span></div>
-                <div class="result-box"><span>Status</span><span id="vdStatus" style="color:#059669;">✓ Acceptable</span></div>
-            </div>
-            <div class="card">
-                <div class="card-header"><i class="fas fa-table"></i><h3>Wire Ampacity</h3><span>NEC 310.16</span></div>
-                <div class="table-wrap">
-                    <table>
-                        <thead><tr><th>AWG</th><th>60°C</th><th>75°C</th><th>90°C</th></tr></thead>
-                        <tbody>
-                            <tr><td>14</td><td>20</td><td>20</td><td>25</td></tr>
-                            <tr><td>12</td><td>25</td><td>25</td><td>30</td></tr>
-                            <tr><td>10</td><td>35</td><td>35</td><td>40</td></tr>
-                            <tr><td>8</td><td>50</td><td>50</td><td>55</td></tr>
-                            <tr><td>6</td><td>65</td><td>65</td><td>75</td></tr>
-                            <tr><td>4</td><td>85</td><td>85</td><td>95</td></tr>
-                            <tr><td>2</td><td>115</td><td>115</td><td>130</td></tr>
-                            <tr><td>1/0</td><td>150</td><td>150</td><td>170</td></tr>
-                            <tr><td>2/0</td><td>175</td><td>175</td><td>195</td></tr>
-                            <tr><td>3/0</td><td>200</td><td>200</td><td>225</td></tr>
-                            <tr><td>4/0</td><td>230</td><td>230</td><td>260</td></tr>
-                        </tbody>
-                    </table>
+
+                <div class="sub-panel hidden" id="elec-amp">
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>AWG</th><th>60°C</th><th>75°C</th><th>90°C</th></tr></thead>
+                            <tbody>
+                                <tr><td>14</td><td>20</td><td>20</td><td>25</td></tr>
+                                <tr><td>12</td><td>25</td><td>25</td><td>30</td></tr>
+                                <tr><td>10</td><td>35</td><td>35</td><td>40</td></tr>
+                                <tr><td>8</td><td>50</td><td>50</td><td>55</td></tr>
+                                <tr><td>6</td><td>65</td><td>65</td><td>75</td></tr>
+                                <tr><td>4</td><td>85</td><td>85</td><td>95</td></tr>
+                                <tr><td>2</td><td>115</td><td>115</td><td>130</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1609,9 +1614,9 @@
                         <option value="230VAC">230V AC · 6.3W</option>
                     </select>
                 </div>
-                <div class="result-box"><span>Power Required</span><span id="solenoidPower">8.0 W</span></div>
-                <div class="result-box"><span>Current Draw</span><span id="solenoidCurrent">0.33 A</span></div>
-                <div class="result-box"><span>Insulation Class</span><span id="solenoidInsulation">Class F (155°C)</span></div>
+                <div class="result-box"><span>Power</span><span id="solenoidPower">8.0 W</span></div>
+                <div class="result-box"><span>Current</span><span id="solenoidCurrent">0.33 A</span></div>
+                <div class="result-box"><span>Insulation</span><span id="solenoidInsulation">Class F (155°C)</span></div>
             </div>
         </div>
 
@@ -1649,60 +1654,113 @@
                     <input type="number" id="bendOffset" value="6" step="any" /><span class="chip">in</span>
                 </div>
                 <button class="btn" id="bendCalcBtn"><i class="fas fa-calculator"></i> Calculate</button>
-                <div class="result-box"><span>Gain @ 90°</span><span id="bendGain">0.563 in</span></div>
+                <div class="result-box"><span>Gain</span><span id="bendGain">0.563 in</span></div>
                 <div class="result-box"><span>Mark Position</span><span id="bendMark">6.56 in</span></div>
                 <div class="result-box"><span>Bender Model</span><span id="benderModel">MS-HTB-6</span></div>
-                <hr />
-                <div style="font-size:0.75rem;background:#f8fafd;padding:10px 14px;border-radius:16px;">
-                    <strong>NEC Requirements:</strong> Total bends between pull points ≤ 360° · Min bending radius: 4× O.D.
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-header"><i class="fas fa-tools"></i><h3>Field Tips</h3><span>SS Tubing</span></div>
-                <div style="font-size:0.8rem;padding:4px 0;line-height:1.8;">
-                    ✅ Always use correct bender size<br />
-                    ✅ Mark all the way around the tube<br />
-                    ✅ Overbend 2–3° for SS spring-back<br />
-                    ✅ Keep all bends in same plane<br />
-                    ❌ Never re-bend at same location<br />
-                    ❌ Do not use pipe or conduit benders
-                </div>
             </div>
         </div>
 
         <!-- ==========================================================
-        PAGE: COMMISSIONING
+        PAGE: COMMISSIONING (Enhanced with VFD/Switchgear)
         ========================================================== -->
         <div class="page" id="page-commissioning">
-            <div class="page-title"><i class="fas fa-check-double"></i> Commissioning Checklist</div>
+            <div class="page-title"><i class="fas fa-check-double"></i> Commissioning</div>
+
             <div class="card">
-                <div class="card-header"><i class="fas fa-clipboard-list"></i><h3>Instrument Commissioning</h3><span>Step-by-Step</span></div>
-                <div style="font-size:0.8rem;padding:4px 0;">
-                    <div style="background:#f1f5f9;padding:10px 14px;border-radius:16px;margin-bottom:6px;">
-                        <strong>1. Pre-Commissioning Checks</strong>
-                        <div style="font-size:0.7rem;color:#64748b;">Documentation Review · Visual Inspection · Tagging</div>
-                    </div>
-                    <div style="background:#f1f5f9;padding:10px 14px;border-radius:16px;margin-bottom:6px;">
-                        <strong>2. Installation Verification</strong>
-                        <div style="font-size:0.7rem;color:#64748b;">Wiring · Power Supply · Signal Line Testing</div>
-                    </div>
-                    <div style="background:#f1f5f9;padding:10px 14px;border-radius:16px;margin-bottom:6px;">
-                        <strong>3. Calibration</strong>
-                        <div style="font-size:0.7rem;color:#64748b;">Initial Calibration · Zero & Span · Functional Testing</div>
-                    </div>
-                    <div style="background:#f1f5f9;padding:10px 14px;border-radius:16px;margin-bottom:6px;">
-                        <strong>4. Configuration</strong>
-                        <div style="font-size:0.7rem;color:#64748b;">Parameter Settings · Communication Setup</div>
-                    </div>
-                    <div style="background:#f1f5f9;padding:10px 14px;border-radius:16px;margin-bottom:6px;">
-                        <strong>5. Loop Checking</strong>
-                        <div style="font-size:0.7rem;color:#64748b;">Loop Testing · Simulated Testing</div>
-                    </div>
-                    <div style="background:#f1f5f9;padding:10px 14px;border-radius:16px;margin-bottom:6px;">
-                        <strong>6. Documentation & Handover</strong>
-                        <div style="font-size:0.7rem;color:#64748b;">Commissioning Report · Training · Client Approval</div>
+                <div class="sub-tabs" id="commTabs">
+                    <div class="sub-tab active" data-tab="comm-general">General</div>
+                    <div class="sub-tab" data-tab="comm-vfd">VFD</div>
+                    <div class="sub-tab" data-tab="comm-switchgear">Switchgear</div>
+                    <div class="sub-tab" data-tab="comm-electrical">Electrical</div>
+                </div>
+
+                <div class="sub-panel active" id="comm-general">
+                    <div style="font-size:0.8rem;padding:4px 0;">
+                        <div style="background:#f1f5f9;padding:10px 14px;border-radius:16px;margin-bottom:6px;">
+                            <strong>1. Pre-Commissioning</strong>
+                            <div style="font-size:0.7rem;color:#64748b;">Documentation · Visual Inspection · Tagging</div>
+                        </div>
+                        <div style="background:#f1f5f9;padding:10px 14px;border-radius:16px;margin-bottom:6px;">
+                            <strong>2. Installation Verification</strong>
+                            <div style="font-size:0.7rem;color:#64748b;">Wiring · Power Supply · Signal Testing</div>
+                        </div>
+                        <div style="background:#f1f5f9;padding:10px 14px;border-radius:16px;margin-bottom:6px;">
+                            <strong>3. Calibration</strong>
+                            <div style="font-size:0.7rem;color:#64748b;">Initial Calibration · Zero & Span · Functional Testing</div>
+                        </div>
+                        <div style="background:#f1f5f9;padding:10px 14px;border-radius:16px;margin-bottom:6px;">
+                            <strong>4. Configuration</strong>
+                            <div style="font-size:0.7rem;color:#64748b;">Parameter Settings · Communication Setup</div>
+                        </div>
+                        <div style="background:#f1f5f9;padding:10px 14px;border-radius:16px;margin-bottom:6px;">
+                            <strong>5. Loop Checking</strong>
+                            <div style="font-size:0.7rem;color:#64748b;">Loop Testing · Simulated Testing</div>
+                        </div>
+                        <div style="background:#f1f5f9;padding:10px 14px;border-radius:16px;margin-bottom:6px;">
+                            <strong>6. Handover</strong>
+                            <div style="font-size:0.7rem;color:#64748b;">Report · Training · Client Approval</div>
+                        </div>
                     </div>
                 </div>
+
+                <div class="sub-panel hidden" id="comm-vfd">
+                    <div style="font-size:0.8rem;padding:4px 0;">
+                        <div style="background:#f1f5f9;padding:10px 14px;border-radius:16px;margin-bottom:6px;">
+                            <strong>VFD Commissioning Checklist</strong>
+                        </div>
+                        <div style="font-size:0.75rem;padding:8px 12px;">
+                            ✅ Input voltage check (380-480VAC ±10%)<br />
+                            ✅ Grounding verification<br />
+                            ✅ Control wiring check (start/stop, speed reference)<br />
+                            ✅ Motor parameters (FLA, RPM, PF)<br />
+                            ✅ I/O configuration<br />
+                            ✅ Ramp settings (accel/decel)<br />
+                            ✅ Torque/speed control mode<br />
+                            ✅ Communication setup (Modbus, Profibus, EtherNet/IP)<br />
+                            ✅ Motor rotation check<br />
+                            ✅ Load test with process
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sub-panel hidden" id="comm-switchgear">
+                    <div style="font-size:0.8rem;padding:4px 0;">
+                        <div style="background:#f1f5f9;padding:10px 14px;border-radius:16px;margin-bottom:6px;">
+                            <strong>Switchgear Commissioning</strong>
+                        </div>
+                        <div style="font-size:0.75rem;padding:8px 12px;">
+                            ✅ Visual inspection (buses, connections)<br />
+                            ✅ Mechanical operation (breaker racking)<br />
+                            ✅ Insulation resistance testing (MEG)<br />
+                            ✅ Contact resistance measurement (micro-ohms)<br />
+                            ✅ Timing tests (close/open)<br />
+                            ✅ Protective relay testing (overcurrent, ground fault)<br />
+                            ✅ Control wiring verification<br />
+                            ✅ CT/VT ratio and polarity check<br />
+                            ✅ Communication with SCADA<br />
+                            ✅ Load testing with real current
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sub-panel hidden" id="comm-electrical">
+                    <div style="font-size:0.8rem;padding:4px 0;">
+                        <div style="background:#f1f5f9;padding:10px 14px;border-radius:16px;margin-bottom:6px;">
+                            <strong>Electrical Commissioning</strong>
+                        </div>
+                        <div style="font-size:0.75rem;padding:8px 12px;">
+                            ✅ Power quality analysis<br />
+                            ✅ Voltage imbalance check<br />
+                            ✅ Harmonic distortion measurement<br />
+                            ✅ Load flow verification<br />
+                            ✅ Protective device coordination<br />
+                            ✅ Grounding system verification<br />
+                            ✅ Emergency shutdown testing<br />
+                            ✅ Backup power testing (UPS, generator)
+                        </div>
+                    </div>
+                </div>
+
                 <div class="row mt-1">
                     <label>Project</label>
                     <input type="text" id="commProject" placeholder="Project Name" />
@@ -1717,44 +1775,40 @@
         </div>
 
         <!-- ==========================================================
-        PAGE: REFERENCES
+        PAGE: REFERENCES (Enhanced)
         ========================================================== -->
         <div class="page" id="page-references">
             <div class="page-title"><i class="fas fa-book"></i> Reference Library</div>
             <div class="card">
                 <div class="tab-scroll" id="refTabs">
                     <div class="tab active" data-ref="tc">TC Colors</div>
-                    <div class="tab" data-ref="ranges">3051 Ranges</div>
+                    <div class="tab" data-ref="ranges">Transmitters</div>
                     <div class="tab" data-ref="rtd">RTD Pt100</div>
                     <div class="tab" data-ref="fluke">Fluke 789</div>
                     <div class="tab" data-ref="wiring">Wiring</div>
                     <div class="tab" data-ref="drawings">Drawings</div>
                     <div class="tab" data-ref="gc-ref">GC Ref</div>
+                    <div class="tab" data-ref="fault-ref">Fault Codes</div>
                 </div>
                 <div id="refContent">
                     <div class="ref-panel" id="ref-tc">
                         <div><strong>Thermocouple Color Codes (IEC)</strong></div>
-                        <div class="chip" style="background:#d4a373;color:white;">Type J</div>
-                        <div class="chip" style="background:#c77dff;color:white;">Type K</div>
-                        <div class="chip" style="background:#4a7c59;color:white;">Type T</div>
-                        <div style="margin-top:6px;font-size:0.85rem;">
-                            <div>J: Iron-Constantan · -40 to 750°C</div>
-                            <div>K: Chromel-Alumel · -200 to 1250°C</div>
-                            <div>T: Copper-Constantan · -200 to 350°C</div>
-                        </div>
+                        <div class="chip">J: Iron-Constantan</div>
+                        <div class="chip">K: Chromel-Alumel</div>
+                        <div class="chip">T: Copper-Constantan</div>
                     </div>
                     <div class="ref-panel hidden" id="ref-ranges">
-                        <div><strong>Rosemount 3051CD Ranges</strong></div>
-                        <div class="chip">Range 0: 0-0.5 inH₂O</div>
-                        <div class="chip">Range 1: 0-2.5 inH₂O</div>
-                        <div class="chip">Range 2: 0-25 inH₂O</div>
-                        <div class="chip">Range 3: 0-250 inH₂O</div>
-                        <div class="chip">Range 4: 0-1000 inH₂O</div>
+                        <div><strong>Common Transmitters</strong></div>
+                        <div class="chip">Rosemount 3051S (0-0.5 to 0-20000 psig)</div>
+                        <div class="chip">Yokogawa EJX (0-0.1 to 0-10000 psig)</div>
+                        <div class="chip">ABB TTH300 (0-0.25 to 0-10000 psig)</div>
+                        <div class="chip">Siemens SITRANS P320 (0-0.1 to 0-10000 psig)</div>
+                        <div style="font-size:0.7rem;margin-top:4px;">HART, Profibus, Foundation Fieldbus available</div>
                     </div>
                     <div class="ref-panel hidden" id="ref-rtd">
                         <div><strong>Pt100 RTD (IEC 60751)</strong></div>
                         <div class="chip">2-wire · 3-wire · 4-wire</div>
-                        <div style="margin-top:4px;font-size:0.8rem;">0°C = 100.00Ω · 100°C = 138.51Ω</div>
+                        <div style="font-size:0.8rem;">0°C = 100.00Ω · 100°C = 138.51Ω</div>
                     </div>
                     <div class="ref-panel hidden" id="ref-fluke">
                         <div><strong>Fluke 789 Loop Calibrator</strong></div>
@@ -1769,104 +1823,86 @@
                         <div class="chip">Shielded twisted pair</div>
                     </div>
                     <div class="ref-panel hidden" id="ref-drawings">
-                        <div><strong>Required Drawings for Commissioning</strong> </div>
-                        <div class="chip">P&ID (Piping & Instrumentation Diagram)</div>
-                        <div class="chip">Loop Drawings (Instrument Loop Diagrams)</div>
-                        <div class="chip">Wiring Diagrams (Terminal Block Details)</div>
-                        <div class="chip">Panel Layouts (Marshalling Cabinet)</div>
-                        <div class="chip">As-Built Drawings</div>
-                        <div class="chip">JB Schedule (Junction Box Details)</div>
+                        <div><strong>Required Drawings</strong></div>
+                        <div class="chip">P&ID</div>
+                        <div class="chip">Loop Drawings</div>
+                        <div class="chip">Wiring Diagrams</div>
+                        <div class="chip">Panel Layouts</div>
+                        <div class="chip">JB Schedule</div>
                     </div>
                     <div class="ref-panel hidden" id="ref-gc-ref">
-                        <div><strong>GC Reference Data</strong></div>
+                        <div><strong>GC Reference</strong></div>
                         <div class="chip">Daniel 700: TCD, 24VDC, -29-55°C</div>
                         <div class="chip">Siemens Maxum II: TCD, 50-260°C oven</div>
                         <div class="chip">ABB PGC5000: DBDID, ppb detection</div>
-                        <div class="chip">Agilent 8890: FID/TCD, 15-35°C ambient</div>
+                    </div>
+                    <div class="ref-panel hidden" id="ref-fault-ref">
+                        <div><strong>Common Fault Codes</strong></div>
+                        <div class="chip">4-20mA: 0mA (no power), 2-3.5mA (fault), >20.5mA (overrange)</div>
+                        <div class="chip">HART: Device address conflict, 250Ω resistor required</div>
+                        <div class="chip">Flow: Orifice plate blocked, DP transmitter drift</div>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- ==========================================================
-        PAGE: TROUBLESHOOTING (Advanced)
+        PAGE: TROUBLESHOOTING (Interactive Q&A)
         ========================================================== -->
         <div class="page" id="page-trouble">
-            <div class="page-title"><i class="fas fa-exclamation-triangle"></i> Advanced Troubleshooting</div>
+            <div class="page-title"><i class="fas fa-exclamation-triangle"></i> Interactive Troubleshooting</div>
 
-            <!-- Fault Codes -->
             <div class="card">
-                <div class="card-header"><i class="fas fa-code"></i><h3>Instrument Fault Codes</h3><span>HART · Display</span></div>
-                <div class="tab-scroll" id="faultTabs">
-                    <div class="tab active" data-fault="msa">MSA PrimaX</div>
-                    <div class="tab" data-fault="siemens">Siemens LR</div>
-                    <div class="tab" data-fault="general">General</div>
-                </div>
-                <div id="faultContent">
-                    <div class="fault-panel" id="fault-msa">
-                        <div><strong>MSA PrimaX IR Fault Codes</strong> [citation:3]</div>
-                        <div class="table-wrap mt-1">
-                            <table>
-                                <thead><tr><th>Code</th><th>mA Output</th><th>Description</th></tr></thead>
-                                <tbody>
-                                    <tr><td>E-01</td><td>0.0 mA</td><td>Safety Critical Fault · Sensor Failure</td></tr>
-                                    <tr><td>E-02</td><td>2.0 mA</td><td>General Fault · Instrument fault</td></tr>
-                                    <tr><td>E-03</td><td>2.5 mA</td><td>Dirty Optics · Clean sensor optics</td></tr>
-                                    <tr><td>E-04</td><td>3.0 mA</td><td>Power Up / Sensor Calibration</td></tr>
-                                    <tr><td>E-05</td><td>3.5 mA</td><td>Cleaning Mode</td></tr>
-                                    <tr><td>E-06</td><td>20.5 mA</td><td>Overrange · Gas > 100% LEL</td></tr>
-                                </tbody>
-                            </table>
+                <div class="card-header"><i class="fas fa-question-circle"></i><h3>Fault Diagnosis</h3><span>Q&A</span></div>
+                <div id="troubleFlow">
+                    <div style="font-size:0.85rem;padding:8px 0;">
+                        <strong>Step 1: Device Type</strong>
+                        <div class="flex mt-1">
+                            <button class="btn btn-sm btn-outline device-btn" data-type="transmitter">Transmitter</button>
+                            <button class="btn btn-sm btn-outline device-btn" data-type="motor">Motor</button>
+                            <button class="btn btn-sm btn-outline device-btn" data-type="gc">GC</button>
+                            <button class="btn btn-sm btn-outline device-btn" data-type="solenoid">Solenoid</button>
                         </div>
-                        <div style="font-size:0.65rem;color:#64748b;margin-top:4px;">Display faults E-07 through E-28 are display module only, analog output unaffected</div>
                     </div>
-                    <div class="fault-panel hidden" id="fault-siemens">
-                        <div><strong>Siemens SITRANS LR Fault Codes</strong> [citation:7][citation:11]</div>
-                        <div class="table-wrap mt-1">
-                            <table>
-                                <thead><tr><th>Code</th><th>Meaning</th><th>Corrective Action</th></tr></thead>
-                                <tbody>
-                                    <tr><td>S:0</td><td>No measurement (Failsafe)</td><td>Check installation, antenna buildup, range</td></tr>
-                                    <tr><td>S:2</td><td>Low power condition</td><td>Correct power supply (voltage/resistance)</td></tr>
-                                    <tr><td>S:3</td><td>Device lifetime limit</td><td>Replacement recommended</td></tr>
-                                    <tr><td>S:6</td><td>Sensor lifetime limit</td><td>Replacement recommended</td></tr>
-                                    <tr><td>S:8</td><td>Service interval expired</td><td>Perform service</td></tr>
-                                    <tr><td>S:11</td><td>Internal temp sensor failure</td><td>Contact Siemens representative</td></tr>
-                                </tbody>
-                            </table>
+                    <div id="troublePower" class="hidden" style="font-size:0.85rem;padding:8px 0;">
+                        <strong>Step 2: Power Status?</strong>
+                        <div class="flex mt-1">
+                            <button class="btn btn-sm btn-outline power-btn" data-power="on">Power On</button>
+                            <button class="btn btn-sm btn-outline power-btn" data-power="off">Power Off</button>
+                            <button class="btn btn-sm btn-outline power-btn" data-power="intermittent">Intermittent</button>
                         </div>
-                        <div style="font-size:0.65rem;color:#64748b;margin-top:4px;">* Faults with asterisk (*) cause device to go to Failsafe mode</div>
                     </div>
-                    <div class="fault-panel hidden" id="fault-general">
-                        <div><strong>General 4-20mA Fault Diagnosis</strong></div>
-                        <div class="table-wrap mt-1">
-                            <table>
-                                <thead><tr><th>Symptom</th><th>mA Output</th><th>Likely Cause</th></tr></thead>
-                                <tbody>
-                                    <tr><td>No output</td><td>0 mA</td><td>Power supply failure, open loop</td></tr>
-                                    <tr><td>Low output</td><td>&lt; 4 mA</td><td>Sensor failure, wiring issue</td></tr>
-                                    <tr><td>Stuck at 4 mA</td><td>4.0 mA</td><td>No process, sensor failure</td></tr>
-                                    <tr><td>Stuck at 20 mA</td><td>20.0 mA</td><td>Overrange, short circuit</td></tr>
-                                    <tr><td>High alarm</td><td>20.5+ mA</td><td>Overrange condition</td></tr>
-                                    <tr><td>Fault alarm</td><td>2.0-3.5 mA</td><td>Instrument fault (configurable)</td></tr>
-                                </tbody>
-                            </table>
+                    <div id="troubleSymptom" class="hidden" style="font-size:0.85rem;padding:8px 0;">
+                        <strong>Step 3: Select Symptom</strong>
+                        <div class="flex mt-1" id="symptomList">
+                            <button class="btn btn-sm btn-outline symptom-btn" data-symptom="no-output">No Output</button>
+                            <button class="btn btn-sm btn-outline symptom-btn" data-symptom="low-output">Low Output</button>
+                            <button class="btn btn-sm btn-outline symptom-btn" data-symptom="erratic">Erratic Reading</button>
+                            <button class="btn btn-sm btn-outline symptom-btn" data-symptom="alarm">Alarm Condition</button>
                         </div>
-                        <div style="font-size:0.65rem;color:#64748b;margin-top:4px;">Fault levels are configurable via HART · NAMUR NE43 recommended</div>
+                    </div>
+                    <div id="troubleResult" class="mt-1 hidden" style="background:#f1f5f9;padding:12px 16px;border-radius:20px;font-size:0.85rem;">
+                        <strong>Diagnosis:</strong>
+                        <div id="troubleDiagnosis" style="margin-top:4px;"></div>
                     </div>
                 </div>
+                <button class="btn w-full" id="resetTroubleBtn" style="justify-content:center;margin-top:8px;"><i class="fas fa-redo"></i> Reset</button>
             </div>
 
-            <!-- Interactive Fault Finder -->
+            <!-- Fault Codes Reference -->
             <div class="card">
-                <div class="card-header"><i class="fas fa-stethoscope"></i><h3>Interactive Fault Finder</h3><span>Select a symptom</span></div>
-                <div class="trouble-item" data-fault="4ma"><i class="fas fa-bolt" style="color:#b45309;"></i> <span><strong>Stuck at 4mA</strong> · no process, wiring, sensor</span></div>
-                <div class="trouble-item" data-fault="22ma"><i class="fas fa-wave-square" style="color:#2563eb;"></i> <span><strong>22mA alarm</strong> · overpressure / sensor fail</span></div>
-                <div class="trouble-item" data-fault="hart"><i class="fas fa-sync-alt" style="color:#1e7e34;"></i> <span><strong>No HART comms</strong> · 250Ω resistor? address?</span></div>
-                <div class="trouble-item" data-fault="gc"><i class="fas fa-chart-bar" style="color:#8b5cf6;"></i> <span><strong>GC baseline drift</strong> · carrier gas, column, detector</span></div>
-                <button class="btn w-full" id="faultFinderBtn" style="justify-content:center;margin-top:8px;"><i class="fas fa-stethoscope"></i> Run Interactive Fault Finder</button>
-                <div id="faultDiagnosis" class="mt-1" style="font-size:0.85rem;background:#f1f5f9;padding:12px 16px;border-radius:20px;min-height:40px;color:#475569;">
-                    <i class="fas fa-lightbulb"></i> Select a fault above or click the button.
+                <div class="card-header"><i class="fas fa-code"></i><h3>Fault Code Reference</h3></div>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>Symptom</th><th>mA Output</th><th>Likely Cause</th></tr></thead>
+                        <tbody>
+                            <tr><td>No output</td><td>0 mA</td><td>Power failure, open loop</td></tr>
+                            <tr><td>Stuck at 4mA</td><td>4.0 mA</td><td>No process, sensor failure</td></tr>
+                            <tr><td>Low output</td><td>&lt; 4 mA</td><td>Sensor failure, wiring issue</td></tr>
+                            <tr><td>High alarm</td><td>20.5+ mA</td><td>Overrange condition</td></tr>
+                            <tr><td>Fault alarm</td><td>2.0-3.5 mA</td><td>Instrument fault (configurable)</td></tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -1877,13 +1913,12 @@
         <div class="page" id="page-ai">
             <div class="page-title"><i class="fas fa-robot"></i> AI Technician</div>
             <div class="card">
-                <div class="chat-bubble"><i class="fas fa-robot" style="margin-right:6px;"></i> Hello! I'm your AI field assistant. Ask me about GC, solenoid, bending, or commissioning.</div>
+                <div class="chat-bubble"><i class="fas fa-robot"></i> Hello! I'm your AI field assistant.</div>
                 <div id="chatHistory"></div>
                 <div class="row mt-1">
                     <input type="text" id="aiInput" placeholder="Ask the AI..." style="flex:1;" />
                     <button class="btn" id="aiSendBtn"><i class="fas fa-paper-plane"></i></button>
                 </div>
-                <div style="font-size:0.65rem;color:#94a3b8;margin-top:4px;">Embedded knowledge base · No external API</div>
             </div>
         </div>
 
@@ -1893,7 +1928,6 @@
         <div class="page" id="page-upload">
             <div class="page-title"><i class="fas fa-upload"></i> File Upload Hub</div>
             <div class="card">
-                <div class="card-header"><i class="fas fa-folder-open"></i><h3>Upload Files</h3><span>PDF · Excel · CSV</span></div>
                 <div class="upload-zone" id="uploadZone">
                     <i class="fas fa-cloud-upload-alt"></i>
                     <div>Drop files here or tap to browse</div>
@@ -1911,7 +1945,6 @@
         <div class="page" id="page-tags">
             <div class="page-title"><i class="fas fa-qrcode"></i> QR / NFC Tag Scanner</div>
             <div class="card">
-                <div class="card-header"><i class="fas fa-camera"></i><h3>Scan Device Tag</h3><span>QR · NFC · OCR</span></div>
                 <div class="upload-zone" id="cameraZone">
                     <i class="fas fa-camera"></i>
                     <div>Tap to scan QR code or nameplate</div>
@@ -1932,22 +1965,25 @@
                     <div style="font-size:0.7rem;color:#94a3b8;margin-bottom:6px;">Saved Devices:</div>
                     <div id="tagContainer"></div>
                 </div>
-                <div style="font-size:0.65rem;color:#64748b;margin-top:8px;padding:8px 12px;background:#f1f5f9;border-radius:16px;">
-                    <strong>Modern Transmitters:</strong> Newer devices (Rosemount, Yokogawa, etc.) feature QR codes with embedded tag, serial number, and calibration data. Scan to auto-populate device info [citation:4][citation:8].
+                <div style="font-size:0.65rem;padding:8px 12px;background:#f1f5f9;border-radius:16px;">
+                    Modern transmitters (Rosemount, Yokogawa) feature QR codes with tag, serial, and calibration data.
                 </div>
             </div>
         </div>
 
         <!-- ==========================================================
-        PAGE: REPORT
+        PAGE: REPORT (Enhanced with calibration values)
         ========================================================== -->
         <div class="page" id="page-report">
             <div class="page-title"><i class="fas fa-file-alt"></i> Report Generator</div>
             <div class="card">
-                <div class="card-header"><i class="fas fa-edit"></i><h3>Field Report</h3><span>Calibration · GC · Commissioning</span></div>
                 <div class="row">
                     <label>Tag</label>
                     <input type="text" id="reportTag" placeholder="FT-1001" />
+                </div>
+                <div class="row">
+                    <label>Model</label>
+                    <input type="text" id="reportModel" placeholder="e.g., Rosemount 3051S" />
                 </div>
                 <div class="row">
                     <label>Type</label>
@@ -1957,9 +1993,16 @@
                         <option value="commissioning">Commissioning</option>
                     </select>
                 </div>
+                <div id="calPointsInput" class="cal-points-grid">
+                    <div><label>0%:</label> <input type="number" id="rp0" value="0" step="any" style="width:60px;" /></div>
+                    <div><label>25%:</label> <input type="number" id="rp25" value="25" step="any" style="width:60px;" /></div>
+                    <div><label>50%:</label> <input type="number" id="rp50" value="50" step="any" style="width:60px;" /></div>
+                    <div><label>75%:</label> <input type="number" id="rp75" value="75" step="any" style="width:60px;" /></div>
+                    <div><label>100%:</label> <input type="number" id="rp100" value="100" step="any" style="width:60px;" /></div>
+                </div>
                 <div class="row">
                     <label>Notes</label>
-                    <textarea id="reportNotes" placeholder="Enter findings, readings, actions..."></textarea>
+                    <textarea id="reportNotes" placeholder="Enter findings, actions..."></textarea>
                 </div>
                 <button class="btn" id="generateReportBtn"><i class="fas fa-file-alt"></i> Generate Report</button>
                 <div id="reportPreview" class="report-preview mt-1">Report will appear here.</div>
@@ -1968,12 +2011,11 @@
         </div>
 
         <!-- ==========================================================
-        PAGE: SETTINGS (with Theme Colors)
+        PAGE: SETTINGS (Multi-color themes)
         ========================================================== -->
         <div class="page" id="page-settings">
             <div class="page-title"><i class="fas fa-cog"></i> Settings</div>
 
-            <!-- Theme Colors -->
             <div class="card">
                 <div class="card-header"><i class="fas fa-palette"></i><h3>Theme Color</h3></div>
                 <div class="theme-grid" id="themeColorGrid">
@@ -1985,10 +2027,13 @@
                     <div class="theme-option" data-color="#dc2626"><span class="color-dot" style="background:#dc2626;"></span>Red</div>
                     <div class="theme-option" data-color="#8b5cf6"><span class="color-dot" style="background:#8b5cf6;"></span>Violet</div>
                     <div class="theme-option" data-color="#d97706"><span class="color-dot" style="background:#d97706;"></span>Gold</div>
+                    <div class="theme-option" data-color="#0d9488"><span class="color-dot" style="background:#0d9488;"></span>Teal</div>
+                    <div class="theme-option" data-color="#db2777"><span class="color-dot" style="background:#db2777;"></span>Rose</div>
+                    <div class="theme-option" data-color="#4f46e5"><span class="color-dot" style="background:#4f46e5;"></span>Indigo</div>
+                    <div class="theme-option" data-color="#65a30d"><span class="color-dot" style="background:#65a30d;"></span>Lime</div>
                 </div>
             </div>
 
-            <!-- Dark Mode -->
             <div class="card">
                 <div class="card-header"><i class="fas fa-moon"></i><h3>Dark Mode</h3></div>
                 <div class="row">
@@ -2006,7 +2051,6 @@
                 </div>
             </div>
 
-            <!-- Data -->
             <div class="card">
                 <div class="card-header"><i class="fas fa-database"></i><h3>Data Management</h3></div>
                 <button class="btn btn-danger" id="clearDataBtn"><i class="fas fa-trash"></i> Clear All Local Data</button>
@@ -2092,6 +2136,26 @@
             });
 
             // =============================================================
+            // SUB-TAB SYSTEM
+            // =============================================================
+            document.querySelectorAll('.sub-tabs').forEach(tabContainer => {
+                tabContainer.querySelectorAll('.sub-tab').forEach(tab => {
+                    tab.addEventListener('click', function() {
+                        const container = this.closest('.sub-tabs');
+                        container.querySelectorAll('.sub-tab').forEach(t => t.classList.remove(
+                        'active'));
+                        this.classList.add('active');
+                        const panelId = this.dataset.tab;
+                        const parent = container.closest('.card');
+                        parent.querySelectorAll('.sub-panel').forEach(p => p.classList.remove(
+                        'active'));
+                        const target = parent.querySelector('#' + panelId);
+                        if (target) target.classList.add('active');
+                    });
+                });
+            });
+
+            // =============================================================
             // DARK MODE & THEME COLORS
             // =============================================================
             const darkToggle = document.getElementById('darkToggle');
@@ -2126,12 +2190,10 @@
                 document.querySelectorAll('.theme-option').forEach(el => {
                     el.classList.toggle('active', el.dataset.color === color);
                 });
-                // Update greeting background
                 const greeting = document.querySelector('.greeting');
                 if (!document.body.classList.contains('dark')) {
                     greeting.style.background = 'linear-gradient(145deg, ' + color + ', ' + adjustColor(color, -20) + ')';
                 }
-                // Update buttons and accents
                 document.querySelectorAll('.btn:not(.btn-outline)').forEach(btn => {
                     btn.style.background = color;
                 });
@@ -2193,7 +2255,7 @@
             renderRecent();
 
             // =============================================================
-            // SEARCH (Home only)
+            // SEARCH
             // =============================================================
             document.getElementById('searchInput').addEventListener('input', function() {
                 const q = this.value.toLowerCase().trim();
@@ -2232,12 +2294,14 @@
             const tempC = document.getElementById('tempC');
             const tempFResult = document.getElementById('tempFResult');
             const tempKResult = document.getElementById('tempKResult');
+            const tempRResult = document.getElementById('tempRResult');
             const tempConvertBtn = document.getElementById('tempConvertBtn');
 
             function convertTemp() {
                 const c = parseFloat(tempC.value) || 0;
                 tempFResult.textContent = ((c * 9 / 5) + 32).toFixed(2) + ' °F';
                 tempKResult.textContent = (c + 273.15).toFixed(2) + ' K';
+                tempRResult.textContent = ((c + 273.15) * 9 / 5).toFixed(2) + ' °R';
             }
             tempConvertBtn.addEventListener('click', convertTemp);
             tempC.addEventListener('input', convertTemp);
@@ -2276,6 +2340,7 @@
             // =============================================================
             const calLow = document.getElementById('calLow');
             const calHigh = document.getElementById('calHigh');
+            const calUnit = document.getElementById('calUnit');
             const calUpdateBtn = document.getElementById('calUpdateBtn');
             const calPointsContainer = document.getElementById('calPointsContainer');
             const calErrorDisplay = document.getElementById('calErrorDisplay');
@@ -2285,6 +2350,7 @@
                 const low = parseFloat(calLow.value) || 0;
                 const high = parseFloat(calHigh.value) || 100;
                 const span = high - low;
+                const unit = calUnit.value;
                 const pts = [0, 25, 50, 75, 100];
                 let html = '';
                 pts.forEach(p => {
@@ -2292,7 +2358,7 @@
                     const mA = 4 + (16 * p / 100);
                     html += `<div class="cal-point">
                                 <span>${p}%</span>
-                                <span>${val.toFixed(2)} PSI</span>
+                                <span>${val.toFixed(2)} ${unit}</span>
                                 <span>${mA.toFixed(2)} mA</span>
                             </div>`;
                 });
@@ -2306,11 +2372,13 @@
             calUpdateBtn.addEventListener('click', buildCalPoints);
             calLow.addEventListener('input', buildCalPoints);
             calHigh.addEventListener('input', buildCalPoints);
+            calUnit.addEventListener('change', buildCalPoints);
             buildCalPoints();
 
             document.getElementById('calAsFoundBtn').addEventListener('click', function() {
                 alert('📋 Calibration Report\nDate: ' + new Date().toLocaleString() +
-                    '\nRange: ' + calLow.value + ' - ' + calHigh.value + ' PSI\nStatus: ' + calPassFail.textContent.trim());
+                    '\nRange: ' + calLow.value + ' - ' + calHigh.value + ' ' + calUnit.value +
+                    '\nStatus: ' + calPassFail.textContent.trim());
             });
 
             // =============================================================
@@ -2382,22 +2450,30 @@
             calcDP();
 
             // =============================================================
-            // FLOW CALCULATOR
+            // FLOW CALCULATOR (Square-root fix)
             // =============================================================
             const flowDP = document.getElementById('flowDP');
             const flowMax = document.getElementById('flowMax');
+            const flowDPUnit = document.getElementById('flowDPUnit');
+            const flowOutUnit = document.getElementById('flowOutUnit');
             const flowResult = document.getElementById('flowResult');
             const flowCalcBtn = document.getElementById('flowCalcBtn');
 
+            const dpFactors = { inH2O: 1, psi: 27.68, kpa: 4.018, mmH2O: 0.03937 };
+
             function calcFlow() {
-                const dp = parseFloat(flowDP.value) || 0;
+                const dpVal = parseFloat(flowDP.value) || 0;
                 const max = parseFloat(flowMax.value) || 1000;
+                const factor = dpFactors[flowDPUnit.value] || 1;
+                const dp = dpVal * factor;
                 const flow = max * Math.sqrt(dp / 100);
-                flowResult.textContent = flow.toFixed(2) + ' GPM';
+                flowResult.textContent = flow.toFixed(2) + ' ' + flowOutUnit.value;
             }
             flowCalcBtn.addEventListener('click', calcFlow);
             flowDP.addEventListener('input', calcFlow);
             flowMax.addEventListener('input', calcFlow);
+            flowDPUnit.addEventListener('change', calcFlow);
+            flowOutUnit.addEventListener('change', calcFlow);
             calcFlow();
 
             // =============================================================
@@ -2416,7 +2492,6 @@
                 const slope = 100 - (Math.abs(offset) * 10);
                 phSlopeResult.textContent = slope.toFixed(1) + '% (' + (slope > 95 ? 'Pass' : 'Fail') + ')';
                 phSlopeResult.style.color = slope > 95 ? '#059669' : '#dc2626';
-                document.getElementById('phDisplay').textContent = measured.toFixed(2);
             });
 
             // ORP
@@ -2431,7 +2506,6 @@
                 const error = measured - std;
                 orpError.textContent = error.toFixed(1) + ' mV';
                 orpError.style.color = Math.abs(error) < 10 ? '#059669' : '#dc2626';
-                document.getElementById('orpDisplay').textContent = measured.toFixed(0) + ' mV';
             });
 
             // Conductivity
@@ -2443,7 +2517,6 @@
                 const cond = parseFloat(condInput.value) || 0;
                 const tds = cond * 0.5;
                 tdsResult.textContent = tds.toFixed(1) + ' ppm';
-                document.getElementById('condDisplay').textContent = cond.toFixed(0) + ' µS/cm';
             });
 
             // DO
@@ -2461,7 +2534,6 @@
                 const adjusted = conc * (sat / 100);
                 doSaturation.textContent = sat.toFixed(1) + '%';
                 doConcentration.textContent = adjusted.toFixed(2) + ' mg/L';
-                document.getElementById('doDisplay').textContent = adjusted.toFixed(1) + ' mg/L';
             });
 
             // Gas Detection
@@ -2487,7 +2559,6 @@
                 gasStatus.style.color = status.includes('✓') ? '#059669' : status.includes('⚠️') ? '#b45309' :
                     '#dc2626';
                 gasAlarm.textContent = alarm;
-                document.getElementById('gasDisplay').textContent = reading + ' ' + type;
             });
 
             // =============================================================
@@ -2505,16 +2576,18 @@
             });
 
             // =============================================================
-            // FAULT TABS
+            // COMMISSIONING TABS
             // =============================================================
-            document.querySelectorAll('#faultTabs .tab').forEach(tab => {
+            document.querySelectorAll('#commTabs .sub-tab').forEach(tab => {
                 tab.addEventListener('click', function() {
-                    document.querySelectorAll('#faultTabs .tab').forEach(t => t.classList.remove('active'));
+                    const container = this.closest('.sub-tabs');
+                    container.querySelectorAll('.sub-tab').forEach(t => t.classList.remove('active'));
                     this.classList.add('active');
-                    const fault = this.dataset.fault;
-                    document.querySelectorAll('.fault-panel').forEach(p => p.classList.add('hidden'));
-                    const panel = document.getElementById('fault-' + fault);
-                    if (panel) panel.classList.remove('hidden');
+                    const panelId = this.dataset.tab;
+                    const parent = container.closest('.card');
+                    parent.querySelectorAll('.sub-panel').forEach(p => p.classList.remove('active'));
+                    const target = parent.querySelector('#' + panelId);
+                    if (target) target.classList.add('active');
                 });
             });
 
@@ -2576,7 +2649,7 @@
             calcBend();
 
             // =============================================================
-            // COMMISSIONING
+            // COMMISSIONING GENERATOR
             // =============================================================
             const commProject = document.getElementById('commProject');
             const commTag = document.getElementById('commTag');
@@ -2587,11 +2660,14 @@
                 const project = commProject.value.trim() || 'N/A';
                 const tag = commTag.value.trim() || 'N/A';
                 const date = new Date().toLocaleString();
+                const activeTab = document.querySelector('#commTabs .sub-tab.active');
+                const type = activeTab ? activeTab.textContent.trim() : 'General';
                 commOutput.textContent = `========================================
         COMMISSIONING CHECKLIST
         ========================================
         Project:    ${project}
         Tag:        ${tag}
+        Type:       ${type}
         Date:       ${date}
         ----------------------------------------
         ✅ Pre-Commissioning Checks
@@ -2675,30 +2751,114 @@
             });
 
             // =============================================================
-            // TROUBLESHOOTING
+            // INTERACTIVE TROUBLESHOOTING
             // =============================================================
-            const faultDiagnosis = document.getElementById('faultDiagnosis');
-            const faultFinderBtn = document.getElementById('faultFinderBtn');
+            let troubleState = { device: null, power: null, symptom: null };
 
-            const faultDB = {
-                '4ma': '🔍 Stuck at 4mA:\n1. Check power supply (24VDC)\n2. Verify loop wiring continuity\n3. Inspect sensor for damage\n4. Check configuration range\n5. Perform loop test',
-                '22ma': '🔍 22mA Alarm:\n1. Check for overpressure condition\n2. Verify sensor diaphragm integrity\n3. Inspect for moisture/contamination\n4. Perform sensor trim\n5. Check output configuration',
-                'hart': '🔍 No HART Comms:\n1. Verify 250Ω resistor in loop\n2. Check HART modem connection\n3. Confirm device address (0 is default)\n4. Check loop current (4-20mA present?)\n5. Verify wiring polarity',
-                'gc': '🔍 GC Baseline Drift:\n1. Check carrier gas purity\n2. Verify column conditioning\n3. Check detector stability\n4. Inspect for leaks\n5. Verify oven temperature control'
-            };
-
-            document.querySelectorAll('.trouble-item').forEach(item => {
-                item.addEventListener('click', function() {
-                    const fault = this.dataset.fault;
-                    const msg = faultDB[fault] || 'No diagnosis available.';
-                    faultDiagnosis.innerHTML = msg.replace(/\n/g, '<br/>');
+            document.querySelectorAll('.device-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    troubleState.device = this.dataset.type;
+                    document.getElementById('troublePower').classList.remove('hidden');
+                    document.getElementById('troubleSymptom').classList.add('hidden');
+                    document.getElementById('troubleResult').classList.add('hidden');
+                    document.querySelectorAll('.device-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
                 });
             });
 
-            faultFinderBtn.addEventListener('click', function() {
-                const keys = Object.keys(faultDB);
-                const rand = keys[Math.floor(Math.random() * keys.length)];
-                faultDiagnosis.innerHTML = faultDB[rand].replace(/\n/g, '<br/>');
+            document.querySelectorAll('.power-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    troubleState.power = this.dataset.power;
+                    document.getElementById('troubleSymptom').classList.remove('hidden');
+                    document.getElementById('troubleResult').classList.add('hidden');
+                    document.querySelectorAll('.power-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+
+            document.querySelectorAll('.symptom-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    troubleState.symptom = this.dataset.symptom;
+                    generateDiagnosis();
+                    document.querySelectorAll('.symptom-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+
+            function generateDiagnosis() {
+                const { device, power, symptom } = troubleState;
+                const diagnoses = {
+                    'transmitter': {
+                        'on': {
+                            'no-output': 'Power on but no output: Check sensor integrity, verify configuration, perform loop test.',
+                            'low-output': 'Low output: Check for process pressure, sensor drift, or wiring resistance.',
+                            'erratic': 'Erratic reading: Check for RFI, moisture, or loose connections.',
+                            'alarm': 'Alarm condition: Check for overpressure, sensor failure, or configuration error.'
+                        },
+                        'off': {
+                            'no-output': 'Power off: Check power supply, circuit breaker, and wiring continuity.',
+                            'low-output': 'Power issue: Verify power supply voltage and connections.',
+                            'erratic': 'Power intermittent: Check for loose connections or failing power supply.',
+                            'alarm': 'Power issue: Verify power supply and wiring.'
+                        }
+                    },
+                    'motor': {
+                        'on': {
+                            'no-output': 'Motor running but no output: Check coupling, mechanical load, or VFD settings.',
+                            'low-output': 'Low output: Check voltage, current, and mechanical load.',
+                            'erratic': 'Erratic: Check for VFD issues, mechanical binding, or sensor feedback.',
+                            'alarm': 'Alarm: Check overload, temperature, or vibration sensors.'
+                        },
+                        'off': {
+                            'no-output': 'Motor off: Check power supply, circuit breaker, and control circuit.',
+                            'low-output': 'Power issue: Verify supply voltage and motor contactor.',
+                            'erratic': 'Power intermittent: Check for loose connections or failing contactor.',
+                            'alarm': 'Power issue: Check control circuit and safety interlocks.'
+                        }
+                    },
+                    'gc': {
+                        'on': {
+                            'no-output': 'GC on but no output: Check detector, carrier gas, and column temperature.',
+                            'low-output': 'Low output: Check sample flow, detector sensitivity, or column condition.',
+                            'erratic': 'Erratic: Check for baseline drift, carrier gas purity, or detector issues.',
+                            'alarm': 'Alarm: Check oven temperature, pressure, or detector status.'
+                        },
+                        'off': {
+                            'no-output': 'GC off: Check power supply and main power switch.',
+                            'low-output': 'Power issue: Verify supply voltage and internal fuses.',
+                            'erratic': 'Power intermittent: Check power supply stability.',
+                            'alarm': 'Power issue: Check circuit breaker and power supply.'
+                        }
+                    },
+                    'solenoid': {
+                        'on': {
+                            'no-output': 'Solenoid energized but no valve operation: Check spool binding, pressure, or debris.',
+                            'low-output': 'Low output: Check voltage, coil resistance, and mechanical obstruction.',
+                            'erratic': 'Erratic: Check for intermittent control signal or electrical noise.',
+                            'alarm': 'Alarm: Check coil temperature, current draw, and valve condition.'
+                        },
+                        'off': {
+                            'no-output': 'Solenoid off: Check control signal, power supply, and coil continuity.',
+                            'low-output': 'Power issue: Verify supply voltage and control wiring.',
+                            'erratic': 'Power intermittent: Check control signal stability.',
+                            'alarm': 'Power issue: Check control circuit and power supply.'
+                        }
+                    }
+                };
+
+                const diag = diagnoses[device]?.[power]?.[symptom] || 'No specific diagnosis available. Check general troubleshooting guide.';
+                document.getElementById('troubleDiagnosis').textContent = diag;
+                document.getElementById('troubleResult').classList.remove('hidden');
+            }
+
+            document.getElementById('resetTroubleBtn').addEventListener('click', function() {
+                troubleState = { device: null, power: null, symptom: null };
+                document.querySelectorAll('.device-btn, .power-btn, .symptom-btn').forEach(b => b.classList.remove(
+                'active'));
+                document.getElementById('troublePower').classList.add('hidden');
+                document.getElementById('troubleSymptom').classList.add('hidden');
+                document.getElementById('troubleResult').classList.add('hidden');
+                document.getElementById('troubleDiagnosis').textContent = '';
             });
 
             // =============================================================
@@ -2832,7 +2992,6 @@
                             <div style="font-size:0.8rem;font-weight:500;">QR Code Detected</div>
                             <div class="scan-result" id="scanResult">Processing...</div>
                         </div>`;
-                    // Simulate QR decode with device info
                     setTimeout(() => {
                         const devices = ['FT-1001 (Rosemount 3051S)', 'PT-203 (Yokogawa EJX)', 'TT-450 (ABB TTH300)',
                             'LT-892 (Siemens LR250)', 'GC-301 (Daniel 700)'
@@ -2841,6 +3000,8 @@
                         tagNumber.value = extracted.split(' ')[0];
                         document.getElementById('scanResult').textContent = extracted;
                         document.getElementById('scanResult').style.color = '#059669';
+                        // Also fill model
+                        document.getElementById('reportModel').value = extracted;
                     }, 1200);
                 };
                 reader.readAsDataURL(file);
@@ -2865,9 +3026,10 @@
             renderTags();
 
             // =============================================================
-            // REPORT GENERATOR
+            // REPORT GENERATOR (Enhanced)
             // =============================================================
             const reportTag = document.getElementById('reportTag');
+            const reportModel = document.getElementById('reportModel');
             const reportType = document.getElementById('reportType');
             const reportNotes = document.getElementById('reportNotes');
             const generateReportBtn = document.getElementById('generateReportBtn');
@@ -2876,17 +3038,30 @@
 
             generateReportBtn.addEventListener('click', function() {
                 const tag = reportTag.value.trim() || 'N/A';
+                const model = reportModel.value.trim() || 'N/A';
                 const type = reportType.value;
                 const notes = reportNotes.value.trim() || 'No additional notes.';
                 const date = new Date().toLocaleString();
-                reportPreview.textContent =
-                    `========================================
+
+                let calValues = '';
+                if (type === 'calibration') {
+                    const rp0 = document.getElementById('rp0').value || '0';
+                    const rp25 = document.getElementById('rp25').value || '25';
+                    const rp50 = document.getElementById('rp50').value || '50';
+                    const rp75 = document.getElementById('rp75').value || '75';
+                    const rp100 = document.getElementById('rp100').value || '100';
+                    calValues = `Calibration Points:\n  0%: ${rp0} \n  25%: ${rp25} \n  50%: ${rp50} \n  75%: ${rp75} \n  100%: ${rp100}`;
+                }
+
+                reportPreview.textContent = `========================================
         INSTRUMENTPRO FIELD REPORT
         ========================================
         Date:       ${date}
         Tag:        ${tag}
+        Model:      ${model}
         Type:       ${type.toUpperCase()}
         ----------------------------------------
+        ${calValues}
         FINDINGS:
         ${notes}
         ----------------------------------------
@@ -2938,7 +3113,7 @@
                 }
             });
 
-            console.log('✅ InstrumentPro v5.0 — Advanced Edition loaded!');
+            console.log('✅ InstrumentPro v6.0 — Ultimate Edition loaded!');
         })();
     </script>
 </body>
