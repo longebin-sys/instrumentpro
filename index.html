@@ -3,207 +3,260 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>InstrumentPro</title>
-<!-- Tailwind CSS (No installation needed) -->
+<title>InstrumentPro - Complete</title>
 <script src="https://cdn.tailwindcss.com"></script>
-<!-- Font Awesome for Icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 <style>
   body { font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif; background-color: #f8f9fa; }
-  .card { @apply bg-white rounded-2xl shadow-sm border border-gray-100 p-5 transition-all; }
+  .card { @apply bg-white rounded-2xl shadow-sm border border-gray-100 p-5; }
   .nav-active { @apply text-blue-600 bg-blue-50; }
   .hide { display: none; }
-  .fade-in { animation: fadeIn 0.3s ease-in-out; }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  .fade-in { animation: fadeIn 0.3s ease; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  input, select { @apply w-full px-4 py-2.5 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm; }
+  .btn { @apply bg-blue-600 text-white px-4 py-2.5 rounded-xl font-medium hover:bg-blue-700 transition text-sm; }
+  .result-box { @apply bg-blue-50 border border-blue-200 rounded-xl p-4 mt-3; }
+  .result-value { @apply text-2xl font-bold text-blue-700; }
 </style>
 </head>
-<body class="text-gray-800">
+<body class="text-gray-800 pb-20 md:pb-0">
 
-  <!-- SIDEBAR (Desktop) -->
-  <aside id="sidebar" class="hidden md:flex flex-col w-64 bg-white border-r border-gray-200 h-screen fixed left-0 top-0 z-20">
-    <div class="p-6 border-b border-gray-100 flex justify-between items-center">
-      <h1 class="text-xl font-bold text-blue-600 flex items-center gap-2"><i class="fas fa-wrench"></i> InstrumentPro</h1>
-      <button onclick="toggleSidebar()" class="md:hidden text-gray-500"><i class="fas fa-times"></i></button>
-    </div>
-    <nav class="flex-1 p-4 space-y-1">
-      <button onclick="showPage('home')" class="w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium hover:bg-gray-50 text-gray-600"><i class="fas fa-home w-5"></i> Dashboard</button>
-      <button onclick="showPage('instruments')" class="w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium hover:bg-gray-50 text-gray-600"><i class="fas fa-database w-5"></i> Instruments</button>
-      <button onclick="showPage('level')" class="w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium hover:bg-gray-50 text-gray-600"><i class="fas fa-tint w-5"></i> Level DP Calc</button>
-      <button onclick="showPage('troubleshoot')" class="w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium hover:bg-gray-50 text-gray-600"><i class="fas fa-stethoscope w-5"></i> Troubleshoot</button>
-      <button onclick="showPage('upload')" class="w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium hover:bg-gray-50 text-gray-600"><i class="fas fa-cloud-upload-alt w-5"></i> Upload Data</button>
-    </nav>
-  </aside>
-
-  <!-- MAIN CONTENT -->
-  <main class="md:ml-64 pb-24 md:pb-6 min-h-screen">
-    
-    <!-- HOME PAGE -->
-    <div id="page-home" class="page fade-in p-6">
-      <header class="mb-6">
-        <h1 class="text-2xl font-bold text-gray-900">Good Morning! 👋</h1>
-        <p class="text-gray-500 mt-1">What do you want to work on today?</p>
-      </header>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-        <div onclick="showPage('instruments')" class="card cursor-pointer hover:border-blue-300 border-l-4 border-l-blue-500">
-          <div class="flex items-center gap-3 mb-2"><div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600"><i class="fas fa-database"></i></div><h3 class="font-bold">Instruments</h3></div>
-          <p class="text-sm text-gray-500">View tag database & JB lists</p>
-        </div>
-        <div onclick="showPage('level')" class="card cursor-pointer hover:border-orange-300 border-l-4 border-l-orange-500">
-          <div class="flex items-center gap-3 mb-2"><div class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center text-orange-600"><i class="fas fa-tint"></i></div><h3 class="font-bold">Level DP Calc</h3></div>
-          <p class="text-sm text-gray-500">Wet/Dry leg LRV & URV</p>
-        </div>
-        <div onclick="showPage('troubleshoot')" class="card cursor-pointer hover:border-green-300 border-l-4 border-l-green-500">
-          <div class="flex items-center gap-3 mb-2"><div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center text-green-600"><i class="fas fa-stethoscope"></i></div><h3 class="font-bold">Troubleshoot</h3></div>
-          <p class="text-sm text-gray-500">AI-assisted fault finding</p>
-        </div>
-        <div onclick="showPage('upload')" class="card cursor-pointer hover:border-purple-300 border-l-4 border-l-purple-500">
-          <div class="flex items-center gap-3 mb-2"><div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center text-purple-600"><i class="fas fa-cloud-upload-alt"></i></div><h3 class="font-bold">Upload Data</h3></div>
-          <p class="text-sm text-gray-500">Add P&IDs, manuals, lists</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- LEVEL DP PAGE -->
-    <div id="page-level" class="page hide fade-in p-6">
-      <header class="mb-6">
-        <h1 class="text-2xl font-bold text-gray-900">Level DP Calculator</h1>
-        <p class="text-gray-500 mt-1">Calculate LRV & URV for installations</p>
-      </header>
-      
-      <div class="card mb-6">
-        <div class="flex bg-gray-100 rounded-xl p-1 mb-4">
-          <button class="flex-1 py-2 rounded-lg bg-white shadow-sm text-sm font-semibold text-gray-800">Simple Mode</button>
-          <button class="flex-1 py-2 rounded-lg text-sm font-medium text-gray-500">Advanced Mode</button>
-        </div>
-        
-        <div class="bg-blue-50 border border-blue-100 rounded-xl p-4 mb-6 flex gap-3">
-          <i class="fas fa-info-circle text-blue-500 mt-1"></i>
-          <p class="text-sm text-blue-800">Simple mode assumes fill fluid SG = 1.0. Use Advanced Mode for different SG.</p>
-        </div>
-
-        <!-- Interactive Diagram Placeholder -->
-        <div class="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center mb-6 bg-gray-50">
-          <i class="fas fa-drafting-compass text-4xl text-gray-400 mb-3"></i>
-          <p class="text-gray-600 font-medium">Interactive Tank Diagram</p>
-          <p class="text-sm text-gray-400 mt-1">(Tap fields to enter Span, SG, and Leg heights)</p>
-        </div>
-
-        <div class="space-y-3">
-          <div class="bg-red-50 border border-red-100 rounded-xl p-4 flex gap-3">
-            <div class="w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center font-bold flex-shrink-0">H</div>
-            <div><h3 class="font-bold text-red-700 text-sm">High Side → Bottom Port</h3><p class="text-xs text-red-600 mt-1">Connect process side (tank bottom) here. Sees full fluid head pressure.</p></div>
-          </div>
-          <div class="bg-green-50 border border-green-100 rounded-xl p-4 flex gap-3">
-            <div class="w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center font-bold flex-shrink-0">L</div>
-            <div><h3 class="font-bold text-green-700 text-sm">Low Side → Top Port</h3><p class="text-xs text-green-600 mt-1">Connect wet leg or dry reference (tank top) here.</p></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- UPLOAD PAGE -->
-    <div id="page-upload" class="page hide fade-in p-6">
-      <header class="mb-6">
-        <h1 class="text-2xl font-bold text-gray-900">Upload Documentation</h1>
-        <p class="text-gray-500 mt-1">Add instrument lists, JB lists, and P&IDs.</p>
-      </header>
-      <div class="border-2 border-dashed border-blue-300 bg-blue-50 rounded-2xl p-10 text-center">
-        <i class="fas fa-cloud-upload-alt text-4xl text-blue-400 mb-3"></i>
-        <h3 class="text-lg font-semibold text-gray-900 mb-2">Drag & drop files here</h3>
-        <p class="text-gray-500 mb-4 text-sm">or click to browse (PDF, Excel, CSV, Images)</p>
-        <button class="bg-blue-600 text-white px-6 py-2.5 rounded-xl font-medium hover:bg-blue-700 transition">Select Files</button>
-      </div>
-    </div>
-
-    <!-- TROUBLESHOOT PAGE -->
-    <div id="page-troubleshoot" class="page hide fade-in p-6">
-      <header class="mb-6">
-        <h1 class="text-2xl font-bold text-gray-900 flex items-center gap-2"><i class="fas fa-robot text-blue-600"></i> AI Assistant</h1>
-        <p class="text-gray-500 mt-1">Describe the symptom, and I'll check your uploaded data.</p>
-      </header>
-      <div class="bg-gray-100 rounded-2xl p-4 h-64 mb-4 overflow-y-auto">
-        <div class="bg-white p-3 rounded-xl rounded-tl-none shadow-sm max-w-[85%] text-sm text-gray-700">
-          Hello! I'm your InstrumentPro assistant. Tell me the instrument tag and the symptom (e.g., "PT-101 reading 22mA").
-        </div>
-      </div>
-      <div class="flex gap-2">
-        <input type="text" placeholder="E.g., LT-205 reading erratic..." class="flex-1 px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
-        <button class="bg-blue-600 text-white px-4 rounded-xl hover:bg-blue-700"><i class="fas fa-paper-plane"></i></button>
-      </div>
-    </div>
-
-    <!-- INSTRUMENTS PAGE -->
-    <div id="page-instruments" class="page hide fade-in p-6">
-      <header class="mb-6 flex justify-between items-center">
-        <div>
-          <h1 class="text-2xl font-bold text-gray-900">Instruments</h1>
-          <p class="text-gray-500 mt-1">Your master tag database.</p>
-        </div>
-        <button class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium"><i class="fas fa-plus mr-1"></i> Add</button>
-      </header>
-      <div class="bg-white rounded-xl border border-gray-200 p-8 text-center text-gray-400">
-        <i class="fas fa-database text-3xl mb-3"></i>
-        <p>No instruments loaded yet.</p>
-        <p class="text-sm mt-1">Go to <strong>Upload Data</strong> to add your Excel/CSV instrument lists.</p>
-      </div>
-    </div>
-
-  </main>
-
-  <!-- BOTTOM NAV (Mobile) -->
-  <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-2 py-2 flex justify-around z-30 pb-safe">
-    <button onclick="showPage('home')" class="nav-btn flex flex-col items-center gap-1 p-2 rounded-lg text-gray-400 w-16" data-page="home">
-      <i class="fas fa-home text-xl"></i><span class="text-[10px] font-medium">Home</span>
-    </button>
-    <button onclick="showPage('instruments')" class="nav-btn flex flex-col items-center gap-1 p-2 rounded-lg text-gray-400 w-16" data-page="instruments">
-      <i class="fas fa-database text-xl"></i><span class="text-[10px] font-medium">Tags</span>
-    </button>
-    <button onclick="showPage('level')" class="nav-btn flex flex-col items-center gap-1 p-2 rounded-lg text-gray-400 w-16" data-page="level">
-      <i class="fas fa-tint text-xl"></i><span class="text-[10px] font-medium">Level</span>
-    </button>
-    <button onclick="showPage('troubleshoot')" class="nav-btn flex flex-col items-center gap-1 p-2 rounded-lg text-gray-400 w-16" data-page="troubleshoot">
-      <i class="fas fa-stethoscope text-xl"></i><span class="text-[10px] font-medium">Fix</span>
-    </button>
-    <button onclick="showPage('upload')" class="nav-btn flex flex-col items-center gap-1 p-2 rounded-lg text-gray-400 w-16" data-page="upload">
-      <i class="fas fa-cloud-upload-alt text-xl"></i><span class="text-[10px] font-medium">Upload</span>
-    </button>
+<!-- SIDEBAR -->
+<aside id="sidebar" class="hidden md:flex flex-col w-64 bg-white border-r h-screen fixed left-0 top-0 z-20">
+  <div class="p-6 border-b"><h1 class="text-xl font-bold text-blue-600"><i class="fas fa-wrench mr-2"></i>InstrumentPro</h1></div>
+  <nav class="flex-1 p-4 space-y-1 overflow-y-auto">
+    <button onclick="showPage('home')" class="w-full text-left px-4 py-3 rounded-xl text-sm font-medium hover:bg-gray-50"><i class="fas fa-home w-5 mr-2"></i>Dashboard</button>
+    <button onclick="showPage('converter')" class="w-full text-left px-4 py-3 rounded-xl text-sm font-medium hover:bg-gray-50"><i class="fas fa-exchange-alt w-5 mr-2"></i>Unit Converter</button>
+    <button onclick="showPage('level')" class="w-full text-left px-4 py-3 rounded-xl text-sm font-medium hover:bg-gray-50"><i class="fas fa-tint w-5 mr-2"></i>Level DP Calc</button>
+    <button onclick="showPage('flow')" class="w-full text-left px-4 py-3 rounded-xl text-sm font-medium hover:bg-gray-50"><i class="fas fa-water w-5 mr-2"></i>Flow Calculator</button>
+    <button onclick="showPage('signal')" class="w-full text-left px-4 py-3 rounded-xl text-sm font-medium hover:bg-gray-50"><i class="fas fa-wave-square w-5 mr-2"></i>4-20 mA Calc</button>
+    <button onclick="showPage('references')" class="w-full text-left px-4 py-3 rounded-xl text-sm font-medium hover:bg-gray-50"><i class="fas fa-book w-5 mr-2"></i>References</button>
+    <button onclick="showPage('instruments')" class="w-full text-left px-4 py-3 rounded-xl text-sm font-medium hover:bg-gray-50"><i class="fas fa-database w-5 mr-2"></i>Instruments</button>
+    <button onclick="showPage('troubleshoot')" class="w-full text-left px-4 py-3 rounded-xl text-sm font-medium hover:bg-gray-50"><i class="fas fa-stethoscope w-5 mr-2"></i>Troubleshoot</button>
+    <button onclick="showPage('upload')" class="w-full text-left px-4 py-3 rounded-xl text-sm font-medium hover:bg-gray-50"><i class="fas fa-cloud-upload-alt w-5 mr-2"></i>Upload Data</button>
   </nav>
+</aside>
 
-  <script>
-    // Simple Page Router
-    function showPage(pageId) {
-      // Hide all pages
-      document.querySelectorAll('.page').forEach(page => page.classList.add('hide'));
-      // Show target page
-      document.getElementById('page-' + pageId).classList.remove('hide');
-      
-      // Update mobile nav active state
-      document.querySelectorAll('.nav-btn').forEach(btn => {
-        if(btn.dataset.page === pageId) {
-          btn.classList.remove('text-gray-400');
-          btn.classList.add('text-blue-600');
-        } else {
-          btn.classList.add('text-gray-400');
-          btn.classList.remove('text-blue-600');
-        }
-      });
-      
-      // Close sidebar on mobile if open
-      document.getElementById('sidebar').classList.add('hidden');
-      window.scrollTo(0, 0);
-    }
+<!-- MAIN CONTENT -->
+<main class="md:ml-64 min-h-screen">
 
-    function toggleSidebar() {
-      const sidebar = document.getElementById('sidebar');
-      sidebar.classList.toggle('hidden');
-      sidebar.classList.toggle('flex');
-      sidebar.classList.toggle('fixed');
-      sidebar.classList.toggle('inset-0');
-      sidebar.classList.toggle('z-50');
-    }
+  <!-- HOME PAGE -->
+  <div id="page-home" class="page fade-in p-6">
+    <header class="mb-6"><h1 class="text-2xl font-bold">Good Morning! 👋</h1><p class="text-gray-500">What do you want to work on?</p></header>
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+      <div onclick="showPage('converter')" class="card cursor-pointer border-l-4 border-l-blue-500"><h3 class="font-bold text-blue-600">Unit Converter</h3><p class="text-xs text-gray-500 mt-1">PSI, bar, °C, GPM...</p></div>
+      <div onclick="showPage('level')" class="card cursor-pointer border-l-4 border-l-orange-500"><h3 class="font-bold text-orange-600">Level DP</h3><p class="text-xs text-gray-500 mt-1">LRV/URV Calculator</p></div>
+      <div onclick="showPage('flow')" class="card cursor-pointer border-l-4 border-l-green-500"><h3 class="font-bold text-green-600">Flow Calc</h3><p class="text-xs text-gray-500 mt-1">Orifice & Square Root</p></div>
+      <div onclick="showPage('signal')" class="card cursor-pointer border-l-4 border-l-purple-500"><h3 class="font-bold text-purple-600">4-20 mA</h3><p class="text-xs text-gray-500 mt-1">Signal Calculator</p></div>
+      <div onclick="showPage('references')" class="card cursor-pointer border-l-4 border-l-red-500"><h3 class="font-bold text-red-600">References</h3><p class="text-xs text-gray-500 mt-1">Color Codes, TC</p></div>
+      <div onclick="showPage('troubleshoot')" class="card cursor-pointer border-l-4 border-l-teal-500"><h3 class="font-bold text-teal-600">Troubleshoot</h3><p class="text-xs text-gray-500 mt-1">AI Assistant</p></div>
+    </div>
+  </div>
 
-    // Initialize
-    showPage('home');
-  </script>
-</ body>
-</html>
+  <!-- UNIT CONVERTER PAGE -->
+  <div id="page-converter" class="page hide fade-in p-6">
+    <header class="mb-6"><h1 class="text-2xl font-bold">Unit Converter</h1></header>
+    
+    <!-- Pressure -->
+    <div class="card mb-4">
+      <h3 class="font-bold text-lg mb-4 flex items-center gap-2"><i class="fas fa-gauge-high text-blue-600"></i> Pressure</h3>
+      <div class="grid grid-cols-2 gap-3 mb-3">
+        <div><label class="text-xs text-gray-500 mb-1 block">Value</label><input type="number" id="pressVal" value="1" oninput="calcPressure()"></div>
+        <div><label class="text-xs text-gray-500 mb-1 block">From</label><select id="pressFrom" onchange="calcPressure()"><option value="bar">bar</option><option value="psi">PSI</option><option value="kpa">kPa</option><option value="mpa">MPa</option></select></div>
+      </div>
+      <div class="result-box"><div class="text-xs text-gray-600 mb-1">Result in kPa:</div><div class="result-value" id="pressResult">100.00 kPa</div></div>
+    </div>
+
+    <!-- Temperature -->
+    <div class="card mb-4">
+      <h3 class="font-bold text-lg mb-4 flex items-center gap-2"><i class="fas fa-thermometer-half text-red-600"></i> Temperature</h3>
+      <div class="grid grid-cols-2 gap-3 mb-3">
+        <div><label class="text-xs text-gray-500 mb-1 block">°C</label><input type="number" id="tempC" value="25" oninput="calcTemp()"></div>
+        <div><label class="text-xs text-gray-500 mb-1 block">°F</label><input type="number" id="tempF" oninput="calcTempFromF()"></div>
+      </div>
+      <div class="result-box"><div class="text-xs text-gray-600 mb-1">Kelvin:</div><div class="result-value" id="tempK">298.15 K</div></div>
+    </div>
+  </div>
+
+  <!-- LEVEL DP CALCULATOR PAGE -->
+  <div id="page-level" class="page hide fade-in p-6">
+    <header class="mb-6"><h1 class="text-2xl font-bold">Level DP Calculator</h1><p class="text-gray-500 text-sm">Calculate LRV & URV for DP level transmitters</p></header>
+    
+    <div class="card mb-4">
+      <div class="flex bg-gray-100 rounded-xl p-1 mb-4">
+        <button onclick="setLevelMode('dry')" id="btn-dry" class="flex-1 py-2 rounded-lg bg-white shadow text-sm font-semibold">Dry Leg</button>
+        <button onclick="setLevelMode('wet')" id="btn-wet" class="flex-1 py-2 rounded-lg text-sm text-gray-500">Wet Leg</button>
+      </div>
+
+      <!-- Dry Leg Inputs -->
+      <div id="dry-inputs" class="space-y-3">
+        <div><label class="text-xs text-gray-500 mb-1 block">Tank Height (inches)</label><input type="number" id="tankHeight" value="120" oninput="calcDryLeg()"></div>
+        <div><label class="text-xs text-gray-500 mb-1 block">Process SG (Specific Gravity)</label><input type="number" id="processSG" value="1.0" step="0.01" oninput="calcDryLeg()"></div>
+        
+        <div class="grid grid-cols-3 gap-2 mt-4">
+          <div class="result-box text-center"><div class="text-xs text-gray-600">LRV</div><div class="result-value text-lg" id="dryLrv">0.0</div><div class="text-xs text-gray-500">inH₂O</div></div>
+          <div class="result-box text-center"><div class="text-xs text-gray-600">URV</div><div class="result-value text-lg" id="dryUrv">120.0</div><div class="text-xs text-gray-500">inH₂O</div></div>
+          <div class="result-box text-center"><div class="text-xs text-gray-600">Span</div><div class="result-value text-lg" id="drySpan">120.0</div><div class="text-xs text-gray-500">inH₂O</div></div>
+        </div>
+      </div>
+
+      <!-- Wet Leg Inputs (Hidden by default) -->
+      <div id="wet-inputs" class="hide space-y-3">
+        <div><label class="text-xs text-gray-500 mb-1 block">Tank Height (in)</label><input type="number" id="wetTankHeight" value="120" oninput="calcWetLeg()"></div>
+        <div><label class="text-xs text-gray-500 mb-1 block">Process SG</label><input type="number" id="wetProcessSG" value="0.85" step="0.01" oninput="calcWetLeg()"></div>
+        <div><label class="text-xs text-gray-500 mb-1 block">Wet Leg Height (in)</label><input type="number" id="wetLegHeight" value="144" oninput="calcWetLeg()"></div>
+        <div><label class="text-xs text-gray-500 mb-1 block">Fill Fluid SG</label><input type="number" id="wetFillSG" value="1.1" step="0.01" oninput="calcWetLeg()"></div>
+        
+        <div class="grid grid-cols-3 gap-2 mt-4">
+          <div class="result-box text-center"><div class="text-xs text-gray-600">LRV</div><div class="result-value text-lg" id="wetLrv">-158.4</div><div class="text-xs text-gray-500">inH₂O</div></div>
+          <div class="result-box text-center"><div class="text-xs text-gray-600">URV</div><div class="result-value text-lg" id="wetUrv">-56.4</div><div class="text-xs text-gray-500">inH₂O</div></div>
+          <div class="result-box text-center"><div class="text-xs text-gray-600">Span</div><div class="result-value text-lg" id="wetSpan">102.0</div><div class="text-xs text-gray-500">inH₂O</div></div>
+        </div>
+      </div>
+
+      <div class="mt-6 p-4 bg-blue-50 rounded-xl border border-blue-100">
+        <h4 class="font-bold text-blue-800 text-sm mb-2">Connection Guide:</h4>
+        <div class="flex gap-3 text-sm">
+          <div class="flex-1 bg-red-100 p-3 rounded-lg"><span class="font-bold text-red-700 block">H (High)</span><span class="text-red-600 text-xs">→ Bottom Port (Process)</span></div>
+          <div class="flex-1 bg-green-100 p-3 rounded-lg"><span class="font-bold text-green-700 block">L (Low)</span><span class="text-green-600 text-xs">→ Top Port (Reference)</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOW CALCULATOR PAGE -->
+  <div id="page-flow" class="page hide fade-in p-6">
+    <header class="mb-6"><h1 class="text-2xl font-bold">Flow Calculator</h1><p class="text-gray-500 text-sm">Orifice plate square root calculation</p></header>
+    <div class="card">
+      <div class="space-y-3">
+        <div><label class="text-xs text-gray-500 mb-1 block">Max Flow (Qmax)</label><input type="number" id="flowMax" value="1000" oninput="calcFlow()"></div>
+        <div><label class="text-xs text-gray-500 mb-1 block">Max ΔP (at Qmax)</label><input type="number" id="dpMax" value="100" oninput="calcFlow()"></div>
+        <div><label class="text-xs text-gray-500 mb-1 block">Current ΔP</label><input type="number" id="dpCurrent" value="50" oninput="calcFlow()"></div>
+      </div>
+      <div class="result-box mt-4">
+        <div class="text-xs text-gray-600 mb-1">Current Flow Rate:</div>
+        <div class="result-value" id="flowResult">707.1</div>
+        <div class="text-sm text-gray-500 mt-2">Formula: Q = Qmax × √(ΔP/ΔPmax)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4-20 mA CALCULATOR PAGE -->
+  <div id="page-signal" class="page hide fade-in p-6">
+    <header class="mb-6"><h1 class="text-2xl font-bold">4-20 mA Calculator</h1></header>
+    <div class="card mb-4">
+      <h3 class="font-bold mb-3">PV Range</h3>
+      <div class="grid grid-cols-2 gap-3 mb-3">
+        <div><label class="text-xs text-gray-500 mb-1 block">LRV (4mA)</label><input type="number" id="pvLrv" value="0" oninput="calcSignal()"></div>
+        <div><label class="text-xs text-gray-500 mb-1 block">URV (20mA)</label><input type="number" id="pvUrv" value="100" oninput="calcSignal()"></div>
+      </div>
+      <div><label class="text-xs text-gray-500 mb-1 block">Current mA</label><input type="number" id="currentMA" value="12" step="0.1" oninput="calcSignal()"></div>
+      <div class="result-box">
+        <div class="text-xs text-gray-600 mb-1">Process Variable:</div>
+        <div class="result-value" id="pvResult">50.00</div>
+        <div class="text-sm text-gray-500 mt-1" id="percentResult">50% of span</div>
+      </div>
+    </div>
+    <div class="card">
+      <h3 class="font-bold mb-3 text-sm text-gray-600">mA Diagnostic Guide:</h3>
+      <ul class="text-sm space-y-2">
+        <li class="flex gap-2"><span class="text-green-600 font-bold">4-20 mA:</span> <span class="text-gray-600">Normal operating range</span></li>
+        <li class="flex gap-2"><span class="text-yellow-600 font-bold">&lt; 4 mA:</span> <span class="text-gray-600">Under-range / Loop fault</span></li>
+        <li class="flex gap-2"><span class="text-red-600 font-bold">22 mA:</span> <span class="text-gray-600">Sensor fault (NAMUR NE43)</span></li>
+        <li class="flex gap-2"><span class="text-red-600 font-bold">0 mA:</span> <span class="text-gray-600">Open circuit / No power</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- REFERENCES PAGE -->
+  <div id="page-references" class="page hide fade-in p-6">
+    <header class="mb-6"><h1 class="text-2xl font-bold">References</h1></header>
+    
+    <!-- TC Colors -->
+    <div class="card mb-4">
+      <h3 class="font-bold text-lg mb-3 flex items-center gap-2"><i class="fas fa-thermometer-half text-red-500"></i> Thermocouple Colors (IEC)</h3>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead class="bg-gray-100"><tr><th class="p-2 text-left">Type</th><th class="p-2 text-left">Positive</th><th class="p-2 text-left">Negative</th><th class="p-2 text-left">Range</th></tr></thead>
+          <tbody>
+            <tr class="border-b"><td class="p-2 font-bold">Type K</td><td class="p-2"><span class="bg-green-500 text-white px-2 py-1 rounded text-xs">Green</span></td><td class="p-2"><span class="bg-gray-400 text-white px-2 py-1 rounded text-xs">White</span></td><td class="p-2 text-xs">-200 to 1260°C</td></tr>
+            <tr class="border-b"><td class="p-2 font-bold">Type J</td><td class="p-2"><span class="bg-gray-400 text-white px-2 py-1 rounded text-xs">White</span></td><td class="p-2"><span class="bg-red-500 text-white px-2 py-1 rounded text-xs">Red</span></td><td class="p-2 text-xs">0 to 750°C</td></tr>
+            <tr class="border-b"><td class="p-2 font-bold">Type T</td><td class="p-2"><span class="bg-blue-500 text-white px-2 py-1 rounded text-xs">Blue</span></td><td class="p-2"><span class="bg-gray-400 text-white px-2 py-1 rounded text-xs">White</span></td><td class="p-2 text-xs">-200 to 350°C</td></tr>
+            <tr><td class="p-2 font-bold">Type E</td><td class="p-2"><span class="bg-red-500 text-white px-2 py-1 rounded text-xs">Red</span></td><td class="p-2"><span class="bg-gray-400 text-white px-2 py-1 rounded text-xs">White</span></td><td class="p-2 text-xs">-200 to 900°C</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- RTD Wiring -->
+    <div class="card mb-4">
+      <h3 class="font-bold text-lg mb-3">RTD Wiring</h3>
+      <div class="space-y-2 text-sm">
+        <div class="p-3 bg-blue-50 rounded-xl"><strong class="text-blue-800">2-Wire:</strong> <span class="text-gray-600">Simple but least accurate. Lead resistance adds error.</span></div>
+        <div class="p-3 bg-green-50 rounded-xl"><strong class="text-green-800">3-Wire:</strong> <span class="text-gray-600">Most common. Compensates for equal lead resistance.</span></div>
+        <div class="p-3 bg-purple-50 rounded-xl"><strong class="text-purple-800">4-Wire:</strong> <span class="text-gray-600">Most accurate. Eliminates lead error completely.</span></div>
+      </div>
+    </div>
+
+    <!-- Common Transmitters -->
+    <div class="card">
+      <h3 class="font-bold text-lg mb-3">Common Transmitters</h3>
+      <div class="space-y-2 text-sm">
+        <div class="flex justify-between p-2 bg-gray-50 rounded-lg"><span class="font-bold">Rosemount 3051</span><span class="text-gray-500">0-0.3 to 0-10000 psi</span></div>
+        <div class="flex justify-between p-2 bg-gray-50 rounded-lg"><span class="font-bold">Yokogawa EJA110E</span><span class="text-gray-500">0-1 to 0-5000 kPa</span></div>
+        <div class="flex justify-between p-2 bg-gray-50 rounded-lg"><span class="font-bold">ABB 266DSH</span><span class="text-gray-500">0-0.1 to 0-1000 mbar</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INSTRUMENTS PAGE -->
+  <div id="page-instruments" class="page hide fade-in p-6">
+    <header class="mb-6 flex justify-between items-center">
+      <div><h1 class="text-2xl font-bold">Instruments</h1><p class="text-gray-500 text-sm">Tag database & JB lists</p></div>
+      <button class="btn"><i class="fas fa-plus mr-1"></i> Add</button>
+    </header>
+    <div class="card text-center py-12">
+      <i class="fas fa-database text-4xl text-gray-300 mb-3"></i>
+      <p class="text-gray-500">No instruments loaded</p>
+      <p class="text-sm text-gray-400 mt-2">Go to Upload to add your instrument list</p>
+    </div>
+  </div>
+
+  <!-- TROUBLESHOOT PAGE -->
+  <div id="page-troubleshoot" class="page hide fade-in p-6">
+    <header class="mb-6"><h1 class="text-2xl font-bold flex items-center gap-2"><i class="fas fa-robot text-blue-600"></i> AI Assistant</h1><p class="text-gray-500 text-sm">Describe the issue</p></header>
+    <div class="card mb-4 h-64 overflow-y-auto bg-gray-50 p-4">
+      <div class="bg-white p-3 rounded-xl rounded-tl-none shadow-sm mb-3 max-w-[85%] text-sm">Hello! I'm your InstrumentPro assistant. Tell me the tag and symptom (e.g., "PT-101 reading 22mA").</div>
+    </div>
+    <div class="flex gap-2">
+      <input type="text" placeholder="Describe the problem..." class="flex-1">
+      <button class="btn"><i class="fas fa-paper-plane"></i></button>
+    </div>
+  </div>
+
+  <!-- UPLOAD PAGE -->
+  <div id="page-upload" class="page hide fade-in p-6">
+    <header class="mb-6"><h1 class="text-2xl font-bold">Upload Data</h1><p class="text-gray-500 text-sm">Add instrument lists, JB lists, P&IDs</p></header>
+    <div class="border-2 border-dashed border-blue-300 bg-blue-50 rounded-2xl p-10 text-center">
+      <i class="fas fa-cloud-upload-alt text-4xl text-blue-400 mb-3"></i>
+      <h3 class="font-bold mb-2">Drag & drop files here</h3>
+      <p class="text-sm text-gray-500 mb-4">PDF, Excel, CSV, Images supported</p>
+      <button class="btn">Select Files</button>
+    </div>
+  </div>
+
+</main>
+
+<!-- BOTTOM NAV -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t px-2 py-2 flex justify-around z-30">
+  <button onclick="showPage('home')" class="nav-btn flex flex-col items-center p-1 text-gray-400 w-14" data-page="home"><i class="fas fa-home text-lg"></i><span class="text-[10px]">Home</span></button>
+  <button onclick="showPage('converter')" class="nav-btn flex flex-col items-center p-1 text-gray-400 w-14" data-page="converter"><i class="fas fa-exchange-alt text-lg"></i><span class="text-[10px]">Calc</span></button>
+  <button onclick="showPage('level')" class="nav-btn flex flex-col items-center p-1 text-gray-400 w-14" data-page="level"><i class="fas fa-tint text-lg"></i><span class="text-[10px]">Level</span></button>
+  <button onclick="showPage('references')" class="nav-btn flex flex-col items-center p-1 text-gray-400 w-14" data-page="references"><i class="fas fa-book text-lg"></i><span class="text-[10px]">Refs</span></button>
+  <button onclick="showPage('upload')" class="nav-btn flex flex-col items-center p-1 text-gray-400 w-14" data-page="upload"><i class="fas fa-cloud-upload-alt text-lg"></i><span class="text-[10px]">Upload</span></button>
+</nav>
+
+<script>
+// Navigation
+function showPage(pageId) {
+  doc
