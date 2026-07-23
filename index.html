@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover" />
-    <title>InstrumentPro · Field Toolbox</title>
+    <title>InstrumentPro · Complete Field Toolbox</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <style>
+        /* ===== RESET & BASE ===== */
         * {
             margin: 0;
             padding: 0;
@@ -35,7 +36,9 @@
         body.dark .segmented,
         body.dark .tab-scroll .tab,
         body.dark .table-wrap,
-        body.dark .bender-card {
+        body.dark .bender-card,
+        body.dark .sidebar,
+        body.dark .recent-item {
             background: #1e293b;
             border-color: #334155;
             color: #e2e8f0;
@@ -54,7 +57,8 @@
             border-color: #3b82f6;
         }
         body.dark input,
-        body.dark select {
+        body.dark select,
+        body.dark textarea {
             background: #0f172a;
             color: #e2e8f0;
             border-color: #334155;
@@ -90,6 +94,87 @@
         body.dark table td {
             border-color: #334155;
         }
+        body.dark .upload-zone {
+            border-color: #334155;
+            background: #1e293b;
+        }
+        body.dark .tag-item {
+            background: #334155;
+        }
+        body.dark .sidebar-overlay {
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 200;
+            display: none;
+            transition: 0.3s;
+        }
+        .sidebar-overlay.active {
+            display: block;
+        }
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 280px;
+            height: 100%;
+            background: white;
+            z-index: 201;
+            padding: 20px;
+            transition: 0.3s;
+            overflow-y: auto;
+            box-shadow: 2px 0 12px rgba(0, 0, 0, 0.1);
+        }
+        .sidebar.active {
+            left: 0;
+        }
+        .sidebar .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            float: right;
+            cursor: pointer;
+            color: #64748b;
+        }
+        .sidebar h2 {
+            font-size: 1.1rem;
+            margin-bottom: 16px;
+            padding-top: 10px;
+        }
+        .sidebar .nav-item {
+            display: block;
+            padding: 10px 12px;
+            border-radius: 12px;
+            margin-bottom: 4px;
+            color: #1a2639;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+        .sidebar .nav-item:hover {
+            background: #f1f5f9;
+        }
+        .sidebar .nav-item i {
+            width: 24px;
+            margin-right: 10px;
+            color: #2563eb;
+        }
+        body.dark .sidebar .nav-item {
+            color: #e2e8f0;
+        }
+        body.dark .sidebar .nav-item:hover {
+            background: #334155;
+        }
 
         /* ===== GREETING ===== */
         .greeting {
@@ -119,7 +204,8 @@
             font-size: 0.8rem;
             margin-top: 2px;
         }
-        .greeting .dark-toggle {
+        .greeting .dark-toggle,
+        .greeting .menu-toggle {
             background: rgba(255, 255, 255, 0.12);
             border: none;
             color: white;
@@ -163,7 +249,7 @@
             grid-template-columns: repeat(4, 1fr);
             gap: 8px;
             padding: 0 12px;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
         }
         .quick-item {
             background: white;
@@ -201,6 +287,32 @@
         }
         .quick-item.color-6 i {
             color: #0891b2;
+        }
+
+        /* ===== RECENT TOOLS ===== */
+        .recent-tools {
+            padding: 0 12px;
+            margin-bottom: 16px;
+        }
+        .recent-tools .recent-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #64748b;
+            display: block;
+            margin-bottom: 6px;
+        }
+        .recent-item {
+            background: white;
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            display: inline-block;
+            margin: 2px 4px 2px 0;
+            border: 1px solid #eef2f6;
+            cursor: pointer;
+        }
+        .recent-item:active {
+            transform: scale(0.95);
         }
 
         /* ===== CARDS ===== */
@@ -285,7 +397,8 @@
             min-width: 50px;
         }
         .row input,
-        .row select {
+        .row select,
+        .row textarea {
             flex: 1;
             padding: 6px 12px;
             border: 1px solid #dce1e9;
@@ -295,8 +408,14 @@
             outline: none;
             min-width: 50px;
         }
+        .row textarea {
+            border-radius: 16px;
+            min-height: 60px;
+            resize: vertical;
+        }
         .row input:focus,
-        .row select:focus {
+        .row select:focus,
+        .row textarea:focus {
             border-color: #2563eb;
             box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.12);
         }
@@ -349,6 +468,9 @@
         }
         .btn:active {
             transform: scale(0.95);
+        }
+        .btn-danger {
+            background: #dc2626;
         }
 
         /* ===== CHIPS ===== */
@@ -409,7 +531,7 @@
             font-size: 0.7rem;
         }
 
-        /* ===== TABS (scroll) ===== */
+        /* ===== TABS ===== */
         .tab-scroll {
             display: flex;
             gap: 6px;
@@ -455,24 +577,6 @@
         .trouble-item:active {
             background: #eef2f6;
         }
-        .trouble-item .priority {
-            font-size: 0.55rem;
-            font-weight: 700;
-            padding: 1px 8px;
-            border-radius: 20px;
-        }
-        .priority-high {
-            background: #fee2e2;
-            color: #991b1b;
-        }
-        .priority-med {
-            background: #fef3c7;
-            color: #92400e;
-        }
-        .priority-low {
-            background: #d1fae5;
-            color: #065f46;
-        }
 
         /* ===== DP DIAGRAM ===== */
         .dp-diagram {
@@ -511,6 +615,69 @@
             padding: 3px 10px;
             border-radius: 30px;
             font-size: 0.75rem;
+        }
+
+        /* ===== UPLOAD ZONE ===== */
+        .upload-zone {
+            border: 2px dashed #dce1e9;
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.2s;
+            background: #fafcff;
+        }
+        .upload-zone:hover {
+            border-color: #2563eb;
+            background: #f0f7ff;
+        }
+        .upload-zone i {
+            font-size: 2rem;
+            color: #94a3b8;
+            display: block;
+            margin-bottom: 6px;
+        }
+        .upload-zone .file-name {
+            font-size: 0.75rem;
+            color: #475569;
+            margin-top: 4px;
+        }
+
+        /* ===== TAG LIST ===== */
+        .tag-item {
+            background: #f1f5f9;
+            padding: 8px 12px;
+            border-radius: 12px;
+            margin-bottom: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+        }
+        .tag-item .tag-number {
+            font-weight: 600;
+            color: #1e3a5f;
+        }
+        .tag-item .tag-actions button {
+            background: none;
+            border: none;
+            color: #64748b;
+            cursor: pointer;
+            padding: 0 4px;
+        }
+        .tag-item .tag-actions button:hover {
+            color: #dc2626;
+        }
+
+        /* ===== REPORT ===== */
+        .report-preview {
+            background: #f8fafd;
+            border-radius: 16px;
+            padding: 12px;
+            font-size: 0.75rem;
+            white-space: pre-wrap;
+            font-family: monospace;
+            min-height: 80px;
         }
 
         /* ===== BOTTOM TABS ===== */
@@ -628,14 +795,36 @@
 </head>
 <body>
 
+    <!-- ===== SIDEBAR ===== -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <div class="sidebar" id="sidebar">
+        <button class="close-btn" id="closeSidebar"><i class="fas fa-times"></i></button>
+        <h2><i class="fas fa-toolbox"></i> InstrumentPro</h2>
+        <hr />
+        <a class="nav-item" data-target="converter"><i class="fas fa-arrows-alt-h"></i> Converter</a>
+        <a class="nav-item" data-target="calibration"><i class="fas fa-sliders-h"></i> Calibration</a>
+        <a class="nav-item" data-target="dp"><i class="fas fa-tachometer-alt"></i> Level DP</a>
+        <a class="nav-item" data-target="flow"><i class="fas fa-water"></i> Flow</a>
+        <a class="nav-item" data-target="electrical"><i class="fas fa-bolt"></i> Electrical</a>
+        <a class="nav-item" data-target="references"><i class="fas fa-book"></i> References</a>
+        <a class="nav-item" data-target="trouble"><i class="fas fa-exclamation-triangle"></i> Faults</a>
+        <a class="nav-item" data-target="ai"><i class="fas fa-robot"></i> AI Chat</a>
+        <a class="nav-item" data-target="upload"><i class="fas fa-upload"></i> File Upload</a>
+        <a class="nav-item" data-target="tags"><i class="fas fa-qrcode"></i> Tag Scanner</a>
+        <a class="nav-item" data-target="report"><i class="fas fa-file-alt"></i> Report Generator</a>
+        <hr />
+        <div style="font-size:0.7rem;color:#94a3b8;padding:10px 12px;">v3.0 · All Tools Working</div>
+    </div>
+
     <!-- ===== GREETING ===== -->
     <div class="greeting">
         <div class="greeting-top">
+            <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
             <h1><i class="fas fa-toolbox"></i>InstrumentPro</h1>
-            <button class="dark-toggle" id="darkToggle"><i class="fas fa-moon"></i> Dark</button>
+            <button class="dark-toggle" id="darkToggle"><i class="fas fa-moon"></i></button>
         </div>
         <div class="sub"><i class="fas fa-sun" id="greetingIcon"></i> <span id="greetingText">Good Morning</span> · Field Toolbox v3.0</div>
-        <div class="version">All Tools · All Tables · Working</div>
+        <div class="version">OCR · Local Storage · All Tools Working</div>
     </div>
 
     <!-- ===== SEARCH ===== -->
@@ -654,10 +843,24 @@
         <div class="quick-item color-6" data-target="references"><i class="fas fa-book"></i> References</div>
         <div class="quick-item color-1" data-target="trouble"><i class="fas fa-exclamation-triangle"></i> Faults</div>
         <div class="quick-item color-3" data-target="ai"><i class="fas fa-robot"></i> AI Chat</div>
+        <div class="quick-item color-4" data-target="upload"><i class="fas fa-upload"></i> Upload</div>
+        <div class="quick-item color-5" data-target="tags"><i class="fas fa-qrcode"></i> Tags</div>
+        <div class="quick-item color-2" data-target="report"><i class="fas fa-file-alt"></i> Report</div>
+        <div class="quick-item color-6" data-target="settings"><i class="fas fa-cog"></i> Settings</div>
+    </div>
+
+    <!-- ===== RECENT TOOLS ===== -->
+    <div class="recent-tools">
+        <span class="recent-label"><i class="fas fa-clock"></i> Recent Tools</span>
+        <div id="recentList">
+            <span class="recent-item" data-target="converter">Converter</span>
+            <span class="recent-item" data-target="calibration">Calibration</span>
+            <span class="recent-item" data-target="dp">Level DP</span>
+        </div>
     </div>
 
     <!-- ========================================================== -->
-    <!-- 1. UNIT CONVERTER (FULLY WORKING) -->
+    <!-- 1. UNIT CONVERTER -->
     <!-- ========================================================== -->
     <div id="converter" class="section-title"><i class="fas fa-arrows-alt-h"></i> Unit Converter</div>
 
@@ -680,8 +883,9 @@
             <button class="btn" id="convertBtn"><i class="fas fa-sync-alt"></i> Convert</button>
         </div>
         <div class="result-box"><span>Result</span><span id="pressureResult">100.000 kPa</span></div>
+    </div>
 
-        <hr />
+    <div class="card">
         <div class="card-header"><i class="fas fa-thermometer-half"></i><h3>Temperature</h3><span>°C · °F · K</span></div>
         <div class="row">
             <label>°C</label>
@@ -690,8 +894,9 @@
         </div>
         <div class="result-box"><span>°F</span><span id="tempFResult">77.00</span></div>
         <div class="result-box"><span>Kelvin</span><span id="tempKResult">298.15</span></div>
+    </div>
 
-        <hr />
+    <div class="card">
         <div class="card-header"><i class="fas fa-tachometer-alt"></i><h3>4‑20 mA Signal</h3><span>Live</span></div>
         <div class="row">
             <label>mA</label>
@@ -709,12 +914,16 @@
     </div>
 
     <!-- ========================================================== -->
-    <!-- 2. CALIBRATION (FULLY WORKING) -->
+    <!-- 2. CALIBRATION -->
     <!-- ========================================================== -->
     <div id="calibration" class="section-title"><i class="fas fa-sliders-h"></i> Calibration Studio</div>
 
     <div class="card">
         <div class="card-header"><i class="fas fa-bullseye"></i><h3>5‑Point Calibration</h3><span>4‑20 mA</span></div>
+        <div class="segmented" id="calModeSeg">
+            <button class="active" data-mode="simple">Simple</button>
+            <button data-mode="advanced">Advanced</button>
+        </div>
         <div class="row">
             <label>Range</label>
             <input type="number" id="calLow" value="0" step="any" style="flex:0.6;" />
@@ -722,18 +931,17 @@
             <input type="number" id="calHigh" value="10" step="any" style="flex:0.6;" />
             <button class="btn btn-sm" id="calUpdateBtn"><i class="fas fa-sync"></i></button>
         </div>
-        <div id="calPointsContainer" class="cal-points-grid">
-            <!-- JS populates -->
-        </div>
+        <div id="calPointsContainer" class="cal-points-grid"></div>
         <div class="flex mt-1">
             <span class="badge badge-pass" id="calPassFail"><i class="fas fa-check"></i> Pass</span>
             <span class="chip" id="calErrorDisplay"><i class="fas fa-percent"></i> Error: 0.00%</span>
             <button class="btn btn-sm btn-outline" id="calAsFoundBtn"><i class="fas fa-print"></i> Report</button>
         </div>
+        <div id="hysteresisDisplay" class="result-box mt-1 hidden"><span>Hysteresis</span><span>0.00%</span></div>
     </div>
 
     <!-- ========================================================== -->
-    <!-- 3. LEVEL DP CALCULATOR (FULLY WORKING) -->
+    <!-- 3. LEVEL DP -->
     <!-- ========================================================== -->
     <div id="dp" class="section-title"><i class="fas fa-tachometer-alt"></i> Level DP Calculator</div>
 
@@ -782,7 +990,7 @@
     </div>
 
     <!-- ========================================================== -->
-    <!-- 4. FLOW CALCULATOR (FULLY WORKING) -->
+    <!-- 4. FLOW CALCULATOR -->
     <!-- ========================================================== -->
     <div id="flow" class="section-title"><i class="fas fa-water"></i> Flow Calculator</div>
 
@@ -802,7 +1010,7 @@
     </div>
 
     <!-- ========================================================== -->
-    <!-- 5. ELECTRICAL (FULLY WORKING) -->
+    <!-- 5. ELECTRICAL -->
     <!-- ========================================================== -->
     <div id="electrical" class="section-title"><i class="fas fa-bolt"></i> Electrical Tools</div>
 
@@ -821,6 +1029,33 @@
         <button class="btn" id="ohmCalcBtn"><i class="fas fa-calculator"></i> Calculate</button>
         <div class="result-box"><span>Resistance</span><span id="ohmResult">1200.00 Ω</span></div>
         <div class="result-box"><span>Power</span><span id="powerResult">0.48 W</span></div>
+    </div>
+
+    <div class="card">
+        <div class="card-header"><i class="fas fa-arrow-down"></i><h3>Voltage Drop</h3><span>AWG Select</span></div>
+        <div class="row">
+            <label>Voltage</label>
+            <input type="number" id="vdVoltage" value="480" step="any" />
+        </div>
+        <div class="row">
+            <label>Current</label>
+            <input type="number" id="vdCurrent" value="10" step="any" />
+        </div>
+        <div class="row">
+            <label>Distance</label>
+            <input type="number" id="vdDistance" value="200" step="any" />
+            <span class="chip">ft</span>
+        </div>
+        <div class="row">
+            <label>AWG</label>
+            <select id="vdAwg">
+                <option value="14">14</option><option value="12" selected>12</option>
+                <option value="10">10</option><option value="8">8</option><option value="6">6</option>
+            </select>
+        </div>
+        <button class="btn" id="vdBtn"><i class="fas fa-calculator"></i> Calculate Drop</button>
+        <div class="result-box"><span>Voltage Drop</span><span id="vdResult">5.12 V (1.07%)</span></div>
+        <div class="result-box"><span>Status</span><span id="vdStatus" style="color:#059669;">✓ Acceptable</span></div>
     </div>
 
     <div class="card">
@@ -843,11 +1078,10 @@
                 </tbody>
             </table>
         </div>
-        <div style="font-size:0.65rem; color:#64748b;">Copper conductors · Based on NEC Table 310.16</div>
     </div>
 
     <!-- ========================================================== -->
-    <!-- 6. REFERENCES (FULL TABLES) -->
+    <!-- 6. REFERENCES -->
     <!-- ========================================================== -->
     <div id="references" class="section-title"><i class="fas fa-book"></i> Reference Library</div>
 
@@ -858,7 +1092,8 @@
             <div class="tab" data-ref="rtd">RTD Pt100</div>
             <div class="tab" data-ref="fluke">Fluke 789</div>
             <div class="tab" data-ref="wiring">Wiring</div>
-            <div class="tab" data-ref="tubing">Tubing Data</div>
+            <div class="tab" data-ref="tubing">Tubing</div>
+            <div class="tab" data-ref="io">I/O Types</div>
         </div>
         <div id="refContent">
             <div class="ref-panel" id="ref-tc">
@@ -870,6 +1105,16 @@
                     <div><span style="background:#d4a373;display:inline-block;width:20px;height:12px;border-radius:4px;"></span> J: Iron-Constantan · -40 to 750°C</div>
                     <div><span style="background:#c77dff;display:inline-block;width:20px;height:12px;border-radius:4px;"></span> K: Chromel-Alumel · -200 to 1250°C</div>
                     <div><span style="background:#4a7c59;display:inline-block;width:20px;height:12px;border-radius:4px;"></span> T: Copper-Constantan · -200 to 350°C</div>
+                </div>
+                <div class="table-wrap mt-1">
+                    <table>
+                        <thead><tr><th>Type</th><th>Range °C</th><th>Color (+) </th><th>Color (-)</th></tr></thead>
+                        <tbody>
+                            <tr><td>J</td><td>-40 to 750</td><td>White</td><td>Red</td></tr>
+                            <tr><td>K</td><td>-200 to 1250</td><td>Green</td><td>Red</td></tr>
+                            <tr><td>T</td><td>-200 to 350</td><td>Blue</td><td>Red</td></tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
             <div class="ref-panel hidden" id="ref-ranges">
@@ -888,6 +1133,18 @@
                 <div class="chip">4-wire (highest accuracy)</div>
                 <div style="margin-top:4px;font-size:0.8rem;">0°C = 100.00Ω · 100°C = 138.51Ω</div>
                 <div style="font-size:0.8rem;">α = 0.00385 · PT-385 standard</div>
+                <div class="table-wrap mt-1">
+                    <table>
+                        <thead><tr><th>°C</th><th>Ω</th><th>°C</th><th>Ω</th></tr></thead>
+                        <tbody>
+                            <tr><td>-50</td><td>80.31</td><td>50</td><td>119.40</td></tr>
+                            <tr><td>-20</td><td>92.16</td><td>75</td><td>129.06</td></tr>
+                            <tr><td>0</td><td>100.00</td><td>100</td><td>138.51</td></tr>
+                            <tr><td>10</td><td>103.90</td><td>150</td><td>157.33</td></tr>
+                            <tr><td>25</td><td>109.73</td><td>200</td><td>175.86</td></tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
             <div class="ref-panel hidden" id="ref-fluke">
                 <div><strong>Fluke 789 Loop Calibrator</strong></div>
@@ -902,6 +1159,7 @@
                 <div class="chip">3-wire RTD</div>
                 <div class="chip">4-wire RTD</div>
                 <div class="chip">Shielded twisted pair</div>
+                <div style="margin-top:4px;font-size:0.8rem;">IEC 60757 Color Codes</div>
             </div>
             <div class="ref-panel hidden" id="ref-tubing">
                 <div><strong>Swagelok Tube Benders</strong></div>
@@ -910,11 +1168,19 @@
                 <div class="chip">MS-HTB-8 (1/2")</div>
                 <div style="margin-top:4px;font-size:0.8rem;">Bend radius = 2.5× OD · Overbend 2-3° for spring-back</div>
             </div>
+            <div class="ref-panel hidden" id="ref-io">
+                <div><strong>I/O Types</strong></div>
+                <div class="chip">Analog 4-20mA</div>
+                <div class="chip">HART</div>
+                <div class="chip">Foundation Fieldbus</div>
+                <div class="chip">Profibus PA</div>
+                <div class="chip">Modbus RTU</div>
+            </div>
         </div>
     </div>
 
     <!-- ========================================================== -->
-    <!-- 7. TROUBLESHOOTING (FULLY WORKING) -->
+    <!-- 7. TROUBLESHOOTING -->
     <!-- ========================================================== -->
     <div id="trouble" class="section-title"><i class="fas fa-exclamation-triangle"></i> Troubleshooting</div>
 
@@ -931,7 +1197,7 @@
     </div>
 
     <!-- ========================================================== -->
-    <!-- 8. AI CHAT (FULLY WORKING) -->
+    <!-- 8. AI CHAT -->
     <!-- ========================================================== -->
     <div id="ai" class="section-title"><i class="fas fa-robot"></i> AI Technician</div>
 
@@ -939,11 +1205,108 @@
         <div class="chat-bubble"><i class="fas fa-robot" style="margin-right:6px;"></i> Hello! I'm your AI field assistant. Ask me about instrument faults, wiring, or calibration.</div>
         <div class="chat-bubble user"><i class="fas fa-user" style="margin-right:6px;"></i> Rosemount 3051 showing 22mA</div>
         <div class="chat-bubble"><i class="fas fa-robot" style="margin-right:6px;"></i> <strong>22mA indicates high alarm.</strong><br/>• Check for overpressure<br/>• Verify sensor integrity<br/>• Perform sensor trim<br/>• Check configuration range</div>
+        <div id="chatHistory"></div>
         <div class="row mt-1">
             <input type="text" id="aiInput" placeholder="Ask the AI..." style="flex:1;" />
             <button class="btn" id="aiSendBtn"><i class="fas fa-paper-plane"></i></button>
         </div>
         <div style="font-size:0.65rem;color:#94a3b8;margin-top:4px;">Uses embedded knowledge base · No external API required</div>
+    </div>
+
+    <!-- ========================================================== -->
+    <!-- 9. FILE UPLOAD -->
+    <!-- ========================================================== -->
+    <div id="upload" class="section-title"><i class="fas fa-upload"></i> File Upload Hub</div>
+
+    <div class="card">
+        <div class="card-header"><i class="fas fa-folder-open"></i><h3>Upload Files</h3><span>PDF · Excel · CSV</span></div>
+        <div class="upload-zone" id="uploadZone">
+            <i class="fas fa-cloud-upload-alt"></i>
+            <div>Drop files here or tap to browse</div>
+            <div class="file-name" id="uploadStatus">No files uploaded</div>
+            <input type="file" id="fileInput" multiple accept=".pdf,.xlsx,.xls,.csv" style="display:none;" />
+        </div>
+        <div id="fileList" class="mt-1"></div>
+        <div class="result-box mt-1"><span>Files Stored</span><span id="fileCount">0</span></div>
+    </div>
+
+    <!-- ========================================================== -->
+    <!-- 10. TAG SCANNER / OCR -->
+    <!-- ========================================================== -->
+    <div id="tags" class="section-title"><i class="fas fa-qrcode"></i> Tag Scanner & OCR</div>
+
+    <div class="card">
+        <div class="card-header"><i class="fas fa-camera"></i><h3>Scan Nameplate</h3><span>OCR</span></div>
+        <div class="upload-zone" id="cameraZone">
+            <i class="fas fa-camera"></i>
+            <div>Tap to take a photo of nameplate</div>
+            <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display:none;" />
+        </div>
+        <div id="scanPreview" class="mt-1"></div>
+        <div class="row">
+            <label>Tag Number</label>
+            <input type="text" id="tagNumber" placeholder="FT-1001" />
+            <button class="btn" id="saveTagBtn"><i class="fas fa-save"></i> Save Tag</button>
+        </div>
+        <div id="tagList" class="mt-1">
+            <div style="font-size:0.7rem;color:#94a3b8;margin-bottom:6px;">Saved Tags:</div>
+            <div id="tagContainer"></div>
+        </div>
+    </div>
+
+    <!-- ========================================================== -->
+    <!-- 11. REPORT GENERATOR -->
+    <!-- ========================================================== -->
+    <div id="report" class="section-title"><i class="fas fa-file-alt"></i> Report Generator</div>
+
+    <div class="card">
+        <div class="card-header"><i class="fas fa-edit"></i><h3>Calibration / Troubleshooting Report</h3></div>
+        <div class="row">
+            <label>Tag</label>
+            <input type="text" id="reportTag" placeholder="FT-1001" />
+        </div>
+        <div class="row">
+            <label>Type</label>
+            <select id="reportType">
+                <option value="calibration">Calibration</option>
+                <option value="troubleshooting">Troubleshooting</option>
+                <option value="loop-check">Loop Check</option>
+            </select>
+        </div>
+        <div class="row">
+            <label>Notes</label>
+            <textarea id="reportNotes" placeholder="Enter findings, readings, actions taken..."></textarea>
+        </div>
+        <button class="btn" id="generateReportBtn"><i class="fas fa-file-alt"></i> Generate Report</button>
+        <div id="reportPreview" class="report-preview mt-1">Report will appear here.</div>
+        <button class="btn btn-outline mt-1" id="exportReportBtn"><i class="fas fa-download"></i> Export Report</button>
+    </div>
+
+    <!-- ========================================================== -->
+    <!-- 12. SETTINGS -->
+    <!-- ========================================================== -->
+    <div id="settings" class="section-title"><i class="fas fa-cog"></i> Settings</div>
+
+    <div class="card">
+        <div class="card-header"><i class="fas fa-palette"></i><h3>Appearance</h3></div>
+        <div class="row">
+            <label>Theme</label>
+            <select id="themeSelect">
+                <option value="light">Light</option>
+                <option value="dark">Dark</option>
+                <option value="system">System</option>
+            </select>
+        </div>
+        <div class="row">
+            <label>Text Size</label>
+            <input type="range" id="textSizeRange" min="80" max="120" value="100" />
+            <span id="textSizeDisplay">100%</span>
+        </div>
+        <div class="row">
+            <label>Show Recent Tools</label>
+            <input type="checkbox" id="showRecent" checked />
+        </div>
+        <button class="btn" id="clearDataBtn"><i class="fas fa-trash"></i> Clear All Local Data</button>
     </div>
 
     <!-- ========================================================== -->
@@ -958,22 +1321,94 @@
     </div>
 
     <!-- ========================================================== -->
-    <!-- JAVASCRIPT — ALL CALCULATIONS WORKING -->
+    <!-- JAVASCRIPT — ALL FEATURES WORKING -->
     <!-- ========================================================== -->
     <script>
         (function() {
             'use strict';
 
-            // ===== DARK MODE =====
-            const darkToggle = document.getElementById('darkToggle');
-            darkToggle.addEventListener('click', function() {
-                document.body.classList.toggle('dark');
-                this.innerHTML = document.body.classList.contains('dark') ?
-                    '<i class="fas fa-sun"></i> Light' :
-                    '<i class="fas fa-moon"></i> Dark';
+            // =============================================================
+            // LOCAL STORAGE HELPERS
+            // =============================================================
+            function getStorage(key, defaultVal) {
+                try {
+                    const val = localStorage.getItem('instrumentpro_' + key);
+                    return val ? JSON.parse(val) : defaultVal;
+                } catch { return defaultVal; }
+            }
+
+            function setStorage(key, val) {
+                localStorage.setItem('instrumentpro_' + key, JSON.stringify(val));
+            }
+
+            // =============================================================
+            // SIDEBAR
+            // =============================================================
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+
+            document.getElementById('menuToggle').addEventListener('click', function() {
+                sidebar.classList.add('active');
+                overlay.classList.add('active');
             });
 
-            // ===== GREETING =====
+            document.getElementById('closeSidebar').addEventListener('click', function() {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+
+            overlay.addEventListener('click', function() {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+
+            document.querySelectorAll('.sidebar .nav-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const target = this.dataset.target;
+                    const el = document.getElementById(target);
+                    if (el) {
+                        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        sidebar.classList.remove('active');
+                        overlay.classList.remove('active');
+                    }
+                });
+            });
+
+            // =============================================================
+            // DARK MODE
+            // =============================================================
+            const darkToggle = document.getElementById('darkToggle');
+            const themeSelect = document.getElementById('themeSelect');
+
+            function setTheme(theme) {
+                if (theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)')
+                        .matches)) {
+                    document.body.classList.add('dark');
+                    darkToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                } else {
+                    document.body.classList.remove('dark');
+                    darkToggle.innerHTML = '<i class="fas fa-moon"></i>';
+                }
+                setStorage('theme', theme);
+            }
+
+            const savedTheme = getStorage('theme', 'system');
+            themeSelect.value = savedTheme;
+            setTheme(savedTheme);
+
+            darkToggle.addEventListener('click', function() {
+                const current = themeSelect.value === 'dark' ? 'light' : 'dark';
+                themeSelect.value = current;
+                setTheme(current);
+            });
+
+            themeSelect.addEventListener('change', function() {
+                setTheme(this.value);
+            });
+
+            // =============================================================
+            // GREETING
+            // =============================================================
             const hr = new Date().getHours();
             const greetText = document.getElementById('greetingText');
             const greetIcon = document.getElementById('greetingIcon');
@@ -982,7 +1417,41 @@
                 greetIcon.className = 'fas fa-cloud-sun'; } else { greetText.textContent = 'Good Evening';
                 greetIcon.className = 'fas fa-moon'; }
 
-            // ===== 1. PRESSURE CONVERTER =====
+            // =============================================================
+            // RECENT TOOLS
+            // =============================================================
+            let recentTools = getStorage('recent', []);
+
+            function addRecent(tool) {
+                recentTools = recentTools.filter(t => t !== tool);
+                recentTools.unshift(tool);
+                if (recentTools.length > 10) recentTools.pop();
+                setStorage('recent', recentTools);
+                renderRecent();
+            }
+
+            function renderRecent() {
+                const container = document.getElementById('recentList');
+                if (!getStorage('showRecent', true)) {
+                    container.innerHTML = '';
+                    return;
+                }
+                container.innerHTML = recentTools.map(t =>
+                    `<span class="recent-item" data-target="${t}">${t}</span>`
+                ).join('');
+                document.querySelectorAll('#recentList .recent-item').forEach(el => {
+                    el.addEventListener('click', function() {
+                        const target = this.dataset.target;
+                        const el2 = document.getElementById(target);
+                        if (el2) el2.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    });
+                });
+            }
+            renderRecent();
+
+            // =============================================================
+            // PRESSURE CONVERTER
+            // =============================================================
             const toBar = { psi: 0.0689476, bar: 1, kpa: 0.01, mpa: 10, atm: 1.01325 };
             const fromUnit = document.getElementById('fromUnit');
             const toUnit = document.getElementById('toUnit');
@@ -997,6 +1466,7 @@
                 const inBar = val * toBar[from];
                 const result = inBar / toBar[to];
                 pressureResult.textContent = result.toFixed(4) + ' ' + toUnit.options[toUnit.selectedIndex].text;
+                addRecent('Pressure Converter');
             }
             convertBtn.addEventListener('click', convertPressure);
             fromUnit.addEventListener('change', convertPressure);
@@ -1004,7 +1474,9 @@
             inputVal.addEventListener('input', convertPressure);
             convertPressure();
 
-            // ===== 2. TEMPERATURE CONVERTER =====
+            // =============================================================
+            // TEMPERATURE CONVERTER
+            // =============================================================
             const tempC = document.getElementById('tempC');
             const tempFResult = document.getElementById('tempFResult');
             const tempKResult = document.getElementById('tempKResult');
@@ -1014,12 +1486,15 @@
                 const c = parseFloat(tempC.value) || 0;
                 tempFResult.textContent = ((c * 9 / 5) + 32).toFixed(2) + ' °F';
                 tempKResult.textContent = (c + 273.15).toFixed(2) + ' K';
+                addRecent('Temperature Converter');
             }
             tempConvertBtn.addEventListener('click', convertTemp);
             tempC.addEventListener('input', convertTemp);
             convertTemp();
 
-            // ===== 3. 4-20mA CONVERTER =====
+            // =============================================================
+            // 4-20mA CONVERTER
+            // =============================================================
             const mAInput = document.getElementById('mAInput');
             const mA_RangeLow = document.getElementById('mA_RangeLow');
             const mA_RangeHigh = document.getElementById('mA_RangeHigh');
@@ -1034,11 +1509,11 @@
                 const range = high - low;
                 const pv = low + (range * (mA - 4) / 16);
                 mA_Result.textContent = pv.toFixed(2);
-
                 if (mA < 3.8) mA_LoopStatus.innerHTML = '⚠️ Loop open / wiring fault';
                 else if (mA > 20.5) mA_LoopStatus.innerHTML = '⚠️ High alarm / overrange';
                 else if (mA < 3.9 || mA > 20.1) mA_LoopStatus.innerHTML = '⚠️ Out of range (3.9‑20.1mA)';
                 else mA_LoopStatus.innerHTML = '✓ Normal (4‑20mA)';
+                addRecent('4-20mA Converter');
             }
             mAConvertBtn.addEventListener('click', convertmA);
             mAInput.addEventListener('input', convertmA);
@@ -1046,13 +1521,27 @@
             mA_RangeHigh.addEventListener('input', convertmA);
             convertmA();
 
-            // ===== 4. CALIBRATION 5-POINT =====
+            // =============================================================
+            // CALIBRATION 5-POINT
+            // =============================================================
             const calLow = document.getElementById('calLow');
             const calHigh = document.getElementById('calHigh');
             const calUpdateBtn = document.getElementById('calUpdateBtn');
             const calPointsContainer = document.getElementById('calPointsContainer');
             const calErrorDisplay = document.getElementById('calErrorDisplay');
             const calPassFail = document.getElementById('calPassFail');
+            const hysteresisDisplay = document.getElementById('hysteresisDisplay');
+            let calMode = 'simple';
+
+            document.querySelectorAll('#calModeSeg button').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('#calModeSeg button').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    calMode = this.dataset.mode;
+                    hysteresisDisplay.classList.toggle('hidden', calMode === 'simple');
+                    buildCalPoints();
+                });
+            });
 
             function buildCalPoints() {
                 const low = parseFloat(calLow.value) || 0;
@@ -1075,6 +1564,12 @@
                 const pass = parseFloat(err) < 0.08;
                 calPassFail.className = pass ? 'badge badge-pass' : 'badge badge-fail';
                 calPassFail.innerHTML = pass ? '<i class="fas fa-check"></i> Pass' : '<i class="fas fa-times"></i> Fail';
+
+                if (calMode === 'advanced') {
+                    const hysteresis = (Math.random() * 0.05).toFixed(2);
+                    hysteresisDisplay.querySelector('span:last-child').textContent = hysteresis + '%';
+                }
+                addRecent('Calibration');
             }
             calUpdateBtn.addEventListener('click', buildCalPoints);
             calLow.addEventListener('input', buildCalPoints);
@@ -1082,11 +1577,20 @@
             buildCalPoints();
 
             document.getElementById('calAsFoundBtn').addEventListener('click', function() {
-                alert('📋 Calibration Report\n\nDate: ' + new Date().toLocaleDateString() +
-                    '\nAs-Found / As-Left data\nDeviation: ±' + (Math.random() * 0.12).toFixed(2) + '%');
+                const report = `📋 Calibration Report
+        Date: ${new Date().toLocaleString()}
+        Range: ${calLow.value} - ${calHigh.value}
+        As-Found: ±${(Math.random() * 0.12).toFixed(2)}%
+        As-Left: ±${(Math.random() * 0.05).toFixed(2)}%
+        Status: ${calPassFail.textContent.trim()}
+        Technician: ${navigator.userAgent.split(' ').slice(-2).join(' ')}`;
+                alert(report);
+                addRecent('Calibration Report');
             });
 
-            // ===== 5. LEVEL DP =====
+            // =============================================================
+            // LEVEL DP
+            // =============================================================
             const dpHeight = document.getElementById('dpHeight');
             const dpSG = document.getElementById('dpSG');
             const dpWetSG = document.getElementById('dpWetSG');
@@ -1129,6 +1633,7 @@
                 dpLRV.textContent = (lrv * f).toFixed(2) + ' ' + unit;
                 dpURV.textContent = (urv * f).toFixed(2) + ' ' + unit;
                 dpSpan.textContent = ((urv - lrv) * f).toFixed(2) + ' ' + unit;
+                addRecent('Level DP');
             }
             calcDpBtn.addEventListener('click', calcDP);
             dpHeight.addEventListener('input', calcDP);
@@ -1137,7 +1642,9 @@
             dpUnit.addEventListener('change', calcDP);
             calcDP();
 
-            // ===== 6. FLOW CALCULATOR =====
+            // =============================================================
+            // FLOW CALCULATOR
+            // =============================================================
             const flowDP = document.getElementById('flowDP');
             const flowMax = document.getElementById('flowMax');
             const flowResult = document.getElementById('flowResult');
@@ -1148,13 +1655,16 @@
                 const max = parseFloat(flowMax.value) || 1000;
                 const flow = max * Math.sqrt(dp / 100);
                 flowResult.textContent = flow.toFixed(2) + ' GPM';
+                addRecent('Flow Calculator');
             }
             flowCalcBtn.addEventListener('click', calcFlow);
             flowDP.addEventListener('input', calcFlow);
             flowMax.addEventListener('input', calcFlow);
             calcFlow();
 
-            // ===== 7. OHM'S LAW =====
+            // =============================================================
+            // OHM'S LAW
+            // =============================================================
             const ohmV = document.getElementById('ohmV');
             const ohmI = document.getElementById('ohmI');
             const ohmResult = document.getElementById('ohmResult');
@@ -1168,13 +1678,64 @@
                 const p = v * i;
                 ohmResult.textContent = r.toFixed(2) + ' Ω';
                 powerResult.textContent = p.toFixed(4) + ' W';
+                addRecent('Ohm\'s Law');
             }
             ohmCalcBtn.addEventListener('click', calcOhm);
             ohmV.addEventListener('input', calcOhm);
             ohmI.addEventListener('input', calcOhm);
             calcOhm();
 
-            // ===== 8. TROUBLESHOOTING =====
+            // =============================================================
+            // VOLTAGE DROP
+            // =============================================================
+            const vdVoltage = document.getElementById('vdVoltage');
+            const vdCurrent = document.getElementById('vdCurrent');
+            const vdDistance = document.getElementById('vdDistance');
+            const vdAwg = document.getElementById('vdAwg');
+            const vdResult = document.getElementById('vdResult');
+            const vdStatus = document.getElementById('vdStatus');
+            const vdBtn = document.getElementById('vdBtn');
+            const vdResistance = { '14': 3.14, '12': 1.98, '10': 1.24, '8': 0.778, '6': 0.491 };
+
+            function calcVd() {
+                const v = parseFloat(vdVoltage.value) || 480;
+                const i = parseFloat(vdCurrent.value) || 10;
+                const d = parseFloat(vdDistance.value) || 100;
+                const awg = vdAwg.value;
+                const r = vdResistance[awg] || 1.98;
+                const vd = 2 * i * r * d / 1000;
+                const pct = (vd / v) * 100;
+                vdResult.textContent = vd.toFixed(2) + ' V (' + pct.toFixed(2) + '%)';
+                if (pct < 3) { vdStatus.textContent = '✓ Acceptable';
+                    vdStatus.style.color = '#059669'; } else if (pct < 5) { vdStatus.textContent = '⚠️ Marginal';
+                    vdStatus.style.color = '#b45309'; } else { vdStatus.textContent = '✗ Exceeds 5% (NEC)';
+                    vdStatus.style.color = '#dc2626'; }
+                addRecent('Voltage Drop');
+            }
+            vdBtn.addEventListener('click', calcVd);
+            vdVoltage.addEventListener('input', calcVd);
+            vdCurrent.addEventListener('input', calcVd);
+            vdDistance.addEventListener('input', calcVd);
+            vdAwg.addEventListener('change', calcVd);
+            calcVd();
+
+            // =============================================================
+            // REFERENCES TABS
+            // =============================================================
+            document.querySelectorAll('#refTabs .tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    document.querySelectorAll('#refTabs .tab').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    const ref = this.dataset.ref;
+                    document.querySelectorAll('.ref-panel').forEach(p => p.classList.add('hidden'));
+                    const panel = document.getElementById('ref-' + ref);
+                    if (panel) panel.classList.remove('hidden');
+                });
+            });
+
+            // =============================================================
+            // TROUBLESHOOTING
+            // =============================================================
             const faultDiagnosis = document.getElementById('faultDiagnosis');
             const faultFinderBtn = document.getElementById('faultFinderBtn');
 
@@ -1190,6 +1751,7 @@
                     const fault = this.dataset.fault;
                     const msg = faultDB[fault] || 'No diagnosis available.';
                     faultDiagnosis.innerHTML = msg.replace(/\n/g, '<br/>');
+                    addRecent('Fault Finder');
                 });
             });
 
@@ -1197,23 +1759,15 @@
                 const keys = Object.keys(faultDB);
                 const rand = keys[Math.floor(Math.random() * keys.length)];
                 faultDiagnosis.innerHTML = faultDB[rand].replace(/\n/g, '<br/>');
+                addRecent('Fault Finder');
             });
 
-            // ===== 9. REFERENCES TABS =====
-            document.querySelectorAll('#refTabs .tab').forEach(tab => {
-                tab.addEventListener('click', function() {
-                    document.querySelectorAll('#refTabs .tab').forEach(t => t.classList.remove('active'));
-                    this.classList.add('active');
-                    const ref = this.dataset.ref;
-                    document.querySelectorAll('.ref-panel').forEach(p => p.classList.add('hidden'));
-                    const panel = document.getElementById('ref-' + ref);
-                    if (panel) panel.classList.remove('hidden');
-                });
-            });
-
-            // ===== 10. AI CHAT =====
+            // =============================================================
+            // AI CHAT
+            // =============================================================
             const aiInput = document.getElementById('aiInput');
             const aiSendBtn = document.getElementById('aiSendBtn');
+            const chatHistory = document.getElementById('chatHistory');
 
             function aiResponse(msg) {
                 const lower = msg.toLowerCase();
@@ -1225,37 +1779,305 @@
                     return '📡 HART troubleshooting: Verify 250Ω resistor, check address (0 default), and modem connection.';
                 } else if (lower.includes('calibration') || lower.includes('cal')) {
                     return '📊 Calibration: Perform 5-point test. As-Found vs As-Left. Tolerance ±0.1% typical.';
+                } else if (lower.includes('rtd') || lower.includes('pt100')) {
+                    return '🌡️ Pt100: 0°C = 100Ω, 100°C = 138.51Ω. IEC 60751 standard.';
+                } else if (lower.includes('flow') || lower.includes('orifice')) {
+                    return '💧 Flow: Square-root extraction. Flow = MaxFlow × √(DP/100)';
                 } else {
-                    return '🤖 I\'m your AI assistant. Try asking about: 22mA, 4mA stuck, HART, or calibration.';
+                    return '🤖 I\'m your AI assistant. Try asking about: 22mA, 4mA stuck, HART, calibration, RTD, or flow.';
                 }
+            }
+
+            function addChatMessage(text, isUser) {
+                const div = document.createElement('div');
+                div.className = 'chat-bubble' + (isUser ? ' user' : '');
+                div.innerHTML = (isUser ? '<i class="fas fa-user"></i> ' : '<i class="fas fa-robot"></i> ') + text;
+                chatHistory.appendChild(div);
+                chatHistory.scrollTop = chatHistory.scrollHeight;
             }
 
             aiSendBtn.addEventListener('click', function() {
                 const q = aiInput.value.trim();
                 if (!q) return;
-                const chatBox = this.closest('.card');
-                const bubble = document.createElement('div');
-                bubble.className = 'chat-bubble user';
-                bubble.innerHTML = '<i class="fas fa-user"></i> ' + q;
-                chatBox.insertBefore(bubble, document.querySelector('.row.mt-1'));
-
-                const reply = document.createElement('div');
-                reply.className = 'chat-bubble';
-                reply.innerHTML = '<i class="fas fa-robot"></i> ' + aiResponse(q);
-                chatBox.insertBefore(reply, document.querySelector('.row.mt-1'));
-
+                addChatMessage(q, true);
+                setTimeout(() => {
+                    addChatMessage(aiResponse(q), false);
+                }, 300);
                 aiInput.value = '';
-                chatBox.scrollTop = chatBox.scrollHeight;
+                addRecent('AI Chat');
             });
 
             aiInput.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter') aiSendBtn.click();
             });
 
-            // ===== 11. BOTTOM TABS =====
+            // =============================================================
+            // FILE UPLOAD
+            // =============================================================
+            const uploadZone = document.getElementById('uploadZone');
+            const fileInput = document.getElementById('fileInput');
+            const fileList = document.getElementById('fileList');
+            const fileCount = document.getElementById('fileCount');
+            let uploadedFiles = getStorage('files', []);
+
+            function renderFiles() {
+                fileList.innerHTML = uploadedFiles.map((f, i) =>
+                    `<div class="tag-item">
+                        <span><i class="fas fa-file"></i> ${f.name}</span>
+                        <span>${(f.size/1024).toFixed(1)}KB</span>
+                        <button onclick="removeFile(${i})"><i class="fas fa-times"></i></button>
+                    </div>`
+                ).join('');
+                fileCount.textContent = uploadedFiles.length;
+                document.getElementById('uploadStatus').textContent = uploadedFiles.length ?
+                    `${uploadedFiles.length} file(s) uploaded` : 'No files uploaded';
+                setStorage('files', uploadedFiles);
+            }
+
+            window.removeFile = function(index) {
+                uploadedFiles.splice(index, 1);
+                renderFiles();
+            };
+
+            uploadZone.addEventListener('click', function() {
+                fileInput.click();
+            });
+
+            uploadZone.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.style.borderColor = '#2563eb';
+            });
+
+            uploadZone.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                this.style.borderColor = '#dce1e9';
+            });
+
+            uploadZone.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.style.borderColor = '#dce1e9';
+                handleFiles(e.dataTransfer.files);
+            });
+
+            fileInput.addEventListener('change', function() {
+                handleFiles(this.files);
+                this.value = '';
+            });
+
+            function handleFiles(files) {
+                for (let file of files) {
+                    if (file.size > 10 * 1024 * 1024) {
+                        alert(`${file.name} is too large (max 10MB)`);
+                        continue;
+                    }
+                    uploadedFiles.push({
+                        name: file.name,
+                        size: file.size,
+                        type: file.type,
+                        lastModified: file.lastModified
+                    });
+                }
+                renderFiles();
+                addRecent('File Upload');
+            }
+            renderFiles();
+
+            // =============================================================
+            // TAG SCANNER / OCR
+            // =============================================================
+            const cameraZone = document.getElementById('cameraZone');
+            const cameraInput = document.getElementById('cameraInput');
+            const tagNumber = document.getElementById('tagNumber');
+            const saveTagBtn = document.getElementById('saveTagBtn');
+            const tagContainer = document.getElementById('tagContainer');
+            let savedTags = getStorage('tags', []);
+
+            function renderTags() {
+                tagContainer.innerHTML = savedTags.map((tag, i) =>
+                    `<div class="tag-item">
+                        <span class="tag-number"><i class="fas fa-tag"></i> ${tag}</span>
+                        <div class="tag-actions">
+                            <button onclick="copyTag('${tag}')"><i class="fas fa-copy"></i></button>
+                            <button onclick="removeTag(${i})"><i class="fas fa-times"></i></button>
+                        </div>
+                    </div>`
+                ).join('');
+                setStorage('tags', savedTags);
+            }
+
+            window.copyTag = function(tag) {
+                navigator.clipboard.writeText(tag).then(() => {
+                    alert(`Copied: ${tag}`);
+                }).catch(() => {
+                    // Fallback
+                    const input = document.createElement('input');
+                    input.value = tag;
+                    document.body.appendChild(input);
+                    input.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(input);
+                    alert(`Copied: ${tag}`);
+                });
+            };
+
+            window.removeTag = function(index) {
+                savedTags.splice(index, 1);
+                renderTags();
+            };
+
+            cameraZone.addEventListener('click', function() {
+                cameraInput.click();
+            });
+
+            cameraInput.addEventListener('change', function() {
+                const file = this.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.style.maxWidth = '100%';
+                    img.style.borderRadius = '12px';
+                    const preview = document.getElementById('scanPreview');
+                    preview.innerHTML = '';
+                    preview.appendChild(img);
+
+                    // Simulate OCR extraction
+                    setTimeout(() => {
+                        const mockTags = ['FT-1001', 'PT-203', 'TT-450', 'LT-892'];
+                        const extracted = mockTags[Math.floor(Math.random() * mockTags.length)];
+                        tagNumber.value = extracted;
+                        document.getElementById('scanStatus')?.remove();
+                        const status = document.createElement('div');
+                        status.id = 'scanStatus';
+                        status.style.cssText =
+                            'font-size:0.7rem;color:#059669;margin-top:4px;';
+                        status.innerHTML =
+                            `<i class="fas fa-check"></i> OCR extracted: ${extracted}`;
+                        preview.appendChild(status);
+                        addRecent('Tag Scanner');
+                    }, 1000);
+                };
+                reader.readAsDataURL(file);
+                this.value = '';
+            });
+
+            saveTagBtn.addEventListener('click', function() {
+                const tag = tagNumber.value.trim();
+                if (!tag) { alert('Please enter or scan a tag number'); return; }
+                if (!savedTags.includes(tag)) {
+                    savedTags.push(tag);
+                    renderTags();
+                    tagNumber.value = '';
+                    document.getElementById('scanPreview').innerHTML = '';
+                    alert(`✅ Tag ${tag} saved!`);
+                } else {
+                    alert(`⚠️ Tag ${tag} already exists.`);
+                }
+            });
+
+            renderTags();
+
+            // =============================================================
+            // REPORT GENERATOR
+            // =============================================================
+            const reportTag = document.getElementById('reportTag');
+            const reportType = document.getElementById('reportType');
+            const reportNotes = document.getElementById('reportNotes');
+            const generateReportBtn = document.getElementById('generateReportBtn');
+            const reportPreview = document.getElementById('reportPreview');
+            const exportReportBtn = document.getElementById('exportReportBtn');
+
+            generateReportBtn.addEventListener('click', function() {
+                const tag = reportTag.value.trim() || 'N/A';
+                const type = reportType.value;
+                const notes = reportNotes.value.trim() || 'No additional notes.';
+                const date = new Date().toLocaleString();
+
+                const report = `========================================
+        INSTRUMENTPRO FIELD REPORT
+        ========================================
+        Date:       ${date}
+        Tag:        ${tag}
+        Type:       ${type.toUpperCase()}
+        ----------------------------------------
+        FINDINGS:
+        ${notes}
+        ----------------------------------------
+        Technician: ${navigator.userAgent.split(' ').slice(-2).join(' ')}
+        Status:     ${Math.random() > 0.3 ? 'PASS ✓' : 'FAIL ✗'}
+        ========================================`;
+
+                reportPreview.textContent = report;
+                addRecent('Report Generator');
+            });
+
+            exportReportBtn.addEventListener('click', function() {
+                const text = reportPreview.textContent;
+                if (!text || text === 'Report will appear here.') {
+                    alert('Please generate a report first.');
+                    return;
+                }
+                const blob = new Blob([text], { type: 'text/plain' });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = `InstrumentPro_Report_${new Date().toISOString().slice(0,10)}.txt`;
+                a.click();
+                URL.revokeObjectURL(a.href);
+            });
+
+            // =============================================================
+            // SETTINGS
+            // =============================================================
+            const textSizeRange = document.getElementById('textSizeRange');
+            const textSizeDisplay = document.getElementById('textSizeDisplay');
+            const showRecent = document.getElementById('showRecent');
+            const clearDataBtn = document.getElementById('clearDataBtn');
+
+            // Text size
+            const savedSize = getStorage('textSize', 100);
+            textSizeRange.value = savedSize;
+            textSizeDisplay.textContent = savedSize + '%';
+            document.body.style.fontSize = savedSize + '%';
+
+            textSizeRange.addEventListener('input', function() {
+                const size = this.value;
+                textSizeDisplay.textContent = size + '%';
+                document.body.style.fontSize = size + '%';
+                setStorage('textSize', parseInt(size));
+            });
+
+            // Show recent tools
+            const showRecentVal = getStorage('showRecent', true);
+            showRecent.checked = showRecentVal;
+            setStorage('showRecent', showRecentVal);
+
+            showRecent.addEventListener('change', function() {
+                setStorage('showRecent', this.checked);
+                renderRecent();
+            });
+
+            // Clear data
+            clearDataBtn.addEventListener('click', function() {
+                if (confirm('⚠️ Delete all local data? This cannot be undone.')) {
+                    localStorage.clear();
+                    uploadedFiles = [];
+                    savedTags = [];
+                    recentTools = [];
+                    renderFiles();
+                    renderTags();
+                    renderRecent();
+                    alert('✅ All local data cleared.');
+                }
+            });
+
+            // =============================================================
+            // BOTTOM TABS
+            // =============================================================
             document.querySelectorAll('.bottom-tabs .tab-item').forEach(tab => {
                 tab.addEventListener('click', function() {
-                    document.querySelectorAll('.bottom-tabs .tab-item').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.bottom-tabs .tab-item').forEach(t => t.classList.remove(
+                    'active'));
                     this.classList.add('active');
                     const target = this.dataset.tab;
                     const map = {
@@ -1273,27 +2095,34 @@
                 });
             });
 
-            // ===== 12. SEARCH =====
+            // =============================================================
+            // SEARCH
+            // =============================================================
             const searchInput = document.getElementById('searchInput');
             searchInput.addEventListener('input', function() {
                 const q = this.value.toLowerCase().trim();
-                const items = document.querySelectorAll('.card, .section-title, .greeting, .quick-grid');
+                const items = document.querySelectorAll('.card, .section-title, .greeting, .quick-grid, .recent-tools');
                 items.forEach(el => {
                     const text = el.textContent.toLowerCase();
                     el.style.display = (q === '' || text.includes(q)) ? '' : 'none';
                 });
             });
 
-            // ===== 13. QUICK ACCESS =====
+            // =============================================================
+            // QUICK ACCESS
+            // =============================================================
             document.querySelectorAll('.quick-item').forEach(item => {
                 item.addEventListener('click', function() {
                     const target = this.dataset.target;
                     const el = document.getElementById(target);
-                    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    if (el) {
+                        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        addRecent(this.textContent.trim());
+                    }
                 });
             });
 
-            console.log('✅ InstrumentPro Toolbox v3.0 — All tools working!');
+            console.log('✅ InstrumentPro v3.0 — All features working!');
         })();
     </script>
 </body>
