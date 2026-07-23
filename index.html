@@ -1,262 +1,669 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>InstrumentPro - Complete</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-<style>
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif; background-color: #f8f9fa; }
-  .card { @apply bg-white rounded-2xl shadow-sm border border-gray-100 p-5; }
-  .nav-active { @apply text-blue-600 bg-blue-50; }
-  .hide { display: none; }
-  .fade-in { animation: fadeIn 0.3s ease; }
-  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-  input, select { @apply w-full px-4 py-2.5 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm; }
-  .btn { @apply bg-blue-600 text-white px-4 py-2.5 rounded-xl font-medium hover:bg-blue-700 transition text-sm; }
-  .result-box { @apply bg-blue-50 border border-blue-200 rounded-xl p-4 mt-3; }
-  .result-value { @apply text-2xl font-bold text-blue-700; }
-</style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover" />
+    <title>InstrumentPro · Complete Toolbox</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        /* ===== RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+        body {
+            background: #f2f5f9;
+            color: #1c2a44;
+            padding: 0 0 80px 0;
+            max-width: 480px;
+            margin: 0 auto;
+            transition: background 0.3s, color 0.3s;
+        }
+        body.dark {
+            background: #0f172a;
+            color: #e2e8f0;
+        }
+        body.dark .card,
+        body.dark .search-bar,
+        body.dark .quick-item,
+        body.dark .greeting,
+        body.dark .result-box,
+        body.dark .cal-point,
+        body.dark .trouble-item,
+        body.dark .dp-diagram,
+        body.dark .segmented {
+            background: #1e293b;
+            border-color: #334155;
+            color: #e2e8f0;
+        }
+        body.dark .card-header span,
+        body.dark .chip,
+        body.dark .result-box span:last-child {
+            color: #94a3b8;
+        }
+        body.dark .btn {
+            background: #2563eb;
+        }
+        body.dark .btn-outline {
+            background: transparent;
+            color: #60a5fa;
+            border-color: #3b82f6;
+        }
+        body.dark input,
+        body.dark select {
+            background: #0f172a;
+            color: #e2e8f0;
+            border-color: #334155;
+        }
+        body.dark .dp-diagram {
+            background: #1a253a;
+        }
+        body.dark .greeting {
+            background: linear-gradient(145deg, #0f2b44, #1a365d);
+        }
+
+        /* ===== TOP GREETING ===== */
+        .greeting {
+            background: linear-gradient(145deg, #1e3a5f, #0f2b44);
+            color: white;
+            padding: 20px 18px 16px 18px;
+            border-radius: 28px;
+            margin: 12px 12px 16px 12px;
+            box-shadow: 0 6px 16px rgba(0, 20, 40, 0.15);
+        }
+        .greeting-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .greeting h1 {
+            font-weight: 600;
+            font-size: 1.5rem;
+            letter-spacing: -0.5px;
+        }
+        .greeting h1 i {
+            margin-right: 8px;
+            color: #7fc9ff;
+        }
+        .greeting .sub {
+            opacity: 0.8;
+            font-size: 0.9rem;
+            margin-top: 4px;
+        }
+        .greeting .dark-toggle {
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+
+        /* ===== SEARCH ===== */
+        .search-bar {
+            background: white;
+            border-radius: 40px;
+            padding: 6px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0 12px 16px 12px;
+            border: 1px solid #e9edf3;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+        }
+        .search-bar i {
+            color: #94a3b8;
+        }
+        .search-bar input {
+            border: none;
+            background: transparent;
+            padding: 10px 0;
+            width: 100%;
+            font-size: 0.95rem;
+            outline: none;
+        }
+
+        /* ===== QUICK ACCESS ===== */
+        .quick-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            padding: 0 12px;
+            margin-bottom: 20px;
+        }
+        .quick-item {
+            background: white;
+            border-radius: 16px;
+            padding: 14px 4px;
+            text-align: center;
+            border: 1px solid #eef2f6;
+            cursor: pointer;
+            transition: 0.15s;
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+        .quick-item i {
+            display: block;
+            font-size: 1.6rem;
+            margin-bottom: 4px;
+            color: #1e3a5f;
+        }
+        .quick-item:active {
+            transform: scale(0.94);
+        }
+        .quick-item.color-1 i {
+            color: #2563eb;
+        }
+        .quick-item.color-2 i {
+            color: #7c3aed;
+        }
+        .quick-item.color-3 i {
+            color: #059669;
+        }
+        .quick-item.color-4 i {
+            color: #b45309;
+        }
+
+        /* ===== RECENT TOOLS ===== */
+        .recent-tools {
+            padding: 0 12px;
+            margin-bottom: 20px;
+        }
+        .recent-tools .chip {
+            background: #eef2f6;
+            border-radius: 40px;
+            padding: 4px 14px;
+            font-size: 0.75rem;
+            display: inline-block;
+            margin: 3px 4px 3px 0;
+        }
+        body.dark .recent-tools .chip {
+            background: #334155;
+            color: #e2e8f0;
+        }
+
+        /* ===== CARDS ===== */
+        .card {
+            background: white;
+            border-radius: 24px;
+            padding: 16px 18px;
+            margin: 0 12px 16px 12px;
+            border: 1px solid #e9edf3;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+        .card-header i {
+            font-size: 1.4rem;
+            color: #1e3a5f;
+            width: 30px;
+        }
+        .card-header h3 {
+            font-weight: 600;
+            font-size: 1.05rem;
+        }
+        .card-header span {
+            margin-left: auto;
+            color: #94a3b8;
+            font-size: 0.7rem;
+            background: #f1f5f9;
+            padding: 2px 12px;
+            border-radius: 30px;
+        }
+
+        /* ===== SEGMENTED CONTROL ===== */
+        .segmented {
+            display: flex;
+            background: #f1f5f9;
+            border-radius: 40px;
+            padding: 3px;
+            margin-bottom: 14px;
+        }
+        .segmented button {
+            flex: 1;
+            border: none;
+            background: transparent;
+            padding: 8px 0;
+            border-radius: 30px;
+            font-weight: 500;
+            font-size: 0.8rem;
+            color: #64748b;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .segmented button.active {
+            background: white;
+            color: #1e3a5f;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+        }
+        body.dark .segmented {
+            background: #334155;
+        }
+        body.dark .segmented button.active {
+            background: #1e293b;
+            color: #e2e8f0;
+        }
+
+        /* ===== ROW / INPUTS ===== */
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 12px;
+            margin-bottom: 12px;
+            align-items: center;
+        }
+        .row label {
+            font-weight: 500;
+            font-size: 0.85rem;
+            color: #475569;
+            min-width: 60px;
+        }
+        .row input,
+        .row select {
+            flex: 1;
+            padding: 8px 14px;
+            border: 1px solid #dce1e9;
+            border-radius: 40px;
+            background: #fafcff;
+            font-size: 0.9rem;
+            outline: none;
+            min-width: 60px;
+        }
+        .row input:focus,
+        .row select:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+        }
+        .row .unit-label {
+            font-size: 0.8rem;
+            color: #64748b;
+            font-weight: 500;
+        }
+        .result-box {
+            background: #f1f6fd;
+            padding: 10px 16px;
+            border-radius: 40px;
+            margin-top: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        .result-box span:last-child {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #0b2d4e;
+        }
+
+        /* ===== BUTTONS ===== */
+        .btn {
+            background: #1e3a5f;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.15s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn i {
+            color: white;
+        }
+        .btn-outline {
+            background: transparent;
+            color: #1e3a5f;
+            border: 1px solid #b6c9e0;
+        }
+        .btn-outline i {
+            color: #1e3a5f;
+        }
+        .btn-sm {
+            padding: 4px 14px;
+            font-size: 0.75rem;
+        }
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+        /* ===== CALIBRATION POINTS ===== */
+        .cal-points-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px 12px;
+            margin: 8px 0;
+        }
+        .cal-point {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8fafd;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+        }
+        .cal-point input {
+            width: 60px;
+            padding: 4px 8px;
+            border: 1px solid #dce1e9;
+            border-radius: 20px;
+            text-align: center;
+            font-size: 0.8rem;
+            background: white;
+        }
+
+        /* ===== DP DIAGRAM ===== */
+        .dp-diagram {
+            background: #eaf0f8;
+            padding: 16px;
+            border-radius: 32px;
+            text-align: center;
+            font-family: monospace;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            letter-spacing: 1px;
+            color: #0b2d4e;
+            margin-top: 6px;
+        }
+        .dp-diagram .port-label {
+            font-size: 0.75rem;
+            font-family: sans-serif;
+            background: rgba(255, 255, 255, 0.6);
+            padding: 2px 12px;
+            border-radius: 20px;
+            display: inline-block;
+            margin: 2px 4px;
+        }
+
+        /* ===== TABS (horizontal scrolling) ===== */
+        .tab-scroll {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding: 4px 0 10px 0;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
+        .tab-scroll::-webkit-scrollbar {
+            display: none;
+        }
+        .tab-scroll .tab {
+            white-space: nowrap;
+            background: #f1f5f9;
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #475569;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: 0.15s;
+        }
+        .tab-scroll .tab.active {
+            background: #1e3a5f;
+            color: white;
+            border-color: #1e3a5f;
+        }
+        body.dark .tab-scroll .tab {
+            background: #334155;
+            color: #cbd5e1;
+        }
+        body.dark .tab-scroll .tab.active {
+            background: #2563eb;
+            color: white;
+        }
+
+        /* ===== TROUBLE ITEMS ===== */
+        .trouble-item {
+            background: #f8fafd;
+            padding: 8px 14px;
+            border-radius: 40px;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-left: 3px solid #1e3a5f;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+        .trouble-item:active {
+            background: #eef2f6;
+        }
+
+        /* ===== STATUS BADGE ===== */
+        .badge {
+            font-size: 0.65rem;
+            padding: 2px 12px;
+            border-radius: 30px;
+            font-weight: 600;
+        }
+        .badge-pass {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        .badge-fail {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        .badge-warn {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        /* ===== CHIPS ===== */
+        .chip {
+            background: #eef2f6;
+            border-radius: 40px;
+            padding: 2px 12px;
+            font-size: 0.7rem;
+            display: inline-block;
+            margin: 2px 3px 2px 0;
+            font-weight: 500;
+        }
+
+        /* ===== BOTTOM TAB BAR ===== */
+        .bottom-tabs {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            max-width: 480px;
+            margin: 0 auto;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 6px 0 10px 0;
+            border-top: 1px solid #e9edf3;
+            box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.04);
+            z-index: 100;
+        }
+        .bottom-tabs .tab-item {
+            text-align: center;
+            font-size: 0.6rem;
+            color: #94a3b8;
+            cursor: pointer;
+            padding: 2px 10px;
+            transition: 0.15s;
+            border: none;
+            background: transparent;
+        }
+        .bottom-tabs .tab-item i {
+            display: block;
+            font-size: 1.2rem;
+            margin-bottom: 2px;
+        }
+        .bottom-tabs .tab-item.active {
+            color: #1e3a5f;
+            font-weight: 600;
+        }
+        body.dark .bottom-tabs {
+            background: #1e293b;
+            border-top-color: #334155;
+        }
+        body.dark .bottom-tabs .tab-item.active {
+            color: #60a5fa;
+        }
+
+        /* ===== AI CHAT (mock) ===== */
+        .chat-bubble {
+            background: #e8f0fe;
+            border-radius: 16px 16px 16px 4px;
+            padding: 10px 14px;
+            margin: 4px 0;
+            font-size: 0.85rem;
+            max-width: 85%;
+        }
+        .chat-bubble.user {
+            background: #1e3a5f;
+            color: white;
+            border-radius: 16px 16px 4px 16px;
+            margin-left: auto;
+        }
+        body.dark .chat-bubble {
+            background: #1a253a;
+            color: #e2e8f0;
+        }
+        body.dark .chat-bubble.user {
+            background: #2563eb;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 420px) {
+            .quick-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .cal-points-grid {
+                grid-template-columns: 1fr;
+            }
+            .row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .row label {
+                min-width: auto;
+            }
+        }
+
+        /* ===== UTILITY ===== */
+        .mt-1 {
+            margin-top: 8px;
+        }
+        .mb-1 {
+            margin-bottom: 8px;
+        }
+        .flex {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            align-items: center;
+        }
+        .gap-1 {
+            gap: 6px;
+        }
+        .text-center {
+            text-align: center;
+        }
+        .w-full {
+            width: 100%;
+        }
+        .hidden {
+            display: none !important;
+        }
+        hr {
+            border: none;
+            border-top: 1px solid #e9edf3;
+            margin: 14px 0;
+        }
+        body.dark hr {
+            border-color: #334155;
+        }
+
+        /* Scrollable sections */
+        .scroll-x {
+            overflow-x: auto;
+            white-space: nowrap;
+            padding: 4px 0;
+            -webkit-overflow-scrolling: touch;
+        }
+    </style>
 </head>
-<body class="text-gray-800 pb-20 md:pb-0">
+<body>
 
-<!-- SIDEBAR -->
-<aside id="sidebar" class="hidden md:flex flex-col w-64 bg-white border-r h-screen fixed left-0 top-0 z-20">
-  <div class="p-6 border-b"><h1 class="text-xl font-bold text-blue-600"><i class="fas fa-wrench mr-2"></i>InstrumentPro</h1></div>
-  <nav class="flex-1 p-4 space-y-1 overflow-y-auto">
-    <button onclick="showPage('home')" class="w-full text-left px-4 py-3 rounded-xl text-sm font-medium hover:bg-gray-50"><i class="fas fa-home w-5 mr-2"></i>Dashboard</button>
-    <button onclick="showPage('converter')" class="w-full text-left px-4 py-3 rounded-xl text-sm font-medium hover:bg-gray-50"><i class="fas fa-exchange-alt w-5 mr-2"></i>Unit Converter</button>
-    <button onclick="showPage('level')" class="w-full text-left px-4 py-3 rounded-xl text-sm font-medium hover:bg-gray-50"><i class="fas fa-tint w-5 mr-2"></i>Level DP Calc</button>
-    <button onclick="showPage('flow')" class="w-full text-left px-4 py-3 rounded-xl text-sm font-medium hover:bg-gray-50"><i class="fas fa-water w-5 mr-2"></i>Flow Calculator</button>
-    <button onclick="showPage('signal')" class="w-full text-left px-4 py-3 rounded-xl text-sm font-medium hover:bg-gray-50"><i class="fas fa-wave-square w-5 mr-2"></i>4-20 mA Calc</button>
-    <button onclick="showPage('references')" class="w-full text-left px-4 py-3 rounded-xl text-sm font-medium hover:bg-gray-50"><i class="fas fa-book w-5 mr-2"></i>References</button>
-    <button onclick="showPage('instruments')" class="w-full text-left px-4 py-3 rounded-xl text-sm font-medium hover:bg-gray-50"><i class="fas fa-database w-5 mr-2"></i>Instruments</button>
-    <button onclick="showPage('troubleshoot')" class="w-full text-left px-4 py-3 rounded-xl text-sm font-medium hover:bg-gray-50"><i class="fas fa-stethoscope w-5 mr-2"></i>Troubleshoot</button>
-    <button onclick="showPage('upload')" class="w-full text-left px-4 py-3 rounded-xl text-sm font-medium hover:bg-gray-50"><i class="fas fa-cloud-upload-alt w-5 mr-2"></i>Upload Data</button>
-  </nav>
-</aside>
-
-<!-- MAIN CONTENT -->
-<main class="md:ml-64 min-h-screen">
-
-  <!-- HOME PAGE -->
-  <div id="page-home" class="page fade-in p-6">
-    <header class="mb-6"><h1 class="text-2xl font-bold">Good Morning! 👋</h1><p class="text-gray-500">What do you want to work on?</p></header>
-    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-      <div onclick="showPage('converter')" class="card cursor-pointer border-l-4 border-l-blue-500"><h3 class="font-bold text-blue-600">Unit Converter</h3><p class="text-xs text-gray-500 mt-1">PSI, bar, °C, GPM...</p></div>
-      <div onclick="showPage('level')" class="card cursor-pointer border-l-4 border-l-orange-500"><h3 class="font-bold text-orange-600">Level DP</h3><p class="text-xs text-gray-500 mt-1">LRV/URV Calculator</p></div>
-      <div onclick="showPage('flow')" class="card cursor-pointer border-l-4 border-l-green-500"><h3 class="font-bold text-green-600">Flow Calc</h3><p class="text-xs text-gray-500 mt-1">Orifice & Square Root</p></div>
-      <div onclick="showPage('signal')" class="card cursor-pointer border-l-4 border-l-purple-500"><h3 class="font-bold text-purple-600">4-20 mA</h3><p class="text-xs text-gray-500 mt-1">Signal Calculator</p></div>
-      <div onclick="showPage('references')" class="card cursor-pointer border-l-4 border-l-red-500"><h3 class="font-bold text-red-600">References</h3><p class="text-xs text-gray-500 mt-1">Color Codes, TC</p></div>
-      <div onclick="showPage('troubleshoot')" class="card cursor-pointer border-l-4 border-l-teal-500"><h3 class="font-bold text-teal-600">Troubleshoot</h3><p class="text-xs text-gray-500 mt-1">AI Assistant</p></div>
-    </div>
-  </div>
-
-  <!-- UNIT CONVERTER PAGE -->
-  <div id="page-converter" class="page hide fade-in p-6">
-    <header class="mb-6"><h1 class="text-2xl font-bold">Unit Converter</h1></header>
-    
-    <!-- Pressure -->
-    <div class="card mb-4">
-      <h3 class="font-bold text-lg mb-4 flex items-center gap-2"><i class="fas fa-gauge-high text-blue-600"></i> Pressure</h3>
-      <div class="grid grid-cols-2 gap-3 mb-3">
-        <div><label class="text-xs text-gray-500 mb-1 block">Value</label><input type="number" id="pressVal" value="1" oninput="calcPressure()"></div>
-        <div><label class="text-xs text-gray-500 mb-1 block">From</label><select id="pressFrom" onchange="calcPressure()"><option value="bar">bar</option><option value="psi">PSI</option><option value="kpa">kPa</option><option value="mpa">MPa</option></select></div>
-      </div>
-      <div class="result-box"><div class="text-xs text-gray-600 mb-1">Result in kPa:</div><div class="result-value" id="pressResult">100.00 kPa</div></div>
-    </div>
-
-    <!-- Temperature -->
-    <div class="card mb-4">
-      <h3 class="font-bold text-lg mb-4 flex items-center gap-2"><i class="fas fa-thermometer-half text-red-600"></i> Temperature</h3>
-      <div class="grid grid-cols-2 gap-3 mb-3">
-        <div><label class="text-xs text-gray-500 mb-1 block">°C</label><input type="number" id="tempC" value="25" oninput="calcTemp()"></div>
-        <div><label class="text-xs text-gray-500 mb-1 block">°F</label><input type="number" id="tempF" oninput="calcTempFromF()"></div>
-      </div>
-      <div class="result-box"><div class="text-xs text-gray-600 mb-1">Kelvin:</div><div class="result-value" id="tempK">298.15 K</div></div>
-    </div>
-  </div>
-
-  <!-- LEVEL DP CALCULATOR PAGE -->
-  <div id="page-level" class="page hide fade-in p-6">
-    <header class="mb-6"><h1 class="text-2xl font-bold">Level DP Calculator</h1><p class="text-gray-500 text-sm">Calculate LRV & URV for DP level transmitters</p></header>
-    
-    <div class="card mb-4">
-      <div class="flex bg-gray-100 rounded-xl p-1 mb-4">
-        <button onclick="setLevelMode('dry')" id="btn-dry" class="flex-1 py-2 rounded-lg bg-white shadow text-sm font-semibold">Dry Leg</button>
-        <button onclick="setLevelMode('wet')" id="btn-wet" class="flex-1 py-2 rounded-lg text-sm text-gray-500">Wet Leg</button>
-      </div>
-
-      <!-- Dry Leg Inputs -->
-      <div id="dry-inputs" class="space-y-3">
-        <div><label class="text-xs text-gray-500 mb-1 block">Tank Height (inches)</label><input type="number" id="tankHeight" value="120" oninput="calcDryLeg()"></div>
-        <div><label class="text-xs text-gray-500 mb-1 block">Process SG (Specific Gravity)</label><input type="number" id="processSG" value="1.0" step="0.01" oninput="calcDryLeg()"></div>
-        
-        <div class="grid grid-cols-3 gap-2 mt-4">
-          <div class="result-box text-center"><div class="text-xs text-gray-600">LRV</div><div class="result-value text-lg" id="dryLrv">0.0</div><div class="text-xs text-gray-500">inH₂O</div></div>
-          <div class="result-box text-center"><div class="text-xs text-gray-600">URV</div><div class="result-value text-lg" id="dryUrv">120.0</div><div class="text-xs text-gray-500">inH₂O</div></div>
-          <div class="result-box text-center"><div class="text-xs text-gray-600">Span</div><div class="result-value text-lg" id="drySpan">120.0</div><div class="text-xs text-gray-500">inH₂O</div></div>
+    <!-- ========================================================== -->
+    <!-- TOP GREETING + DARK MODE TOGGLE -->
+    <!-- ========================================================== -->
+    <div class="greeting">
+        <div class="greeting-top">
+            <h1><i class="fas fa-toolbox"></i>InstrumentPro</h1>
+            <button class="dark-toggle" id="darkToggle"><i class="fas fa-moon"></i> Dark</button>
         </div>
-      </div>
-
-      <!-- Wet Leg Inputs (Hidden by default) -->
-      <div id="wet-inputs" class="hide space-y-3">
-        <div><label class="text-xs text-gray-500 mb-1 block">Tank Height (in)</label><input type="number" id="wetTankHeight" value="120" oninput="calcWetLeg()"></div>
-        <div><label class="text-xs text-gray-500 mb-1 block">Process SG</label><input type="number" id="wetProcessSG" value="0.85" step="0.01" oninput="calcWetLeg()"></div>
-        <div><label class="text-xs text-gray-500 mb-1 block">Wet Leg Height (in)</label><input type="number" id="wetLegHeight" value="144" oninput="calcWetLeg()"></div>
-        <div><label class="text-xs text-gray-500 mb-1 block">Fill Fluid SG</label><input type="number" id="wetFillSG" value="1.1" step="0.01" oninput="calcWetLeg()"></div>
-        
-        <div class="grid grid-cols-3 gap-2 mt-4">
-          <div class="result-box text-center"><div class="text-xs text-gray-600">LRV</div><div class="result-value text-lg" id="wetLrv">-158.4</div><div class="text-xs text-gray-500">inH₂O</div></div>
-          <div class="result-box text-center"><div class="text-xs text-gray-600">URV</div><div class="result-value text-lg" id="wetUrv">-56.4</div><div class="text-xs text-gray-500">inH₂O</div></div>
-          <div class="result-box text-center"><div class="text-xs text-gray-600">Span</div><div class="result-value text-lg" id="wetSpan">102.0</div><div class="text-xs text-gray-500">inH₂O</div></div>
-        </div>
-      </div>
-
-      <div class="mt-6 p-4 bg-blue-50 rounded-xl border border-blue-100">
-        <h4 class="font-bold text-blue-800 text-sm mb-2">Connection Guide:</h4>
-        <div class="flex gap-3 text-sm">
-          <div class="flex-1 bg-red-100 p-3 rounded-lg"><span class="font-bold text-red-700 block">H (High)</span><span class="text-red-600 text-xs">→ Bottom Port (Process)</span></div>
-          <div class="flex-1 bg-green-100 p-3 rounded-lg"><span class="font-bold text-green-700 block">L (Low)</span><span class="text-green-600 text-xs">→ Top Port (Reference)</span></div>
-        </div>
-      </div>
+        <div class="sub"><i class="fas fa-sun" id="greetingIcon"></i> <span id="greetingText">Good Morning</span> · What do you need?</div>
     </div>
-  </div>
 
-  <!-- FLOW CALCULATOR PAGE -->
-  <div id="page-flow" class="page hide fade-in p-6">
-    <header class="mb-6"><h1 class="text-2xl font-bold">Flow Calculator</h1><p class="text-gray-500 text-sm">Orifice plate square root calculation</p></header>
-    <div class="card">
-      <div class="space-y-3">
-        <div><label class="text-xs text-gray-500 mb-1 block">Max Flow (Qmax)</label><input type="number" id="flowMax" value="1000" oninput="calcFlow()"></div>
-        <div><label class="text-xs text-gray-500 mb-1 block">Max ΔP (at Qmax)</label><input type="number" id="dpMax" value="100" oninput="calcFlow()"></div>
-        <div><label class="text-xs text-gray-500 mb-1 block">Current ΔP</label><input type="number" id="dpCurrent" value="50" oninput="calcFlow()"></div>
-      </div>
-      <div class="result-box mt-4">
-        <div class="text-xs text-gray-600 mb-1">Current Flow Rate:</div>
-        <div class="result-value" id="flowResult">707.1</div>
-        <div class="text-sm text-gray-500 mt-2">Formula: Q = Qmax × √(ΔP/ΔPmax)</div>
-      </div>
+    <!-- ========================================================== -->
+    <!-- SEARCH -->
+    <!-- ========================================================== -->
+    <div class="search-bar">
+        <i class="fas fa-search"></i>
+        <input type="text" id="searchInput" placeholder="Search tools, references, faults..." />
     </div>
-  </div>
 
-  <!-- 4-20 mA CALCULATOR PAGE -->
-  <div id="page-signal" class="page hide fade-in p-6">
-    <header class="mb-6"><h1 class="text-2xl font-bold">4-20 mA Calculator</h1></header>
-    <div class="card mb-4">
-      <h3 class="font-bold mb-3">PV Range</h3>
-      <div class="grid grid-cols-2 gap-3 mb-3">
-        <div><label class="text-xs text-gray-500 mb-1 block">LRV (4mA)</label><input type="number" id="pvLrv" value="0" oninput="calcSignal()"></div>
-        <div><label class="text-xs text-gray-500 mb-1 block">URV (20mA)</label><input type="number" id="pvUrv" value="100" oninput="calcSignal()"></div>
-      </div>
-      <div><label class="text-xs text-gray-500 mb-1 block">Current mA</label><input type="number" id="currentMA" value="12" step="0.1" oninput="calcSignal()"></div>
-      <div class="result-box">
-        <div class="text-xs text-gray-600 mb-1">Process Variable:</div>
-        <div class="result-value" id="pvResult">50.00</div>
-        <div class="text-sm text-gray-500 mt-1" id="percentResult">50% of span</div>
-      </div>
+    <!-- ========================================================== -->
+    <!-- QUICK ACCESS (colored icons) -->
+    <!-- ========================================================== -->
+    <div class="quick-grid" id="quickAccess">
+        <div class="quick-item color-1" data-target="converter"><i class="fas fa-arrows-alt-h"></i> Converter</div>
+        <div class="quick-item color-2" data-target="calibration"><i class="fas fa-sliders-h"></i> Calibration</div>
+        <div class="quick-item color-3" data-target="dp"><i class="fas fa-tachometer-alt"></i> Level DP</div>
+        <div class="quick-item color-4" data-target="flow"><i class="fas fa-water"></i> Flow</div>
+        <div class="quick-item color-1" data-target="electrical"><i class="fas fa-bolt"></i> Electrical</div>
+        <div class="quick-item color-2" data-target="references"><i class="fas fa-book"></i> References</div>
+        <div class="quick-item color-3" data-target="trouble"><i class="fas fa-exclamation-triangle"></i> Fault</div>
+        <div class="quick-item color-4" data-target="ai"><i class="fas fa-robot"></i> AI Chat</div>
+    </div>
+
+    <!-- ========================================================== -->
+    <!-- RECENT TOOLS -->
+    <!-- ========================================================== -->
+    <div class="recent-tools">
+        <span style="font-size:0.75rem; font-weight:600; color:#64748b;">RECENT TOOLS</span>
+        <div>
+            <span class="chip">4-20mA Calc</span>
+            <span class="chip">Pressure → PSI</span>
+            <span class="chip">DP Level</span>
+            <span class="chip">Calibration 5pt</span>
+        </div>
+    </div>
+
+    <!-- ========================================================== -->
+    <!-- 1. UNIT CONVERTER (LIVE) -->
+    <!-- ========================================================== -->
+    <div id="converter" class="section-title" style="padding:0 12px 8px 12px;">
+        <h2 style="font-size:1.1rem;"><i class="fas fa-arrows-alt-h"></i> Unit Converter</h2>
     </div>
     <div class="card">
-      <h3 class="font-bold mb-3 text-sm text-gray-600">mA Diagnostic Guide:</h3>
-      <ul class="text-sm space-y-2">
-        <li class="flex gap-2"><span class="text-green-600 font-bold">4-20 mA:</span> <span class="text-gray-600">Normal operating range</span></li>
-        <li class="flex gap-2"><span class="text-yellow-600 font-bold">&lt; 4 mA:</span> <span class="text-gray-600">Under-range / Loop fault</span></li>
-        <li class="flex gap-2"><span class="text-red-600 font-bold">22 mA:</span> <span class="text-gray-600">Sensor fault (NAMUR NE43)</span></li>
-        <li class="flex gap-2"><span class="text-red-600 font-bold">0 mA:</span> <span class="text-gray-600">Open circuit / No power</span></li>
-      </ul>
-    </div>
-  </div>
-
-  <!-- REFERENCES PAGE -->
-  <div id="page-references" class="page hide fade-in p-6">
-    <header class="mb-6"><h1 class="text-2xl font-bold">References</h1></header>
-    
-    <!-- TC Colors -->
-    <div class="card mb-4">
-      <h3 class="font-bold text-lg mb-3 flex items-center gap-2"><i class="fas fa-thermometer-half text-red-500"></i> Thermocouple Colors (IEC)</h3>
-      <div class="overflow-x-auto">
-        <table class="w-full text-sm">
-          <thead class="bg-gray-100"><tr><th class="p-2 text-left">Type</th><th class="p-2 text-left">Positive</th><th class="p-2 text-left">Negative</th><th class="p-2 text-left">Range</th></tr></thead>
-          <tbody>
-            <tr class="border-b"><td class="p-2 font-bold">Type K</td><td class="p-2"><span class="bg-green-500 text-white px-2 py-1 rounded text-xs">Green</span></td><td class="p-2"><span class="bg-gray-400 text-white px-2 py-1 rounded text-xs">White</span></td><td class="p-2 text-xs">-200 to 1260°C</td></tr>
-            <tr class="border-b"><td class="p-2 font-bold">Type J</td><td class="p-2"><span class="bg-gray-400 text-white px-2 py-1 rounded text-xs">White</span></td><td class="p-2"><span class="bg-red-500 text-white px-2 py-1 rounded text-xs">Red</span></td><td class="p-2 text-xs">0 to 750°C</td></tr>
-            <tr class="border-b"><td class="p-2 font-bold">Type T</td><td class="p-2"><span class="bg-blue-500 text-white px-2 py-1 rounded text-xs">Blue</span></td><td class="p-2"><span class="bg-gray-400 text-white px-2 py-1 rounded text-xs">White</span></td><td class="p-2 text-xs">-200 to 350°C</td></tr>
-            <tr><td class="p-2 font-bold">Type E</td><td class="p-2"><span class="bg-red-500 text-white px-2 py-1 rounded text-xs">Red</span></td><td class="p-2"><span class="bg-gray-400 text-white px-2 py-1 rounded text-xs">White</span></td><td class="p-2 text-xs">-200 to 900°C</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- RTD Wiring -->
-    <div class="card mb-4">
-      <h3 class="font-bold text-lg mb-3">RTD Wiring</h3>
-      <div class="space-y-2 text-sm">
-        <div class="p-3 bg-blue-50 rounded-xl"><strong class="text-blue-800">2-Wire:</strong> <span class="text-gray-600">Simple but least accurate. Lead resistance adds error.</span></div>
-        <div class="p-3 bg-green-50 rounded-xl"><strong class="text-green-800">3-Wire:</strong> <span class="text-gray-600">Most common. Compensates for equal lead resistance.</span></div>
-        <div class="p-3 bg-purple-50 rounded-xl"><strong class="text-purple-800">4-Wire:</strong> <span class="text-gray-600">Most accurate. Eliminates lead error completely.</span></div>
-      </div>
-    </div>
-
-    <!-- Common Transmitters -->
-    <div class="card">
-      <h3 class="font-bold text-lg mb-3">Common Transmitters</h3>
-      <div class="space-y-2 text-sm">
-        <div class="flex justify-between p-2 bg-gray-50 rounded-lg"><span class="font-bold">Rosemount 3051</span><span class="text-gray-500">0-0.3 to 0-10000 psi</span></div>
-        <div class="flex justify-between p-2 bg-gray-50 rounded-lg"><span class="font-bold">Yokogawa EJA110E</span><span class="text-gray-500">0-1 to 0-5000 kPa</span></div>
-        <div class="flex justify-between p-2 bg-gray-50 rounded-lg"><span class="font-bold">ABB 266DSH</span><span class="text-gray-500">0-0.1 to 0-1000 mbar</span></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- INSTRUMENTS PAGE -->
-  <div id="page-instruments" class="page hide fade-in p-6">
-    <header class="mb-6 flex justify-between items-center">
-      <div><h1 class="text-2xl font-bold">Instruments</h1><p class="text-gray-500 text-sm">Tag database & JB lists</p></div>
-      <button class="btn"><i class="fas fa-plus mr-1"></i> Add</button>
-    </header>
-    <div class="card text-center py-12">
-      <i class="fas fa-database text-4xl text-gray-300 mb-3"></i>
-      <p class="text-gray-500">No instruments loaded</p>
-      <p class="text-sm text-gray-400 mt-2">Go to Upload to add your instrument list</p>
-    </div>
-  </div>
-
-  <!-- TROUBLESHOOT PAGE -->
-  <div id="page-troubleshoot" class="page hide fade-in p-6">
-    <header class="mb-6"><h1 class="text-2xl font-bold flex items-center gap-2"><i class="fas fa-robot text-blue-600"></i> AI Assistant</h1><p class="text-gray-500 text-sm">Describe the issue</p></header>
-    <div class="card mb-4 h-64 overflow-y-auto bg-gray-50 p-4">
-      <div class="bg-white p-3 rounded-xl rounded-tl-none shadow-sm mb-3 max-w-[85%] text-sm">Hello! I'm your InstrumentPro assistant. Tell me the tag and symptom (e.g., "PT-101 reading 22mA").</div>
-    </div>
-    <div class="flex gap-2">
-      <input type="text" placeholder="Describe the problem..." class="flex-1">
-      <button class="btn"><i class="fas fa-paper-plane"></i></button>
-    </div>
-  </div>
-
-  <!-- UPLOAD PAGE -->
-  <div id="page-upload" class="page hide fade-in p-6">
-    <header class="mb-6"><h1 class="text-2xl font-bold">Upload Data</h1><p class="text-gray-500 text-sm">Add instrument lists, JB lists, P&IDs</p></header>
-    <div class="border-2 border-dashed border-blue-300 bg-blue-50 rounded-2xl p-10 text-center">
-      <i class="fas fa-cloud-upload-alt text-4xl text-blue-400 mb-3"></i>
-      <h3 class="font-bold mb-2">Drag & drop files here</h3>
-      <p class="text-sm text-gray-500 mb-4">PDF, Excel, CSV, Images supported</p>
-      <button class="btn">Select Files</button>
-    </div>
-  </div>
-
-</main>
-
-<!-- BOTTOM NAV -->
-<nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t px-2 py-2 flex justify-around z-30">
-  <button onclick="showPage('home')" class="nav-btn flex flex-col items-center p-1 text-gray-400 w-14" data-page="home"><i class="fas fa-home text-lg"></i><span class="text-[10px]">Home</span></button>
-  <button onclick="showPage('converter')" class="nav-btn flex flex-col items-center p-1 text-gray-400 w-14" data-page="converter"><i class="fas fa-exchange-alt text-lg"></i><span class="text-[10px]">Calc</span></button>
-  <button onclick="showPage('level')" class="nav-btn flex flex-col items-center p-1 text-gray-400 w-14" data-page="level"><i class="fas fa-tint text-lg"></i><span class="text-[10px]">Level</span></button>
-  <button onclick="showPage('references')" class="nav-btn flex flex-col items-center p-1 text-gray-400 w-14" data-page="references"><i class="fas fa-book text-lg"></i><span class="text-[10px]">Refs</span></button>
-  <button onclick="showPage('upload')" class="nav-btn flex flex-col items-center p-1 text-gray-400 w-14" data-page="upload"><i class="fas fa-cloud-upload-alt text-lg"></i><span class="text-[10px]">Upload</span></button>
-</nav>
-
-<script>
-// Navigation
-function showPage(pageId) {
-  doc
+        <div class="card-header"><i class="fas fa-weight"></i><h3>Pressure</h3><span>psi · bar · kPa</span></div>
+        <div class="row">
+            <label>From</label>
+            <select id="fromUnit">
+                <option value="psi">PSI</option><option value="bar" selected>bar</option>
+                <option value="kpa">kPa</option><option value="mpa">MPa</option><option value="atm">atm</option>
+            </select>
+            <input type="number" id="inputVal" value="1" step="any" />
+        </div>
+        <div class="row">
+            <label>To</label>
+            <select id="toUnit">
+                <option value="psi">PSI</option><option value="bar">bar</option>
+                <option value="kpa" selected>kPa</opt
