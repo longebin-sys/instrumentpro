@@ -3,16 +3,11 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover" />
-    <title>InstrumentPro · I/E Bible Advanced</title>
+    <title>InstrumentPro · I/E Bible</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <style>
         /* ===== RESET & BASE ===== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif; }
         body {
             background: #f2f5f9;
             color: #1c2a44;
@@ -25,75 +20,26 @@
             background: #0f172a;
             color: #e2e8f0;
         }
-        body.dark .card,
-        body.dark .search-bar,
-        body.dark .quick-item,
-        body.dark .greeting,
-        body.dark .result-box,
-        body.dark .cal-point,
-        body.dark .trouble-item,
-        body.dark .dp-diagram,
-        body.dark .segmented,
-        body.dark .tab-scroll .tab,
-        body.dark .bender-card,
-        body.dark .restricted-box,
-        body.dark .chat-bubble {
+        body.dark .card, body.dark .search-bar, body.dark .quick-item, body.dark .greeting,
+        body.dark .result-box, body.dark .cal-point, body.dark .trouble-item, body.dark .dp-diagram,
+        body.dark .segmented, body.dark .tab-scroll .tab, body.dark .bender-card {
             background: #1e293b;
             border-color: #334155;
             color: #e2e8f0;
         }
-        body.dark .card-header span,
-        body.dark .chip,
-        body.dark .result-box span:last-child {
-            color: #94a3b8;
-        }
-        body.dark .btn {
-            background: #2563eb;
-        }
-        body.dark .btn-outline {
-            background: transparent;
-            color: #60a5fa;
-            border-color: #3b82f6;
-        }
-        body.dark input,
-        body.dark select {
-            background: #0f172a;
-            color: #e2e8f0;
-            border-color: #334155;
-        }
-        body.dark .dp-diagram {
-            background: #1a253a;
-        }
-        body.dark .greeting {
-            background: linear-gradient(145deg, #0f2b44, #1a365d);
-        }
-        body.dark .bottom-tabs {
-            background: #1e293b;
-            border-top-color: #334155;
-        }
-        body.dark .bottom-tabs .tab-item.active {
-            color: #60a5fa;
-        }
-        body.dark .badge-pass {
-            background: #065f46;
-            color: #d1fae5;
-        }
-        body.dark .badge-fail {
-            background: #7f1d1d;
-            color: #fee2e2;
-        }
-        body.dark .tab-scroll .tab.active {
-            background: #2563eb;
-            color: white;
-        }
-        body.dark .restricted-box {
-            background: #1a253a;
-            border-color: #7f1d1d;
-            color: #fca5a5;
-        }
-        body.dark .chat-bubble.user {
-            background: #2563eb;
-        }
+        body.dark .card-header span, body.dark .chip, body.dark .result-box span:last-child { color: #94a3b8; }
+        body.dark .btn { background: #2563eb; }
+        body.dark .btn-outline { background: transparent; color: #60a5fa; border-color: #3b82f6; }
+        body.dark input, body.dark select { background: #0f172a; color: #e2e8f0; border-color: #334155; }
+        body.dark .dp-diagram { background: #1a253a; }
+        body.dark .greeting { background: linear-gradient(145deg, #0f2b44, #1a365d); }
+        body.dark .bottom-tabs { background: #1e293b; border-top-color: #334155; }
+        body.dark .bottom-tabs .tab-item.active { color: #60a5fa; }
+        body.dark .badge-pass { background: #065f46; color: #d1fae5; }
+        body.dark .badge-fail { background: #7f1d1d; color: #fee2e2; }
+        body.dark .tab-scroll .tab.active { background: #2563eb; color: white; }
+        body.dark table th { background: #334155; }
+        body.dark table td { border-color: #334155; }
 
         /* ===== GREETING ===== */
         .greeting {
@@ -102,29 +48,14 @@
             padding: 18px 16px 14px 16px;
             border-radius: 28px;
             margin: 12px 12px 16px 12px;
-            box-shadow: 0 6px 16px rgba(0, 20, 40, 0.15);
+            box-shadow: 0 6px 16px rgba(0,20,40,0.15);
         }
-        .greeting-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .greeting h1 {
-            font-weight: 700;
-            font-size: 1.3rem;
-            letter-spacing: -0.5px;
-        }
-        .greeting h1 i {
-            margin-right: 6px;
-            color: #7fc9ff;
-        }
-        .greeting .sub {
-            opacity: 0.8;
-            font-size: 0.8rem;
-            margin-top: 2px;
-        }
+        .greeting-top { display: flex; justify-content: space-between; align-items: center; }
+        .greeting h1 { font-weight: 700; font-size: 1.3rem; letter-spacing: -0.5px; }
+        .greeting h1 i { margin-right: 6px; color: #7fc9ff; }
+        .greeting .sub { opacity: 0.8; font-size: 0.8rem; margin-top: 2px; }
         .greeting .dark-toggle {
-            background: rgba(255, 255, 255, 0.12);
+            background: rgba(255,255,255,0.12);
             border: none;
             color: white;
             padding: 4px 12px;
@@ -132,11 +63,7 @@
             font-size: 0.7rem;
             cursor: pointer;
         }
-        .greeting .version {
-            font-size: 0.55rem;
-            opacity: 0.5;
-            margin-top: 2px;
-        }
+        .greeting .version { font-size: 0.55rem; opacity: 0.5; margin-top: 2px; }
 
         /* ===== SEARCH ===== */
         .search-bar {
@@ -149,9 +76,7 @@
             margin: 0 12px 16px 12px;
             border: 1px solid #e9edf3;
         }
-        .search-bar i {
-            color: #94a3b8;
-        }
+        .search-bar i { color: #94a3b8; }
         .search-bar input {
             border: none;
             background: transparent;
@@ -180,32 +105,14 @@
             font-size: 0.65rem;
             font-weight: 600;
         }
-        .quick-item i {
-            display: block;
-            font-size: 1.4rem;
-            margin-bottom: 2px;
-        }
-        .quick-item:active {
-            transform: scale(0.94);
-        }
-        .quick-item.color-1 i {
-            color: #2563eb;
-        }
-        .quick-item.color-2 i {
-            color: #7c3aed;
-        }
-        .quick-item.color-3 i {
-            color: #059669;
-        }
-        .quick-item.color-4 i {
-            color: #b45309;
-        }
-        .quick-item.color-5 i {
-            color: #dc2626;
-        }
-        .quick-item.color-6 i {
-            color: #0891b2;
-        }
+        .quick-item i { display: block; font-size: 1.4rem; margin-bottom: 2px; }
+        .quick-item:active { transform: scale(0.94); }
+        .quick-item.color-1 i { color: #2563eb; }
+        .quick-item.color-2 i { color: #7c3aed; }
+        .quick-item.color-3 i { color: #059669; }
+        .quick-item.color-4 i { color: #b45309; }
+        .quick-item.color-5 i { color: #dc2626; }
+        .quick-item.color-6 i { color: #0891b2; }
 
         /* ===== CARDS ===== */
         .card {
@@ -214,7 +121,7 @@
             padding: 14px 16px;
             margin: 0 12px 14px 12px;
             border: 1px solid #e9edf3;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
         }
         .card-header {
             display: flex;
@@ -222,15 +129,8 @@
             gap: 10px;
             margin-bottom: 12px;
         }
-        .card-header i {
-            font-size: 1.2rem;
-            color: #1e3a5f;
-            width: 28px;
-        }
-        .card-header h3 {
-            font-weight: 600;
-            font-size: 1rem;
-        }
+        .card-header i { font-size: 1.2rem; color: #1e3a5f; width: 28px; }
+        .card-header h3 { font-weight: 600; font-size: 1rem; }
         .card-header span {
             margin-left: auto;
             color: #94a3b8;
@@ -244,11 +144,9 @@
             font-size: 1rem;
             font-weight: 700;
         }
-        .section-title i {
-            margin-right: 6px;
-        }
+        .section-title i { margin-right: 6px; }
 
-        /* ===== SEGMENTED CONTROL ===== */
+        /* ===== SEGMENTED ===== */
         .segmented {
             display: flex;
             background: #f1f5f9;
@@ -271,7 +169,7 @@
         .segmented button.active {
             background: white;
             color: #1e3a5f;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
         }
 
         /* ===== ROWS ===== */
@@ -282,14 +180,8 @@
             margin-bottom: 10px;
             align-items: center;
         }
-        .row label {
-            font-weight: 500;
-            font-size: 0.8rem;
-            color: #475569;
-            min-width: 50px;
-        }
-        .row input,
-        .row select {
+        .row label { font-weight: 500; font-size: 0.8rem; color: #475569; min-width: 50px; }
+        .row input, .row select {
             flex: 1;
             padding: 6px 12px;
             border: 1px solid #dce1e9;
@@ -299,10 +191,9 @@
             outline: none;
             min-width: 50px;
         }
-        .row input:focus,
-        .row select:focus {
+        .row input:focus, .row select:focus {
             border-color: #2563eb;
-            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.12);
+            box-shadow: 0 0 0 2px rgba(37,99,235,0.12);
         }
         .result-box {
             background: #f1f6fd;
@@ -336,31 +227,13 @@
             align-items: center;
             gap: 4px;
         }
-        .btn i {
-            color: white;
-        }
-        .btn-outline {
-            background: transparent;
-            color: #1e3a5f;
-            border: 1px solid #b6c9e0;
-        }
-        .btn-outline i {
-            color: #1e3a5f;
-        }
-        .btn-sm {
-            padding: 3px 12px;
-            font-size: 0.65rem;
-        }
-        .btn:active {
-            transform: scale(0.95);
-        }
-        .btn-restricted {
-            background: #94a3b8;
-            cursor: not-allowed;
-            opacity: 0.6;
-        }
+        .btn i { color: white; }
+        .btn-outline { background: transparent; color: #1e3a5f; border: 1px solid #b6c9e0; }
+        .btn-outline i { color: #1e3a5f; }
+        .btn-sm { padding: 3px 12px; font-size: 0.65rem; }
+        .btn:active { transform: scale(0.95); }
 
-        /* ===== CHIPS & BADGES ===== */
+        /* ===== CHIPS ===== */
         .chip {
             background: #eef2f6;
             border-radius: 40px;
@@ -376,18 +249,34 @@
             border-radius: 30px;
             font-weight: 600;
         }
-        .badge-pass {
-            background: #d1fae5;
-            color: #065f46;
+        .badge-pass { background: #d1fae5; color: #065f46; }
+        .badge-fail { background: #fee2e2; color: #991b1b; }
+        .badge-warn { background: #fef3c7; color: #92400e; }
+
+        /* ===== TABLES ===== */
+        .table-wrap {
+            overflow-x: auto;
+            margin: 8px 0;
+            border-radius: 16px;
+            border: 1px solid #e9edf3;
         }
-        .badge-fail {
-            background: #fee2e2;
-            color: #991b1b;
+        table {
+            width: 100%;
+            font-size: 0.7rem;
+            border-collapse: collapse;
         }
-        .badge-warn {
-            background: #fef3c7;
-            color: #92400e;
+        th, td {
+            padding: 6px 8px;
+            border: 1px solid #e9edf3;
+            text-align: center;
         }
+        th {
+            background: #f1f5f9;
+            font-weight: 600;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+        }
+        td { font-size: 0.7rem; }
 
         /* ===== TABS (scroll) ===== */
         .tab-scroll {
@@ -398,9 +287,7 @@
             scrollbar-width: none;
             -webkit-overflow-scrolling: touch;
         }
-        .tab-scroll::-webkit-scrollbar {
-            display: none;
-        }
+        .tab-scroll::-webkit-scrollbar { display: none; }
         .tab-scroll .tab {
             white-space: nowrap;
             background: #f1f5f9;
@@ -432,27 +319,16 @@
             font-size: 0.8rem;
             cursor: pointer;
         }
-        .trouble-item:active {
-            background: #eef2f6;
-        }
+        .trouble-item:active { background: #eef2f6; }
         .trouble-item .priority {
             font-size: 0.55rem;
             font-weight: 700;
             padding: 1px 8px;
             border-radius: 20px;
         }
-        .priority-high {
-            background: #fee2e2;
-            color: #991b1b;
-        }
-        .priority-med {
-            background: #fef3c7;
-            color: #92400e;
-        }
-        .priority-low {
-            background: #d1fae5;
-            color: #065f46;
-        }
+        .priority-high { background: #fee2e2; color: #991b1b; }
+        .priority-med { background: #fef3c7; color: #92400e; }
+        .priority-low { background: #d1fae5; color: #065f46; }
 
         /* ===== DP DIAGRAM ===== */
         .dp-diagram {
@@ -469,104 +345,11 @@
         .dp-diagram .port-label {
             font-size: 0.65rem;
             font-family: sans-serif;
-            background: rgba(255, 255, 255, 0.7);
+            background: rgba(255,255,255,0.7);
             padding: 2px 10px;
             border-radius: 20px;
             display: inline-block;
             margin: 2px 4px;
-        }
-
-        /* ===== BENDER TABLE ===== */
-        .bender-card table {
-            width: 100%;
-            font-size: 0.7rem;
-            border-collapse: collapse;
-            margin: 6px 0;
-        }
-        .bender-card th,
-        .bender-card td {
-            padding: 4px 6px;
-            border: 1px solid #e2e8f0;
-            text-align: center;
-        }
-        body.dark .bender-card th,
-        body.dark .bender-card td {
-            border-color: #334155;
-        }
-        .bender-card th {
-            background: #f1f5f9;
-            font-weight: 600;
-        }
-        body.dark .bender-card th {
-            background: #334155;
-        }
-
-        /* ===== RESTRICTED ===== */
-        .restricted-box {
-            background: #fef2f2;
-            border: 1px solid #fecaca;
-            border-radius: 20px;
-            padding: 16px;
-            text-align: center;
-            color: #991b1b;
-            margin: 8px 0;
-        }
-        .restricted-box i {
-            font-size: 1.8rem;
-            display: block;
-            margin-bottom: 6px;
-        }
-
-        /* ===== BOTTOM TABS ===== */
-        .bottom-tabs {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            max-width: 480px;
-            margin: 0 auto;
-            background: white;
-            display: flex;
-            justify-content: space-around;
-            padding: 4px 0 8px 0;
-            border-top: 1px solid #e9edf3;
-            box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.04);
-            z-index: 100;
-        }
-        .bottom-tabs .tab-item {
-            text-align: center;
-            font-size: 0.55rem;
-            color: #94a3b8;
-            cursor: pointer;
-            padding: 2px 8px;
-            border: none;
-            background: transparent;
-            transition: 0.15s;
-        }
-        .bottom-tabs .tab-item i {
-            display: block;
-            font-size: 1.1rem;
-            margin-bottom: 1px;
-        }
-        .bottom-tabs .tab-item.active {
-            color: #1e3a5f;
-            font-weight: 600;
-        }
-
-        /* ===== AI CHAT ===== */
-        .chat-bubble {
-            background: #e8f0fe;
-            border-radius: 16px 16px 16px 4px;
-            padding: 8px 12px;
-            margin: 4px 0;
-            font-size: 0.8rem;
-            max-width: 88%;
-        }
-        .chat-bubble.user {
-            background: #1e3a5f;
-            color: white;
-            border-radius: 16px 16px 4px 16px;
-            margin-left: auto;
         }
 
         /* ===== CAL POINTS ===== */
@@ -586,86 +369,92 @@
             font-size: 0.75rem;
         }
 
-        /* ===== UTILITY ===== */
-        .mt-1 {
-            margin-top: 6px;
-        }
-        .mb-1 {
-            margin-bottom: 6px;
-        }
-        .flex {
+        /* ===== BOTTOM TABS ===== */
+        .bottom-tabs {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            max-width: 480px;
+            margin: 0 auto;
+            background: white;
             display: flex;
-            flex-wrap: wrap;
-            gap: 4px 8px;
-            align-items: center;
-        }
-        .w-full {
-            width: 100%;
-        }
-        .hidden {
-            display: none !important;
-        }
-        hr {
-            border: none;
+            justify-content: space-around;
+            padding: 4px 0 8px 0;
             border-top: 1px solid #e9edf3;
-            margin: 10px 0;
+            box-shadow: 0 -2px 12px rgba(0,0,0,0.04);
+            z-index: 100;
         }
-        body.dark hr {
-            border-color: #334155;
-        }
-        .text-center {
+        .bottom-tabs .tab-item {
             text-align: center;
+            font-size: 0.55rem;
+            color: #94a3b8;
+            cursor: pointer;
+            padding: 2px 8px;
+            border: none;
+            background: transparent;
+            transition: 0.15s;
         }
-        .ref-panel {
-            font-size: 0.8rem;
-        }
-        .ref-panel .chip {
-            margin: 2px 4px 2px 0;
-        }
+        .bottom-tabs .tab-item i { display: block; font-size: 1.1rem; margin-bottom: 1px; }
+        .bottom-tabs .tab-item.active { color: #1e3a5f; font-weight: 600; }
 
-        /* ===== RESPONSIVE ===== */
+        /* ===== AI CHAT ===== */
+        .chat-bubble {
+            background: #e8f0fe;
+            border-radius: 16px 16px 16px 4px;
+            padding: 8px 12px;
+            margin: 4px 0;
+            font-size: 0.8rem;
+            max-width: 88%;
+        }
+        .chat-bubble.user {
+            background: #1e3a5f;
+            color: white;
+            border-radius: 16px 16px 4px 16px;
+            margin-left: auto;
+        }
+        body.dark .chat-bubble { background: #1a253a; color: #e2e8f0; }
+        body.dark .chat-bubble.user { background: #2563eb; }
+
+        /* ===== UTILITY ===== */
+        .mt-1 { margin-top: 6px; }
+        .mb-1 { margin-bottom: 6px; }
+        .flex { display: flex; flex-wrap: wrap; gap: 4px 8px; align-items: center; }
+        .w-full { width: 100%; }
+        .hidden { display: none !important; }
+        hr { border: none; border-top: 1px solid #e9edf3; margin: 10px 0; }
+        body.dark hr { border-color: #334155; }
+        .text-center { text-align: center; }
+        .ref-panel { font-size: 0.8rem; }
+        .ref-panel .chip { margin: 2px 4px 2px 0; }
+
         @media (max-width: 420px) {
-            .quick-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-            .cal-points-grid {
-                grid-template-columns: 1fr;
-            }
-            .row {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .row label {
-                min-width: auto;
-            }
+            .quick-grid { grid-template-columns: repeat(3, 1fr); }
+            .cal-points-grid { grid-template-columns: 1fr; }
+            .row { flex-direction: column; align-items: stretch; }
+            .row label { min-width: auto; }
         }
     </style>
 </head>
 <body>
 
-    <!-- ========================================================== -->
-    <!-- GREETING + DARK MODE -->
-    <!-- ========================================================== -->
+    <!-- ===== GREETING ===== -->
     <div class="greeting">
         <div class="greeting-top">
             <h1><i class="fas fa-bible"></i>I/E BIBLE</h1>
             <button class="dark-toggle" id="darkToggle"><i class="fas fa-moon"></i> Dark</button>
         </div>
         <div class="sub"><i class="fas fa-sun" id="greetingIcon"></i> <span id="greetingText">Good Morning</span> · Oscar Corona & Jacob Yepéz</div>
-        <div class="version">v3.0 · NEC-compliant · Field Pro</div>
+        <div class="version">v3.0 · NEC-compliant · All Tools Unlocked</div>
     </div>
 
-    <!-- ========================================================== -->
-    <!-- SEARCH -->
-    <!-- ========================================================== -->
+    <!-- ===== SEARCH ===== -->
     <div class="search-bar">
         <i class="fas fa-search"></i>
         <input type="text" id="searchInput" placeholder="Search motors, wiring, tubing, faults..." />
     </div>
 
-    <!-- ========================================================== -->
-    <!-- QUICK ACCESS -->
-    <!-- ========================================================== -->
+    <!-- ===== QUICK ACCESS ===== -->
     <div class="quick-grid" id="quickAccess">
         <div class="quick-item color-1" data-target="electrical"><i class="fas fa-bolt"></i> Electrical</div>
         <div class="quick-item color-2" data-target="motors"><i class="fas fa-cogs"></i> Motors</div>
@@ -678,741 +467,57 @@
     </div>
 
     <!-- ========================================================== -->
-    <!-- 1. ELECTRICAL SECTION -->
+    <!-- 1. ELECTRICAL SECTION (FULL TABLES) -->
     <!-- ========================================================== -->
     <div id="electrical" class="section-title"><i class="fas fa-bolt"></i> Electrical · NEC Tools</div>
 
+    <!-- Ohm's Law -->
     <div class="card">
         <div class="card-header"><i class="fas fa-ohm"></i><h3>Ohm's Law</h3><span>V · I · R · P</span></div>
-        <div class="row">
-            <label>Voltage</label><input type="number" id="ohmV" value="24" step="any" /><span class="chip">V</span>
-        </div>
-        <div class="row">
-            <label>Current</label><input type="number" id="ohmI" value="20" step="any" /><span class="chip">mA</span>
-        </div>
+        <div class="row"><label>Voltage</label><input type="number" id="ohmV" value="24" step="any" /><span class="chip">V</span></div>
+        <div class="row"><label>Current</label><input type="number" id="ohmI" value="20" step="any" /><span class="chip">mA</span></div>
         <button class="btn" id="ohmCalcBtn"><i class="fas fa-calculator"></i> Calculate</button>
         <div class="result-box"><span>Resistance</span><span id="ohmResult">1200.00 Ω</span></div>
         <div class="result-box"><span>Power</span><span id="powerResult">0.48 W</span></div>
     </div>
 
+    <!-- 3-Phase Power -->
     <div class="card">
         <div class="card-header"><i class="fas fa-chart-line"></i><h3>3‑Phase Power</h3><span>kW · kVA · kVAR</span></div>
-        <div class="row">
-            <label>V (L-L)</label><input type="number" id="threePhaseV" value="480" step="any" />
-        </div>
-        <div class="row">
-            <label>I (A)</label><input type="number" id="threePhaseI" value="10" step="any" />
-        </div>
-        <div class="row">
-            <label>PF</label><input type="number" id="threePhasePF" value="0.85" step="0.01" />
-        </div>
+        <div class="row"><label>V (L-L)</label><input type="number" id="threePhaseV" value="480" step="any" /></div>
+        <div class="row"><label>I (A)</label><input type="number" id="threePhaseI" value="10" step="any" /></div>
+        <div class="row"><label>PF</label><input type="number" id="threePhasePF" value="0.85" step="0.01" /></div>
         <button class="btn" id="threePhaseBtn"><i class="fas fa-calculator"></i> Calculate</button>
         <div class="result-box"><span>kW</span><span id="threePhaseKW">7.07</span></div>
         <div class="result-box"><span>kVA</span><span id="threePhaseKVA">8.31</span></div>
         <div class="result-box"><span>kVAR</span><span id="threePhaseKVAR">4.38</span></div>
     </div>
 
+    <!-- Ampacity Table (NEC 310.16) -->
     <div class="card">
-        <div class="card-header"><i class="fas fa-wire"></i><h3>Wire Load (Ampacity)</h3><span>NEC 310.15</span></div>
-        <div class="row">
-            <label>AWG</label>
-            <select id="awgAmpacity">
-                <option value="14">14</option><option value="12" selected>12</option>
-                <option value="10">10</option><option value="8">8</option>
-                <option value="6">6</option><option value="4">4</option>
-                <option value="2">2</option>
-            </select>
+        <div class="card-header"><i class="fas fa-wire"></i><h3>Wire Ampacity</h3><span>NEC 310.16</span></div>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>AWG</th><th>60°C</th><th>75°C</th><th>90°C</th></tr></thead>
+                <tbody>
+                    <tr><td>14</td><td>20</td><td>20</td><td>25</td></tr>
+                    <tr><td>12</td><td>25</td><td>25</td><td>30</td></tr>
+                    <tr><td>10</td><td>35</td><td>35</td><td>40</td></tr>
+                    <tr><td>8</td><td>50</td><td>50</td><td>55</td></tr>
+                    <tr><td>6</td><td>65</td><td>65</td><td>75</td></tr>
+                    <tr><td>4</td><td>85</td><td>85</td><td>95</td></tr>
+                    <tr><td>2</td><td>115</td><td>115</td><td>130</td></tr>
+                    <tr><td>1/0</td><td>150</td><td>150</td><td>170</td></tr>
+                    <tr><td>2/0</td><td>175</td><td>175</td><td>195</td></tr>
+                    <tr><td>3/0</td><td>200</td><td>200</td><td>225</td></tr>
+                    <tr><td>4/0</td><td>230</td><td>230</td><td>260</td></tr>
+                </tbody>
+            </table>
         </div>
-        <div class="row">
-            <label>Insulation</label>
-            <select id="insulationType">
-                <option value="THHN">THHN (90°C)</option>
-                <option value="THWN" selected>THWN (75°C)</option>
-                <option value="XHHW">XHHW (90°C)</option>
-            </select>
-        </div>
-        <button class="btn" id="ampacityBtn"><i class="fas fa-calculator"></i> Get Ampacity</button>
-        <div class="result-box"><span>Max Ampacity</span><span id="ampacityResult">25 A</span></div>
-        <div class="result-box"><span>NEC Reference</span><span id="ampacityRef">Table 310.16</span></div>
-    </div>
-
-    <div class="card">
-        <div class="card-header"><i class="fas fa-arrow-down"></i><h3>Voltage Drop</h3><span>NEC Ch. 9</span></div>
-        <div class="row">
-            <label>Voltage</label><input type="number" id="vdVoltage" value="480" step="any" /><span class="chip">V</span>
-        </div>
-        <div class="row">
-            <label>Current</label><input type="number" id="vdCurrent" value="10" step="any" /><span class="chip">A</span>
-        </div>
-        <div class="row">
-            <label>Distance</label><input type="number" id="vdDistance" value="200" step="any" /><span class="chip">ft</span>
-        </div>
-        <div class="row">
-            <label>AWG</label>
-            <select id="vdAwg">
-                <option value="14">14</option><option value="12" selected>12</option>
-                <option value="10">10</option><option value="8">8</option>
-                <option value="6">6</option>
-            </select>
-        </div>
-        <button class="btn" id="vdBtn"><i class="fas fa-calculator"></i> Calculate Drop</button>
-        <div class="result-box"><span>Voltage Drop</span><span id="vdResult">5.12 V (1.07%)</span></div>
-        <div class="result-box"><span>Status</span><span id="vdStatus" style="color:#059669;">✓ Acceptable</span></div>
-    </div>
-
-    <!-- ========================================================== -->
-    <!-- 2. MOTORS SECTION -->
-    <!-- ========================================================== -->
-    <div id="motors" class="section-title"><i class="fas fa-cogs"></i> Motors · Troubleshooting</div>
-
-    <div class="card">
-        <div class="card-header"><i class="fas fa-exclamation-circle"></i><h3>Motor Issues</h3><span>Field Guide</span></div>
-        <div class="trouble-item" data-fault="no-start"><i class="fas fa-ban" style="color:#dc2626;"></i> <span><strong>HIGH</strong> Motor will not start — no response</span></div>
-        <div class="trouble-item" data-fault="trips"><i class="fas fa-exclamation-triangle" style="color:#b45309;"></i> <span><strong>HIGH</strong> Motor starts but trips overload relay repeatedly</span></div>
-        <div class="trouble-item" data-fault="noise"><i class="fas fa-volume-up" style="color:#0891b2;"></i> <span><strong>MEDIUM</strong> Motor runs but makes unusual noise (grinding, squealing, humming)</span></div>
-        <div class="trouble-item" data-fault="overheat"><i class="fas fa-fire" style="color:#dc2626;"></i> <span><strong>HIGH</strong> Motor overheating / excessive temperature</span></div>
-        <div class="trouble-item" data-fault="instant-trip"><i class="fas fa-bolt" style="color:#dc2626;"></i> <span><strong>HIGH</strong> Motor trips immediately on start (instantaneous / high-current trip)</span></div>
-        <div class="trouble-item" data-fault="backwards"><i class="fas fa-undo" style="color:#7c3aed;"></i> <span><strong>MEDIUM</strong> Motor runs backwards</span></div>
-    </div>
-
-    <div class="card">
-        <div class="card-header"><i class="fas fa-microchip"></i><h3>Motor Protection</h3><span>FLA · Overload</span></div>
-        <div class="row">
-            <label>HP</label><input type="number" id="motorHP" value="10" step="any" />
-        </div>
-        <div class="row">
-            <label>Voltage</label>
-            <select id="motorVoltage">
-                <option value="230">230V</option>
-                <option value="460" selected>460V</option>
-                <option value="575">575V</option>
-            </select>
-        </div>
-        <button class="btn" id="motorFlaBtn"><i class="fas fa-calculator"></i> Calculate FLA</button>
-        <div class="result-box"><span>Full Load Amps</span><span id="motorFlaResult">14.0 A</span></div>
-        <div class="result-box"><span>Overload Setting</span><span id="motorOverloadResult">15.4 A (110%)</span></div>
-    </div>
-
-    <!-- ========================================================== -->
-    <!-- 3. TUBING / CONDUIT BENDING -->
-    <!-- ========================================================== -->
-    <div id="tubing" class="section-title"><i class="fas fa-pipe-valve"></i> Tubing & Conduit Bending</div>
-
-    <div class="card bender-card">
-        <div class="card-header"><i class="fas fa-ruler"></i><h3>Swagelok Tube Bender</h3><span>MS-HTB</span></div>
-        <div class="segmented" id="benderModeSeg">
-            <button class="active" data-mode="tubing">Tubing</button>
-            <button data-mode="conduit">Conduit</button>
-        </div>
-        <div class="row">
-            <label>Tube OD</label>
-            <select id="tubeSize">
-                <option value="0.25">1/4"</option>
-                <option value="0.375" selected>3/8"</option>
-                <option value="0.5">1/2"</option>
-            </select>
-        </div>
-        <div class="row">
-            <label>Bend Angle</label>
-            <input type="number" id="bendAngle" value="90" step="any" /><span class="chip">°</span>
-        </div>
-        <div class="row">
-            <label>Offset</label>
-            <input type="number" id="bendOffset" value="6" step="any" /><span class="chip">in</span>
-        </div>
-        <button class="btn" id="bendCalcBtn"><i class="fas fa-calculator"></i> Calculate</button>
-        <div class="result-box"><span>Gain @ 90°</span><span id="bendGain">0.563 in</span></div>
-        <div class="result-box"><span>Mark Position</span><span id="bendMark">6.56 in</span></div>
-        <div class="result-box"><span>Bender Model</span><span id="benderModel">MS-HTB-6</span></div>
-
-        <hr />
-        <div style="font-size:0.75rem; background:#f8fafd; padding:8px 12px; border-radius:16px;">
-            <strong>Field Tips:</strong> ✅ Overbend 2–3° for SS spring-back · ❌ Never re-bend at same location
-        </div>
-
-        <table style="margin-top:8px;">
-            <thead><tr><th>Size</th><th>OD</th><th>Wall</th><th>Radius</th><th>Gain</th><th>Model</th></tr></thead>
-            <tbody>
-                <tr><td>1/4"</td><td>0.250"</td><td>0.035"</td><td>0.625"</td><td>0.375"</td><td>MS-HTB-4</td></tr>
-                <tr><td>3/8"</td><td>0.375"</td><td>0.035"</td><td>0.938"</td><td>0.563"</td><td>MS-HTB-6</td></tr>
-                <tr><td>1/2"</td><td>0.500"</td><td>0.049"</td><td>1.250"</td><td>0.750"</td><td>MS-HTB-8</td></tr>
-            </tbody>
-        </table>
-    </div>
-
-    <!-- ========================================================== -->
-    <!-- 4. ANALYTICAL INSTRUMENTS -->
-    <!-- ========================================================== -->
-    <div id="analytical" class="section-title"><i class="fas fa-flask"></i> Analytical Instruments</div>
-
-    <div class="card">
-        <div class="card-header"><i class="fas fa-vial"></i><h3>Analyzers</h3><span>Field Reference</span></div>
-        <div class="scroll-x">
-            <span class="chip">Gas Detection</span>
-            <span class="chip">pH</span>
-            <span class="chip">Turbidity</span>
-            <span class="chip">Conductivity</span>
-            <span class="chip">Density</span>
-            <span class="chip">Trace O₂</span>
-            <span class="chip">ORP</span>
-        </div>
-
-        <div class="restricted-box">
-            <i class="fas fa-lock"></i>
-            <strong>Access Restricted</strong>
-            <div style="font-size:0.8rem; margin-top:4px;">This content is not available on your current account. Upgrade to access analyzer calibration, standards, and field procedures.</div>
-        </div>
-
-        <div class="row">
-            <label>pH Calibration</label>
-            <select style="flex:1;">
-                <option>4.00 · 7.00 · 10.00</option>
-                <option>4.01 · 6.86 · 9.18</option>
-            </select>
-            <button class="btn btn-sm btn-outline"><i class="fas fa-calculator"></i> Slope</button>
-        </div>
-        <div class="result-box"><span>pH Slope</span><span>98.2% (Pass)</span></div>
-    </div>
-
-    <!-- ========================================================== -->
-    <!-- 5. TROUBLESHOOTING -->
-    <!-- ========================================================== -->
-    <div id="trouble" class="section-title"><i class="fas fa-exclamation-triangle"></i> Troubleshooting</div>
-
-    <div class="card">
-        <div class="card-header"><i class="fas fa-stethoscope"></i><h3>Fault Finder</h3><span>Interactive</span></div>
-        <div class="trouble-item" data-fault="4ma"><i class="fas fa-bolt" style="color:#b45309;"></i> <span><strong>Stuck at 4mA</strong> · no process, wiring, sensor</span></div>
-        <div class="trouble-item" data-fault="22ma"><i class="fas fa-wave-square" style="color:#2563eb;"></i> <span><strong>22mA alarm</strong> · overpressure / sensor fail</span></div>
-        <div class="trouble-item" data-fault="hart"><i class="fas fa-sync-alt" style="color:#1e7e34;"></i> <span><strong>No HART comms</strong> · 250Ω resistor? address?</span></div>
-        <div class="trouble-item" data-fault="drift"><i class="fas fa-chart-line" style="color:#7c3aed;"></i> <span><strong>Output drifting</strong> · RFI, grounding, moisture</span></div>
-        <button class="btn w-full" id="faultFinderBtn" style="justify-content:center;margin-top:6px;"><i class="fas fa-stethoscope"></i> Run Interactive Fault Finder</button>
-        <div id="faultDiagnosis" class="mt-1" style="font-size:0.85rem;background:#f1f5f9;padding:10px 14px;border-radius:20px;min-height:40px;color:#475569;">
-            <i class="fas fa-lightbulb"></i> Select a fault above or click the button.
-        </div>
-    </div>
-
-    <!-- ========================================================== -->
-    <!-- 6. REFERENCES -->
-    <!-- ========================================================== -->
-    <div id="references" class="section-title"><i class="fas fa-book"></i> Reference Library</div>
-
-    <div class="card">
-        <div class="tab-scroll" id="refTabs">
-            <div class="tab active" data-ref="tc">TC Colors</div>
-            <div class="tab" data-ref="ranges">3051 Ranges</div>
-            <div class="tab" data-ref="io">I/O Types</div>
-            <div class="tab" data-ref="fluke">Fluke 789</div>
-            <div class="tab" data-ref="rtd">RTD Pt100</div>
-            <div class="tab" data-ref="wiring">Wiring</div>
-        </div>
-        <div id="refContent">
-            <div class="ref-panel" id="ref-tc">
-                <div class="chip" style="background:#d4a373;color:white;">Type J</div>
-                <div class="chip" style="background:#c77dff;color:white;">Type K</div>
-                <div class="chip" style="background:#4a7c59;color:white;">Type T</div>
-                <div style="margin-top:6px;font-size:0.85rem;">
-                    <div><span style="background:#d4a373;display:inline-block;width:20px;height:12px;border-radius:4px;"></span> J: Iron-Constantan</div>
-                    <div><span style="background:#c77dff;display:inline-block;width:20px;height:12px;border-radius:4px;"></span> K: Chromel-Alumel</div>
-                    <div><span style="background:#4a7c59;display:inline-block;width:20px;height:12px;border-radius:4px;"></span> T: Copper-Constantan</div>
-                </div>
-            </div>
-            <div class="ref-panel hidden" id="ref-ranges">
-                <div><strong>Rosemount 3051CD</strong></div>
-                <div class="chip">Range 0: 0-0.5 inH₂O</div>
-                <div class="chip">Range 1: 0-2.5 inH₂O</div>
-                <div class="chip">Range 2: 0-25 inH₂O</div>
-                <div class="chip">Range 3: 0-250 inH₂O</div>
-                <div class="chip">Range 4: 0-1000 inH₂O</div>
-            </div>
-            <div class="ref-panel hidden" id="ref-io">
-                <div><strong>I/O Types</strong></div>
-                <div class="chip">Analog 4-20mA</div>
-                <div class="chip">HART</div>
-                <div class="chip">Foundation Fieldbus</div>
-                <div class="chip">Profibus PA</div>
-                <div class="chip">Modbus</div>
-            </div>
-            <div class="ref-panel hidden" id="ref-fluke">
-                <div><strong>Fluke 789 Loop Calibrator</strong></div>
-                <div class="chip">mA source/simulate</div>
-                <div class="chip">24V loop power</div>
-                <div class="chip">HART resistor built-in</div>
-                <div class="chip">±0.02% accuracy</div>
-            </div>
-            <div class="ref-panel hidden" id="ref-rtd">
-                <div><strong>Pt100 RTD</strong></div>
-                <div class="chip">2-wire</div>
-                <div class="chip">3-wire (most common)</div>
-                <div class="chip">4-wire (highest accuracy)</div>
-                <div style="margin-top:4px;font-size:0.8rem;">0°C = 100Ω · 100°C = 138.5Ω</div>
-                <div style="margin-top:4px;font-size:0.8rem;">IEC 60751 · α = 0.00385</div>
-            </div>
-            <div class="ref-panel hidden" id="ref-wiring">
-                <div><strong>Wiring Standards</strong></div>
-                <div class="chip">2-wire loop powered</div>
-                <div class="chip">3-wire RTD</div>
-                <div class="chip">4-wire RTD</div>
-                <div class="chip">Shielded twisted pair</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ========================================================== -->
-    <!-- 7. UNIT CONVERTER -->
-    <!-- ========================================================== -->
-    <div id="converter" class="section-title"><i class="fas fa-arrows-alt-h"></i> Unit Converter</div>
-
-    <div class="card">
-        <div class="card-header"><i class="fas fa-weight"></i><h3>Pressure</h3><span>psi · bar · kPa</span></div>
-        <div class="row">
-            <label>From</label>
-            <select id="fromUnit">
-                <option value="psi">PSI</option><option value="bar" selected>bar</option>
-                <option value="kpa">kPa</option><option value="mpa">MPa</option><option value="atm">atm</option>
-            </select>
-            <input type="number" id="inputVal" value="1" step="any" />
-        </div>
-        <div class="row">
-            <label>To</label>
-            <select id="toUnit">
-                <option value="psi">PSI</option><option value="bar">bar</option>
-                <option value="kpa" selected>kPa</option><option value="mpa">MPa</option><option value="atm">atm</option>
-            </select>
-            <button class="btn" id="convertBtn"><i class="fas fa-sync-alt"></i> Convert</button>
-        </div>
-        <div class="result-box"><span>Result</span><span id="pressureResult">100.000 kPa</span></div>
-
-        <hr />
-        <div class="card-header"><i class="fas fa-thermometer-half"></i><h3>Temperature</h3><span>°C · °F · K</span></div>
-        <div class="row">
-            <label>°C</label>
-            <input type="number" id="tempC" value="25" step="any" />
-            <button class="btn" id="tempConvertBtn"><i class="fas fa-arrow-right"></i> Convert</button>
-        </div>
-        <div class="result-box"><span>°F</span><span id="tempFResult">77.00</span></div>
-        <div class="result-box"><span>Kelvin</span><span id="tempKResult">298.15</span></div>
-    </div>
-
-    <!-- ========================================================== -->
-    <!-- 8. AI CHAT -->
-    <!-- ========================================================== -->
-    <div id="ai" class="section-title"><i class="fas fa-robot"></i> AI Technician</div>
-
-    <div class="card">
-        <div class="chat-bubble"><i class="fas fa-robot" style="margin-right:6px;"></i> Hello! I'm your AI field assistant. Ask me about instrument faults, wiring, or calibration.</div>
-        <div class="chat-bubble user"><i class="fas fa-user" style="margin-right:6px;"></i> Rosemount 3051 showing 22mA</div>
-        <div class="chat-bubble"><i class="fas fa-robot" style="margin-right:6px;"></i> <strong>22mA indicates high alarm.</strong><br/>• Check for overpressure<br/>• Verify sensor integrity<br/>• Perform sensor trim<br/>• Check configuration range</div>
+        <div style="font-size:0.65rem; color:#64748b; margin-top:4px;">Copper conductors · Based on NEC Table 310.16 [citation:6]</div>
         <div class="row mt-1">
-            <input type="text" id="aiInput" placeholder="Ask the AI..." style="flex:1;" />
-            <button class="btn" id="aiSendBtn"><i class="fas fa-paper-plane"></i></button>
-        </div>
-        <div style="font-size:0.65rem;color:#94a3b8;margin-top:4px;">(Mock AI — real backend required for full intelligence)</div>
-    </div>
-
-    <!-- ========================================================== -->
-    <!-- HART / COMPLEX METERS (quick ref) -->
-    <!-- ========================================================== -->
-    <div class="card" style="display:flex; flex-wrap:wrap; gap:8px; justify-content:space-between;">
-        <div><i class="fas fa-microchip" style="font-size:1.2rem;color:#1e3a5f;"></i> <strong>HART</strong> <span class="chip">24VDC</span><span class="chip">250Ω</span><span class="chip">Address</span></div>
-        <div><i class="fas fa-tachometer-alt" style="font-size:1.2rem;color:#1e3a5f;"></i> <strong>Complex Meters</strong> <span class="chip">Coriolis</span><span class="chip">Mag</span><span class="chip">Radar</span></div>
-    </div>
-
-    <!-- ========================================================== -->
-    <!-- BOTTOM TABS -->
-    <!-- ========================================================== -->
-    <div class="bottom-tabs" id="bottomTabs">
-        <button class="tab-item active" data-tab="home"><i class="fas fa-home"></i> Home</button>
-        <button class="tab-item" data-tab="calc"><i class="fas fa-calculator"></i> Calc</button>
-        <button class="tab-item" data-tab="refs"><i class="fas fa-book"></i> Refs</button>
-        <button class="tab-item" data-tab="level"><i class="fas fa-tachometer-alt"></i> Level</button>
-        <button class="tab-item" data-tab="support"><i class="fas fa-headset"></i> Support</button>
-    </div>
-
-    <!-- ========================================================== -->
-    <!-- JAVASCRIPT — ALL LIVE CALCULATIONS -->
-    <!-- ========================================================== -->
-    <script>
-        (function() {
-            'use strict';
-
-            // =============================================================
-            // DARK MODE
-            // =============================================================
-            const darkToggle = document.getElementById('darkToggle');
-            darkToggle.addEventListener('click', function() {
-                document.body.classList.toggle('dark');
-                this.innerHTML = document.body.classList.contains('dark') ?
-                    '<i class="fas fa-sun"></i> Light' :
-                    '<i class="fas fa-moon"></i> Dark';
-            });
-
-            // =============================================================
-            // GREETING
-            // =============================================================
-            const hr = new Date().getHours();
-            const greetText = document.getElementById('greetingText');
-            const greetIcon = document.getElementById('greetingIcon');
-            if (hr < 12) { greetText.textContent = 'Good Morning';
-                greetIcon.className = 'fas fa-sun'; } else if (hr < 17) { greetText.textContent = 'Good Afternoon';
-                greetIcon.className = 'fas fa-cloud-sun'; } else { greetText.textContent = 'Good Evening';
-                greetIcon.className = 'fas fa-moon'; }
-
-            // =============================================================
-            // 1. OHM'S LAW
-            // =============================================================
-            const ohmV = document.getElementById('ohmV');
-            const ohmI = document.getElementById('ohmI');
-            const ohmResult = document.getElementById('ohmResult');
-            const powerResult = document.getElementById('powerResult');
-            const ohmCalcBtn = document.getElementById('ohmCalcBtn');
-
-            function calcOhm() {
-                const v = parseFloat(ohmV.value) || 0;
-                const i = parseFloat(ohmI.value) / 1000 || 0;
-                const r = i > 0 ? v / i : 0;
-                const p = v * i;
-                ohmResult.textContent = r.toFixed(2) + ' Ω';
-                powerResult.textContent = p.toFixed(4) + ' W';
-            }
-            ohmCalcBtn.addEventListener('click', calcOhm);
-            ohmV.addEventListener('input', calcOhm);
-            ohmI.addEventListener('input', calcOhm);
-            calcOhm();
-
-            // =============================================================
-            // 2. 3-PHASE POWER
-            // =============================================================
-            const threePhaseV = document.getElementById('threePhaseV');
-            const threePhaseI = document.getElementById('threePhaseI');
-            const threePhasePF = document.getElementById('threePhasePF');
-            const threePhaseKW = document.getElementById('threePhaseKW');
-            const threePhaseKVA = document.getElementById('threePhaseKVA');
-            const threePhaseKVAR = document.getElementById('threePhaseKVAR');
-            const threePhaseBtn = document.getElementById('threePhaseBtn');
-
-            function calcThreePhase() {
-                const v = parseFloat(threePhaseV.value) || 0;
-                const i = parseFloat(threePhaseI.value) || 0;
-                const pf = parseFloat(threePhasePF.value) || 0.85;
-                const kva = (v * i * Math.sqrt(3)) / 1000;
-                const kw = kva * pf;
-                const kvar = kva * Math.sin(Math.acos(pf));
-                threePhaseKW.textContent = kw.toFixed(2);
-                threePhaseKVA.textContent = kva.toFixed(2);
-                threePhaseKVAR.textContent = kvar.toFixed(2);
-            }
-            threePhaseBtn.addEventListener('click', calcThreePhase);
-            threePhaseV.addEventListener('input', calcThreePhase);
-            threePhaseI.addEventListener('input', calcThreePhase);
-            threePhasePF.addEventListener('input', calcThreePhase);
-            calcThreePhase();
-
-            // =============================================================
-            // 3. AMPACITY
-            // =============================================================
-            const awgAmpacity = document.getElementById('awgAmpacity');
-            const insulationType = document.getElementById('insulationType');
-            const ampacityResult = document.getElementById('ampacityResult');
-            const ampacityRef = document.getElementById('ampacityRef');
-            const ampacityBtn = document.getElementById('ampacityBtn');
-
-            const ampacityTable = {
-                '14': { 'THHN': 25, 'THWN': 20, 'XHHW': 25 },
-                '12': { 'THHN': 30, 'THWN': 25, 'XHHW': 30 },
-                '10': { 'THHN': 40, 'THWN': 35, 'XHHW': 40 },
-                '8': { 'THHN': 55, 'THWN': 50, 'XHHW': 55 },
-                '6': { 'THHN': 75, 'THWN': 65, 'XHHW': 75 },
-                '4': { 'THHN': 95, 'THWN': 85, 'XHHW': 95 },
-                '2': { 'THHN': 130, 'THWN': 115, 'XHHW': 130 }
-            };
-
-            function calcAmpacity() {
-                const awg = awgAmpacity.value;
-                const ins = insulationType.value;
-                const amp = ampacityTable[awg]?.[ins] || 0;
-                ampacityResult.textContent = amp + ' A';
-                ampacityRef.textContent = 'Table 310.16 (75°C column)';
-            }
-            ampacityBtn.addEventListener('click', calcAmpacity);
-            awgAmpacity.addEventListener('change', calcAmpacity);
-            insulationType.addEventListener('change', calcAmpacity);
-            calcAmpacity();
-
-            // =============================================================
-            // 4. VOLTAGE DROP
-            // =============================================================
-            const vdVoltage = document.getElementById('vdVoltage');
-            const vdCurrent = document.getElementById('vdCurrent');
-            const vdDistance = document.getElementById('vdDistance');
-            const vdAwg = document.getElementById('vdAwg');
-            const vdResult = document.getElementById('vdResult');
-            const vdStatus = document.getElementById('vdStatus');
-            const vdBtn = document.getElementById('vdBtn');
-
-            const vdResistance = { '14': 3.14, '12': 1.98, '10': 1.24, '8': 0.778, '6': 0.491 };
-
-            function calcVd() {
-                const v = parseFloat(vdVoltage.value) || 480;
-                const i = parseFloat(vdCurrent.value) || 10;
-                const d = parseFloat(vdDistance.value) || 100;
-                const awg = vdAwg.value;
-                const r = vdResistance[awg] || 1.98;
-                const vd = 2 * i * r * d / 1000;
-                const pct = (vd / v) * 100;
-                vdResult.textContent = vd.toFixed(2) + ' V (' + pct.toFixed(2) + '%)';
-                if (pct < 3) { vdStatus.textContent = '✓ Acceptable';
-                    vdStatus.style.color = '#059669'; } else if (pct < 5) { vdStatus.textContent = '⚠️ Marginal';
-                    vdStatus.style.color = '#b45309'; } else { vdStatus.textContent = '✗ Exceeds 5% (NEC)';
-                    vdStatus.style.color = '#dc2626'; }
-            }
-            vdBtn.addEventListener('click', calcVd);
-            vdVoltage.addEventListener('input', calcVd);
-            vdCurrent.addEventListener('input', calcVd);
-            vdDistance.addEventListener('input', calcVd);
-            vdAwg.addEventListener('change', calcVd);
-            calcVd();
-
-            // =============================================================
-            // 5. MOTOR FLA
-            // =============================================================
-            const motorHP = document.getElementById('motorHP');
-            const motorVoltage = document.getElementById('motorVoltage');
-            const motorFlaResult = document.getElementById('motorFlaResult');
-            const motorOverloadResult = document.getElementById('motorOverloadResult');
-            const motorFlaBtn = document.getElementById('motorFlaBtn');
-
-            function calcMotorFLA() {
-                const hp = parseFloat(motorHP.value) || 0;
-                const v = parseFloat(motorVoltage.value) || 460;
-                // Simplified FLA formula: (HP * 746) / (V * 1.73 * 0.9)
-                const fla = (hp * 746) / (v * 1.73 * 0.85);
-                motorFlaResult.textContent = fla.toFixed(1) + ' A';
-                motorOverloadResult.textContent = (fla * 1.1).toFixed(1) + ' A (110%)';
-            }
-            motorFlaBtn.addEventListener('click', calcMotorFLA);
-            motorHP.addEventListener('input', calcMotorFLA);
-            motorVoltage.addEventListener('change', calcMotorFLA);
-            calcMotorFLA();
-
-            // =============================================================
-            // 6. BENDER CALCULATOR
-            // =============================================================
-            const tubeSize = document.getElementById('tubeSize');
-            const bendAngle = document.getElementById('bendAngle');
-            const bendOffset = document.getElementById('bendOffset');
-            const bendGain = document.getElementById('bendGain');
-            const bendMark = document.getElementById('bendMark');
-            const benderModel = document.getElementById('benderModel');
-            const bendCalcBtn = document.getElementById('bendCalcBtn');
-
-            const benderData = {
-                '0.25': { gain: 0.375, model: 'MS-HTB-4', radius: 0.625 },
-                '0.375': { gain: 0.563, model: 'MS-HTB-6', radius: 0.938 },
-                '0.5': { gain: 0.750, model: 'MS-HTB-8', radius: 1.250 }
-            };
-
-            function calcBend() {
-                const size = tubeSize.value;
-                const angle = parseFloat(bendAngle.value) || 90;
-                const offset = parseFloat(bendOffset.value) || 0;
-                const data = benderData[size] || benderData['0.375'];
-                const gain = (data.gain * angle) / 90;
-                const mark = offset + gain;
-                bendGain.textContent = gain.toFixed(3) + ' in';
-                bendMark.textContent = mark.toFixed(2) + ' in';
-                benderModel.textContent = data.model;
-            }
-            bendCalcBtn.addEventListener('click', calcBend);
-            tubeSize.addEventListener('change', calcBend);
-            bendAngle.addEventListener('input', calcBend);
-            bendOffset.addEventListener('input', calcBend);
-            calcBend();
-
-            // =============================================================
-            // 7. PRESSURE CONVERTER
-            // =============================================================
-            const toBar = { psi: 0.0689476, bar: 1, kpa: 0.01, mpa: 10, atm: 1.01325 };
-            const fromUnit = document.getElementById('fromUnit');
-            const toUnit = document.getElementById('toUnit');
-            const inputVal = document.getElementById('inputVal');
-            const pressureResult = document.getElementById('pressureResult');
-            const convertBtn = document.getElementById('convertBtn');
-
-            function convertPressure() {
-                const val = parseFloat(inputVal.value) || 0;
-                const from = fromUnit.value;
-                const to = toUnit.value;
-                const inBar = val * toBar[from];
-                const result = inBar / toBar[to];
-                pressureResult.textContent = result.toFixed(4) + ' ' + toUnit.options[toUnit.selectedIndex].text;
-            }
-            convertBtn.addEventListener('click', convertPressure);
-            fromUnit.addEventListener('change', convertPressure);
-            toUnit.addEventListener('change', convertPressure);
-            inputVal.addEventListener('input', convertPressure);
-            convertPressure();
-
-            // =============================================================
-            // 8. TEMPERATURE CONVERTER
-            // =============================================================
-            const tempC = document.getElementById('tempC');
-            const tempFResult = document.getElementById('tempFResult');
-            const tempKResult = document.getElementById('tempKResult');
-            const tempConvertBtn = document.getElementById('tempConvertBtn');
-
-            function convertTemp() {
-                const c = parseFloat(tempC.value) || 0;
-                tempFResult.textContent = ((c * 9 / 5) + 32).toFixed(2) + ' °F';
-                tempKResult.textContent = (c + 273.15).toFixed(2) + ' K';
-            }
-            tempConvertBtn.addEventListener('click', convertTemp);
-            tempC.addEventListener('input', convertTemp);
-            convertTemp();
-
-            // =============================================================
-            // 9. TROUBLESHOOTING FAULT FINDER
-            // =============================================================
-            const faultDiagnosis = document.getElementById('faultDiagnosis');
-            const faultFinderBtn = document.getElementById('faultFinderBtn');
-
-            const faultDB = {
-                '4ma': '🔍 Stuck at 4mA:\n1. Check power supply (24VDC)\n2. Verify loop wiring continuity\n3. Inspect sensor for damage\n4. Check configuration range\n5. Perform loop test',
-                '22ma': '🔍 22mA Alarm:\n1. Check for overpressure condition\n2. Verify sensor diaphragm integrity\n3. Inspect for moisture/contamination\n4. Perform sensor trim\n5. Check output configuration',
-                'hart': '🔍 No HART Comms:\n1. Verify 250Ω resistor in loop\n2. Check HART modem connection\n3. Confirm device address (0 is default)\n4. Check loop current (4-20mA present?)\n5. Verify wiring polarity',
-                'drift': '🔍 Output Drifting:\n1. Check for RFI/EMI interference\n2. Verify grounding (single point)\n3. Inspect for moisture in housing\n4. Check process pressure stability\n5. Perform dampening adjustment',
-                'no-start': '🔍 Motor will not start:\n1. Check incoming power (voltage)\n2. Verify control circuit (start/stop)\n3. Test overload relay (reset?)\n4. Check motor starter coil\n5. Inspect motor windings (MEG)',
-                'trips': '🔍 Motor trips overload:\n1. Check for mechanical binding\n2. Verify FLA setting (adjust)\n3. Test motor windings (MEG)\n4. Check voltage imbalance\n5. Inspect for single-phasing',
-                'noise': '🔍 Motor unusual noise:\n1. Check bearings (grinding)\n2. Verify rotor/stator clearance\n3. Check for loose parts\n4. Inspect fan/ventilation\n5. Check for electrical hum (VFD issues)',
-                'overheat': '🔍 Motor overheating:\n1. Check ventilation/airflow\n2. Verify voltage (low/high)\n3. Check for overload condition\n4. Test motor windings\n5. Check ambient temperature',
-                'instant-trip': '🔍 Motor trips immediately:\n1. Check for short circuit\n2. Verify instantaneous trip setting\n3. Test motor windings (MEG)\n4. Check for ground fault\n5. Verify CB/relay sizing',
-                'backwards': '🔍 Motor runs backwards:\n1. Swap any two phase leads\n2. Check rotation arrow on motor\n3. Verify phase sequence\n4. Check drive parameters\n5. Confirm mechanical coupling'
-            };
-
-            document.querySelectorAll('.trouble-item').forEach(item => {
-                item.addEventListener('click', function() {
-                    const fault = this.dataset.fault;
-                    const msg = faultDB[fault] || 'No diagnosis available.';
-                    faultDiagnosis.innerHTML = msg.replace(/\n/g, '<br/>');
-                });
-            });
-
-            faultFinderBtn.addEventListener('click', function() {
-                const keys = Object.keys(faultDB);
-                const rand = keys[Math.floor(Math.random() * keys.length)];
-                faultDiagnosis.innerHTML = faultDB[rand].replace(/\n/g, '<br/>');
-            });
-
-            // =============================================================
-            // 10. REFERENCES TABS
-            // =============================================================
-            document.querySelectorAll('#refTabs .tab').forEach(tab => {
-                tab.addEventListener('click', function() {
-                    document.querySelectorAll('#refTabs .tab').forEach(t => t.classList.remove('active'));
-                    this.classList.add('active');
-                    const ref = this.dataset.ref;
-                    document.querySelectorAll('.ref-panel').forEach(p => p.classList.add('hidden'));
-                    const panel = document.getElementById('ref-' + ref);
-                    if (panel) panel.classList.remove('hidden');
-                });
-            });
-
-            // =============================================================
-            // 11. AI CHAT
-            // =============================================================
-            const aiInput = document.getElementById('aiInput');
-            const aiSendBtn = document.getElementById('aiSendBtn');
-
-            function aiResponse(msg) {
-                const lower = msg.toLowerCase();
-                if (lower.includes('22ma') || lower.includes('alarm')) {
-                    return '🔴 22mA alarm: Overpressure or sensor failure. Check range, perform trim, verify process.';
-                } else if (lower.includes('4ma') || lower.includes('stuck')) {
-                    return '🔵 Stuck at 4mA: No process, wiring open, or sensor failure. Check loop power and wiring.';
-                } else if (lower.includes('hart')) {
-                    return '📡 HART troubleshooting: Verify 250Ω resistor, check address (0 default), and modem connection.';
-                } else if (lower.includes('motor') || lower.includes('fla')) {
-                    return '⚡ Motor FLA: Use HP × 746 / (V × 1.73 × 0.85). Overload typically 110-125% of FLA.';
-                } else if (lower.includes('calibration') || lower.includes('cal')) {
-                    return '📊 Calibration: Perform 5-point test. As-Found vs As-Left. Tolerance ±0.1% typical.';
-                } else if (lower.includes('bend') || lower.includes('tubing')) {
-                    return '🔧 Tubing bending: Use Swagelok MS-HTB bender. Overbend 2-3° for SS spring-back. Mark position = offset + gain.';
-                } else {
-                    return '🤖 I\'m your AI assistant. Try asking about: 22mA, 4mA stuck, HART, motors, calibration, or tubing bending.';
-                }
-            }
-
-            aiSendBtn.addEventListener('click', function() {
-                const q = aiInput.value.trim();
-                if (!q) return;
-                const chatBox = this.closest('.card');
-                const bubble = document.createElement('div');
-                bubble.className = 'chat-bubble user';
-                bubble.innerHTML = '<i class="fas fa-user"></i> ' + q;
-                chatBox.insertBefore(bubble, document.querySelector('.row.mt-1'));
-
-                const reply = document.createElement('div');
-                reply.className = 'chat-bubble';
-                reply.innerHTML = '<i class="fas fa-robot"></i> ' + aiResponse(q);
-                chatBox.insertBefore(reply, document.querySelector('.row.mt-1'));
-
-                aiInput.value = '';
-                chatBox.scrollTop = chatBox.scrollHeight;
-            });
-
-            aiInput.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter') aiSendBtn.click();
-            });
-
-            // =============================================================
-            // 12. BOTTOM TAB NAVIGATION
-            // =============================================================
-            document.querySelectorAll('.bottom-tabs .tab-item').forEach(tab => {
-                tab.addEventListener('click', function() {
-                    document.querySelectorAll('.bottom-tabs .tab-item').forEach(t => t.classList.remove(
-                    'active'));
-                    this.classList.add('active');
-                    const target = this.dataset.tab;
-                    const map = {
-                        'home': 'greetingText',
-                        'calc': 'converter',
-                        'refs': 'references',
-                        'level': 'tubing',
-                        'support': 'ai'
-                    };
-                    const id = map[target];
-                    if (id) {
-                        const el = document.getElementById(id);
-                        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }
-                });
-            });
-
-            // =============================================================
-            // 13. SEARCH
-            // =============================================================
-            const searchInput = document.getElementById('searchInput');
-            searchInput.addEventListener('input', function() {
-                const q = this.value.toLowerCase().trim();
-                const items = document.querySelectorAll('.card, .section-title, .greeting, .quick-grid');
-                items.forEach(el => {
-                    const text = el.textContent.toLowerCase();
-                    el.style.display = (q === '' || text.includes(q)) ? '' : 'none';
-                });
-            });
-
-            // =============================================================
-            // 14. QUICK ACCESS SCROLL
-            // =============================================================
-            document.querySelectorAll('.quick-item').forEach(item => {
-                item.addEventListener('click', function() {
-                    const target = this.dataset.target;
-                    const el = document.getElementById(target);
-                    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                });
-            });
-
-            console.log('✅ InstrumentPro I/E Bible v3.0 — All tools live!');
-        })();
-    </script>
-</body>
-</html>
+            <label>Select AWG</label>
+            <select id="awgSelect">
+                <option value="14">14</option><option value="12" selected>12</option>
+                <option value="10">10</option><option value="8">8</option>
+                <optio
