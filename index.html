@@ -3,8 +3,18 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover" />
+    <meta name="theme-color" content="#1e3a5f" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="InstrumentPro" />
+    <link rel="manifest" href="manifest.json" />
+    <link rel="icon" type="image/x-icon" href="icons/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png" />
+    <link rel="apple-touch-icon" href="icons/icon-180.png" />
     <title>InstrumentPro · Temperature & Analytical</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
     <style>
         /* ===== RESET & BASE ===== */
         * {
@@ -296,10 +306,10 @@
         .sub-tab {
             white-space: nowrap;
             background: #f1f5f9;
-            padding: 6px 16px;
+            padding: 10px 20px;
             border-radius: 60px;
-            font-size: 0.7rem;
-            font-weight: 500;
+            font-size: 0.78rem;
+            font-weight: 600;
             color: #475569;
             cursor: pointer;
             border: 1px solid transparent;
@@ -351,23 +361,23 @@
         }
         .quick-item {
             background: white;
-            border-radius: 20px;
-            padding: 14px 4px;
+            border-radius: 22px;
+            padding: 18px 4px;
             text-align: center;
             border: 1px solid #eef2f6;
             cursor: pointer;
-            transition: 0.15s;
-            font-size: 0.6rem;
-            font-weight: 600;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+            font-size: 0.65rem;
+            font-weight: 700;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
         }
         .quick-item i {
             display: block;
-            font-size: 1.4rem;
-            margin-bottom: 3px;
+            font-size: 1.6rem;
+            margin-bottom: 5px;
         }
         .quick-item:active {
-            transform: scale(0.95);
+            transform: scale(0.94);
         }
         .quick-item.color-1 i {
             color: #2563eb;
@@ -518,19 +528,28 @@
 
         /* ===== BUTTONS ===== */
         .btn {
-            background: #1e3a5f;
+            --btn-c1: #1e3a5f;
+            --btn-c2: #16324f;
+            background: linear-gradient(135deg, var(--btn-c1), var(--btn-c2));
             color: white;
             border: none;
-            padding: 8px 20px;
+            padding: 13px 26px;
+            min-height: 46px;
             border-radius: 60px;
-            font-weight: 600;
-            font-size: 0.75rem;
+            font-weight: 700;
+            font-size: 0.85rem;
+            letter-spacing: 0.2px;
             cursor: pointer;
-            transition: 0.15s;
+            transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            box-shadow: 0 2px 8px rgba(30, 58, 95, 0.15);
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 14px rgba(30, 58, 95, 0.28);
+        }
+        .btn:hover {
+            filter: brightness(1.06);
+            box-shadow: 0 6px 18px rgba(30, 58, 95, 0.32);
         }
         .btn i {
             color: white;
@@ -538,26 +557,37 @@
         .btn-outline {
             background: transparent;
             color: #1e3a5f;
-            border: 1px solid #b6c9e0;
+            border: 2px solid #b6c9e0;
             box-shadow: none;
+        }
+        .btn-outline:hover {
+            background: rgba(30, 58, 95, 0.06);
+            filter: none;
         }
         .btn-outline i {
             color: #1e3a5f;
         }
         .btn-sm {
-            padding: 5px 14px;
-            font-size: 0.65rem;
+            padding: 9px 18px;
+            min-height: 38px;
+            font-size: 0.75rem;
         }
         .btn:active {
-            transform: scale(0.95);
+            transform: scale(0.94);
+            box-shadow: 0 2px 6px rgba(30, 58, 95, 0.2);
+        }
+        .btn.w-full {
+            width: 100%;
         }
         .btn-success {
-            background: #059669;
-            box-shadow: 0 2px 8px rgba(5, 150, 105, 0.2);
+            --btn-c1: #059669;
+            --btn-c2: #047a56;
+            box-shadow: 0 4px 14px rgba(5, 150, 105, 0.28);
         }
         .btn-danger {
-            background: #dc2626;
-            box-shadow: 0 2px 8px rgba(220, 38, 38, 0.2);
+            --btn-c1: #dc2626;
+            --btn-c2: #b91c1c;
+            box-shadow: 0 4px 14px rgba(220, 38, 38, 0.28);
         }
 
         /* ===== CHIPS & BADGES ===== */
@@ -704,12 +734,77 @@
         }
         .cal-point {
             display: flex;
+            flex-wrap: wrap;
             justify-content: space-between;
             align-items: center;
+            gap: 4px 8px;
             background: #f8fafd;
-            padding: 5px 12px;
-            border-radius: 60px;
+            padding: 6px 14px;
+            border-radius: 20px;
             font-size: 0.7rem;
+        }
+        #calPointsContainer.cal-points-grid {
+            grid-template-columns: 1fr;
+        }
+        .cal-point input.cal-actual {
+            padding: 4px 10px;
+            border: 1px solid #dce1e9;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            background: white;
+        }
+        body.dark .cal-point input.cal-actual {
+            background: #0f172a;
+            border-color: #334155;
+            color: #e2e8f0;
+        }
+
+        /* ============================================================
+                   SEGMENTED CONTROL
+                   ============================================================ */
+        .segmented {
+            display: flex;
+            background: #f1f5f9;
+            border-radius: 60px;
+            padding: 4px;
+            gap: 4px;
+            margin-bottom: 14px;
+        }
+        .segmented button {
+            flex: 1;
+            border: none;
+            background: transparent;
+            color: #475569;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 8px 10px;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: 0.15s;
+            font-family: inherit;
+        }
+        .segmented button.active {
+            background: #1e3a5f;
+            color: white;
+            box-shadow: 0 2px 8px rgba(30, 58, 95, 0.2);
+        }
+        body.dark .segmented button {
+            color: #94a3b8;
+        }
+        body.dark .segmented button.active {
+            background: #2563eb;
+            color: white;
+        }
+
+        /* ============================================================
+                   GC PANELS
+                   ============================================================ */
+        .gc-panel {
+            font-size: 0.8rem;
+            padding: 4px 0;
+        }
+        .gc-panel .chip {
+            margin: 2px 4px 2px 0;
         }
 
         /* ============================================================
@@ -797,14 +892,15 @@
             font-weight: 600;
             color: #1e3a5f;
         }
-        .tag-item .tag-actions button {
+        .tag-item button {
             background: none;
             border: none;
             color: #64748b;
             cursor: pointer;
             padding: 0 6px;
+            font-size: 0.9rem;
         }
-        .tag-item .tag-actions button:hover {
+        .tag-item button:hover {
             color: #dc2626;
         }
 
@@ -842,22 +938,23 @@
         }
         .bottom-tabs .tab-item {
             text-align: center;
-            font-size: 0.5rem;
+            font-size: 0.6rem;
+            font-weight: 600;
             color: #94a3b8;
             cursor: pointer;
-            padding: 2px 8px;
+            padding: 6px 10px;
             border: none;
             background: transparent;
             transition: 0.15s;
         }
         .bottom-tabs .tab-item i {
             display: block;
-            font-size: 1.1rem;
-            margin-bottom: 2px;
+            font-size: 1.3rem;
+            margin-bottom: 3px;
         }
         .bottom-tabs .tab-item.active {
             color: #1e3a5f;
-            font-weight: 600;
+            font-weight: 700;
         }
 
         /* ============================================================
@@ -1124,6 +1221,11 @@
                         </select>
                     </div>
                     <div class="row">
+                        <label>Range</label>
+                        <input type="number" id="rtdRangeLow" value="0" step="any" style="flex:0.5;" /><span>to</span>
+                        <input type="number" id="rtdRangeHigh" value="100" step="any" style="flex:0.5;" /><span class="chip">°C</span>
+                    </div>
+                    <div class="row">
                         <label>Input</label>
                         <input type="number" id="rtdInput" value="100" step="any" style="flex:0.6;" />
                         <select id="rtdInputUnit" style="flex:0.5;">
@@ -1144,7 +1246,7 @@
                     <div class="result-box"><span>Result</span><span id="rtdResult">0.00 °C</span></div>
                     <div class="result-box"><span>mA Equivalent</span><span id="rtdMaResult">12.00 mA</span></div>
                     <div class="result-box"><span>% of Range</span><span id="rtdPercentResult">50.00 %</span></div>
-                    <div style="font-size:0.65rem;color:#64748b;margin-top:4px;">Range: 0-100°C · 4-20mA · α = 0.00385</div>
+                    <div style="font-size:0.65rem;color:#64748b;margin-top:4px;" id="rtdRangeNote">Range: 0-100°C · 4-20mA · Pt100 · α = 0.00385</div>
                 </div>
 
                 <!-- ===== THERMOCOUPLE SECTION ===== -->
@@ -1161,6 +1263,11 @@
                             <option value="S">Type S</option>
                             <option value="R">Type R</option>
                         </select>
+                    </div>
+                    <div class="row">
+                        <label>Range</label>
+                        <input type="number" id="tcRangeLow" value="0" step="any" style="flex:0.5;" /><span>to</span>
+                        <input type="number" id="tcRangeHigh" value="1000" step="any" style="flex:0.5;" /><span class="chip">°C</span>
                     </div>
                     <div class="row">
                         <label>Input</label>
@@ -1186,7 +1293,7 @@
                     <div class="result-box"><span>mV</span><span id="tcMvResult">0.00 mV</span></div>
                     <div class="result-box"><span>mA</span><span id="tcMaResult">12.00 mA</span></div>
                     <div class="result-box"><span>% of Range</span><span id="tcPercentResult">50.00 %</span></div>
-                    <div style="font-size:0.65rem;color:#64748b;margin-top:4px;">Range: 0-1000°C · 4-20mA · Reference junction: 0°C</div>
+                    <div style="font-size:0.65rem;color:#64748b;margin-top:4px;" id="tcRangeNote">Range: 0-1000°C · 4-20mA · Reference junction: 0°C</div>
                 </div>
             </div>
 
@@ -1217,6 +1324,17 @@
             <div class="page-title"><i class="fas fa-flask"></i> Analytical Instruments</div>
 
             <div class="card">
+                <div class="card-header"><i class="fas fa-gauge-high"></i><h3>Quick Status</h3><span>latest calibrations</span></div>
+                <div class="analytical-grid">
+                    <div class="analytical-card"><i class="fas fa-vial" style="color:#2563eb;"></i><div class="label">pH</div><div class="value" id="statusPh">—</div></div>
+                    <div class="analytical-card"><i class="fas fa-bolt" style="color:#7c3aed;"></i><div class="label">ORP</div><div class="value" id="statusOrp">—</div></div>
+                    <div class="analytical-card"><i class="fas fa-water" style="color:#059669;"></i><div class="label">Cond</div><div class="value" id="statusCond">—</div></div>
+                    <div class="analytical-card"><i class="fas fa-lungs" style="color:#0891b2;"></i><div class="label">DO</div><div class="value" id="statusDo">—</div></div>
+                    <div class="analytical-card"><i class="fas fa-shield-alt" style="color:#dc2626;"></i><div class="label">Gas</div><div class="value" id="statusGas">—</div></div>
+                </div>
+            </div>
+
+            <div class="card">
                 <div class="sub-tabs" id="analyticalTabs">
                     <div class="sub-tab active" data-tab="ana-ph">pH</div>
                     <div class="sub-tab" data-tab="ana-orp">ORP</div>
@@ -1236,6 +1354,17 @@
                     <div class="result-box"><span>pH Slope</span><span id="phSlopeResult">98.2% (Pass)</span></div>
                     <div class="result-box"><span>Offset</span><span id="phOffsetResult">+0.02 pH</span></div>
                     <div style="font-size:0.65rem;color:#64748b;">Acceptable slope: 95-105% · Asymmetry: ±30 mV</div>
+                    <hr />
+                    <div class="card-header" style="margin-bottom:8px;"><i class="fas fa-exchange-alt"></i><h3 style="font-size:0.85rem;">mV → pH Converter</h3></div>
+                    <div class="row">
+                        <label>mV</label>
+                        <input type="number" id="phMv" value="0" step="any" style="flex:0.5;" />
+                        <label>Temp</label>
+                        <input type="number" id="phMvTemp" value="25" step="any" style="flex:0.5;" /><span class="chip">°C</span>
+                    </div>
+                    <button class="btn btn-sm" id="phMvBtn"><i class="fas fa-calculator"></i> Convert</button>
+                    <div class="result-box"><span>pH</span><span id="phMvResult">7.00</span></div>
+                    <div class="result-box"><span>Nernst Slope</span><span id="phNernstResult">59.16 mV/pH</span></div>
                 </div>
 
                 <!-- ORP -->
@@ -1256,11 +1385,31 @@
                     <div class="row">
                         <label>Conductivity</label>
                         <input type="number" id="condInput" value="250" step="any" /><span class="chip">µS/cm</span>
+                    </div>
+                    <div class="row">
+                        <label>TDS Factor</label>
+                        <select id="tdsFactor">
+                            <option value="0.5" selected>0.5 (NaCl)</option>
+                            <option value="0.55">0.55 (typical)</option>
+                            <option value="0.7">0.7 (KCl)</option>
+                        </select>
                         <button class="btn btn-sm" id="condCalcBtn"><i class="fas fa-calculator"></i> TDS</button>
                     </div>
                     <div class="result-box"><span>TDS (ppm)</span><span id="tdsResult">125.0</span></div>
-                    <div class="result-box"><span>Cell Constant</span><span id="cellConstantResult">1.0 cm⁻¹</span></div>
-                    <div style="font-size:0.65rem;color:#64748b;">TDS ≈ 0.5 × Conductivity · Cell constant: 1.0 cm⁻¹</div>
+                    <div style="font-size:0.65rem;color:#64748b;">TDS ≈ factor × Conductivity (corrected by cell constant below)</div>
+                    <hr />
+                    <div class="card-header" style="margin-bottom:8px;"><i class="fas fa-ruler-combined"></i><h3 style="font-size:0.85rem;">Cell Constant Calibration</h3></div>
+                    <div class="row">
+                        <label>Standard</label>
+                        <input type="number" id="cellStdCond" value="1413" step="any" style="flex:0.6;" /><span class="chip">µS/cm</span>
+                    </div>
+                    <div class="row">
+                        <label>Displayed</label>
+                        <input type="number" id="cellMeasured" value="1413" step="any" style="flex:0.6;" /><span class="chip">µS/cm</span>
+                    </div>
+                    <button class="btn btn-sm" id="cellConstantBtn"><i class="fas fa-check"></i> Calculate K</button>
+                    <div class="result-box"><span>Cell Constant</span><span id="cellConstantResult">1.00 cm⁻¹</span></div>
+                    <div style="font-size:0.65rem;color:#64748b;">K = standard ÷ displayed reading · common standard: 1413 µS/cm (0.01N KCl @ 25°C)</div>
                 </div>
 
                 <!-- Dissolved O₂ -->
@@ -1361,10 +1510,12 @@
                     </select>
                     <button class="btn btn-sm" id="calUpdateBtn"><i class="fas fa-sync"></i></button>
                 </div>
+                <div class="row"><label>Tolerance</label><input type="number" id="calTolerance" value="0.1" step="0.01" style="flex:0.4;" /><span class="chip">% of span</span></div>
+                <div style="font-size:0.65rem;color:#64748b;margin-bottom:6px;">Enter the <strong>actual</strong> mA reading measured at each test point — error is calculated from ideal vs. actual.</div>
                 <div id="calPointsContainer" class="cal-points-grid"></div>
                 <div class="flex mt-1">
                     <span class="badge badge-pass" id="calPassFail"><i class="fas fa-check"></i> Pass</span>
-                    <span class="chip" id="calErrorDisplay"><i class="fas fa-percent"></i> Error: 0.00%</span>
+                    <span class="chip" id="calErrorDisplay"><i class="fas fa-percent"></i> Max error: 0.00%</span>
                 </div>
             </div>
         </div>
@@ -1382,7 +1533,7 @@
                 </div>
                 <div class="row"><label>Height</label><input type="number" id="dpHeight" value="120" step="any" /><span>in</span></div>
                 <div class="row"><label>SG</label><input type="number" id="dpSG" value="1.0" step="0.01" /></div>
-                <div id="wetLegRow" class="row hidden"><label>Wet SG</label><input type="number" id="dpWetSG" value="1.0" step="0.01" /></div>
+                <div id="wetLegRow" class="row hidden"><label id="wetLegLabel">Wet SG</label><input type="number" id="dpWetSG" value="1.0" step="0.01" /></div>
                 <div class="row">
                     <label>Output</label>
                     <select id="dpUnit"><option value="inH2O">inH₂O</option><option value="psi">PSI</option><option value="kpa">kPa</option></select>
@@ -1486,6 +1637,11 @@
                 <div class="sub-panel hidden" id="elec-amp">
                     <div class="table-wrap"><table><thead><tr><th>AWG</th><th>60°C</th><th>75°C</th><th>90°C</th></tr></thead>
                             <tbody><tr><td>14</td><td>20</td><td>20</td><td>25</td></tr><tr><td>12</td><td>25</td><td>25</td><td>30</td></tr><tr><td>10</td><td>35</td><td>35</td><td>40</td></tr><tr><td>8</td><td>50</td><td>50</td><td>55</td></tr><tr><td>6</td><td>65</td><td>65</td><td>75</td></tr></tbody></table></div>
+                    <div class="row mt-1"><label>Load</label><input type="number" id="ampLoad" value="24" step="any" /><span class="chip">A</span></div>
+                    <div class="row"><label>Insulation</label><select id="ampRating"><option value="60">60°C</option><option value="75" selected>75°C</option><option value="90">90°C</option></select></div>
+                    <button class="btn" id="ampCalcBtn"><i class="fas fa-calculator"></i> Find Min. Wire Size</button>
+                    <div class="result-box"><span>Min. AWG</span><span id="ampResult">10 AWG</span></div>
+                    <div class="result-box"><span>Ampacity</span><span id="ampCapacity">35 A</span></div>
                 </div>
             </div>
         </div>
@@ -1500,7 +1656,11 @@
                         <thead><tr><th>Voltage</th><th>Wattage</th><th>Insulation</th></tr></thead>
                         <tbody><tr><td>12V DC</td><td>8-10W</td><td>Class H</td></tr><tr><td>24V DC</td><td>6-8W</td><td>Class F</td></tr><tr><td>120V AC</td><td>6.3W</td><td>Class F</td></tr><tr><td>230V AC</td><td>6.3W</td><td>Class F</td></tr></tbody>
                     </table></div>
-                <div class="row mt-1"><label>Coil Type</label><select id="solenoidType"><option value="12VDC">12V DC · 10W</option><option value="24VDC" selected>24V DC · 8W</option><option value="120VAC">120V AC · 6.3W</option><option value="230VAC">230V AC · 6.3W</option></select></div>
+                <div class="row mt-1"><label>Preset</label><select id="solenoidType"><option value="12VDC">12V DC · 10W</option><option value="24VDC" selected>24V DC · 8W</option><option value="120VAC">120V AC · 6.3W</option><option value="230VAC">230V AC · 6.3W</option></select></div>
+                <div style="font-size:0.65rem;color:#64748b;margin:2px 0 6px 0;">Picking a preset fills in typical values below — edit them for your actual coil.</div>
+                <div class="row"><label>Voltage</label><input type="number" id="solenoidV" value="24" step="any" /><span class="chip">V</span></div>
+                <div class="row"><label>Coil R</label><input type="number" id="solenoidR" value="72" step="any" /><span class="chip">Ω</span></div>
+                <button class="btn" id="solenoidCalcBtn"><i class="fas fa-calculator"></i> Calculate</button>
                 <div class="result-box"><span>Power</span><span id="solenoidPower">8.0 W</span></div>
                 <div class="result-box"><span>Current</span><span id="solenoidCurrent">0.33 A</span></div>
             </div>
@@ -1626,7 +1786,11 @@
                 <div class="trouble-item" data-fault="4ma"><i class="fas fa-bolt" style="color:#b45309;"></i> Stuck at 4mA</div>
                 <div class="trouble-item" data-fault="22ma"><i class="fas fa-wave-square" style="color:#2563eb;"></i> 22mA alarm</div>
                 <div class="trouble-item" data-fault="hart"><i class="fas fa-sync-alt" style="color:#1e7e34;"></i> No HART comms</div>
-                <button class="btn w-full" id="faultFinderBtn" style="justify-content:center;margin-top:6px;"><i class="fas fa-stethoscope"></i> Run Fault Finder</button>
+                <div class="trouble-item" data-fault="drift"><i class="fas fa-chart-line" style="color:#7c3aed;"></i> Reading drifts over time</div>
+                <div class="trouble-item" data-fault="erratic"><i class="fas fa-random" style="color:#dc2626;"></i> Erratic / noisy signal</div>
+                <div class="trouble-item" data-fault="nodisplay"><i class="fas fa-tv" style="color:#0891b2;"></i> Blank local display</div>
+                <div class="trouble-item" data-fault="groundloop"><i class="fas fa-bolt" style="color:#b45309;"></i> Ground loop / noise</div>
+                <button class="btn w-full" id="faultFinderBtn" style="justify-content:center;margin-top:6px;"><i class="fas fa-list"></i> Show Full Guide</button>
                 <div id="faultDiagnosis" class="mt-1" style="background:#f1f5f9;padding:12px 16px;border-radius:20px;min-height:40px;">Select a fault above.</div>
             </div>
         </div>
@@ -1661,8 +1825,8 @@
         <div class="page" id="page-tags">
             <div class="page-title"><i class="fas fa-qrcode"></i> Tag Scanner</div>
             <div class="card">
-                <div class="upload-zone" id="cameraZone"><i class="fas fa-camera"></i><div>Scan QR</div><input type="file" id="cameraInput" accept="image/*" capture="environment" style="display:none;" /></div>
-                <div id="scanPreview" class="mt-1"><div class="scanner-preview"><i class="fas fa-qrcode"></i><div>Ready</div></div></div>
+                <div class="upload-zone" id="cameraZone"><i class="fas fa-camera"></i><div>Tap to photograph tag (OCR)</div><input type="file" id="cameraInput" accept="image/*" capture="environment" style="display:none;" /></div>
+                <div id="scanPreview" class="mt-1"><div class="scanner-preview"><i class="fas fa-camera"></i><div>Ready</div></div></div>
                 <div class="row mt-1"><label>Tag</label><input type="text" id="tagNumber" placeholder="FT-1001" /><button class="btn" id="saveTagBtn"><i class="fas fa-save"></i> Save</button></div>
                 <div id="tagContainer"></div>
             </div>
@@ -1677,6 +1841,8 @@
                 <div class="row"><label>Tag</label><input type="text" id="reportTag" placeholder="FT-1001" /></div>
                 <div class="row"><label>Model</label><input type="text" id="reportModel" placeholder="Rosemount 3051S" /></div>
                 <div class="row"><label>Type</label><select id="reportType"><option value="calibration">Calibration</option><option value="gc">GC</option><option value="commissioning">Commissioning</option></select></div>
+                <div class="row"><label>Tolerance</label><input type="number" id="reportTolerance" value="2" step="0.1" style="flex:0.4;" /><span class="chip">% (calibration only)</span></div>
+                <div style="font-size:0.65rem;color:#64748b;margin:2px 0 4px 0;">For Calibration: enter the <strong>actual</strong> % reading recorded at each nominal test point (defaults show ideal).</div>
                 <div id="calPointsInput" class="cal-points-grid">
                     <div><label>0%</label><input type="number" id="rp0" value="0" step="any" style="width:50px;" /></div>
                     <div><label>25%</label><input type="number" id="rp25" value="25" step="any" style="width:50px;" /></div>
@@ -1717,6 +1883,12 @@
                 <div class="card-header"><i class="fas fa-moon"></i><h3>Dark Mode</h3></div>
                 <div class="row"><label>Theme</label><select id="themeSelect"><option value="light">Light</option><option value="dark">Dark</option><option value="system">System</option></select></div>
                 <div class="row"><label>Text Size</label><input type="range" id="textSizeRange" min="80" max="120" value="100" /><span id="textSizeDisplay">100%</span></div>
+            </div>
+            <div class="card">
+                <div class="card-header"><i class="fas fa-mobile-alt"></i><h3>Install App</h3></div>
+                <div id="installUnavailable" style="font-size:0.75rem;color:#64748b;margin-bottom:8px;">Save InstrumentPro to your home screen for offline, full-screen access.</div>
+                <div id="installIosHint" class="hidden" style="font-size:0.75rem;color:#64748b;margin-bottom:8px;">On iPhone/iPad: tap the <i class="fas fa-arrow-up-from-bracket"></i> Share button in Safari, then "Add to Home Screen".</div>
+                <button class="btn w-full hidden" id="installAppBtn" style="justify-content:center;"><i class="fas fa-download"></i> Install App</button>
             </div>
             <div class="card">
                 <div class="card-header"><i class="fas fa-database"></i><h3>Data</h3></div>
@@ -1857,8 +2029,9 @@
                 if (!document.body.classList.contains('dark')) {
                     greeting.style.background = 'linear-gradient(145deg, ' + color + ', ' + adjustColor(color, -20) + ')';
                 }
-                document.querySelectorAll('.btn:not(.btn-outline)').forEach(btn => {
-                    btn.style.background = color;
+                document.querySelectorAll('.btn:not(.btn-outline):not(.btn-danger):not(.btn-success)').forEach(btn => {
+                    btn.style.setProperty('--btn-c1', color);
+                    btn.style.setProperty('--btn-c2', adjustColor(color, -25));
                 });
                 document.querySelectorAll('.card-header i, .quick-item i, .analytical-card .value').forEach(el => {
                     if (el.tagName === 'I') el.style.color = color;
@@ -1943,36 +2116,57 @@
             // =============================================================
             // RTD CALCULATOR
             // =============================================================
+            const rtdType = document.getElementById('rtdType');
+            const rtdRangeLow = document.getElementById('rtdRangeLow');
+            const rtdRangeHigh = document.getElementById('rtdRangeHigh');
             const rtdInput = document.getElementById('rtdInput');
             const rtdInputUnit = document.getElementById('rtdInputUnit');
             const rtdOutputUnit = document.getElementById('rtdOutputUnit');
             const rtdResult = document.getElementById('rtdResult');
             const rtdMaResult = document.getElementById('rtdMaResult');
             const rtdPercentResult = document.getElementById('rtdPercentResult');
+            const rtdRangeNote = document.getElementById('rtdRangeNote');
             const rtdConvertBtn = document.getElementById('rtdConvertBtn');
+            const RTD_ALPHA = 0.00385; // IEC 60751, Ω/Ω/°C
+            const rtdBase = { pt100: 100, pt500: 500, pt1000: 1000 };
+
+            function updateRtdNote() {
+                const base = rtdBase[rtdType.value] || 100;
+                const lo = parseFloat(rtdRangeLow.value) || 0;
+                const hi = parseFloat(rtdRangeHigh.value) || 100;
+                rtdRangeNote.textContent = `Range: ${lo}-${hi}°C · 4-20mA · ${rtdType.value.toUpperCase()} (${base}Ω @ 0°C) · α = 0.00385`;
+            }
+            rtdType.addEventListener('change', updateRtdNote);
+            rtdRangeLow.addEventListener('input', updateRtdNote);
+            rtdRangeHigh.addEventListener('input', updateRtdNote);
+            updateRtdNote();
 
             rtdConvertBtn.addEventListener('click', function() {
                 const val = parseFloat(rtdInput.value) || 0;
                 const inUnit = rtdInputUnit.value;
                 const outUnit = rtdOutputUnit.value;
+                const base = rtdBase[rtdType.value] || 100;
+                const lo = parseFloat(rtdRangeLow.value) || 0;
+                const hi = parseFloat(rtdRangeHigh.value) || 100;
+                const span = hi - lo || 1;
                 let temp = 0,
                     ma = 0,
                     percent = 0;
 
                 // Convert input to temperature
                 if (inUnit === 'ohm') {
-                    temp = (val - 100) / 0.385; // Pt100 simplified
+                    temp = (val - base) / (base * RTD_ALPHA);
                 } else if (inUnit === 'ma') {
                     ma = val;
-                    temp = ((ma - 4) / 16) * 100; // 0-100°C range
+                    temp = lo + ((ma - 4) / 16) * span;
                 } else if (inUnit === 'percent') {
                     percent = val;
-                    temp = (percent / 100) * 100;
+                    temp = lo + (percent / 100) * span;
                 }
 
-                // Calculate mA and percent
-                ma = 4 + (temp / 100) * 16;
-                percent = (temp / 100) * 100;
+                // Calculate mA and percent relative to the configured range
+                ma = 4 + ((temp - lo) / span) * 16;
+                percent = ((temp - lo) / span) * 100;
 
                 // Output
                 if (outUnit === 'temp') {
@@ -1990,6 +2184,8 @@
             // THERMOCOUPLE CALCULATOR
             // =============================================================
             const tcType = document.getElementById('tcType');
+            const tcRangeLow = document.getElementById('tcRangeLow');
+            const tcRangeHigh = document.getElementById('tcRangeHigh');
             const tcInput = document.getElementById('tcInput');
             const tcInputUnit = document.getElementById('tcInputUnit');
             const tcOutputUnit = document.getElementById('tcOutputUnit');
@@ -1997,7 +2193,18 @@
             const tcMvResult = document.getElementById('tcMvResult');
             const tcMaResult = document.getElementById('tcMaResult');
             const tcPercentResult = document.getElementById('tcPercentResult');
+            const tcRangeNote = document.getElementById('tcRangeNote');
             const tcConvertBtn = document.getElementById('tcConvertBtn');
+
+            function updateTcNote() {
+                const lo = parseFloat(tcRangeLow.value) || 0;
+                const hi = parseFloat(tcRangeHigh.value) || 1000;
+                tcRangeNote.textContent = `Range: ${lo}-${hi}°C · 4-20mA · Type ${tcType.value} · Reference junction: 0°C`;
+            }
+            tcType.addEventListener('change', updateTcNote);
+            tcRangeLow.addEventListener('input', updateTcNote);
+            tcRangeHigh.addEventListener('input', updateTcNote);
+            updateTcNote();
 
             // Approximate mV values for different TC types at 100°C and 1000°C
             const tcData = {
@@ -2016,12 +2223,15 @@
                 const inUnit = tcInputUnit.value;
                 const outUnit = tcOutputUnit.value;
                 const data = tcData[type] || tcData['K'];
+                const lo = parseFloat(tcRangeLow.value) || 0;
+                const hi = parseFloat(tcRangeHigh.value) || 1000;
+                const span = hi - lo || 1;
                 let temp = 0,
                     mv = 0,
                     ma = 0,
                     percent = 0;
 
-                // Convert input to temperature
+                // Convert input to temperature (mV table is always referenced to 0°C, independent of configured range)
                 if (inUnit === 'mv') {
                     mv = val;
                     if (data.mv1000) {
@@ -2031,10 +2241,10 @@
                     }
                 } else if (inUnit === 'ma') {
                     ma = val;
-                    temp = ((ma - 4) / 16) * 1000; // 0-1000°C range
+                    temp = lo + ((ma - 4) / 16) * span;
                 } else if (inUnit === 'percent') {
                     percent = val;
-                    temp = (percent / 100) * 1000;
+                    temp = lo + (percent / 100) * span;
                 } else if (inUnit === 'temp') {
                     temp = val;
                 }
@@ -2045,8 +2255,8 @@
                 } else {
                     mv = (temp / 100) * data.mv100;
                 }
-                ma = 4 + (temp / 1000) * 16;
-                percent = (temp / 1000) * 100;
+                ma = 4 + ((temp - lo) / span) * 16;
+                percent = ((temp - lo) / span) * 100;
 
                 // Output
                 if (outUnit === 'temp') {
@@ -2141,27 +2351,50 @@
             const calLow = document.getElementById('calLow');
             const calHigh = document.getElementById('calHigh');
             const calUnit = document.getElementById('calUnit');
+            const calTolerance = document.getElementById('calTolerance');
             const calUpdateBtn = document.getElementById('calUpdateBtn');
             const calPointsContainer = document.getElementById('calPointsContainer');
             const calErrorDisplay = document.getElementById('calErrorDisplay');
             const calPassFail = document.getElementById('calPassFail');
+            const calPts = [0, 25, 50, 75, 100];
 
             function buildCalPoints() {
                 const low = parseFloat(calLow.value) || 0;
                 const high = parseFloat(calHigh.value) || 100;
                 const span = high - low;
                 const unit = calUnit.value;
-                const pts = [0, 25, 50, 75, 100];
                 let html = '';
-                pts.forEach(p => {
+                calPts.forEach(p => {
                     const val = low + (span * p / 100);
-                    const mA = 4 + (16 * p / 100);
-                    html += `<div class="cal-point"><span>${p}%</span><span>${val.toFixed(2)} ${unit}</span><span>${mA.toFixed(2)} mA</span></div>`;
+                    const idealMa = 4 + (16 * p / 100);
+                    html += `<div class="cal-point"><span>${p}% (${val.toFixed(2)} ${unit})</span><span>ideal ${idealMa.toFixed(2)} mA</span>` +
+                        `<input type="number" class="cal-actual" data-ideal="${idealMa}" step="0.01" placeholder="actual mA" style="width:70px;" /></div>`;
                 });
                 calPointsContainer.innerHTML = html;
-                const err = (Math.random() * 0.15).toFixed(2);
-                calErrorDisplay.innerHTML = `Error: ±${err}%`;
-                const pass = parseFloat(err) < 0.08;
+                calPointsContainer.querySelectorAll('.cal-actual').forEach(inp => inp.addEventListener('input', evaluateCal));
+                evaluateCal();
+            }
+
+            function evaluateCal() {
+                const tol = parseFloat(calTolerance.value) || 0.1;
+                let maxErrorPct = 0;
+                let anyEntered = false;
+                calPointsContainer.querySelectorAll('.cal-actual').forEach(inp => {
+                    if (inp.value.trim() === '') return;
+                    anyEntered = true;
+                    const ideal = parseFloat(inp.dataset.ideal);
+                    const actual = parseFloat(inp.value);
+                    const errorPct = Math.abs(actual - ideal) / 16 * 100; // % of 4-20mA span
+                    if (errorPct > maxErrorPct) maxErrorPct = errorPct;
+                });
+                if (!anyEntered) {
+                    calErrorDisplay.innerHTML = 'Max error: — (enter actual readings)';
+                    calPassFail.className = 'badge badge-warn';
+                    calPassFail.innerHTML = 'Pending';
+                    return;
+                }
+                calErrorDisplay.innerHTML = `Max error: ${maxErrorPct.toFixed(3)}%`;
+                const pass = maxErrorPct <= tol;
                 calPassFail.className = pass ? 'badge badge-pass' : 'badge badge-fail';
                 calPassFail.innerHTML = pass ? 'Pass' : 'Fail';
             }
@@ -2169,6 +2402,7 @@
             calLow.addEventListener('input', buildCalPoints);
             calHigh.addEventListener('input', buildCalPoints);
             calUnit.addEventListener('change', buildCalPoints);
+            calTolerance.addEventListener('input', evaluateCal);
             buildCalPoints();
 
             // =============================================================
@@ -2183,6 +2417,7 @@
             const dpSpan = document.getElementById('dpSpan');
             const calcDpBtn = document.getElementById('calcDpBtn');
             const wetLegRow = document.getElementById('wetLegRow');
+            const wetLegLabel = document.getElementById('wetLegLabel');
             let dpMode = 'dry';
 
             document.querySelectorAll('#dpModeSeg button').forEach(btn => {
@@ -2191,6 +2426,13 @@
                     this.classList.add('active');
                     dpMode = this.dataset.mode;
                     wetLegRow.classList.toggle('hidden', dpMode === 'dry');
+                    if (dpMode === 'wet') {
+                        wetLegLabel.textContent = 'Wet Leg SG';
+                        dpWetSG.value = 1.0;
+                    } else if (dpMode === 'remote') {
+                        wetLegLabel.textContent = 'Elevation (inH₂O eq.)';
+                        dpWetSG.value = 0;
+                    }
                     calcDP();
                 });
             });
@@ -2268,7 +2510,29 @@
                 phSlopeResult.textContent = slope.toFixed(1) + '% (' + (slope > 95 ? 'Pass' : 'Fail') + ')';
                 phSlopeResult.style.color = slope > 95 ? '#059669' : '#dc2626';
                 phOffsetResult.textContent = (offset > 0 ? '+' : '') + offset.toFixed(2) + ' pH';
+                document.getElementById('statusPh').textContent = slope.toFixed(1) + '%';
             });
+
+            // pH: mV -> pH (Nernst equation)
+            const phMv = document.getElementById('phMv');
+            const phMvTemp = document.getElementById('phMvTemp');
+            const phMvBtn = document.getElementById('phMvBtn');
+            const phMvResult = document.getElementById('phMvResult');
+            const phNernstResult = document.getElementById('phNernstResult');
+
+            function calcPhFromMv() {
+                const mv = parseFloat(phMv.value) || 0;
+                const tempC = parseFloat(phMvTemp.value);
+                const tempK = (isNaN(tempC) ? 25 : tempC) + 273.15;
+                const nernstSlope = 0.198417 * tempK; // mV per pH unit at given temperature
+                const ph = 7 - (mv / nernstSlope);
+                phMvResult.textContent = ph.toFixed(2);
+                phNernstResult.textContent = nernstSlope.toFixed(2) + ' mV/pH';
+            }
+            phMvBtn.addEventListener('click', calcPhFromMv);
+            phMv.addEventListener('input', calcPhFromMv);
+            phMvTemp.addEventListener('input', calcPhFromMv);
+            calcPhFromMv();
 
             // ORP
             const orpStandard = document.getElementById('orpStandard');
@@ -2285,20 +2549,46 @@
                 const pass = Math.abs(error) < 10;
                 orpStatus.textContent = pass ? '✓ Pass' : '✗ Fail';
                 orpStatus.style.color = pass ? '#059669' : '#dc2626';
+                document.getElementById('statusOrp').textContent = error.toFixed(1) + ' mV';
             });
 
             // Conductivity
             const condInput = document.getElementById('condInput');
+            const tdsFactor = document.getElementById('tdsFactor');
             const tdsResult = document.getElementById('tdsResult');
-            const cellConstantResult = document.getElementById('cellConstantResult');
             const condCalcBtn = document.getElementById('condCalcBtn');
+            let currentCellConstant = 1.0;
 
-            condCalcBtn.addEventListener('click', function() {
+            function calcTds() {
                 const cond = parseFloat(condInput.value) || 0;
-                const tds = cond * 0.5;
+                const factor = parseFloat(tdsFactor.value) || 0.5;
+                const corrected = cond * currentCellConstant;
+                const tds = corrected * factor;
                 tdsResult.textContent = tds.toFixed(1) + ' ppm';
-                cellConstantResult.textContent = '1.0 cm⁻¹';
-            });
+                document.getElementById('statusCond').textContent = corrected.toFixed(0) + ' µS';
+            }
+            condCalcBtn.addEventListener('click', calcTds);
+            condInput.addEventListener('input', calcTds);
+            tdsFactor.addEventListener('change', calcTds);
+            calcTds();
+
+            // Conductivity: Cell Constant Calibration
+            const cellStdCond = document.getElementById('cellStdCond');
+            const cellMeasured = document.getElementById('cellMeasured');
+            const cellConstantBtn = document.getElementById('cellConstantBtn');
+            const cellConstantResult = document.getElementById('cellConstantResult');
+
+            function calcCellConstant() {
+                const std = parseFloat(cellStdCond.value) || 1413;
+                const measured = parseFloat(cellMeasured.value) || std;
+                currentCellConstant = measured > 0 ? std / measured : 1.0;
+                cellConstantResult.textContent = currentCellConstant.toFixed(3) + ' cm⁻¹';
+                calcTds();
+            }
+            cellConstantBtn.addEventListener('click', calcCellConstant);
+            cellStdCond.addEventListener('input', calcCellConstant);
+            cellMeasured.addEventListener('input', calcCellConstant);
+            calcCellConstant();
 
             // DO
             const doTemp = document.getElementById('doTemp');
@@ -2315,6 +2605,7 @@
                 const adjusted = conc * (sat / 100);
                 doSaturation.textContent = sat.toFixed(1) + '%';
                 doConcentration.textContent = adjusted.toFixed(2) + ' mg/L';
+                document.getElementById('statusDo').textContent = adjusted.toFixed(1) + ' mg/L';
             });
 
             // Gas Detection
@@ -2340,6 +2631,9 @@
                 gasStatus.style.color = status.includes('✓') ? '#059669' : status.includes('⚠️') ? '#b45309' :
                     '#dc2626';
                 gasAlarm.textContent = alarm;
+                const statusGasEl = document.getElementById('statusGas');
+                statusGasEl.textContent = status.replace(/[✓⚠️✗]/g, '').trim();
+                statusGasEl.style.color = gasStatus.style.color;
             });
 
             // =============================================================
@@ -2356,42 +2650,45 @@
                 });
             });
 
-            // =============================================================
-            // COMMISSIONING TABS
-            // =============================================================
-            document.querySelectorAll('#commTabs .sub-tab').forEach(tab => {
-                tab.addEventListener('click', function() {
-                    const container = this.closest('.sub-tabs');
-                    container.querySelectorAll('.sub-tab').forEach(t => t.classList.remove('active'));
-                    this.classList.add('active');
-                    const panelId = this.dataset.tab;
-                    const parent = container.closest('.card');
-                    parent.querySelectorAll('.sub-panel').forEach(p => p.classList.remove('active'));
-                    const target = parent.querySelector('#' + panelId);
-                    if (target) target.classList.add('active');
-                });
-            });
+            // Note: commissioning tabs use the shared '.sub-tabs' handler defined above — no separate binding needed.
 
             // =============================================================
             // SOLENOID
             // =============================================================
             const solenoidType = document.getElementById('solenoidType');
+            const solenoidV = document.getElementById('solenoidV');
+            const solenoidR = document.getElementById('solenoidR');
             const solenoidPower = document.getElementById('solenoidPower');
             const solenoidCurrent = document.getElementById('solenoidCurrent');
+            const solenoidCalcBtn = document.getElementById('solenoidCalcBtn');
+
+            // Typical V/R combos per preset (R derived so P and I match published typical values)
+            const solenoidPresets = {
+                '12VDC': { v: 12, r: 14.4 },
+                '24VDC': { v: 24, r: 72 },
+                '120VAC': { v: 120, r: 2285.7 },
+                '230VAC': { v: 230, r: 8396.8 }
+            };
+
+            function calcSolenoid() {
+                const v = parseFloat(solenoidV.value) || 0;
+                const r = parseFloat(solenoidR.value) || 1;
+                const i = v / r;
+                const p = v * i;
+                solenoidPower.textContent = p.toFixed(2) + ' W';
+                solenoidCurrent.textContent = i.toFixed(3) + ' A';
+            }
 
             solenoidType.addEventListener('change', function() {
-                const val = this.value;
-                const data = {
-                    '12VDC': { power: '10.0 W', current: '0.83 A' },
-                    '24VDC': { power: '8.0 W', current: '0.33 A' },
-                    '120VAC': { power: '6.3 W', current: '0.05 A' },
-                    '230VAC': { power: '6.3 W', current: '0.03 A' }
-                };
-                const d = data[val] || data['24VDC'];
-                solenoidPower.textContent = d.power;
-                solenoidCurrent.textContent = d.current;
+                const preset = solenoidPresets[this.value] || solenoidPresets['24VDC'];
+                solenoidV.value = preset.v;
+                solenoidR.value = preset.r;
+                calcSolenoid();
             });
-            solenoidType.dispatchEvent(new Event('change'));
+            solenoidCalcBtn.addEventListener('click', calcSolenoid);
+            solenoidV.addEventListener('input', calcSolenoid);
+            solenoidR.addEventListener('input', calcSolenoid);
+            calcSolenoid();
 
             // =============================================================
             // BENDING
@@ -2501,6 +2798,42 @@
             calcVd();
 
             // =============================================================
+            // AMPACITY / WIRE SIZE CALCULATOR
+            // =============================================================
+            const ampLoad = document.getElementById('ampLoad');
+            const ampRating = document.getElementById('ampRating');
+            const ampCalcBtn = document.getElementById('ampCalcBtn');
+            const ampResult = document.getElementById('ampResult');
+            const ampCapacity = document.getElementById('ampCapacity');
+            // Ordered smallest-current-capacity first so we can pick the first one that's sufficient
+            const ampacityTable = [
+                { awg: '14', 60: 20, 75: 20, 90: 25 },
+                { awg: '12', 60: 25, 75: 25, 90: 30 },
+                { awg: '10', 60: 35, 75: 35, 90: 40 },
+                { awg: '8', 60: 50, 75: 50, 90: 55 },
+                { awg: '6', 60: 65, 75: 65, 90: 75 }
+            ];
+
+            function calcAmpacity() {
+                const load = parseFloat(ampLoad.value) || 0;
+                const rating = ampRating.value;
+                const fit = ampacityTable.find(row => row[rating] >= load);
+                if (fit) {
+                    ampResult.textContent = fit.awg + ' AWG';
+                    ampResult.style.color = '#0b2d4e';
+                    ampCapacity.textContent = fit[rating] + ' A';
+                } else {
+                    ampResult.textContent = '> 6 AWG (consult tables)';
+                    ampResult.style.color = '#dc2626';
+                    ampCapacity.textContent = '—';
+                }
+            }
+            ampCalcBtn.addEventListener('click', calcAmpacity);
+            ampLoad.addEventListener('input', calcAmpacity);
+            ampRating.addEventListener('change', calcAmpacity);
+            calcAmpacity();
+
+            // =============================================================
             // REFERENCES TABS
             // =============================================================
             document.querySelectorAll('#refTabs .tab').forEach(tab => {
@@ -2523,7 +2856,11 @@
             const faultDB = {
                 '4ma': '🔍 Stuck at 4mA:\n1. Check power supply\n2. Verify loop wiring\n3. Inspect sensor\n4. Check configuration\n5. Perform loop test',
                 '22ma': '🔍 22mA Alarm:\n1. Check overpressure\n2. Verify sensor integrity\n3. Inspect for moisture\n4. Perform sensor trim\n5. Check configuration',
-                'hart': '🔍 No HART Comms:\n1. Verify 250Ω resistor\n2. Check modem connection\n3. Confirm device address\n4. Check loop current\n5. Verify wiring polarity'
+                'hart': '🔍 No HART Comms:\n1. Verify 250Ω resistor\n2. Check modem connection\n3. Confirm device address\n4. Check loop current\n5. Verify wiring polarity',
+                'drift': '🔍 Reading Drifts Over Time:\n1. Check for temperature effects on electronics\n2. Inspect impulse lines for plugging/leaks\n3. Verify zero/span hasn\'t shifted (re-trim)\n4. Check power supply stability\n5. Inspect for moisture ingress',
+                'erratic': '🔍 Erratic / Noisy Signal:\n1. Check for ground loops (measure shield-to-ground)\n2. Inspect wiring for loose terminals\n3. Look for nearby VFD/motor EMI sources\n4. Verify shield is grounded at one end only\n5. Check process for turbulence/pulsation',
+                'nodisplay': '🔍 Blank Local Display:\n1. Verify loop power at terminals\n2. Check display ribbon/connector seating\n3. Confirm firmware hasn\'t crashed (power cycle)\n4. Inspect for water ingress in housing\n5. Check fuse if unit is externally powered',
+                'groundloop': '🔍 Ground Loop / Noise:\n1. Ground cable shield at ONE end only\n2. Check for multiple earth grounds on same loop\n3. Use isolated barrier/isolator if unavoidable\n4. Verify power supply common isn\'t shared incorrectly\n5. Route signal cable away from power cables'
             };
 
             document.querySelectorAll('.trouble-item').forEach(item => {
@@ -2535,9 +2872,8 @@
             });
 
             faultFinderBtn.addEventListener('click', function() {
-                const keys = Object.keys(faultDB);
-                const rand = keys[Math.floor(Math.random() * keys.length)];
-                faultDiagnosis.innerHTML = faultDB[rand].replace(/\n/g, '<br/>');
+                const all = Object.keys(faultDB).map(k => faultDB[k]).join('\n\n');
+                faultDiagnosis.innerHTML = all.replace(/\n/g, '<br/>');
             });
 
             // =============================================================
@@ -2642,15 +2978,38 @@
                 reader.onload = function(e) {
                     const preview = document.getElementById('scanPreview');
                     preview.innerHTML =
-                        `<div class="scanner-preview"><img src="${e.target.result}" style="max-width:100%;max-height:120px;border-radius:12px;" /><div class="scan-result">Processing...</div></div>`;
-                    setTimeout(() => {
-                        const devices = ['FT-1001', 'PT-203', 'TT-450', 'LT-892', 'GC-301'];
-                        const extracted = devices[Math.floor(Math.random() * devices.length)];
-                        tagNumber.value = extracted;
-                        document.querySelector('.scan-result').textContent = extracted + ' (Rosemount 3051S)';
-                        document.querySelector('.scan-result').style.color = '#059669';
-                        document.getElementById('reportModel').value = 'Rosemount 3051S';
-                    }, 1000);
+                        `<div class="scanner-preview"><img src="${e.target.result}" style="max-width:100%;max-height:120px;border-radius:12px;" /><div class="scan-result">🔍 Reading text (OCR)...</div></div>`;
+
+                    if (typeof Tesseract === 'undefined') {
+                        document.querySelector('.scan-result').textContent = '⚠️ OCR engine unavailable (offline?). Enter tag manually.';
+                        document.querySelector('.scan-result').style.color = '#dc2626';
+                        return;
+                    }
+
+                    Tesseract.recognize(e.target.result, 'eng')
+                        .then(function(result) {
+                            const rawText = (result.data.text || '').trim();
+                            // Look for a typical instrument tag pattern, e.g. FT-1001, PT203, TT-450
+                            const match = rawText.match(/\b[A-Z]{2,4}-?\d{2,5}[A-Z]?\b/);
+                            const resultEl = document.querySelector('.scan-result');
+                            if (match) {
+                                const tag = match[0].toUpperCase();
+                                tagNumber.value = tag;
+                                resultEl.innerHTML = `Detected: <strong>${tag}</strong><br/><span style="font-size:0.65rem;opacity:0.7;">Raw OCR: ${rawText.slice(0, 80) || '(empty)'}</span>`;
+                                resultEl.style.color = '#059669';
+                            } else if (rawText) {
+                                resultEl.innerHTML = `No tag pattern found.<br/><span style="font-size:0.65rem;opacity:0.7;">Raw OCR: ${rawText.slice(0, 100)}</span>`;
+                                resultEl.style.color = '#b45309';
+                            } else {
+                                resultEl.textContent = '⚠️ No text detected — try a clearer photo, or enter the tag manually.';
+                                resultEl.style.color = '#b45309';
+                            }
+                        })
+                        .catch(function(err) {
+                            const resultEl = document.querySelector('.scan-result');
+                            resultEl.textContent = '⚠️ OCR failed: ' + (err.message || 'unknown error') + '. Enter tag manually.';
+                            resultEl.style.color = '#dc2626';
+                        });
                 };
                 reader.readAsDataURL(file);
                 this.value = '';
@@ -2684,6 +3043,8 @@
             const reportPreview = document.getElementById('reportPreview');
             const exportReportBtn = document.getElementById('exportReportBtn');
 
+            const reportTolerance = document.getElementById('reportTolerance');
+
             generateReportBtn.addEventListener('click', function() {
                 const tag = reportTag.value.trim() || 'N/A';
                 const model = reportModel.value.trim() || 'N/A';
@@ -2691,12 +3052,22 @@
                 const notes = reportNotes.value.trim() || 'No additional notes.';
                 const date = new Date().toLocaleString();
                 let calValues = '';
+                let statusLine = 'COMPLETED — see notes';
                 if (type === 'calibration') {
-                    calValues =
-                        `Calibration Points:\n  0%: ${document.getElementById('rp0').value}\n  25%: ${document.getElementById('rp25').value}\n  50%: ${document.getElementById('rp50').value}\n  75%: ${document.getElementById('rp75').value}\n  100%: ${document.getElementById('rp100').value}`;
+                    const expected = { rp0: 0, rp25: 25, rp50: 50, rp75: 75, rp100: 100 };
+                    const tol = parseFloat(reportTolerance.value) || 2;
+                    let maxDev = 0;
+                    const lines = Object.keys(expected).map(id => {
+                        const actual = parseFloat(document.getElementById(id).value) || 0;
+                        const dev = Math.abs(actual - expected[id]);
+                        if (dev > maxDev) maxDev = dev;
+                        return `  ${expected[id]}%: ${actual} (deviation ${dev.toFixed(2)}%)`;
+                    });
+                    calValues = `Calibration Points:\n` + lines.join('\n');
+                    statusLine = maxDev <= tol ? `PASS ✓ (max deviation ${maxDev.toFixed(2)}% ≤ ${tol}% tolerance)` : `FAIL ✗ (max deviation ${maxDev.toFixed(2)}% > ${tol}% tolerance)`;
                 }
                 reportPreview.textContent =
-                    `========================================\nINSTRUMENTPRO FIELD REPORT\n========================================\nDate: ${date}\nTag: ${tag}\nModel: ${model}\nType: ${type.toUpperCase()}\n----------------------------------------\n${calValues}\nFINDINGS:\n${notes}\n----------------------------------------\nStatus: ${Math.random() > 0.3 ? 'PASS ✓' : 'FAIL ✗'}\n========================================`;
+                    `========================================\nINSTRUMENTPRO FIELD REPORT\n========================================\nDate: ${date}\nTag: ${tag}\nModel: ${model}\nType: ${type.toUpperCase()}\n----------------------------------------\n${calValues}\nFINDINGS:\n${notes}\n----------------------------------------\nStatus: ${statusLine}\n========================================`;
             });
 
             exportReportBtn.addEventListener('click', function() {
@@ -2741,6 +3112,59 @@
                     alert('Data cleared.');
                 }
             });
+
+            // =============================================================
+            // PWA INSTALL PROMPT
+            // =============================================================
+            const installUnavailable = document.getElementById('installUnavailable');
+            const installIosHint = document.getElementById('installIosHint');
+            const installAppBtn = document.getElementById('installAppBtn');
+            let deferredInstallPrompt = null;
+
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+            const isIos = /iphone|ipad|ipod/i.test(window.navigator.userAgent);
+
+            if (isStandalone) {
+                installUnavailable.textContent = '✅ Already installed — you\'re using the installed app.';
+            } else if (isIos) {
+                installUnavailable.classList.add('hidden');
+                installIosHint.classList.remove('hidden');
+            }
+
+            window.addEventListener('beforeinstallprompt', function(e) {
+                e.preventDefault();
+                deferredInstallPrompt = e;
+                installUnavailable.classList.add('hidden');
+                installIosHint.classList.add('hidden');
+                installAppBtn.classList.remove('hidden');
+            });
+
+            installAppBtn.addEventListener('click', function() {
+                if (!deferredInstallPrompt) return;
+                deferredInstallPrompt.prompt();
+                deferredInstallPrompt.userChoice.finally(function() {
+                    deferredInstallPrompt = null;
+                    installAppBtn.classList.add('hidden');
+                });
+            });
+
+            window.addEventListener('appinstalled', function() {
+                installAppBtn.classList.add('hidden');
+                installIosHint.classList.add('hidden');
+                installUnavailable.classList.remove('hidden');
+                installUnavailable.textContent = '✅ Installed! Find InstrumentPro on your home screen.';
+            });
+
+            // =============================================================
+            // SERVICE WORKER REGISTRATION (offline support)
+            // =============================================================
+            if ('serviceWorker' in navigator && (window.location.protocol === 'https:' || window.location.hostname === 'localhost')) {
+                window.addEventListener('load', function() {
+                    navigator.serviceWorker.register('./service-worker.js').catch(function(err) {
+                        console.warn('Service worker registration failed:', err);
+                    });
+                });
+            }
 
             console.log('✅ InstrumentPro v7.0 loaded!');
         })();
