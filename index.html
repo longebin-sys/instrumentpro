@@ -132,6 +132,94 @@
             color: white;
         }
 
+        /* ===== SPLASH SCREEN ===== */
+        #splashScreen {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: linear-gradient(160deg, #1e3a5f, #0f2b44);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        #splashScreen.fade-out {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        .splash-content {
+            text-align: center;
+            color: white;
+            padding: 20px;
+        }
+        .splash-icon {
+            width: 92px;
+            height: 92px;
+            border-radius: 26px;
+            background: rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: #7fc9ff;
+            margin: 0 auto 18px auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            animation: splashPulse 1.8s ease-in-out infinite;
+        }
+        @keyframes splashPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+        }
+        .splash-title {
+            font-size: 1.6rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 4px;
+            animation: splashFadeUp 0.6s ease both;
+        }
+        .splash-sub {
+            font-size: 0.8rem;
+            opacity: 0.7;
+            margin-bottom: 30px;
+            animation: splashFadeUp 0.6s ease 0.1s both;
+        }
+        @keyframes splashFadeUp {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .splash-loader {
+            width: 160px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 0 auto;
+        }
+        .splash-loader-bar {
+            width: 40%;
+            height: 100%;
+            background: linear-gradient(90deg, #7fc9ff, #2563eb);
+            border-radius: 10px;
+            animation: splashLoading 1.1s ease-in-out infinite;
+        }
+        @keyframes splashLoading {
+            0% { transform: translateX(-120%); }
+            100% { transform: translateX(360%); }
+        }
+        .splash-status {
+            font-size: 0.65rem;
+            opacity: 0.55;
+            margin-top: 14px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .splash-icon, .splash-loader-bar, .splash-title, .splash-sub {
+                animation: none;
+            }
+        }
+
         /* ===== SIDEBAR ===== */
         .sidebar-overlay {
             position: fixed;
@@ -1111,6 +1199,19 @@
 <body>
 
     <!-- ============================================================
+    SPLASH / LOADING SCREEN
+    ============================================================ -->
+    <div id="splashScreen">
+        <div class="splash-content">
+            <div class="splash-icon"><i class="fas fa-gauge-high"></i></div>
+            <div class="splash-title">InstrumentPro</div>
+            <div class="splash-sub">Field Toolbox for Technicians</div>
+            <div class="splash-loader"><div class="splash-loader-bar"></div></div>
+            <div class="splash-status" id="splashStatus">Loading tools…</div>
+        </div>
+    </div>
+
+    <!-- ============================================================
     SIDEBAR
     ============================================================ -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
@@ -1124,6 +1225,7 @@
         <a class="nav-item" data-page="tempcal"><i class="fas fa-thermometer-half"></i> Temp Cal</a>
         <a class="nav-item" data-page="dp"><i class="fas fa-tachometer-alt"></i> Level DP</a>
         <a class="nav-item" data-page="flow"><i class="fas fa-water"></i> Flow</a>
+        <a class="nav-item" data-page="connect"><i class="fas fa-bluetooth-b"></i> Connect Device</a>
         <a class="nav-item" data-page="analytical"><i class="fas fa-flask"></i> Analytical</a>
         <a class="nav-item" data-page="gc"><i class="fas fa-chart-bar"></i> Gas Chromatography</a>
         <a class="nav-item" data-page="electrical"><i class="fas fa-bolt"></i> Electrical</a>
@@ -1173,6 +1275,7 @@
                 <div class="quick-item color-7" data-page="tempcal"><i class="fas fa-thermometer-half"></i> Temp Cal</div>
                 <div class="quick-item color-3" data-page="dp"><i class="fas fa-tachometer-alt"></i> Level DP</div>
                 <div class="quick-item color-4" data-page="flow"><i class="fas fa-water"></i> Flow</div>
+                <div class="quick-item color-6" data-page="connect"><i class="fas fa-bluetooth-b"></i> Connect</div>
                 <div class="quick-item color-7" data-page="analytical"><i class="fas fa-flask"></i> Analytical</div>
                 <div class="quick-item color-8" data-page="gc"><i class="fas fa-chart-bar"></i> GC</div>
                 <div class="quick-item color-5" data-page="electrical"><i class="fas fa-bolt"></i> Electrical</div>
@@ -1295,6 +1398,7 @@
                     <div class="result-box"><span>% of Range</span><span id="tcPercentResult">50.00 %</span></div>
                     <div style="font-size:0.65rem;color:#64748b;margin-top:4px;" id="tcRangeNote">Range: 0-1000°C · 4-20mA · Reference junction: 0°C</div>
                 </div>
+                <button class="btn w-full mt-1" id="tempCalExportBtn" style="justify-content:center;"><i class="fas fa-download"></i> Export as .txt</button>
             </div>
 
             <!-- TC Reference Table -->
@@ -1450,17 +1554,18 @@
                 <div class="sub-tabs" id="converterTabs">
                     <div class="sub-tab active" data-tab="conv-pressure">Pressure</div>
                     <div class="sub-tab" data-tab="conv-temp">Temperature</div>
+                    <div class="sub-tab" data-tab="conv-speed">Speed</div>
                     <div class="sub-tab" data-tab="conv-ma">4-20mA</div>
                 </div>
                 <div class="sub-panel active" id="conv-pressure">
                     <div class="row">
                         <label>From</label>
-                        <select id="fromUnit"><option value="psi">PSI</option><option value="bar" selected>bar</option><option value="kpa">kPa</option><option value="mpa">MPa</option><option value="atm">atm</option></select>
+                        <select id="fromUnit"><option value="psi">PSI</option><option value="bar" selected>bar</option><option value="kpa">kPa</option><option value="mpa">MPa</option><option value="atm">atm</option><option value="inh2o">inH₂O</option><option value="inhg">inHg</option><option value="mmhg">mmHg</option><option value="mmh2o">mmH₂O</option><option value="torr">Torr</option><option value="ksi">ksi</option></select>
                         <input type="number" id="inputVal" value="1" step="any" />
                     </div>
                     <div class="row">
                         <label>To</label>
-                        <select id="toUnit"><option value="psi">PSI</option><option value="bar">bar</option><option value="kpa" selected>kPa</option><option value="mpa">MPa</option><option value="atm">atm</option></select>
+                        <select id="toUnit"><option value="psi">PSI</option><option value="bar">bar</option><option value="kpa" selected>kPa</option><option value="mpa">MPa</option><option value="atm">atm</option><option value="inh2o">inH₂O</option><option value="inhg">inHg</option><option value="mmhg">mmHg</option><option value="mmh2o">mmH₂O</option><option value="torr">Torr</option><option value="ksi">ksi</option></select>
                         <button class="btn" id="convertBtn"><i class="fas fa-sync-alt"></i> Convert</button>
                     </div>
                     <div class="result-box"><span>Result</span><span id="pressureResult">100.000 kPa</span></div>
@@ -1474,6 +1579,20 @@
                     <div class="result-box"><span>°F</span><span id="tempFResult">77.00</span></div>
                     <div class="result-box"><span>Kelvin</span><span id="tempKResult">298.15</span></div>
                     <div class="result-box"><span>°R</span><span id="tempRResult">536.67</span></div>
+                </div>
+                <div class="sub-panel hidden" id="conv-speed">
+                    <div class="row">
+                        <label>From</label>
+                        <select id="speedFromUnit"><option value="mps" selected>m/s</option><option value="fps">ft/s</option><option value="fpm">ft/min</option><option value="kph">km/h</option><option value="mph">mph</option><option value="knot">knots</option></select>
+                        <input type="number" id="speedInputVal" value="1" step="any" />
+                    </div>
+                    <div class="row">
+                        <label>To</label>
+                        <select id="speedToUnit"><option value="mps">m/s</option><option value="fps">ft/s</option><option value="fpm">ft/min</option><option value="kph" selected>km/h</option><option value="mph">mph</option><option value="knot">knots</option></select>
+                        <button class="btn" id="speedConvertBtn"><i class="fas fa-sync-alt"></i> Convert</button>
+                    </div>
+                    <div class="result-box"><span>Result</span><span id="speedResult">3.600 km/h</span></div>
+                    <div style="font-size:0.65rem;color:#64748b;margin-top:4px;">Useful for pipe flow velocity, anemometer/air velocity readings, and pump/fan shaft speed cross-checks.</div>
                 </div>
                 <div class="sub-panel hidden" id="conv-ma">
                     <div class="row">
@@ -1499,6 +1618,7 @@
         <div class="page" id="page-calibration">
             <div class="page-title"><i class="fas fa-sliders-h"></i> Pressure Calibration</div>
             <div class="card">
+                <div class="row"><label>Tag</label><input type="text" id="calTag" placeholder="PT-101" /></div>
                 <div class="row">
                     <label>Range</label>
                     <input type="number" id="calLow" value="0" step="any" style="flex:0.5;" />
@@ -1512,11 +1632,17 @@
                 </div>
                 <div class="row"><label>Tolerance</label><input type="number" id="calTolerance" value="0.1" step="0.01" style="flex:0.4;" /><span class="chip">% of span</span></div>
                 <div style="font-size:0.65rem;color:#64748b;margin-bottom:6px;">Enter the <strong>actual</strong> mA reading measured at each test point — error is calculated from ideal vs. actual.</div>
+                <div id="calLiveBar" class="row hidden" style="background:#f0fdf4;border-radius:16px;padding:8px 12px;">
+                    <i class="fas fa-satellite-dish" style="color:#059669;"></i>
+                    <span style="font-size:0.75rem;flex:1;">Live: <strong id="calLiveValue">—</strong> mA</span>
+                    <span style="font-size:0.6rem;color:#64748b;">Tap a point's 📥 to fill it</span>
+                </div>
                 <div id="calPointsContainer" class="cal-points-grid"></div>
                 <div class="flex mt-1">
                     <span class="badge badge-pass" id="calPassFail"><i class="fas fa-check"></i> Pass</span>
                     <span class="chip" id="calErrorDisplay"><i class="fas fa-percent"></i> Max error: 0.00%</span>
                 </div>
+                <button class="btn w-full mt-1" id="calExportBtn" style="justify-content:center;"><i class="fas fa-download"></i> Export as .txt</button>
             </div>
         </div>
 
@@ -1549,20 +1675,117 @@
         PAGE: FLOW (short)
         ========================================================== -->
         <div class="page" id="page-flow">
-            <div class="page-title"><i class="fas fa-water"></i> Flow Calculator</div>
+            <div class="page-title"><i class="fas fa-water"></i> Flow Calculator (√ Extraction)</div>
             <div class="card">
+                <div class="card-header"><i class="fas fa-info-circle"></i><h3 style="font-size:0.85rem;">DP Flow Transmitter</h3></div>
+                <div style="font-size:0.65rem;color:#64748b;margin-bottom:8px;">For orifice/venturi/DP-type flow elements: Flow is proportional to the <strong>square root</strong> of differential pressure. Set your calibrated DP range and max flow (Qmax) once below.</div>
                 <div class="row">
-                    <label>DP</label>
-                    <input type="number" id="flowDP" value="100" step="any" style="flex:0.6;" />
-                    <select id="flowDPUnit" style="flex:0.5;"><option value="inH2O">inH₂O</option><option value="psi">PSI</option><option value="kpa">kPa</option></select>
+                    <label>DP Range</label>
+                    <input type="number" id="flowDPLow" value="0" step="any" style="flex:0.4;" /><span>to</span>
+                    <input type="number" id="flowDPHigh" value="100" step="any" style="flex:0.4;" />
+                    <select id="flowDPUnit" style="flex:0.5;"><option value="inH2O">inH₂O</option><option value="psi">PSI</option><option value="kpa">kPa</option><option value="bar">bar</option></select>
                 </div>
                 <div class="row">
                     <label>Max Flow</label>
                     <input type="number" id="flowMax" value="1000" step="any" style="flex:0.6;" />
-                    <select id="flowOutUnit" style="flex:0.5;"><option value="GPM">GPM</option><option value="L/min">L/min</option><option value="m3/hr">m³/hr</option></select>
+                    <select id="flowOutUnit" style="flex:0.5;"><option value="GPM">GPM</option><option value="L/min">L/min</option><option value="m3/hr">m³/hr</option><option value="MMSCFD">MMSCFD</option></select>
+                </div>
+                <div class="segmented" id="flowModeSeg">
+                    <button class="active" data-mode="dp2flow">DP → Flow</button>
+                    <button data-mode="flow2dp">Flow → DP</button>
+                </div>
+                <div class="row" id="flowInputRow">
+                    <label id="flowInputLabel">DP Reading</label>
+                    <input type="number" id="flowInputVal" value="100" step="any" style="flex:0.6;" />
+                    <span class="chip" id="flowInputChip">inH₂O</span>
                 </div>
                 <button class="btn" id="flowCalcBtn"><i class="fas fa-calculator"></i> Calculate</button>
                 <div class="result-box"><span>Flow</span><span id="flowResult">1000.00 GPM</span></div>
+                <div class="result-box"><span>DP</span><span id="flowDPResult">100.00 inH₂O</span></div>
+                <div class="result-box"><span>% of Range</span><span id="flowPercentResult">100.0 %</span></div>
+                <div class="result-box"><span>mA (4-20mA)</span><span id="flowMaResult">20.00 mA</span></div>
+                <div style="font-size:0.65rem;color:#64748b;margin-top:4px;">Flow = Qmax × √(%DP ÷ 100). Reverse: DP% = (Flow ÷ Qmax)².</div>
+            </div>
+        </div>
+
+        <!-- ==========================================================
+        PAGE: CONNECT DEVICE (Bluetooth / WiFi / HART)
+        ========================================================== -->
+        <div class="page" id="page-connect">
+            <div class="page-title"><i class="fas fa-bluetooth-b"></i> Connect Device</div>
+
+            <div class="card" style="background:#fff7ed;border-color:#fde68a;">
+                <div style="font-size:0.7rem;color:#92400e;"><i class="fas fa-triangle-exclamation"></i> <strong>Read before connecting:</strong> Bluetooth support depends on your instrument's actual hardware — this works with devices that expose a serial/UART-style Bluetooth LE service (a common pattern, but not universal). WiFi devices usually need to be reachable over plain HTTP, which browsers block from an HTTPS site like GitHub Pages unless the device also supports HTTPS. The HART tool below builds correctly-framed/checksummed command bytes, but <strong>writing range values (URV/LRV) changes a live transmitter's calibration</strong> — verify everything against your transmitter's manual and test on a bench setup before using on an installed, in-service device.</div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><i class="fas fa-bluetooth-b"></i><h3>Bluetooth (BLE)</h3><span id="bleStatusChip">Disconnected</span></div>
+                <div style="font-size:0.65rem;color:#64748b;margin-bottom:8px;">Works in Chrome or Edge on Android/desktop. Not supported in Safari or iOS (Apple doesn't allow Web Bluetooth).</div>
+                <div class="row"><label>Service UUID</label><input type="text" id="bleServiceUuid" value="6e400001-b5a3-f393-e0a9-e50e24dcca9e" style="flex:1;font-size:0.7rem;" /></div>
+                <div class="row"><label>Notify Char</label><input type="text" id="bleNotifyUuid" value="6e400003-b5a3-f393-e0a9-e50e24dcca9e" style="flex:1;font-size:0.7rem;" /></div>
+                <div class="row"><label>Write Char</label><input type="text" id="bleWriteUuid" value="6e400002-b5a3-f393-e0a9-e50e24dcca9e" style="flex:1;font-size:0.7rem;" /></div>
+                <div style="font-size:0.6rem;color:#64748b;margin-bottom:8px;">Defaults are the Nordic UART Service — a common BLE serial-bridge pattern used by many DIY/serial-to-BLE adapters. If your instrument uses different UUIDs (check its manual/datasheet), edit them above before connecting.</div>
+                <button class="btn w-full" id="bleConnectBtn" style="justify-content:center;"><i class="fas fa-bluetooth-b"></i> Connect Bluetooth Device</button>
+                <button class="btn btn-outline w-full mt-1 hidden" id="bleDisconnectBtn" style="justify-content:center;"><i class="fas fa-xmark"></i> Disconnect</button>
+                <div class="result-box mt-1"><span>Last Reading</span><span id="bleLastReading">—</span></div>
+                <div class="result-box"><span>Raw Data</span><span id="bleRawData" style="font-size:0.65rem;">—</span></div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><i class="fas fa-wifi"></i><h3>WiFi (local network)</h3><span id="wifiStatusChip">Disconnected</span></div>
+                <div style="font-size:0.65rem;color:#64748b;margin-bottom:8px;">Enter your instrument's local HTTP endpoint (e.g. its IP address). This will likely fail if this app is loaded over HTTPS and the device only serves plain HTTP — that's a browser security restriction (mixed content), not a bug.</div>
+                <div class="row"><label>Endpoint</label><input type="text" id="wifiEndpoint" placeholder="http://192.168.1.50/reading" style="flex:1;" /></div>
+                <div class="row"><label>Poll</label><select id="wifiPollInterval"><option value="0">Manual only</option><option value="2000" selected>Every 2s</option><option value="5000">Every 5s</option></select></div>
+                <button class="btn w-full" id="wifiConnectBtn" style="justify-content:center;"><i class="fas fa-wifi"></i> Connect / Fetch</button>
+                <button class="btn btn-outline w-full mt-1 hidden" id="wifiDisconnectBtn" style="justify-content:center;"><i class="fas fa-xmark"></i> Stop Polling</button>
+                <div class="result-box mt-1"><span>Last Reading</span><span id="wifiLastReading">—</span></div>
+                <div id="wifiError" style="font-size:0.65rem;color:#dc2626;margin-top:4px;"></div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><i class="fas fa-satellite-dish"></i><h3>Live Reading Feed</h3></div>
+                <div style="font-size:0.75rem;">This value auto-fills into Calibration test points when you tap 📥 next to a point.</div>
+                <div class="result-box mt-1"><span>Current Value</span><span id="liveGlobalValue">— (not connected)</span></div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><i class="fas fa-microchip"></i><h3>HART Frame Builder</h3></div>
+                <div style="font-size:0.65rem;color:#64748b;margin-bottom:8px;">Builds a correctly-framed, checksummed HART short-frame command. You supply the command number, polling address, and data bytes (per your transmitter's HART command manual) — this tool handles the fiddly preamble/framing/checksum math.</div>
+                <div class="row">
+                    <label>Command</label>
+                    <select id="hartCommand" style="flex:1;">
+                        <option value="0">0 — Read Unique Identifier</option>
+                        <option value="1">1 — Read Primary Variable</option>
+                        <option value="2">2 — Read Loop Current & % Range</option>
+                        <option value="3">3 — Read Dynamic Variables</option>
+                        <option value="6">6 — Write Polling Address</option>
+                        <option value="12">12 — Read Message</option>
+                        <option value="13">13 — Read Tag/Descriptor/Date</option>
+                        <option value="15">15 — Read Device Range/Units/Damping</option>
+                        <option value="17">17 — Write Message</option>
+                        <option value="18">18 — Write Tag/Descriptor/Date</option>
+                        <option value="35">35 — Write PV Range Values (LRV/URV)</option>
+                        <option value="40">40 — Enter/Exit Fixed Current Mode</option>
+                        <option value="42">42 — Perform Device Reset</option>
+                        <option value="44">44 — Write PV Units</option>
+                        <option value="custom">Custom command number...</option>
+                    </select>
+                </div>
+                <div class="row hidden" id="hartCustomCmdRow"><label>Cmd #</label><input type="number" id="hartCustomCmd" min="0" max="255" value="0" /></div>
+                <div class="row"><label>Address</label><input type="number" id="hartAddress" min="0" max="15" value="0" step="1" /><span class="chip">0-15 (polling addr)</span></div>
+                <div class="row"><label>Data (hex)</label><input type="text" id="hartDataHex" placeholder="e.g. 39 43 C8 00 00 43 96 00 00" style="flex:1;font-family:monospace;" /></div>
+                <button class="btn" id="hartBuildBtn"><i class="fas fa-hammer"></i> Build Frame</button>
+                <div class="result-box"><span>Frame (hex)</span><span id="hartFrameResult" style="font-size:0.65rem;word-break:break-all;">—</span></div>
+                <button class="btn btn-danger w-full mt-1" id="hartSendBtn" style="justify-content:center;"><i class="fas fa-paper-plane"></i> Send via Bluetooth</button>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><i class="fas fa-calculator"></i><h3>Float ↔ Hex (IEEE-754)</h3></div>
+                <div style="font-size:0.65rem;color:#64748b;margin-bottom:8px;">HART range values (LRV/URV) are sent as 4-byte IEEE-754 floats. Use this to get the hex bytes for a value like a new URV, to paste into the Data field above.</div>
+                <div class="row"><label>Decimal</label><input type="number" id="floatDecInput" value="100" step="any" /><button class="btn btn-sm" id="floatToHexBtn">→ Hex</button></div>
+                <div class="result-box"><span>Hex (big-endian)</span><span id="floatHexResult">42 C8 00 00</span></div>
+                <div class="row mt-1"><label>Hex</label><input type="text" id="hexDecInput" placeholder="42 C8 00 00" style="flex:1;font-family:monospace;" /><button class="btn btn-sm" id="hexToFloatBtn">→ Dec</button></div>
+                <div class="result-box"><span>Decimal</span><span id="hexDecResult">—</span></div>
             </div>
         </div>
 
@@ -1737,6 +1960,7 @@
                     <div class="tab" data-ref="rtd">RTD</div>
                     <div class="tab" data-ref="fluke">Fluke 789</div>
                     <div class="tab" data-ref="fault-ref">Fault Codes</div>
+                    <div class="tab" data-ref="network">Networking</div>
                 </div>
                 <div id="refContent">
                     <div class="ref-panel" id="ref-tc">
@@ -1772,6 +1996,27 @@
                         <div><strong>Fault Codes</strong></div>
                         <div class="chip">4-20mA: 0mA (no power), 2-3.5mA (fault), >20.5mA (overrange)</div>
                         <div class="chip">HART: 250Ω resistor required</div>
+                    </div>
+                    <div class="ref-panel hidden" id="ref-network">
+                        <div><strong>TCP vs UDP</strong></div>
+                        <div style="font-size:0.75rem;margin:6px 0;">
+                            <strong>TCP</strong> — connection-based; both ends handshake (SYN → SYN-ACK → ACK) before data flows, and every packet is acknowledged and re-sent if lost. Reliable and ordered, but has more overhead/latency. Used where data loss isn't acceptable.
+                        </div>
+                        <div style="font-size:0.75rem;margin:6px 0;">
+                            <strong>UDP</strong> — connectionless; packets are just sent with no handshake and no guarantee of delivery or order. Lower latency and overhead, but the application has to tolerate (or handle) dropped/out-of-order packets. Used where speed matters more than perfection.
+                        </div>
+                        <div class="chip">TCP: web, email, file transfer, Modbus TCP</div>
+                        <div class="chip">UDP: streaming, broadcast, discovery, DNS</div>
+                        <hr />
+                        <div><strong>Common Industrial Ports</strong></div>
+                        <div class="chip">Modbus TCP: 502 (TCP)</div>
+                        <div class="chip">EtherNet/IP: 44818 (TCP) / 2222 (UDP)</div>
+                        <div class="chip">DNP3: 20000 (TCP/UDP)</div>
+                        <div class="chip">OPC UA: 4840 (TCP)</div>
+                        <div class="chip">HART-IP: 5094 (TCP/UDP)</div>
+                        <div class="chip">BACnet: 47808 (UDP)</div>
+                        <div class="chip">PROFINET RT: real-time, runs over raw Ethernet (no TCP/UDP)</div>
+                        <div style="font-size:0.65rem;color:#64748b;margin-top:6px;">PROFINET IO messaging itself is time-critical and bypasses TCP/UDP; only its non-real-time services (e.g. diagnostics, config) use UDP/TCP.</div>
                     </div>
                 </div>
             </div>
@@ -1844,11 +2089,11 @@
                 <div class="row"><label>Tolerance</label><input type="number" id="reportTolerance" value="2" step="0.1" style="flex:0.4;" /><span class="chip">% (calibration only)</span></div>
                 <div style="font-size:0.65rem;color:#64748b;margin:2px 0 4px 0;">For Calibration: enter the <strong>actual</strong> % reading recorded at each nominal test point (defaults show ideal).</div>
                 <div id="calPointsInput" class="cal-points-grid">
-                    <div><label>0%</label><input type="number" id="rp0" value="0" step="any" style="width:50px;" /></div>
-                    <div><label>25%</label><input type="number" id="rp25" value="25" step="any" style="width:50px;" /></div>
-                    <div><label>50%</label><input type="number" id="rp50" value="50" step="any" style="width:50px;" /></div>
-                    <div><label>75%</label><input type="number" id="rp75" value="75" step="any" style="width:50px;" /></div>
-                    <div><label>100%</label><input type="number" id="rp100" value="100" step="any" style="width:50px;" /></div>
+                    <div class="cal-point"><span>0%</span><input type="number" id="rp0" value="0" step="any" class="cal-actual" /></div>
+                    <div class="cal-point"><span>25%</span><input type="number" id="rp25" value="25" step="any" class="cal-actual" /></div>
+                    <div class="cal-point"><span>50%</span><input type="number" id="rp50" value="50" step="any" class="cal-actual" /></div>
+                    <div class="cal-point"><span>75%</span><input type="number" id="rp75" value="75" step="any" class="cal-actual" /></div>
+                    <div class="cal-point"><span>100%</span><input type="number" id="rp100" value="100" step="any" class="cal-actual" /></div>
                 </div>
                 <div class="row"><label>Notes</label><textarea id="reportNotes" placeholder="Notes..."></textarea></div>
                 <button class="btn" id="generateReportBtn"><i class="fas fa-file-alt"></i> Generate</button>
@@ -1917,6 +2162,29 @@
             'use strict';
 
             // =============================================================
+            // SPLASH SCREEN
+            // =============================================================
+            const splashScreen = document.getElementById('splashScreen');
+            const splashStatus = document.getElementById('splashStatus');
+            const splashMessages = ['Loading tools…', 'Preparing calculators…', 'Almost ready…'];
+            let splashMsgIndex = 0;
+            const splashMsgInterval = setInterval(function() {
+                splashMsgIndex = (splashMsgIndex + 1) % splashMessages.length;
+                splashStatus.textContent = splashMessages[splashMsgIndex];
+            }, 600);
+
+            const splashMinDelay = new Promise(function(resolve) { setTimeout(resolve, 1100); });
+            const pageFullyLoaded = new Promise(function(resolve) {
+                if (document.readyState === 'complete') resolve();
+                else window.addEventListener('load', resolve);
+            });
+            Promise.all([splashMinDelay, pageFullyLoaded]).then(function() {
+                clearInterval(splashMsgInterval);
+                splashScreen.classList.add('fade-out');
+                setTimeout(function() { splashScreen.style.display = 'none'; }, 550);
+            });
+
+            // =============================================================
             // PAGE NAVIGATION
             // =============================================================
             const pages = document.querySelectorAll('.page');
@@ -1983,9 +2251,15 @@
                         this.classList.add('active');
                         const panelId = this.dataset.tab;
                         const parent = container.closest('.card');
-                        parent.querySelectorAll('.sub-panel').forEach(p => p.classList.remove('active'));
+                        parent.querySelectorAll('.sub-panel').forEach(p => {
+                            p.classList.remove('active');
+                            p.classList.add('hidden');
+                        });
                         const target = parent.querySelector('#' + panelId);
-                        if (target) target.classList.add('active');
+                        if (target) {
+                            target.classList.add('active');
+                            target.classList.remove('hidden');
+                        }
                     });
                 });
             });
@@ -2111,6 +2385,48 @@
                     document.getElementById('rtdSection').classList.toggle('hidden', sensor !== 'rtd');
                     document.getElementById('tcSection').classList.toggle('hidden', sensor !== 'tc');
                 });
+            });
+
+            document.getElementById('tempCalExportBtn').addEventListener('click', function() {
+                const activeSensor = document.querySelector('#sensorTypeSeg button.active').dataset.sensor;
+                const date = new Date().toLocaleString();
+                let content;
+                if (activeSensor === 'rtd') {
+                    content =
+                        `========================================\n` +
+                        `INSTRUMENTPRO RTD CALIBRATION RECORD\n` +
+                        `========================================\n` +
+                        `Date: ${date}\n` +
+                        `RTD Type: ${rtdType.value.toUpperCase()}\n` +
+                        `Range: ${rtdRangeLow.value} to ${rtdRangeHigh.value} °C\n` +
+                        `----------------------------------------\n` +
+                        `Input: ${rtdInput.value} ${rtdInputUnit.options[rtdInputUnit.selectedIndex].text}\n` +
+                        `Result: ${rtdResult.textContent}\n` +
+                        `mA Equivalent: ${rtdMaResult.textContent}\n` +
+                        `% of Range: ${rtdPercentResult.textContent}\n` +
+                        `========================================`;
+                } else {
+                    content =
+                        `========================================\n` +
+                        `INSTRUMENTPRO THERMOCOUPLE CALIBRATION RECORD\n` +
+                        `========================================\n` +
+                        `Date: ${date}\n` +
+                        `TC Type: ${tcType.value}\n` +
+                        `Range: ${tcRangeLow.value} to ${tcRangeHigh.value} °C\n` +
+                        `----------------------------------------\n` +
+                        `Input: ${tcInput.value} ${tcInputUnit.options[tcInputUnit.selectedIndex].text}\n` +
+                        `Result: ${tcResult.textContent}\n` +
+                        `mV: ${tcMvResult.textContent}\n` +
+                        `mA: ${tcMaResult.textContent}\n` +
+                        `% of Range: ${tcPercentResult.textContent}\n` +
+                        `========================================`;
+                }
+                const blob = new Blob([content], { type: 'text/plain' });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = 'InstrumentPro_TempCal_' + activeSensor.toUpperCase() + '_' + new Date().toISOString().slice(0, 10) + '.txt';
+                a.click();
+                URL.revokeObjectURL(a.href);
             });
 
             // =============================================================
@@ -2277,7 +2593,11 @@
             // =============================================================
             // PRESSURE CONVERTER
             // =============================================================
-            const toBar = { psi: 0.0689476, bar: 1, kpa: 0.01, mpa: 10, atm: 1.01325 };
+            const toBar = {
+                psi: 0.0689476, bar: 1, kpa: 0.01, mpa: 10, atm: 1.01325,
+                inh2o: 0.00248843, inhg: 0.0338639, mmhg: 0.00133322,
+                mmh2o: 0.0000980665, torr: 0.00133322, ksi: 68.9476
+            };
             const fromUnit = document.getElementById('fromUnit');
             const toUnit = document.getElementById('toUnit');
             const inputVal = document.getElementById('inputVal');
@@ -2297,6 +2617,28 @@
             toUnit.addEventListener('change', convertPressure);
             inputVal.addEventListener('input', convertPressure);
             convertPressure();
+
+            // =============================================================
+            // SPEED CONVERTER
+            // =============================================================
+            const toMps = { mps: 1, fps: 0.3048, fpm: 0.00508, kph: 0.277778, mph: 0.44704, knot: 0.514444 };
+            const speedFromUnit = document.getElementById('speedFromUnit');
+            const speedToUnit = document.getElementById('speedToUnit');
+            const speedInputVal = document.getElementById('speedInputVal');
+            const speedResult = document.getElementById('speedResult');
+            const speedConvertBtn = document.getElementById('speedConvertBtn');
+
+            function convertSpeed() {
+                const val = parseFloat(speedInputVal.value) || 0;
+                const inMps = val * toMps[speedFromUnit.value];
+                const result = inMps / toMps[speedToUnit.value];
+                speedResult.textContent = result.toFixed(3) + ' ' + speedToUnit.options[speedToUnit.selectedIndex].text;
+            }
+            speedConvertBtn.addEventListener('click', convertSpeed);
+            speedFromUnit.addEventListener('change', convertSpeed);
+            speedToUnit.addEventListener('change', convertSpeed);
+            speedInputVal.addEventListener('input', convertSpeed);
+            convertSpeed();
 
             // =============================================================
             // TEMPERATURE CONVERTER
@@ -2352,10 +2694,12 @@
             const calHigh = document.getElementById('calHigh');
             const calUnit = document.getElementById('calUnit');
             const calTolerance = document.getElementById('calTolerance');
+            const calTag = document.getElementById('calTag');
             const calUpdateBtn = document.getElementById('calUpdateBtn');
             const calPointsContainer = document.getElementById('calPointsContainer');
             const calErrorDisplay = document.getElementById('calErrorDisplay');
             const calPassFail = document.getElementById('calPassFail');
+            const calExportBtn = document.getElementById('calExportBtn');
             const calPts = [0, 25, 50, 75, 100];
 
             function buildCalPoints() {
@@ -2368,10 +2712,22 @@
                     const val = low + (span * p / 100);
                     const idealMa = 4 + (16 * p / 100);
                     html += `<div class="cal-point"><span>${p}% (${val.toFixed(2)} ${unit})</span><span>ideal ${idealMa.toFixed(2)} mA</span>` +
-                        `<input type="number" class="cal-actual" data-ideal="${idealMa}" step="0.01" placeholder="actual mA" style="width:70px;" /></div>`;
+                        `<input type="number" class="cal-actual" data-ideal="${idealMa}" data-percent="${p}" data-target="${val.toFixed(4)}" step="0.01" placeholder="actual mA" style="width:60px;" />` +
+                        `<button type="button" class="fill-live-btn" title="Fill from live reading" style="background:none;border:none;cursor:pointer;font-size:0.9rem;">📥</button></div>`;
                 });
                 calPointsContainer.innerHTML = html;
                 calPointsContainer.querySelectorAll('.cal-actual').forEach(inp => inp.addEventListener('input', evaluateCal));
+                calPointsContainer.querySelectorAll('.fill-live-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const input = this.previousElementSibling;
+                        if (window.InstrumentProLive && window.InstrumentProLive.value !== null) {
+                            input.value = window.InstrumentProLive.value;
+                            evaluateCal();
+                        } else {
+                            alert('No live device connected. Go to Connect Device to pair a Bluetooth or WiFi test instrument first.');
+                        }
+                    });
+                });
                 evaluateCal();
             }
 
@@ -2404,6 +2760,56 @@
             calUnit.addEventListener('change', buildCalPoints);
             calTolerance.addEventListener('input', evaluateCal);
             buildCalPoints();
+
+            // Export calibration record as a downloadable .txt file
+            calExportBtn.addEventListener('click', function() {
+                const tag = calTag.value.trim() || 'Untagged';
+                const low = parseFloat(calLow.value) || 0;
+                const high = parseFloat(calHigh.value) || 100;
+                const unit = calUnit.value;
+                const tol = parseFloat(calTolerance.value) || 0.1;
+                const date = new Date().toLocaleString();
+                let maxErrorPct = 0;
+                const lines = [];
+                calPointsContainer.querySelectorAll('.cal-point').forEach(row => {
+                    const inp = row.querySelector('.cal-actual');
+                    const percent = inp.dataset.percent;
+                    const target = parseFloat(inp.dataset.target);
+                    const ideal = parseFloat(inp.dataset.ideal);
+                    const actualRaw = inp.value.trim();
+                    const actual = actualRaw === '' ? null : parseFloat(actualRaw);
+                    const errorPct = actual === null ? null : Math.abs(actual - ideal) / 16 * 100;
+                    if (errorPct !== null && errorPct > maxErrorPct) maxErrorPct = errorPct;
+                    lines.push(
+                        `  ${percent.padStart(3)}%  |  Target: ${target.toFixed(2)} ${unit}  |  Ideal: ${ideal.toFixed(2)} mA  |  Actual: ${actual === null ? '—' : actual.toFixed(2) + ' mA'}  |  Error: ${errorPct === null ? '—' : errorPct.toFixed(3) + '%'}`
+                    );
+                });
+                const pass = maxErrorPct <= tol;
+                const content =
+                    `========================================\n` +
+                    `INSTRUMENTPRO CALIBRATION RECORD\n` +
+                    `========================================\n` +
+                    `Tag: ${tag}\n` +
+                    `Date: ${date}\n` +
+                    `Range: ${low} to ${high} ${unit}\n` +
+                    `Tolerance: ${tol}% of span\n` +
+                    `----------------------------------------\n` +
+                    lines.join('\n') + '\n' +
+                    `----------------------------------------\n` +
+                    `Max Error: ${maxErrorPct.toFixed(3)}%\n` +
+                    `Result: ${pass ? 'PASS ✓' : 'FAIL ✗'}\n` +
+                    `========================================\n`;
+                const blob = new Blob([content], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                const safeTag = tag.replace(/[^a-z0-9\-_]/gi, '_');
+                a.href = url;
+                a.download = `calibration_${safeTag}_${new Date().toISOString().slice(0, 10)}.txt`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            });
 
             // =============================================================
             // LEVEL DP
@@ -2467,27 +2873,76 @@
             calcDP();
 
             // =============================================================
-            // FLOW CALCULATOR
+            // FLOW CALCULATOR (SQUARE ROOT EXTRACTION)
             // =============================================================
-            const flowDP = document.getElementById('flowDP');
+            const flowDPLow = document.getElementById('flowDPLow');
+            const flowDPHigh = document.getElementById('flowDPHigh');
             const flowMax = document.getElementById('flowMax');
             const flowDPUnit = document.getElementById('flowDPUnit');
             const flowOutUnit = document.getElementById('flowOutUnit');
+            const flowInputVal = document.getElementById('flowInputVal');
+            const flowInputLabel = document.getElementById('flowInputLabel');
+            const flowInputChip = document.getElementById('flowInputChip');
             const flowResult = document.getElementById('flowResult');
+            const flowDPResult = document.getElementById('flowDPResult');
+            const flowPercentResult = document.getElementById('flowPercentResult');
+            const flowMaResult = document.getElementById('flowMaResult');
             const flowCalcBtn = document.getElementById('flowCalcBtn');
-            const dpFactors = { inH2O: 1, psi: 27.68, kpa: 4.018 };
+            let flowMode = 'dp2flow';
+
+            document.querySelectorAll('#flowModeSeg button').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('#flowModeSeg button').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    flowMode = this.dataset.mode;
+                    if (flowMode === 'dp2flow') {
+                        flowInputLabel.textContent = 'DP Reading';
+                        flowInputChip.textContent = flowDPUnit.options[flowDPUnit.selectedIndex].text;
+                    } else {
+                        flowInputLabel.textContent = 'Flow Reading';
+                        flowInputChip.textContent = flowOutUnit.value;
+                    }
+                    calcFlow();
+                });
+            });
+            flowDPUnit.addEventListener('change', function() {
+                if (flowMode === 'dp2flow') flowInputChip.textContent = this.options[this.selectedIndex].text;
+            });
+            flowOutUnit.addEventListener('change', function() {
+                if (flowMode === 'flow2dp') flowInputChip.textContent = this.value;
+            });
 
             function calcFlow() {
-                const dpVal = parseFloat(flowDP.value) || 0;
-                const max = parseFloat(flowMax.value) || 1000;
-                const factor = dpFactors[flowDPUnit.value] || 1;
-                const dp = dpVal * factor;
-                const flow = max * Math.sqrt(dp / 100);
+                const dpLow = parseFloat(flowDPLow.value) || 0;
+                const dpHigh = parseFloat(flowDPHigh.value) || 100;
+                const span = dpHigh - dpLow || 1;
+                const qmax = parseFloat(flowMax.value) || 1000;
+                const val = parseFloat(flowInputVal.value) || 0;
+                let dp, flow, percent;
+
+                if (flowMode === 'dp2flow') {
+                    dp = val;
+                    percent = ((dp - dpLow) / span) * 100;
+                    percent = Math.max(0, percent); // sqrt of negative % is invalid below zero DP
+                    flow = qmax * Math.sqrt(percent / 100);
+                } else {
+                    flow = val;
+                    const flowRatio = Math.max(0, flow / qmax);
+                    percent = (flowRatio * flowRatio) * 100;
+                    dp = dpLow + (percent / 100) * span;
+                }
+
+                const ma = 4 + Math.min(Math.max(percent, 0), 100) / 100 * 16;
                 flowResult.textContent = flow.toFixed(2) + ' ' + flowOutUnit.value;
+                flowDPResult.textContent = dp.toFixed(2) + ' ' + flowDPUnit.options[flowDPUnit.selectedIndex].text;
+                flowPercentResult.textContent = percent.toFixed(1) + ' %';
+                flowMaResult.textContent = ma.toFixed(2) + ' mA';
             }
             flowCalcBtn.addEventListener('click', calcFlow);
-            flowDP.addEventListener('input', calcFlow);
+            flowDPLow.addEventListener('input', calcFlow);
+            flowDPHigh.addEventListener('input', calcFlow);
             flowMax.addEventListener('input', calcFlow);
+            flowInputVal.addEventListener('input', calcFlow);
             flowDPUnit.addEventListener('change', calcFlow);
             flowOutUnit.addEventListener('change', calcFlow);
             calcFlow();
@@ -2651,6 +3106,251 @@
             });
 
             // Note: commissioning tabs use the shared '.sub-tabs' handler defined above — no separate binding needed.
+
+            // =============================================================
+            // LIVE READING FEED (shared by Bluetooth + WiFi, consumed by Calibration page)
+            // =============================================================
+            window.InstrumentProLive = { value: null, source: null };
+            const liveGlobalValue = document.getElementById('liveGlobalValue');
+            const calLiveBar = document.getElementById('calLiveBar');
+            const calLiveValue = document.getElementById('calLiveValue');
+
+            function pushLiveReading(value, source) {
+                window.InstrumentProLive.value = value;
+                window.InstrumentProLive.source = source;
+                liveGlobalValue.textContent = value.toFixed(3) + ' (' + source + ')';
+                calLiveBar.classList.remove('hidden');
+                calLiveValue.textContent = value.toFixed(3);
+            }
+
+            function extractFirstFloat(text) {
+                const match = text.match(/-?\d+(\.\d+)?/);
+                return match ? parseFloat(match[0]) : null;
+            }
+
+            // =============================================================
+            // BLUETOOTH (Web Bluetooth API — BLE serial/UART-bridge pattern)
+            // =============================================================
+            const bleServiceUuid = document.getElementById('bleServiceUuid');
+            const bleNotifyUuid = document.getElementById('bleNotifyUuid');
+            const bleWriteUuid = document.getElementById('bleWriteUuid');
+            const bleConnectBtn = document.getElementById('bleConnectBtn');
+            const bleDisconnectBtn = document.getElementById('bleDisconnectBtn');
+            const bleStatusChip = document.getElementById('bleStatusChip');
+            const bleLastReading = document.getElementById('bleLastReading');
+            const bleRawData = document.getElementById('bleRawData');
+            let bleDevice = null, bleWriteChar = null;
+
+            async function connectBluetooth() {
+                if (!navigator.bluetooth) {
+                    alert('Web Bluetooth isn\'t supported in this browser. Use Chrome or Edge on Android or desktop — Safari/iOS doesn\'t support it.');
+                    return;
+                }
+                try {
+                    const serviceUuid = bleServiceUuid.value.trim().toLowerCase();
+                    bleDevice = await navigator.bluetooth.requestDevice({
+                        filters: [{ services: [serviceUuid] }],
+                        optionalServices: [serviceUuid]
+                    });
+                    bleStatusChip.textContent = 'Connecting…';
+                    const server = await bleDevice.gatt.connect();
+                    const service = await server.getPrimaryService(serviceUuid);
+                    const notifyChar = await service.getCharacteristic(bleNotifyUuid.value.trim().toLowerCase());
+                    try {
+                        bleWriteChar = await service.getCharacteristic(bleWriteUuid.value.trim().toLowerCase());
+                    } catch (e) {
+                        bleWriteChar = null; // some devices are notify-only; that's fine for reading
+                    }
+                    await notifyChar.startNotifications();
+                    notifyChar.addEventListener('characteristicvaluechanged', function(event) {
+                        const text = new TextDecoder().decode(event.target.value);
+                        bleRawData.textContent = text.trim().slice(0, 40);
+                        const num = extractFirstFloat(text);
+                        if (num !== null) {
+                            bleLastReading.textContent = num.toFixed(3);
+                            pushLiveReading(num, 'Bluetooth');
+                        }
+                    });
+                    bleStatusChip.textContent = '✅ ' + (bleDevice.name || 'Connected');
+                    bleConnectBtn.classList.add('hidden');
+                    bleDisconnectBtn.classList.remove('hidden');
+                    bleDevice.addEventListener('gattserverdisconnected', function() {
+                        bleStatusChip.textContent = 'Disconnected';
+                        bleConnectBtn.classList.remove('hidden');
+                        bleDisconnectBtn.classList.add('hidden');
+                    });
+                } catch (err) {
+                    bleStatusChip.textContent = 'Disconnected';
+                    if (err.name !== 'NotFoundError') { // user simply cancelled the picker
+                        alert('Bluetooth connection failed: ' + err.message + '\n\nCheck that the Service/Notify UUIDs above match your device (see its manual).');
+                    }
+                }
+            }
+            bleConnectBtn.addEventListener('click', connectBluetooth);
+            bleDisconnectBtn.addEventListener('click', function() {
+                if (bleDevice && bleDevice.gatt.connected) bleDevice.gatt.disconnect();
+            });
+
+            // =============================================================
+            // WIFI (fetch a local HTTP endpoint)
+            // =============================================================
+            const wifiEndpoint = document.getElementById('wifiEndpoint');
+            const wifiPollInterval = document.getElementById('wifiPollInterval');
+            const wifiConnectBtn = document.getElementById('wifiConnectBtn');
+            const wifiDisconnectBtn = document.getElementById('wifiDisconnectBtn');
+            const wifiStatusChip = document.getElementById('wifiStatusChip');
+            const wifiLastReading = document.getElementById('wifiLastReading');
+            const wifiError = document.getElementById('wifiError');
+            let wifiPollHandle = null;
+
+            async function fetchWifiReading() {
+                const url = wifiEndpoint.value.trim();
+                if (!url) { wifiError.textContent = 'Enter an endpoint URL first.'; return; }
+                try {
+                    const res = await fetch(url, { cache: 'no-store' });
+                    const text = await res.text();
+                    let num = null;
+                    try {
+                        const json = JSON.parse(text);
+                        num = json.value ?? json.reading ?? json.mA ?? json.pv ?? extractFirstFloat(text);
+                    } catch (e) {
+                        num = extractFirstFloat(text);
+                    }
+                    if (num === null) {
+                        wifiError.textContent = 'Connected, but couldn\'t find a numeric reading in the response.';
+                        return;
+                    }
+                    num = parseFloat(num);
+                    wifiError.textContent = '';
+                    wifiStatusChip.textContent = '✅ Connected';
+                    wifiLastReading.textContent = num.toFixed(3);
+                    pushLiveReading(num, 'WiFi');
+                } catch (err) {
+                    wifiStatusChip.textContent = 'Disconnected';
+                    wifiError.textContent = 'Fetch failed: ' + err.message + '. If this app is on HTTPS and the device is plain HTTP, browsers block that (mixed content) — try hosting locally over HTTP, or use a device with HTTPS support.';
+                }
+            }
+            wifiConnectBtn.addEventListener('click', function() {
+                fetchWifiReading();
+                const interval = parseInt(wifiPollInterval.value);
+                if (interval > 0) {
+                    if (wifiPollHandle) clearInterval(wifiPollHandle);
+                    wifiPollHandle = setInterval(fetchWifiReading, interval);
+                    wifiConnectBtn.classList.add('hidden');
+                    wifiDisconnectBtn.classList.remove('hidden');
+                }
+            });
+            wifiDisconnectBtn.addEventListener('click', function() {
+                if (wifiPollHandle) clearInterval(wifiPollHandle);
+                wifiPollHandle = null;
+                wifiStatusChip.textContent = 'Disconnected';
+                wifiConnectBtn.classList.remove('hidden');
+                wifiDisconnectBtn.classList.add('hidden');
+            });
+
+            // =============================================================
+            // HART FRAME BUILDER (short-frame format, correct checksum math)
+            // =============================================================
+            const hartCommand = document.getElementById('hartCommand');
+            const hartCustomCmdRow = document.getElementById('hartCustomCmdRow');
+            const hartCustomCmd = document.getElementById('hartCustomCmd');
+            const hartAddress = document.getElementById('hartAddress');
+            const hartDataHex = document.getElementById('hartDataHex');
+            const hartBuildBtn = document.getElementById('hartBuildBtn');
+            const hartFrameResult = document.getElementById('hartFrameResult');
+            const hartSendBtn = document.getElementById('hartSendBtn');
+            let lastHartFrameBytes = null;
+
+            hartCommand.addEventListener('change', function() {
+                hartCustomCmdRow.classList.toggle('hidden', this.value !== 'custom');
+            });
+
+            function parseHexBytes(str) {
+                const cleaned = str.trim().replace(/,/g, ' ').split(/\s+/).filter(Boolean);
+                const bytes = [];
+                for (const h of cleaned) {
+                    const b = parseInt(h, 16);
+                    if (isNaN(b) || b < 0 || b > 255) return null;
+                    bytes.push(b);
+                }
+                return bytes;
+            }
+
+            function toHexStr(bytes) {
+                return bytes.map(b => b.toString(16).toUpperCase().padStart(2, '0')).join(' ');
+            }
+
+            hartBuildBtn.addEventListener('click', function() {
+                const cmd = hartCommand.value === 'custom' ? parseInt(hartCustomCmd.value) || 0 : parseInt(hartCommand.value);
+                const addr = Math.min(63, Math.max(0, parseInt(hartAddress.value) || 0));
+                const dataBytes = hartDataHex.value.trim() === '' ? [] : parseHexBytes(hartDataHex.value);
+                if (dataBytes === null) {
+                    hartFrameResult.textContent = 'Invalid hex in data field.';
+                    return;
+                }
+                // Short-frame format: Preamble (5x FF) + Start(0x02) + Address (1 byte, bit7=1 for primary master) + Command + ByteCount + Data + Checksum (XOR of everything from Start through Data)
+                const preamble = [0xFF, 0xFF, 0xFF, 0xFF, 0xFF];
+                const start = 0x02;
+                const addressByte = 0x80 | (addr & 0x3F); // primary master, short-frame polling address
+                const byteCount = dataBytes.length;
+                const frameBody = [start, addressByte, cmd, byteCount, ...dataBytes];
+                let checksum = 0;
+                frameBody.forEach(b => { checksum ^= b; });
+                const fullFrame = [...preamble, ...frameBody, checksum];
+                lastHartFrameBytes = fullFrame;
+                hartFrameResult.textContent = toHexStr(fullFrame);
+            });
+
+            hartSendBtn.addEventListener('click', async function() {
+                if (!lastHartFrameBytes) {
+                    alert('Build a frame first.');
+                    return;
+                }
+                if (!bleWriteChar) {
+                    alert('No Bluetooth device with a write characteristic is connected. Connect one in the Bluetooth section above first.');
+                    return;
+                }
+                const confirmed = confirm(
+                    'This will transmit a raw HART command frame to the connected device:\n\n' + toHexStr(lastHartFrameBytes) +
+                    '\n\nIf this is command 35 (write range) or another write command, it WILL change the live transmitter\'s configuration. Are you sure you want to send this?'
+                );
+                if (!confirmed) return;
+                try {
+                    await bleWriteChar.writeValue(new Uint8Array(lastHartFrameBytes));
+                    alert('Frame sent.');
+                } catch (err) {
+                    alert('Send failed: ' + err.message);
+                }
+            });
+
+            // =============================================================
+            // FLOAT <-> HEX (IEEE-754) HELPER
+            // =============================================================
+            const floatDecInput = document.getElementById('floatDecInput');
+            const floatToHexBtn = document.getElementById('floatToHexBtn');
+            const floatHexResult = document.getElementById('floatHexResult');
+            const hexDecInput = document.getElementById('hexDecInput');
+            const hexToFloatBtn = document.getElementById('hexToFloatBtn');
+            const hexDecResult = document.getElementById('hexDecResult');
+
+            floatToHexBtn.addEventListener('click', function() {
+                const val = parseFloat(floatDecInput.value) || 0;
+                const buf = new ArrayBuffer(4);
+                new DataView(buf).setFloat32(0, val, false); // big-endian, standard for HART
+                const bytes = Array.from(new Uint8Array(buf));
+                floatHexResult.textContent = toHexStr(bytes);
+            });
+            hexToFloatBtn.addEventListener('click', function() {
+                const bytes = parseHexBytes(hexDecInput.value);
+                if (!bytes || bytes.length !== 4) {
+                    hexDecResult.textContent = 'Need exactly 4 hex bytes.';
+                    return;
+                }
+                const buf = new Uint8Array(bytes).buffer;
+                const val = new DataView(buf).getFloat32(0, false);
+                hexDecResult.textContent = val.toString();
+            });
+            floatToHexBtn.click();
 
             // =============================================================
             // SOLENOID
