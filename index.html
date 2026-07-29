@@ -23,12 +23,16 @@
             box-sizing: border-box;
             font-family: -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
         }
+        html {
+            height: 100%;
+        }
         body {
             background: #f0f4fa;
             color: #1a2639;
             max-width: 480px;
             margin: 0 auto;
             height: 100vh;
+            height: 100dvh; /* dynamic viewport height - fixes content getting cut off behind mobile browser UI (gesture bars, dynamic address bars) on devices where 100vh overshoots the visible area */
             display: flex;
             flex-direction: column;
             overflow: hidden;
@@ -220,6 +224,68 @@
             }
         }
 
+        /* ===== WHITE THEME OVERRIDE (contrast-safe) ===== */
+        body.theme-light .greeting {
+            color: #0f2b44;
+            border: 1px solid #e2e8f0;
+        }
+        body.theme-light .greeting h1 i {
+            color: #2563eb;
+        }
+        body.theme-light .greeting .sub {
+            opacity: 0.65;
+        }
+        body.theme-light .greeting .dark-toggle,
+        body.theme-light .greeting .menu-toggle {
+            background: rgba(15, 43, 68, 0.08);
+            color: #0f2b44;
+        }
+        body.theme-light .btn:not(.btn-outline):not(.btn-danger):not(.btn-success) {
+            color: #0f2b44 !important;
+            border: 1px solid #cbd5e1;
+        }
+        body.theme-light .btn:not(.btn-outline):not(.btn-danger):not(.btn-success) i {
+            color: #0f2b44 !important;
+        }
+
+        /* ===== SETTINGS ACCORDION ===== */
+        .settings-accordion {
+            padding: 16px 18px;
+        }
+        .settings-accordion summary {
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            list-style: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .settings-accordion summary::-webkit-details-marker {
+            display: none;
+        }
+        .settings-accordion summary::after {
+            content: '\f078';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            margin-left: auto;
+            font-size: 0.75rem;
+            color: #94a3b8;
+            transition: transform 0.2s ease;
+        }
+        .settings-accordion[open] summary::after {
+            transform: rotate(180deg);
+        }
+        .settings-accordion-body {
+            margin-top: 14px;
+        }
+        .settings-accordion-body .card {
+            margin: 0 0 14px 0;
+        }
+        .settings-accordion-body .page-title {
+            display: none;
+        }
+
         /* ===== SIDEBAR ===== */
         .sidebar-overlay {
             position: fixed;
@@ -349,7 +415,7 @@
             flex: 1;
             overflow-y: auto;
             overflow-x: hidden;
-            padding: 12px 0 60px 0;
+            padding: 12px 0 calc(60px + env(safe-area-inset-bottom)) 0;
             scroll-behavior: smooth;
         }
         .page-container::-webkit-scrollbar {
@@ -1018,7 +1084,7 @@
             background: white;
             display: flex;
             justify-content: space-around;
-            padding: 6px 0 12px 0;
+            padding: 6px 0 max(12px, env(safe-area-inset-bottom)) 0;
             border-top: 1px solid #e9edf3;
             box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.04);
             z-index: 100;
@@ -1225,18 +1291,13 @@
         <a class="nav-item" data-page="tempcal"><i class="fas fa-thermometer-half"></i> Temp Cal</a>
         <a class="nav-item" data-page="dp"><i class="fas fa-tachometer-alt"></i> Level DP</a>
         <a class="nav-item" data-page="flow"><i class="fas fa-water"></i> Flow</a>
-        <a class="nav-item" data-page="connect"><i class="fas fa-bluetooth-b"></i> Connect Device</a>
         <a class="nav-item" data-page="analytical"><i class="fas fa-flask"></i> Analytical</a>
         <a class="nav-item" data-page="gc"><i class="fas fa-chart-bar"></i> Gas Chromatography</a>
         <a class="nav-item" data-page="electrical"><i class="fas fa-bolt"></i> Electrical</a>
-        <a class="nav-item" data-page="solenoid"><i class="fas fa-coil"></i> Solenoid Coils</a>
         <a class="nav-item" data-page="bending"><i class="fas fa-pipe-valve"></i> Tube Bending</a>
-        <a class="nav-item" data-page="commissioning"><i class="fas fa-check-double"></i> Commissioning</a>
         <a class="nav-item" data-page="references"><i class="fas fa-book"></i> References</a>
         <a class="nav-item" data-page="trouble"><i class="fas fa-exclamation-triangle"></i> Troubleshooting</a>
         <a class="nav-item" data-page="ai"><i class="fas fa-robot"></i> AI Chat</a>
-        <a class="nav-item" data-page="upload"><i class="fas fa-upload"></i> File Upload</a>
-        <a class="nav-item" data-page="tags"><i class="fas fa-qrcode"></i> Tag Scanner</a>
         <a class="nav-item" data-page="report"><i class="fas fa-file-alt"></i> Report</a>
         <a class="nav-item" data-page="settings"><i class="fas fa-cog"></i> Settings</a>
         <hr />
@@ -1269,25 +1330,10 @@
                 <i class="fas fa-search"></i>
                 <input type="text" id="searchInput" placeholder="Search tools..." />
             </div>
-            <div class="quick-grid" id="quickAccess">
+            <div class="quick-grid" id="quickAccess" style="grid-template-columns: repeat(3, 1fr);">
                 <div class="quick-item color-1" data-page="converter"><i class="fas fa-arrows-alt-h"></i> Converter</div>
-                <div class="quick-item color-2" data-page="calibration"><i class="fas fa-sliders-h"></i> Calibration</div>
-                <div class="quick-item color-7" data-page="tempcal"><i class="fas fa-thermometer-half"></i> Temp Cal</div>
-                <div class="quick-item color-3" data-page="dp"><i class="fas fa-tachometer-alt"></i> Level DP</div>
-                <div class="quick-item color-4" data-page="flow"><i class="fas fa-water"></i> Flow</div>
-                <div class="quick-item color-6" data-page="connect"><i class="fas fa-bluetooth-b"></i> Connect</div>
-                <div class="quick-item color-7" data-page="analytical"><i class="fas fa-flask"></i> Analytical</div>
-                <div class="quick-item color-8" data-page="gc"><i class="fas fa-chart-bar"></i> GC</div>
                 <div class="quick-item color-5" data-page="electrical"><i class="fas fa-bolt"></i> Electrical</div>
-                <div class="quick-item color-6" data-page="solenoid"><i class="fas fa-coil"></i> Solenoid</div>
-                <div class="quick-item color-1" data-page="bending"><i class="fas fa-pipe-valve"></i> Bending</div>
-                <div class="quick-item color-2" data-page="commissioning"><i class="fas fa-check-double"></i> Commission</div>
-                <div class="quick-item color-3" data-page="references"><i class="fas fa-book"></i> Refs</div>
-                <div class="quick-item color-4" data-page="trouble"><i class="fas fa-exclamation-triangle"></i> Faults</div>
-                <div class="quick-item color-5" data-page="ai"><i class="fas fa-robot"></i> AI Chat</div>
-                <div class="quick-item color-6" data-page="upload"><i class="fas fa-upload"></i> Upload</div>
-                <div class="quick-item color-7" data-page="tags"><i class="fas fa-qrcode"></i> Tags</div>
-                <div class="quick-item color-8" data-page="report"><i class="fas fa-file-alt"></i> Report</div>
+                <div class="quick-item color-3" data-page="references"><i class="fas fa-book"></i> References</div>
             </div>
             <div class="recent-tools">
                 <span class="recent-label"><i class="fas fa-clock"></i> Recent Tools</span>
@@ -1314,7 +1360,7 @@
 
                 <!-- ===== RTD SECTION ===== -->
                 <div id="rtdSection">
-                    <div class="card-header"><i class="fas fa-microchip"></i><h3>RTD Calculator</h3><span>Pt100</span></div>
+                    <div class="card-header"><i class="fas fa-microchip"></i><h3>RTD Calculator</h3><span id="rtdTypeBadge">Pt100</span></div>
                     <div class="row">
                         <label>RTD Type</label>
                         <select id="rtdType">
@@ -1428,17 +1474,6 @@
             <div class="page-title"><i class="fas fa-flask"></i> Analytical Instruments</div>
 
             <div class="card">
-                <div class="card-header"><i class="fas fa-gauge-high"></i><h3>Quick Status</h3><span>latest calibrations</span></div>
-                <div class="analytical-grid">
-                    <div class="analytical-card"><i class="fas fa-vial" style="color:#2563eb;"></i><div class="label">pH</div><div class="value" id="statusPh">—</div></div>
-                    <div class="analytical-card"><i class="fas fa-bolt" style="color:#7c3aed;"></i><div class="label">ORP</div><div class="value" id="statusOrp">—</div></div>
-                    <div class="analytical-card"><i class="fas fa-water" style="color:#059669;"></i><div class="label">Cond</div><div class="value" id="statusCond">—</div></div>
-                    <div class="analytical-card"><i class="fas fa-lungs" style="color:#0891b2;"></i><div class="label">DO</div><div class="value" id="statusDo">—</div></div>
-                    <div class="analytical-card"><i class="fas fa-shield-alt" style="color:#dc2626;"></i><div class="label">Gas</div><div class="value" id="statusGas">—</div></div>
-                </div>
-            </div>
-
-            <div class="card">
                 <div class="sub-tabs" id="analyticalTabs">
                     <div class="sub-tab active" data-tab="ana-ph">pH</div>
                     <div class="sub-tab" data-tab="ana-orp">ORP</div>
@@ -1542,6 +1577,7 @@
                     <div class="result-box"><span>Alarm Level</span><span id="gasAlarm">10% LEL</span></div>
                     <div style="font-size:0.65rem;color:#64748b;">Alarm levels: LEL 10%, O₂ 19.5%/23.5%, H₂S 10ppm, CO 35ppm</div>
                 </div>
+                <button class="btn w-full mt-1" id="anaExportBtn" style="justify-content:center;"><i class="fas fa-download"></i> Export Calibration as .txt</button>
             </div>
         </div>
 
@@ -1593,6 +1629,45 @@
                     </div>
                     <div class="result-box"><span>Result</span><span id="speedResult">3.600 km/h</span></div>
                     <div style="font-size:0.65rem;color:#64748b;margin-top:4px;">Useful for pipe flow velocity, anemometer/air velocity readings, and pump/fan shaft speed cross-checks.</div>
+                    <hr />
+                    <div class="card-header" style="margin-bottom:8px;"><i class="fas fa-wave-square"></i><h3 style="font-size:0.85rem;">Frequency → Rotational Speed</h3></div>
+                    <div class="row">
+                        <label>Frequency</label>
+                        <input type="number" id="freqInputVal" value="60" step="any" style="flex:0.5;" /><span class="chip">Hz</span>
+                    </div>
+                    <div class="row">
+                        <label>Pulses/Rev</label>
+                        <input type="number" id="freqPulsesPerRev" value="1" step="1" min="1" style="flex:0.5;" /><span class="chip">teeth/pulses per revolution</span>
+                    </div>
+                    <button class="btn btn-sm" id="freqToSpeedBtn"><i class="fas fa-calculator"></i> Convert</button>
+                    <div class="result-box"><span>Speed</span><span id="freqRpmResult">3600.0 RPM</span></div>
+                    <div class="result-box"><span></span><span id="freqHzResult">60.00 Hz shaft rotation</span></div>
+                    <div style="font-size:0.65rem;color:#64748b;margin-top:4px;">RPM = (Frequency ÷ Pulses per Rev) × 60. For a magnetic pickup/gear-tooth speed probe, "Pulses/Rev" = number of gear teeth.</div>
+                    <hr />
+                    <div class="card-header" style="margin-bottom:8px;"><i class="fas fa-ruler-horizontal"></i><h3 style="font-size:0.85rem;">Vibration Probe Gap ↔ mV (DC)</h3></div>
+                    <div style="font-size:0.65rem;color:#64748b;margin-bottom:6px;">Eddy-current proximity probes (e.g. Bently Nevada 3300 series) output a DC gap voltage proportional to sensor-to-shaft distance. Standard scale factor is <strong>200 mV/mil</strong> for 8mm probes, <strong>100 mV/mil</strong> for 11mm probes — verify against your probe's actual datasheet since this varies by system.</div>
+                    <div class="row">
+                        <label>Probe</label>
+                        <select id="vibProbeScale" style="flex:1;">
+                            <option value="0.2" selected>8mm probe — 200 mV/mil</option>
+                            <option value="0.1">11mm probe — 100 mV/mil</option>
+                            <option value="custom">Custom scale factor…</option>
+                        </select>
+                    </div>
+                    <div class="row hidden" id="vibCustomScaleRow"><label>Scale</label><input type="number" id="vibCustomScale" value="0.2" step="any" /><span class="chip">V/mil</span></div>
+                    <div class="row">
+                        <label>Gap</label>
+                        <input type="number" id="vibGapMils" value="50" step="any" style="flex:0.6;" /><span class="chip">mils</span>
+                        <button class="btn btn-sm" id="vibGapToMvBtn">→ mV</button>
+                    </div>
+                    <div class="result-box"><span>Gap Voltage</span><span id="vibMvResult">-10.00 Vdc</span></div>
+                    <div class="row mt-1">
+                        <label>Voltage</label>
+                        <input type="number" id="vibMvInput" value="-10" step="any" style="flex:0.6;" /><span class="chip">Vdc</span>
+                        <button class="btn btn-sm" id="vibMvToGapBtn">→ Gap</button>
+                    </div>
+                    <div class="result-box"><span>Gap</span><span id="vibGapResult">50.0 mils</span></div>
+                    <div style="font-size:0.65rem;color:#64748b;margin-top:4px;">Typical usable linear range is roughly 10-90 mils (mid-scale bias around -10 Vdc on a -24V Proximitor supply) — readings pinned near 0V or near supply rail indicate the probe is out of its linear range or miswired.</div>
                 </div>
                 <div class="sub-panel hidden" id="conv-ma">
                     <div class="row">
@@ -1616,25 +1691,29 @@
         PAGE: CALIBRATION (short)
         ========================================================== -->
         <div class="page" id="page-calibration">
-            <div class="page-title"><i class="fas fa-sliders-h"></i> Pressure Calibration</div>
+            <div class="page-title"><i class="fas fa-sliders-h"></i> Calibration</div>
             <div class="card">
+                <div class="row"><label>Type</label>
+                    <select id="calType" style="flex:1;">
+                        <option value="pressure" selected>Pressure Transmitter</option>
+                        <option value="temperature">Temperature Transmitter</option>
+                        <option value="valve">Control Valve (Stroke)</option>
+                    </select>
+                </div>
                 <div class="row"><label>Tag</label><input type="text" id="calTag" placeholder="PT-101" /></div>
                 <div class="row">
                     <label>Range</label>
                     <input type="number" id="calLow" value="0" step="any" style="flex:0.5;" />
                     <span>to</span>
                     <input type="number" id="calHigh" value="100" step="any" style="flex:0.5;" />
-                    <select id="calUnit" style="flex:0.6;">
-                        <option value="psi">PSI</option><option value="bar" selected>bar</option>
-                        <option value="kpa">kPa</option><option value="mpa">MPa</option>
-                    </select>
+                    <select id="calUnit" style="flex:0.6;"></select>
                     <button class="btn btn-sm" id="calUpdateBtn"><i class="fas fa-sync"></i></button>
                 </div>
-                <div class="row"><label>Tolerance</label><input type="number" id="calTolerance" value="0.1" step="0.01" style="flex:0.4;" /><span class="chip">% of span</span></div>
-                <div style="font-size:0.65rem;color:#64748b;margin-bottom:6px;">Enter the <strong>actual</strong> mA reading measured at each test point — error is calculated from ideal vs. actual.</div>
+                <div class="row"><label>Tolerance</label><input type="number" id="calTolerance" value="0.1" step="0.01" style="flex:0.4;" /><span class="chip" id="calToleranceUnit">% of span</span></div>
+                <div style="font-size:0.65rem;color:#64748b;margin-bottom:6px;" id="calInstructions">Enter the <strong>actual</strong> mA reading measured at each test point — error is calculated from ideal vs. actual.</div>
                 <div id="calLiveBar" class="row hidden" style="background:#f0fdf4;border-radius:16px;padding:8px 12px;">
                     <i class="fas fa-satellite-dish" style="color:#059669;"></i>
-                    <span style="font-size:0.75rem;flex:1;">Live: <strong id="calLiveValue">—</strong> mA</span>
+                    <span style="font-size:0.75rem;flex:1;">Live: <strong id="calLiveValue">—</strong></span>
                     <span style="font-size:0.6rem;color:#64748b;">Tap a point's 📥 to fill it</span>
                 </div>
                 <div id="calPointsContainer" class="cal-points-grid"></div>
@@ -1657,17 +1736,32 @@
                     <button data-mode="wet">Wet</button>
                     <button data-mode="remote">Remote</button>
                 </div>
-                <div class="row"><label>Height</label><input type="number" id="dpHeight" value="120" step="any" /><span>in</span></div>
+                <div class="row"><label>Height</label><input type="number" id="dpHeight" value="120" step="any" style="flex:0.6;" /><select id="dpHeightUnit" style="flex:0.5;"><option value="in" selected>in</option><option value="mm">mm</option><option value="cm">cm</option><option value="ft">ft</option><option value="m">m</option></select></div>
                 <div class="row"><label>SG</label><input type="number" id="dpSG" value="1.0" step="0.01" /></div>
                 <div id="wetLegRow" class="row hidden"><label id="wetLegLabel">Wet SG</label><input type="number" id="dpWetSG" value="1.0" step="0.01" /></div>
                 <div class="row">
                     <label>Output</label>
-                    <select id="dpUnit"><option value="inH2O">inH₂O</option><option value="psi">PSI</option><option value="kpa">kPa</option></select>
+                    <select id="dpUnit"><option value="inH2O">inH₂O</option><option value="psi">PSI</option><option value="kpa">kPa</option><option value="mbar">mbar</option><option value="mmH2O">mmH₂O</option></select>
                     <button class="btn" id="calcDpBtn"><i class="fas fa-calculator"></i> Calculate</button>
                 </div>
                 <div class="result-box"><span>LRV</span><span id="dpLRV">0.00</span></div>
                 <div class="result-box"><span>URV</span><span id="dpURV">120.00</span></div>
                 <div class="result-box"><span>Span</span><span id="dpSpan">120.00</span></div>
+            </div>
+            <div class="card">
+                <div class="card-header"><i class="fas fa-image"></i><h3 style="font-size:0.85rem;">Reference Diagrams</h3></div>
+                <div id="dpDiagramDry" style="text-align:center;">
+                    <img src="images/dp-dry-leg.png" alt="Dry leg DP level diagram" style="max-width:100%;border-radius:16px;" />
+                    <div style="font-size:0.65rem;color:#64748b;margin-top:4px;">Dry leg: HP tap at tank bottom, LP tap at top (vapor space), no fill fluid in the LP impulse line.</div>
+                </div>
+                <div id="dpDiagramWet" class="hidden" style="text-align:center;">
+                    <img src="images/dp-wet-leg.png" alt="Wet leg DP level diagram" style="max-width:100%;border-radius:16px;" />
+                    <div style="font-size:0.65rem;color:#64748b;margin-top:4px;">Wet leg: LP impulse line is filled with a reference/seal fluid, which is why LRV is negative (suppressed zero).</div>
+                </div>
+                <div id="dpDiagramRemote" class="hidden" style="text-align:center;">
+                    <img src="images/dp-remote-seal.png" alt="Remote seal DP level diagram" style="max-width:100%;border-radius:16px;" />
+                    <div style="font-size:0.65rem;color:#64748b;margin-top:4px;">Remote seal: capillary-filled diaphragm seals eliminate impulse lines entirely — elevation/suppression is set electronically or via the capillary fill fluid head.</div>
+                </div>
             </div>
         </div>
 
@@ -1705,14 +1799,452 @@
                 <div class="result-box"><span>% of Range</span><span id="flowPercentResult">100.0 %</span></div>
                 <div class="result-box"><span>mA (4-20mA)</span><span id="flowMaResult">20.00 mA</span></div>
                 <div style="font-size:0.65rem;color:#64748b;margin-top:4px;">Flow = Qmax × √(%DP ÷ 100). Reverse: DP% = (Flow ÷ Qmax)².</div>
+                <button class="btn w-full mt-1" id="flowExportBtn" style="justify-content:center;"><i class="fas fa-download"></i> Export as .txt</button>
+            </div>
+        </div>
+        <!-- ==========================================================
+        PAGE: GAS CHROMATOGRAPHY
+        ========================================================== -->
+        <div class="page" id="page-gc">
+            <div class="page-title"><i class="fas fa-chart-bar"></i> Gas Chromatography</div>
+            <div class="card">
+                <img src="assets/gc_elution_order.png" alt="Natural gas GC elution order diagram" style="width:100%;border-radius:16px;border:1px solid #e9edf3;margin-bottom:10px;" />
+                <div class="tab-scroll" id="gcTabs">
+                    <div class="tab active" data-gc="daniel">Daniel</div>
+                    <div class="tab" data-gc="siemens">Siemens</div>
+                    <div class="tab" data-gc="abb">ABB</div>
+                    <div class="tab" data-gc="agilent">Agilent</div>
+                </div>
+                <div id="gcContent">
+                    <div class="gc-panel" id="gc-daniel">
+                        <div><strong>Daniel 700 Series</strong></div>
+                        <div class="chip">TCD · He carrier @ 90 psig</div>
+                        <div class="chip">Temp: -29°C to +55°C ambient</div>
+                        <div style="font-size:0.75rem;margin-top:6px;">Calibration: Certified gas standards · Multi-point</div>
+                    </div>
+                    <div class="gc-panel hidden" id="gc-siemens">
+                        <div><strong>Siemens Maxum II</strong></div>
+                        <div class="chip">TCD · 50-260°C oven</div>
+                        <div class="chip">Dynamic Range: 10⁵</div>
+                        <div style="font-size:0.75rem;margin-top:6px;">Carrier: H₂/N₂/He/Ar (4.6 purity)</div>
+                    </div>
+                    <div class="gc-panel hidden" id="gc-abb">
+                        <div><strong>ABB PGC5000</strong></div>
+                        <div class="chip">DBDID · ppb detection</div>
+                        <div class="chip">Smart Oven™</div>
+                        <div style="font-size:0.75rem;margin-top:6px;">Auto-calibration with internal standards</div>
+                    </div>
+                    <div class="gc-panel hidden" id="gc-agilent">
+                        <div><strong>Agilent 8890</strong></div>
+                        <div class="chip">FID · TCD · µECD</div>
+                        <div class="chip">Temp: 15-35°C ambient</div>
+                        <div style="font-size:0.75rem;margin-top:6px;">Carrier: H₂/He/N₂ (high purity)</div>
+                    </div>
+                </div>
+                <hr />
+                <div><strong>Operating Parameters</strong></div>
+                <div class="row mt-1"><label>Carrier Pressure</label><input type="number" id="gcCarrierPressure" value="90" step="any" /><span class="chip">psig</span></div>
+                <div class="row"><label>Oven Temp</label><input type="number" id="gcOvenTemp" value="60" step="any" /><span class="chip">°C</span></div>
+                <div style="font-size:0.65rem;color:#64748b;margin-bottom:6px;">Defaults auto-fill from the selected analyzer above — edit for your actual unit's setpoints.</div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><i class="fas fa-vial-circle-check"></i><h3>Calibration Check</h3><span>GPA 2261 blend</span></div>
+                <div style="font-size:0.65rem;color:#64748b;margin-bottom:8px;">Certified values default to a typical GPA 2261 natural gas calibration blend. Enter your analyzer's measured mol% for each component to check deviation.</div>
+                <div class="row"><label>Tolerance</label><input type="number" id="gcTolerance" value="2" step="0.1" style="flex:0.4;" /><span class="chip">% relative</span></div>
+                <div id="gcCalTable" class="table-wrap"><table>
+                        <thead><tr><th>Component</th><th>Certified %</th><th>Measured %</th><th>Dev %</th></tr></thead>
+                        <tbody></tbody>
+                    </table></div>
+                <button class="btn w-full mt-1" id="gcCalCheckBtn" style="justify-content:center;"><i class="fas fa-check"></i> Check Calibration</button>
+                <div class="result-box"><span>Overall</span><span id="gcCalResult">—</span></div>
+                <button class="btn-outline btn w-full mt-1" id="gcExportBtn" style="justify-content:center;"><i class="fas fa-download"></i> Export as .txt</button>
             </div>
         </div>
 
         <!-- ==========================================================
-        PAGE: CONNECT DEVICE (Bluetooth / WiFi / HART)
+        PAGE: ELECTRICAL (short)
         ========================================================== -->
-        <div class="page" id="page-connect">
-            <div class="page-title"><i class="fas fa-bluetooth-b"></i> Connect Device</div>
+        <div class="page" id="page-electrical">
+            <div class="page-title"><i class="fas fa-bolt"></i> Electrical Tools</div>
+            <div class="card">
+                <div class="sub-tabs" id="electricalTabs">
+                    <div class="sub-tab active" data-tab="elec-ohm">Ohm's Law</div>
+                    <div class="sub-tab" data-tab="elec-vd">Voltage Drop</div>
+                    <div class="sub-tab" data-tab="elec-amp">Ampacity</div>
+                    <div class="sub-tab" data-tab="elec-solenoid">Solenoid</div>
+                </div>
+                <div class="sub-panel active" id="elec-ohm">
+                    <div class="row"><label>V</label><input type="number" id="ohmV" value="24" step="any" /><span class="chip">V</span></div>
+                    <div class="row"><label>I</label><input type="number" id="ohmI" value="20" step="any" /><span class="chip">mA</span></div>
+                    <button class="btn" id="ohmCalcBtn"><i class="fas fa-calculator"></i> Calculate</button>
+                    <div class="result-box"><span>R</span><span id="ohmResult">1200.00 Ω</span></div>
+                    <div class="result-box"><span>P</span><span id="powerResult">0.48 W</span></div>
+                </div>
+                <div class="sub-panel hidden" id="elec-vd">
+                    <div class="row"><label>V</label><input type="number" id="vdVoltage" value="480" step="any" /></div>
+                    <div class="row"><label>I</label><input type="number" id="vdCurrent" value="10" step="any" /></div>
+                    <div class="row"><label>Dist</label><input type="number" id="vdDistance" value="200" step="any" /><span class="chip">ft</span></div>
+                    <div class="row"><label>AWG</label><select id="vdAwg"><option value="14">14</option><option value="12" selected>12</option><option value="10">10</option><option value="8">8</option><option value="6">6</option></select></div>
+                    <button class="btn" id="vdBtn"><i class="fas fa-calculator"></i> Calculate</button>
+                    <div class="result-box"><span>Drop</span><span id="vdResult">5.12 V (1.07%)</span></div>
+                    <div class="result-box"><span>Status</span><span id="vdStatus" style="color:#059669;">✓ Acceptable</span></div>
+                </div>
+                <div class="sub-panel hidden" id="elec-amp">
+                    <div class="table-wrap"><table><thead><tr><th>AWG</th><th>60°C</th><th>75°C</th><th>90°C</th></tr></thead>
+                            <tbody><tr><td>14</td><td>20</td><td>20</td><td>25</td></tr><tr><td>12</td><td>25</td><td>25</td><td>30</td></tr><tr><td>10</td><td>35</td><td>35</td><td>40</td></tr><tr><td>8</td><td>50</td><td>50</td><td>55</td></tr><tr><td>6</td><td>65</td><td>65</td><td>75</td></tr></tbody></table></div>
+                    <div class="row mt-1"><label>Load</label><input type="number" id="ampLoad" value="24" step="any" /><span class="chip">A</span></div>
+                    <div class="row"><label>Insulation</label><select id="ampRating"><option value="60">60°C</option><option value="75" selected>75°C</option><option value="90">90°C</option></select></div>
+                    <button class="btn" id="ampCalcBtn"><i class="fas fa-calculator"></i> Find Min. Wire Size</button>
+                    <div class="result-box"><span>Min. AWG</span><span id="ampResult">10 AWG</span></div>
+                    <div class="result-box"><span>Ampacity</span><span id="ampCapacity">35 A</span></div>
+                </div>
+                <div class="sub-panel hidden" id="elec-solenoid">
+                    <div class="table-wrap"><table>
+                            <thead><tr><th>Voltage</th><th>Wattage</th><th>Insulation</th></tr></thead>
+                            <tbody><tr><td>12V DC</td><td>8-10W</td><td>Class H</td></tr><tr><td>24V DC</td><td>6-8W</td><td>Class F</td></tr><tr><td>120V AC</td><td>6.3W</td><td>Class F</td></tr><tr><td>230V AC</td><td>6.3W</td><td>Class F</td></tr></tbody>
+                        </table></div>
+                    <div class="row mt-1"><label>Preset</label><select id="solenoidType"><option value="12VDC">12V DC · 10W</option><option value="24VDC" selected>24V DC · 8W</option><option value="120VAC">120V AC · 6.3W</option><option value="230VAC">230V AC · 6.3W</option></select></div>
+                    <div style="font-size:0.65rem;color:#64748b;margin:2px 0 6px 0;">Picking a preset fills in typical values below — edit them for your actual coil.</div>
+                    <div class="row"><label>Voltage</label><input type="number" id="solenoidV" value="24" step="any" /><span class="chip">V</span></div>
+                    <div class="row"><label>Coil R</label><input type="number" id="solenoidR" value="72" step="any" /><span class="chip">Ω</span></div>
+                    <button class="btn" id="solenoidCalcBtn"><i class="fas fa-calculator"></i> Calculate</button>
+                    <div class="result-box"><span>Power</span><span id="solenoidPower">8.0 W</span></div>
+                    <div class="result-box"><span>Current</span><span id="solenoidCurrent">0.33 A</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================================
+        PAGE: BENDING
+        ========================================================== -->
+        <div class="page" id="page-bending">
+            <div class="page-title"><i class="fas fa-pipe-valve"></i> Tube Bending</div>
+            <div class="card">
+                <img src="assets/bend_geometry.png" alt="Tube bend geometry diagram" style="width:100%;max-width:400px;display:block;margin:0 auto 12px auto;border-radius:16px;border:1px solid #e9edf3;" />
+                <div class="table-wrap"><table><thead><tr><th>Size</th><th>OD</th><th>Radius</th><th>Wall</th><th>Model</th></tr></thead>
+                        <tbody><tr><td>1/4"</td><td>0.250</td><td>0.5625</td><td>0.028-0.065"</td><td>MS-HTB-4</td></tr>
+                            <tr><td>5/16"</td><td>0.3125</td><td>0.75</td><td>0.028-0.065"</td><td>MS-HTB-5</td></tr>
+                            <tr><td>3/8"</td><td>0.375</td><td>0.9375</td><td>0.028-0.065"</td><td>MS-HTB-6</td></tr>
+                            <tr><td>1/2"</td><td>0.500</td><td>1.5</td><td>0.035-0.083"</td><td>MS-HTB-8</td></tr></tbody>
+                    </table></div>
+                <div style="font-size:0.65rem;color:#64748b;margin:6px 0 10px 0;">Radius/wall figures per Swagelok tube bending guidance for standard hand benders. Always confirm against the specific bender and tubing spec sheet you're using — wall thickness outside this range risks wrinkling or wall thinning at the bend.</div>
+                <div class="row mt-1"><label>Tube</label><select id="tubeSize"><option value="0.25">1/4"</option><option value="0.3125">5/16"</option><option value="0.375" selected>3/8"</option><option value="0.5">1/2"</option></select></div>
+                <div class="row"><label>Angle</label><input type="number" id="bendAngle" value="90" step="any" /><span class="chip">°</span></div>
+                <div class="row"><label>Offset</label><input type="number" id="bendOffset" value="6" step="any" /><span class="chip">in</span></div>
+                <button class="btn" id="bendCalcBtn"><i class="fas fa-calculator"></i> Calculate</button>
+                <div class="result-box"><span>Gain</span><span id="bendGain">0.563 in</span></div>
+                <div class="result-box"><span>Mark</span><span id="bendMark">6.56 in</span></div>
+                <div class="result-box"><span>Model</span><span id="benderModel">MS-HTB-6</span></div>
+                <div style="font-size:0.65rem;color:#64748b;margin-top:6px;">Gain computed from real bend geometry: 2R·tan(θ/2) − Rθ(rad), not a rough linear approximation.</div>
+            </div>
+        </div>
+
+        <!-- ==========================================================
+        PAGE: REFERENCES
+        ========================================================== -->
+        <div class="page" id="page-references">
+            <div class="page-title"><i class="fas fa-book"></i> Reference Library</div>
+            <div class="card">
+                <div class="tab-scroll" id="refTabs">
+                    <div class="tab active" data-ref="tc">TC Colors</div>
+                    <div class="tab" data-ref="ranges">Transmitters</div>
+                    <div class="tab" data-ref="rtd">RTD</div>
+                    <div class="tab" data-ref="fluke">Fluke 789</div>
+                    <div class="tab" data-ref="fault-ref">Fault Codes</div>
+                    <div class="tab" data-ref="network">Networking</div>
+                    <div class="tab" data-ref="commissioning">Commissioning</div>
+                </div>
+                <div class="ref-panel hidden" id="ref-commissioning">
+                    <div class="sub-tabs" id="commTabs">
+                        <div class="sub-tab active" data-tab="comm-general">General</div>
+                        <div class="sub-tab" data-tab="comm-vfd">VFD</div>
+                        <div class="sub-tab" data-tab="comm-switchgear">Switchgear</div>
+                    </div>
+                    <div class="sub-panel active" id="comm-general">
+                        <div style="font-size:0.75rem;padding:4px 0;">
+                            <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:4px;">1. Pre-Commissioning · 2. Installation · 3. Calibration</div>
+                            <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:4px;">4. Configuration · 5. Loop Checking · 6. Handover</div>
+                        </div>
+                    </div>
+                    <div class="sub-panel hidden" id="comm-vfd">
+                        <div style="font-size:0.75rem;padding:4px 0;">
+                            <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:4px;">✅ Input voltage · Grounding · Control wiring</div>
+                            <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:4px;">✅ Motor parameters · I/O config · Ramp settings</div>
+                            <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:4px;">✅ Communication · Rotation check · Load test</div>
+                        </div>
+                    </div>
+                    <div class="sub-panel hidden" id="comm-switchgear">
+                        <div style="font-size:0.75rem;padding:4px 0;">
+                            <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:4px;">✅ Visual inspection · Mechanical operation</div>
+                            <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:4px;">✅ MEG test · Contact resistance · Timing tests</div>
+                            <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:4px;">✅ Protective relay testing · CT/VT check · Load test</div>
+                        </div>
+                    </div>
+                    <div class="row mt-1"><label>Project</label><input type="text" id="commProject" placeholder="Project" /></div>
+                    <div class="row"><label>Tag</label><input type="text" id="commTag" placeholder="FT-1001" /></div>
+                    <button class="btn" id="commCheckBtn"><i class="fas fa-check"></i> Generate</button>
+                    <div id="commOutput" class="report-preview mt-1">Checklist will appear here.</div>
+                </div>
+                <div id="refContent">
+                    <div class="ref-panel" id="ref-tc">
+                        <div><strong>TC Color Codes</strong></div>
+                        <div class="chip">J: White/Red</div>
+                        <div class="chip">K: Green/Red</div>
+                        <div class="chip">T: Blue/Red</div>
+                        <div class="chip">E: Purple/Red</div>
+                        <div class="chip">N: Orange/Red</div>
+                        <div class="chip">S: Black/Red</div>
+                        <hr />
+                        <div><strong>mV Output Table (NIST ITS-90, 0°C ref. junction)</strong></div>
+                        <div style="font-size:0.65rem;color:#64748b;margin:4px 0 8px 0;">Cold junction at 0°C. Field readings need cold-junction compensation if your reference isn't at 0°C.</div>
+                        <div class="table-wrap"><table>
+                                <thead><tr><th>°C</th><th>Type K</th><th>Type J</th><th>Type T</th><th>Type E</th></tr></thead>
+                                <tbody>
+                                    <tr><td>0</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td></tr>
+                                    <tr><td>100</td><td>4.096</td><td>5.269</td><td>4.279</td><td>6.319</td></tr>
+                                    <tr><td>200</td><td>8.138</td><td>10.779</td><td>9.288</td><td>13.419</td></tr>
+                                    <tr><td>300</td><td>12.209</td><td>16.327</td><td>14.862</td><td>21.033</td></tr>
+                                    <tr><td>400</td><td>16.397</td><td>21.848</td><td>20.872</td><td>28.943</td></tr>
+                                    <tr><td>500</td><td>20.644</td><td>27.393</td><td>—</td><td>36.999</td></tr>
+                                    <tr><td>600</td><td>24.905</td><td>33.102</td><td>—</td><td>45.085</td></tr>
+                                    <tr><td>700</td><td>29.129</td><td>39.132</td><td>—</td><td>53.110</td></tr>
+                                    <tr><td>800</td><td>33.275</td><td>45.494</td><td>—</td><td>61.017</td></tr>
+                                    <tr><td>900</td><td>37.326</td><td>—</td><td>—</td><td>68.783</td></tr>
+                                    <tr><td>1000</td><td>41.276</td><td>—</td><td>—</td><td>76.373</td></tr>
+                                </tbody>
+                            </table></div>
+                        <div style="font-size:0.6rem;color:#94a3b8;margin-top:6px;">Type T max ~400°C, Type J max ~760°C (oxidizing atmosphere degrades J above that).</div>
+                    </div>
+                    <div class="ref-panel hidden" id="ref-ranges">
+                        <div><strong>Common Transmitters</strong></div>
+                        <div class="chip">Rosemount 3051S</div>
+                        <div class="chip">Yokogawa EJX</div>
+                        <div class="chip">ABB TTH300</div>
+                        <div class="chip">Siemens P320</div>
+                        <hr />
+                        <div style="font-size:0.8rem;margin-bottom:8px;"><strong>Rosemount 3051 (Pressure/DP)</strong></div>
+                        <div style="font-size:0.72rem;margin-bottom:10px;">
+                            HART (4-20mA) or FOUNDATION Fieldbus/Profibus. Coplanar or in-line flange styles. Local push-button "zero/span" or full config via HART communicator/AMS. Digital trim (sensor trim) separate from output trim — a common calibration mistake is adjusting output trim (4-20mA) when the actual sensor reading is off; check both. Diagnostic: Statistical Process Monitoring (SPM) option flags noise/blockage before it's visible on the PV.
+                        </div>
+                        <div style="font-size:0.8rem;margin-bottom:8px;"><strong>Yokogawa EJA/EJX</strong></div>
+                        <div style="font-size:0.72rem;margin-bottom:10px;">
+                            DPharp sensor (silicon resonant), BRAIN or HART protocol (some support FF). Local zero adjustment via external zero screw; span/range set digitally, not by a physical span pot on modern units. Self-diagnostics with a status/alarm menu accessible via the BT200 handheld or the optional local display. EJX has 10x turndown improvement over EJA — matters when re-ranging for a different service.
+                        </div>
+                        <div style="font-size:0.8rem;margin-bottom:8px;"><strong>ABB (266/267/TTH300 series)</strong></div>
+                        <div style="font-size:0.72rem;margin-bottom:10px;">
+                            266 series pressure transmitters use a capacitive sensor; HART or Profibus PA versions available. TTH300 is ABB's HART temperature transmitter — accepts RTD/TC/mV/Ω inputs, field-configurable via local keypad or DTM/AMS software. Look for ABB's "TTH300 quick-start" 3-button local menu for field re-ranging without a handheld.
+                        </div>
+                        <div style="font-size:0.8rem;margin-bottom:8px;"><strong>Honeywell Sensepoint XCD (Gas Detector)</strong></div>
+                        <div style="font-size:0.72rem;margin-bottom:10px;">
+                            Fixed flammable/toxic/O₂ detector. 4-20mA (sink or source, selectable via a switch on the back of the display module) + 2 programmable alarm relays + 1 fault relay + optional Modbus RS485. Tri-color backlit LCD: steady green = normal, flashing yellow = fault, flashing red = alarm. Configured non-intrusively with a magnetic wand — no need to open the housing. Sensor cartridges plug in and auto-recognize (EC cartridges for H₂S/CO/NO₂/H₂, catalytic/IR for flammables, electrochemical for O₂). Fault state pulls the analog output below 1mA.
+                        </div>
+                        <div style="font-size:0.8rem;margin-bottom:8px;"><strong>Honeywell Smoke Detectors (addressable systems)</strong></div>
+                        <div style="font-size:0.72rem;">
+                            Typically photoelectric or ionization sensing on an addressable loop (e.g. NOTIFIER/Honeywell fire panels) — each detector reports a unique address back to the FACP rather than a simple contact closure, allowing pinpoint alarm location and drift/dirty-sensor compensation reported at the panel. Field cleaning/sensitivity testing should follow the panel's specific test procedure, not just a visual check.
+                        </div>
+                        <div style="font-size:0.6rem;color:#94a3b8;margin-top:8px;">Always confirm exact behavior against the specific model's manual — firmware/hardware revisions change menu structures and default settings over time.</div>
+                    </div>
+                    <div class="ref-panel hidden" id="ref-rtd">
+                        <div><strong>RTD Types</strong></div>
+                        <div class="chip">Pt100: 100Ω @ 0°C</div>
+                        <div class="chip">Pt500: 500Ω @ 0°C</div>
+                        <div class="chip">Pt1000: 1000Ω @ 0°C</div>
+                        <div style="font-size:0.8rem;">α = 0.00385 · IEC 60751</div>
+                        <hr />
+                        <div><strong>Resistance vs. Temperature Table</strong></div>
+                        <div style="font-size:0.65rem;color:#64748b;margin:4px 0 8px 0;">Computed live from the IEC 60751 Callendar-Van Dusen equation (R = R₀(1 + At + Bt²), A=3.9083×10⁻³, B=-5.775×10⁻⁷) — not a static/rounded lookup.</div>
+                        <div class="row" style="margin-bottom:6px;">
+                            <label>Base</label>
+                            <select id="rtdTableBase" style="flex:1;">
+                                <option value="100">Pt100</option>
+                                <option value="500">Pt500</option>
+                                <option value="1000">Pt1000</option>
+                            </select>
+                        </div>
+                        <div class="table-wrap"><table id="rtdRefTable">
+                                <thead><tr><th>°C</th><th>Ω</th><th>°C</th><th>Ω</th></tr></thead>
+                                <tbody></tbody>
+                            </table></div>
+                    </div>
+                    <div class="ref-panel hidden" id="ref-fluke">
+                        <div><strong>Fluke 789 ProcessMeter</strong></div>
+                        <div class="chip">mA source/simulate</div>
+                        <div class="chip">24V loop power</div>
+                        <div class="chip">HART resistor 250Ω</div>
+                        <img src="assets/fluke789_schematic.png" alt="Fluke 789 front panel schematic" style="width:100%;max-width:320px;display:block;margin:10px auto;border-radius:16px;border:1px solid #e9edf3;" />
+                        <div style="font-size:0.6rem;color:#94a3b8;text-align:center;margin-bottom:10px;">Schematic reference diagram (not to exact scale)</div>
+                        <div><strong>Which switch position to use</strong></div>
+                        <div style="font-size:0.72rem;margin:6px 0;">
+                            <strong>mA DC (measure):</strong> reading an existing loop's current without breaking it — connect in series, or across a 250Ω resistor if reading via HART. The meter's own 250Ω resistor auto-engages in this mode so you can read HART on the same connection.
+                        </div>
+                        <div style="font-size:0.72rem;margin:6px 0;">
+                            <strong>mA SOURCE:</strong> the 789 supplies its own 24V loop power and outputs a set mA value — use this to bench-test a receiving device (PLC/DCS input card, indicator) without a live transmitter connected.
+                        </div>
+                        <div style="font-size:0.72rem;margin:6px 0;">
+                            <strong>mA SIMULATE:</strong> the 789 acts as if it were the transmitter, drawing the set mA from loop power supplied by the system (not by the meter) — use this to test a loop's wiring/PLC input while the real transmitter is disconnected.
+                        </div>
+                        <div style="font-size:0.72rem;margin:6px 0;">
+                            <strong>% Step buttons (0/25/50/75/100%):</strong> jump straight to 4/8/12/16/20mA equivalents when sourcing/simulating — much faster than dialing in exact mA for a 5-point check.
+                        </div>
+                        <div style="font-size:0.72rem;margin:6px 0;">
+                            <strong>SpanCheck:</strong> automatically steps 0%→100%→0% so you can watch the receiving instrument respond, without touching buttons between steps.
+                        </div>
+                        <div style="font-size:0.65rem;color:#64748b;margin-top:8px;">HART IN/OUT terminals let the 789 pass HART communication through while it measures — handy for reading a HART variable at the same time as the raw mA.</div>
+                    </div>
+                    <div class="ref-panel hidden" id="ref-fault-ref">
+                        <div><strong>Fault Codes</strong></div>
+                        <div class="chip">4-20mA: 0mA (no power), 2-3.5mA (fault), >20.5mA (overrange)</div>
+                        <div class="chip">HART: 250Ω resistor required</div>
+                        <div class="sub-tabs mt-1" id="faultMfgTabs">
+                            <div class="sub-tab active" data-tab="fm-rosemount">Rosemount</div>
+                            <div class="sub-tab" data-tab="fm-yokogawa">Yokogawa</div>
+                            <div class="sub-tab" data-tab="fm-abb">ABB</div>
+                            <div class="sub-tab" data-tab="fm-honeywell">Honeywell</div>
+                        </div>
+                        <div class="sub-panel active" id="fm-rosemount">
+                            <div style="font-size:0.72rem;">
+                                <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>FAIL ELECT</strong> — electronics failure; module usually needs replacement.</div>
+                                <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Sensor module disconnected/miscompare</strong> — check ribbon cable/connector between sensor and electronics.</div>
+                                <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Zero Fail / Span Fail</strong> — trim value out of acceptable range; re-trim against a known-good reference, don't just force it.</div>
+                                <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Press Limit / Temp Limit</strong> — process exceeded the sensor's rated range — check for overpressure/overtemp event, not just a config issue.</div>
+                            </div>
+                        </div>
+                        <div class="sub-panel hidden" id="fm-yokogawa">
+                            <div style="font-size:0.72rem;">
+                                <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Er.01 CAP MODULE FAULT</strong> (BRAIN protocol) — capacitance sensor module failure.</div>
+                                <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Self-check/status menu</strong> — accessible via BT200 handheld or local display; flags sensor, amplifier, and EEPROM faults separately, so check which subsystem before swapping parts.</div>
+                                <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Burst mode active but no output change</strong> — often a comms/loop wiring issue rather than the sensor itself; verify HART burst mode isn't conflicting with a multidrop poll.</div>
+                            </div>
+                        </div>
+                        <div class="sub-panel hidden" id="fm-abb">
+                            <div style="font-size:0.72rem;">
+                                <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Sensor break / open circuit</strong> (TTH300) — RTD/TC wiring fault; check for a broken element or loose terminal before replacing the transmitter head.</div>
+                                <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Out of range</strong> — input signal exceeds the configured LRV/URV; re-check ranging against the actual process, not just the alarm.</div>
+                                <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Config/EEPROM error</strong> — often clears with a factory reset via the local keypad or DTM, but re-verify all range/tag settings afterward since a reset wipes them.</div>
+                            </div>
+                        </div>
+                        <div class="sub-panel hidden" id="fm-honeywell">
+                            <div style="font-size:0.72rem;">
+                                <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Sensepoint XCD — flashing yellow LCD</strong> = fault state; output drops below 1mA. Check sensor cartridge seating first (they're plug-in and can work loose).</div>
+                                <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Flashing red LCD</strong> = alarm (real gas reading over setpoint) — don't confuse with the fault state above; verify with a bump test before assuming it's a false alarm.</div>
+                                <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Addressable smoke detector trouble</strong> — panel reports the specific device address; a "dirty sensor" trouble means clean/replace per the panel's maintenance procedure, not just reset the panel.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ref-panel hidden" id="ref-network">
+                        <div><strong>TCP vs UDP</strong></div>
+                        <div style="font-size:0.75rem;margin:6px 0;">
+                            <strong>TCP</strong> — connection-based; both ends handshake (SYN → SYN-ACK → ACK) before data flows, and every packet is acknowledged and re-sent if lost. Reliable and ordered, but has more overhead/latency. Used where data loss isn't acceptable.
+                        </div>
+                        <div style="font-size:0.75rem;margin:6px 0;">
+                            <strong>UDP</strong> — connectionless; packets are just sent with no handshake and no guarantee of delivery or order. Lower latency and overhead, but the application has to tolerate (or handle) dropped/out-of-order packets. Used where speed matters more than perfection.
+                        </div>
+                        <div class="chip">TCP: web, email, file transfer, Modbus TCP</div>
+                        <div class="chip">UDP: streaming, broadcast, discovery, DNS</div>
+                        <hr />
+                        <div><strong>Common Industrial Ports</strong></div>
+                        <div class="chip">Modbus TCP: 502 (TCP)</div>
+                        <div class="chip">EtherNet/IP: 44818 (TCP) / 2222 (UDP)</div>
+                        <div class="chip">DNP3: 20000 (TCP/UDP)</div>
+                        <div class="chip">OPC UA: 4840 (TCP)</div>
+                        <div class="chip">HART-IP: 5094 (TCP/UDP)</div>
+                        <div class="chip">BACnet: 47808 (UDP)</div>
+                        <div class="chip">PROFINET RT: real-time, runs over raw Ethernet (no TCP/UDP)</div>
+                        <div style="font-size:0.65rem;color:#64748b;margin-top:6px;">PROFINET IO messaging itself is time-critical and bypasses TCP/UDP; only its non-real-time services (e.g. diagnostics, config) use UDP/TCP.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================================
+        PAGE: TROUBLESHOOTING (short)
+        ========================================================== -->
+        <div class="page" id="page-trouble">
+            <div class="page-title"><i class="fas fa-exclamation-triangle"></i> Troubleshooting</div>
+            <div class="card">
+                <div class="row"><label>Device</label>
+                    <select id="troubleDevice" style="flex:1;">
+                        <option value="level">Level Transmitters</option>
+                        <option value="pressure">Pressure Transmitters</option>
+                        <option value="flow">Flow Meters</option>
+                        <option value="controlvalve">Control Valves</option>
+                        <option value="shutdownvalve">Shutdown/ESD Valves</option>
+                        <option value="speedprobe">Speed Probes</option>
+                        <option value="vibprobe">Vibration Probes</option>
+                        <option value="gasdet">Gas Detectors</option>
+                        <option value="smokedet">Smoke Detectors</option>
+                        <option value="firepanel">Fire Panels (FACP)</option>
+                        <option value="genset">Generator Control Panel</option>
+                        <option value="blowdown">Blowdown Valves</option>
+                        <option value="plcforce">PLC Forcing (AB/GE/Honeywell)</option>
+                        <option value="fm200">FM-200 Fire Suppression</option>
+                        <option value="turbinefg">GE/Solar Turbines Fire & Gas</option>
+                    </select>
+                </div>
+                <div id="troubleOutput" style="font-size:0.75rem;"></div>
+                <hr />
+                <div><strong>Generic Loop Faults</strong></div>
+                <div class="trouble-item" data-fault="4ma"><i class="fas fa-bolt" style="color:#b45309;"></i> Stuck at 4mA</div>
+                <div class="trouble-item" data-fault="22ma"><i class="fas fa-wave-square" style="color:#2563eb;"></i> 22mA alarm</div>
+                <div class="trouble-item" data-fault="hart"><i class="fas fa-sync-alt" style="color:#1e7e34;"></i> No HART comms</div>
+                <div class="trouble-item" data-fault="drift"><i class="fas fa-chart-line" style="color:#7c3aed;"></i> Reading drifts over time</div>
+                <div class="trouble-item" data-fault="erratic"><i class="fas fa-random" style="color:#dc2626;"></i> Erratic / noisy signal</div>
+                <div class="trouble-item" data-fault="nodisplay"><i class="fas fa-tv" style="color:#0891b2;"></i> Blank local display</div>
+                <div class="trouble-item" data-fault="groundloop"><i class="fas fa-bolt" style="color:#b45309;"></i> Ground loop / noise</div>
+                <button class="btn w-full" id="faultFinderBtn" style="justify-content:center;margin-top:6px;"><i class="fas fa-list"></i> Show Full Guide</button>
+                <div id="faultDiagnosis" class="mt-1" style="background:#f1f5f9;padding:12px 16px;border-radius:20px;min-height:40px;">Select a fault above.</div>
+            </div>
+        </div>
+
+        <!-- ==========================================================
+        PAGE: AI CHAT
+        ========================================================== -->
+        <div class="page" id="page-ai">
+            <div class="page-title"><i class="fas fa-robot"></i> AI Technician</div>
+            <div class="card">
+                <div class="chat-bubble"><i class="fas fa-robot"></i> Hello! I'm your AI assistant.</div>
+                <div id="chatHistory"></div>
+                <div class="row mt-1"><input type="text" id="aiInput" placeholder="Ask..." style="flex:1;" /><button class="btn" id="aiSendBtn"><i class="fas fa-paper-plane"></i></button></div>
+            </div>
+        </div>
+        <!-- ==========================================================
+        PAGE: TAG SCANNER
+        ========================================================== -->
+
+        <!-- ==========================================================
+        PAGE: REPORT
+        ========================================================== -->
+        <div class="page" id="page-report">
+            <div class="page-title"><i class="fas fa-file-alt"></i> Report</div>
+            <div class="card">
+                <div class="row"><label>Tag</label><input type="text" id="reportTag" placeholder="FT-1001" /></div>
+                <div class="row"><label>Model</label><input type="text" id="reportModel" placeholder="Rosemount 3051S" /></div>
+                <div class="row"><label>Type</label><select id="reportType"><option value="calibration">Calibration</option><option value="gc">GC</option><option value="commissioning">Commissioning</option></select></div>
+                <div class="row"><label>Tolerance</label><input type="number" id="reportTolerance" value="2" step="0.1" style="flex:0.4;" /><span class="chip">% (calibration only)</span></div>
+                <div style="font-size:0.65rem;color:#64748b;margin:2px 0 4px 0;">For Calibration: enter the <strong>actual</strong> % reading recorded at each nominal test point (defaults show ideal).</div>
+                <div id="calPointsInput" class="cal-points-grid">
+                    <div class="cal-point"><span>0%</span><input type="number" id="rp0" value="0" step="any" class="cal-actual" /></div>
+                    <div class="cal-point"><span>25%</span><input type="number" id="rp25" value="25" step="any" class="cal-actual" /></div>
+                    <div class="cal-point"><span>50%</span><input type="number" id="rp50" value="50" step="any" class="cal-actual" /></div>
+                    <div class="cal-point"><span>75%</span><input type="number" id="rp75" value="75" step="any" class="cal-actual" /></div>
+                    <div class="cal-point"><span>100%</span><input type="number" id="rp100" value="100" step="any" class="cal-actual" /></div>
+                </div>
+                <div class="row"><label>Notes</label><textarea id="reportNotes" placeholder="Notes..."></textarea></div>
+                <button class="btn" id="generateReportBtn"><i class="fas fa-file-alt"></i> Generate</button>
+                <div id="reportPreview" class="report-preview mt-1">Report will appear here.</div>
+                <button class="btn btn-outline mt-1" id="exportReportBtn"><i class="fas fa-download"></i> Export</button>
+            </div>
+        </div>
+
+        <!-- ==========================================================
+        PAGE: SETTINGS
+        ========================================================== -->
+        <div class="page" id="page-settings">
+            <div class="page-title"><i class="fas fa-cog"></i> Settings</div>
+            <details class="card settings-accordion">
+                <summary><i class="fas fa-bluetooth-b"></i> Connect Device (Bluetooth / WiFi / HART)</summary>
+                <div class="settings-accordion-body">
 
             <div class="card" style="background:#fff7ed;border-color:#fde68a;">
                 <div style="font-size:0.7rem;color:#92400e;"><i class="fas fa-triangle-exclamation"></i> <strong>Read before connecting:</strong> Bluetooth support depends on your instrument's actual hardware — this works with devices that expose a serial/UART-style Bluetooth LE service (a common pattern, but not universal). WiFi devices usually need to be reachable over plain HTTP, which browsers block from an HTTPS site like GitHub Pages unless the device also supports HTTPS. The HART tool below builds correctly-framed/checksummed command bytes, but <strong>writing range values (URV/LRV) changes a live transmitter's calibration</strong> — verify everything against your transmitter's manual and test on a bench setup before using on an installed, in-service device.</div>
@@ -1787,330 +2319,37 @@
                 <div class="row mt-1"><label>Hex</label><input type="text" id="hexDecInput" placeholder="42 C8 00 00" style="flex:1;font-family:monospace;" /><button class="btn btn-sm" id="hexToFloatBtn">→ Dec</button></div>
                 <div class="result-box"><span>Decimal</span><span id="hexDecResult">—</span></div>
             </div>
-        </div>
+                </div>
+            </details>
 
-        <!-- ==========================================================
-        PAGE: GAS CHROMATOGRAPHY
-        ========================================================== -->
-        <div class="page" id="page-gc">
-            <div class="page-title"><i class="fas fa-chart-bar"></i> Gas Chromatography</div>
-            <div class="card">
-                <div class="tab-scroll" id="gcTabs">
-                    <div class="tab active" data-gc="daniel">Daniel</div>
-                    <div class="tab" data-gc="siemens">Siemens</div>
-                    <div class="tab" data-gc="abb">ABB</div>
-                    <div class="tab" data-gc="agilent">Agilent</div>
-                </div>
-                <div id="gcContent">
-                    <div class="gc-panel" id="gc-daniel">
-                        <div><strong>Daniel 700 Series</strong></div>
-                        <div class="chip">TCD · He carrier @ 90 psig</div>
-                        <div class="chip">Temp: -29°C to +55°C</div>
-                        <div style="font-size:0.75rem;margin-top:6px;">Calibration: Certified gas standards · Multi-point</div>
-                    </div>
-                    <div class="gc-panel hidden" id="gc-siemens">
-                        <div><strong>Siemens Maxum II</strong></div>
-                        <div class="chip">TCD · 50-260°C oven</div>
-                        <div class="chip">Dynamic Range: 10⁵</div>
-                        <div style="font-size:0.75rem;margin-top:6px;">Carrier: H₂/N₂/He/Ar (4.6 purity)</div>
-                    </div>
-                    <div class="gc-panel hidden" id="gc-abb">
-                        <div><strong>ABB PGC5000</strong></div>
-                        <div class="chip">DBDID · ppb detection</div>
-                        <div class="chip">Smart Oven™</div>
-                        <div style="font-size:0.75rem;margin-top:6px;">Auto-calibration with internal standards</div>
-                    </div>
-                    <div class="gc-panel hidden" id="gc-agilent">
-                        <div><strong>Agilent 8890</strong></div>
-                        <div class="chip">FID · TCD · µECD</div>
-                        <div class="chip">Temp: 15-35°C</div>
-                        <div style="font-size:0.75rem;margin-top:6px;">Carrier: H₂/He/N₂ (high purity)</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ==========================================================
-        PAGE: ELECTRICAL (short)
-        ========================================================== -->
-        <div class="page" id="page-electrical">
-            <div class="page-title"><i class="fas fa-bolt"></i> Electrical Tools</div>
-            <div class="card">
-                <div class="sub-tabs" id="electricalTabs">
-                    <div class="sub-tab active" data-tab="elec-ohm">Ohm's Law</div>
-                    <div class="sub-tab" data-tab="elec-vd">Voltage Drop</div>
-                    <div class="sub-tab" data-tab="elec-amp">Ampacity</div>
-                </div>
-                <div class="sub-panel active" id="elec-ohm">
-                    <div class="row"><label>V</label><input type="number" id="ohmV" value="24" step="any" /><span class="chip">V</span></div>
-                    <div class="row"><label>I</label><input type="number" id="ohmI" value="20" step="any" /><span class="chip">mA</span></div>
-                    <button class="btn" id="ohmCalcBtn"><i class="fas fa-calculator"></i> Calculate</button>
-                    <div class="result-box"><span>R</span><span id="ohmResult">1200.00 Ω</span></div>
-                    <div class="result-box"><span>P</span><span id="powerResult">0.48 W</span></div>
-                </div>
-                <div class="sub-panel hidden" id="elec-vd">
-                    <div class="row"><label>V</label><input type="number" id="vdVoltage" value="480" step="any" /></div>
-                    <div class="row"><label>I</label><input type="number" id="vdCurrent" value="10" step="any" /></div>
-                    <div class="row"><label>Dist</label><input type="number" id="vdDistance" value="200" step="any" /><span class="chip">ft</span></div>
-                    <div class="row"><label>AWG</label><select id="vdAwg"><option value="14">14</option><option value="12" selected>12</option><option value="10">10</option><option value="8">8</option><option value="6">6</option></select></div>
-                    <button class="btn" id="vdBtn"><i class="fas fa-calculator"></i> Calculate</button>
-                    <div class="result-box"><span>Drop</span><span id="vdResult">5.12 V (1.07%)</span></div>
-                    <div class="result-box"><span>Status</span><span id="vdStatus" style="color:#059669;">✓ Acceptable</span></div>
-                </div>
-                <div class="sub-panel hidden" id="elec-amp">
-                    <div class="table-wrap"><table><thead><tr><th>AWG</th><th>60°C</th><th>75°C</th><th>90°C</th></tr></thead>
-                            <tbody><tr><td>14</td><td>20</td><td>20</td><td>25</td></tr><tr><td>12</td><td>25</td><td>25</td><td>30</td></tr><tr><td>10</td><td>35</td><td>35</td><td>40</td></tr><tr><td>8</td><td>50</td><td>50</td><td>55</td></tr><tr><td>6</td><td>65</td><td>65</td><td>75</td></tr></tbody></table></div>
-                    <div class="row mt-1"><label>Load</label><input type="number" id="ampLoad" value="24" step="any" /><span class="chip">A</span></div>
-                    <div class="row"><label>Insulation</label><select id="ampRating"><option value="60">60°C</option><option value="75" selected>75°C</option><option value="90">90°C</option></select></div>
-                    <button class="btn" id="ampCalcBtn"><i class="fas fa-calculator"></i> Find Min. Wire Size</button>
-                    <div class="result-box"><span>Min. AWG</span><span id="ampResult">10 AWG</span></div>
-                    <div class="result-box"><span>Ampacity</span><span id="ampCapacity">35 A</span></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ==========================================================
-        PAGE: SOLENOID
-        ========================================================== -->
-        <div class="page" id="page-solenoid">
-            <div class="page-title"><i class="fas fa-coil"></i> Solenoid Coils</div>
-            <div class="card">
-                <div class="table-wrap"><table>
-                        <thead><tr><th>Voltage</th><th>Wattage</th><th>Insulation</th></tr></thead>
-                        <tbody><tr><td>12V DC</td><td>8-10W</td><td>Class H</td></tr><tr><td>24V DC</td><td>6-8W</td><td>Class F</td></tr><tr><td>120V AC</td><td>6.3W</td><td>Class F</td></tr><tr><td>230V AC</td><td>6.3W</td><td>Class F</td></tr></tbody>
-                    </table></div>
-                <div class="row mt-1"><label>Preset</label><select id="solenoidType"><option value="12VDC">12V DC · 10W</option><option value="24VDC" selected>24V DC · 8W</option><option value="120VAC">120V AC · 6.3W</option><option value="230VAC">230V AC · 6.3W</option></select></div>
-                <div style="font-size:0.65rem;color:#64748b;margin:2px 0 6px 0;">Picking a preset fills in typical values below — edit them for your actual coil.</div>
-                <div class="row"><label>Voltage</label><input type="number" id="solenoidV" value="24" step="any" /><span class="chip">V</span></div>
-                <div class="row"><label>Coil R</label><input type="number" id="solenoidR" value="72" step="any" /><span class="chip">Ω</span></div>
-                <button class="btn" id="solenoidCalcBtn"><i class="fas fa-calculator"></i> Calculate</button>
-                <div class="result-box"><span>Power</span><span id="solenoidPower">8.0 W</span></div>
-                <div class="result-box"><span>Current</span><span id="solenoidCurrent">0.33 A</span></div>
-            </div>
-        </div>
-
-        <!-- ==========================================================
-        PAGE: BENDING
-        ========================================================== -->
-        <div class="page" id="page-bending">
-            <div class="page-title"><i class="fas fa-pipe-valve"></i> Tube Bending</div>
-            <div class="card">
-                <div class="table-wrap"><table><thead><tr><th>Size</th><th>OD</th><th>Radius</th><th>Gain</th><th>Model</th></tr></thead>
-                        <tbody><tr><td>1/4"</td><td>0.250</td><td>0.625</td><td>0.375</td><td>MS-HTB-4</td></tr>
-                            <tr><td>3/8"</td><td>0.375</td><td>0.938</td><td>0.563</td><td>MS-HTB-6</td></tr>
-                            <tr><td>1/2"</td><td>0.500</td><td>1.250</td><td>0.750</td><td>MS-HTB-8</td></tr></tbody>
-                    </table></div>
-                <div class="row mt-1"><label>Tube</label><select id="tubeSize"><option value="0.25">1/4"</option><option value="0.375" selected>3/8"</option><option value="0.5">1/2"</option></select></div>
-                <div class="row"><label>Angle</label><input type="number" id="bendAngle" value="90" step="any" /><span class="chip">°</span></div>
-                <div class="row"><label>Offset</label><input type="number" id="bendOffset" value="6" step="any" /><span class="chip">in</span></div>
-                <button class="btn" id="bendCalcBtn"><i class="fas fa-calculator"></i> Calculate</button>
-                <div class="result-box"><span>Gain</span><span id="bendGain">0.563 in</span></div>
-                <div class="result-box"><span>Mark</span><span id="bendMark">6.56 in</span></div>
-                <div class="result-box"><span>Model</span><span id="benderModel">MS-HTB-6</span></div>
-            </div>
-        </div>
-
-        <!-- ==========================================================
-        PAGE: COMMISSIONING
-        ========================================================== -->
-        <div class="page" id="page-commissioning">
-            <div class="page-title"><i class="fas fa-check-double"></i> Commissioning</div>
-            <div class="card">
-                <div class="sub-tabs" id="commTabs">
-                    <div class="sub-tab active" data-tab="comm-general">General</div>
-                    <div class="sub-tab" data-tab="comm-vfd">VFD</div>
-                    <div class="sub-tab" data-tab="comm-switchgear">Switchgear</div>
-                </div>
-                <div class="sub-panel active" id="comm-general">
-                    <div style="font-size:0.75rem;padding:4px 0;">
-                        <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:4px;">1. Pre-Commissioning · 2. Installation · 3. Calibration</div>
-                        <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:4px;">4. Configuration · 5. Loop Checking · 6. Handover</div>
-                    </div>
-                </div>
-                <div class="sub-panel hidden" id="comm-vfd">
-                    <div style="font-size:0.75rem;padding:4px 0;">
-                        <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:4px;">✅ Input voltage · Grounding · Control wiring</div>
-                        <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:4px;">✅ Motor parameters · I/O config · Ramp settings</div>
-                        <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:4px;">✅ Communication · Rotation check · Load test</div>
-                    </div>
-                </div>
-                <div class="sub-panel hidden" id="comm-switchgear">
-                    <div style="font-size:0.75rem;padding:4px 0;">
-                        <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:4px;">✅ Visual inspection · Mechanical operation</div>
-                        <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:4px;">✅ MEG test · Contact resistance · Timing tests</div>
-                        <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:4px;">✅ Protective relay testing · CT/VT check · Load test</div>
-                    </div>
-                </div>
-                <div class="row mt-1"><label>Project</label><input type="text" id="commProject" placeholder="Project" /></div>
-                <div class="row"><label>Tag</label><input type="text" id="commTag" placeholder="FT-1001" /></div>
-                <button class="btn" id="commCheckBtn"><i class="fas fa-check"></i> Generate</button>
-                <div id="commOutput" class="report-preview mt-1">Checklist will appear here.</div>
-            </div>
-        </div>
-
-        <!-- ==========================================================
-        PAGE: REFERENCES
-        ========================================================== -->
-        <div class="page" id="page-references">
-            <div class="page-title"><i class="fas fa-book"></i> Reference Library</div>
-            <div class="card">
-                <div class="tab-scroll" id="refTabs">
-                    <div class="tab active" data-ref="tc">TC Colors</div>
-                    <div class="tab" data-ref="ranges">Transmitters</div>
-                    <div class="tab" data-ref="rtd">RTD</div>
-                    <div class="tab" data-ref="fluke">Fluke 789</div>
-                    <div class="tab" data-ref="fault-ref">Fault Codes</div>
-                    <div class="tab" data-ref="network">Networking</div>
-                </div>
-                <div id="refContent">
-                    <div class="ref-panel" id="ref-tc">
-                        <div><strong>TC Color Codes</strong></div>
-                        <div class="chip">J: White/Red</div>
-                        <div class="chip">K: Green/Red</div>
-                        <div class="chip">T: Blue/Red</div>
-                        <div class="chip">E: Purple/Red</div>
-                        <div class="chip">N: Orange/Red</div>
-                        <div class="chip">S: Black/Red</div>
-                    </div>
-                    <div class="ref-panel hidden" id="ref-ranges">
-                        <div><strong>Common Transmitters</strong></div>
-                        <div class="chip">Rosemount 3051S</div>
-                        <div class="chip">Yokogawa EJX</div>
-                        <div class="chip">ABB TTH300</div>
-                        <div class="chip">Siemens P320</div>
-                    </div>
-                    <div class="ref-panel hidden" id="ref-rtd">
-                        <div><strong>RTD Types</strong></div>
-                        <div class="chip">Pt100: 100Ω @ 0°C</div>
-                        <div class="chip">Pt500: 500Ω @ 0°C</div>
-                        <div class="chip">Pt1000: 1000Ω @ 0°C</div>
-                        <div style="font-size:0.8rem;">α = 0.00385 · IEC 60751</div>
-                    </div>
-                    <div class="ref-panel hidden" id="ref-fluke">
-                        <div><strong>Fluke 789</strong></div>
-                        <div class="chip">mA source/simulate</div>
-                        <div class="chip">24V loop power</div>
-                        <div class="chip">HART resistor 250Ω</div>
-                    </div>
-                    <div class="ref-panel hidden" id="ref-fault-ref">
-                        <div><strong>Fault Codes</strong></div>
-                        <div class="chip">4-20mA: 0mA (no power), 2-3.5mA (fault), >20.5mA (overrange)</div>
-                        <div class="chip">HART: 250Ω resistor required</div>
-                    </div>
-                    <div class="ref-panel hidden" id="ref-network">
-                        <div><strong>TCP vs UDP</strong></div>
-                        <div style="font-size:0.75rem;margin:6px 0;">
-                            <strong>TCP</strong> — connection-based; both ends handshake (SYN → SYN-ACK → ACK) before data flows, and every packet is acknowledged and re-sent if lost. Reliable and ordered, but has more overhead/latency. Used where data loss isn't acceptable.
-                        </div>
-                        <div style="font-size:0.75rem;margin:6px 0;">
-                            <strong>UDP</strong> — connectionless; packets are just sent with no handshake and no guarantee of delivery or order. Lower latency and overhead, but the application has to tolerate (or handle) dropped/out-of-order packets. Used where speed matters more than perfection.
-                        </div>
-                        <div class="chip">TCP: web, email, file transfer, Modbus TCP</div>
-                        <div class="chip">UDP: streaming, broadcast, discovery, DNS</div>
-                        <hr />
-                        <div><strong>Common Industrial Ports</strong></div>
-                        <div class="chip">Modbus TCP: 502 (TCP)</div>
-                        <div class="chip">EtherNet/IP: 44818 (TCP) / 2222 (UDP)</div>
-                        <div class="chip">DNP3: 20000 (TCP/UDP)</div>
-                        <div class="chip">OPC UA: 4840 (TCP)</div>
-                        <div class="chip">HART-IP: 5094 (TCP/UDP)</div>
-                        <div class="chip">BACnet: 47808 (UDP)</div>
-                        <div class="chip">PROFINET RT: real-time, runs over raw Ethernet (no TCP/UDP)</div>
-                        <div style="font-size:0.65rem;color:#64748b;margin-top:6px;">PROFINET IO messaging itself is time-critical and bypasses TCP/UDP; only its non-real-time services (e.g. diagnostics, config) use UDP/TCP.</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ==========================================================
-        PAGE: TROUBLESHOOTING (short)
-        ========================================================== -->
-        <div class="page" id="page-trouble">
-            <div class="page-title"><i class="fas fa-exclamation-triangle"></i> Troubleshooting</div>
-            <div class="card">
-                <div class="trouble-item" data-fault="4ma"><i class="fas fa-bolt" style="color:#b45309;"></i> Stuck at 4mA</div>
-                <div class="trouble-item" data-fault="22ma"><i class="fas fa-wave-square" style="color:#2563eb;"></i> 22mA alarm</div>
-                <div class="trouble-item" data-fault="hart"><i class="fas fa-sync-alt" style="color:#1e7e34;"></i> No HART comms</div>
-                <div class="trouble-item" data-fault="drift"><i class="fas fa-chart-line" style="color:#7c3aed;"></i> Reading drifts over time</div>
-                <div class="trouble-item" data-fault="erratic"><i class="fas fa-random" style="color:#dc2626;"></i> Erratic / noisy signal</div>
-                <div class="trouble-item" data-fault="nodisplay"><i class="fas fa-tv" style="color:#0891b2;"></i> Blank local display</div>
-                <div class="trouble-item" data-fault="groundloop"><i class="fas fa-bolt" style="color:#b45309;"></i> Ground loop / noise</div>
-                <button class="btn w-full" id="faultFinderBtn" style="justify-content:center;margin-top:6px;"><i class="fas fa-list"></i> Show Full Guide</button>
-                <div id="faultDiagnosis" class="mt-1" style="background:#f1f5f9;padding:12px 16px;border-radius:20px;min-height:40px;">Select a fault above.</div>
-            </div>
-        </div>
-
-        <!-- ==========================================================
-        PAGE: AI CHAT
-        ========================================================== -->
-        <div class="page" id="page-ai">
-            <div class="page-title"><i class="fas fa-robot"></i> AI Technician</div>
-            <div class="card">
-                <div class="chat-bubble"><i class="fas fa-robot"></i> Hello! I'm your AI assistant.</div>
-                <div id="chatHistory"></div>
-                <div class="row mt-1"><input type="text" id="aiInput" placeholder="Ask..." style="flex:1;" /><button class="btn" id="aiSendBtn"><i class="fas fa-paper-plane"></i></button></div>
-            </div>
-        </div>
-
-        <!-- ==========================================================
-        PAGE: FILE UPLOAD
-        ========================================================== -->
-        <div class="page" id="page-upload">
-            <div class="page-title"><i class="fas fa-upload"></i> File Upload</div>
+            <details class="card settings-accordion">
+                <summary><i class="fas fa-upload"></i> File Upload</summary>
+                <div class="settings-accordion-body">
             <div class="card">
                 <div class="upload-zone" id="uploadZone"><i class="fas fa-cloud-upload-alt"></i><div>Tap to upload</div><input type="file" id="fileInput" multiple style="display:none;" /></div>
                 <div id="fileList"></div>
                 <div class="result-box"><span>Files</span><span id="fileCount">0</span></div>
             </div>
-        </div>
+                </div>
+            </details>
 
-        <!-- ==========================================================
-        PAGE: TAG SCANNER
-        ========================================================== -->
-        <div class="page" id="page-tags">
-            <div class="page-title"><i class="fas fa-qrcode"></i> Tag Scanner</div>
+            <details class="card settings-accordion">
+                <summary><i class="fas fa-tags"></i> Tag Scanner</summary>
+                <div class="settings-accordion-body">
             <div class="card">
                 <div class="upload-zone" id="cameraZone"><i class="fas fa-camera"></i><div>Tap to photograph tag (OCR)</div><input type="file" id="cameraInput" accept="image/*" capture="environment" style="display:none;" /></div>
                 <div id="scanPreview" class="mt-1"><div class="scanner-preview"><i class="fas fa-camera"></i><div>Ready</div></div></div>
                 <div class="row mt-1"><label>Tag</label><input type="text" id="tagNumber" placeholder="FT-1001" /><button class="btn" id="saveTagBtn"><i class="fas fa-save"></i> Save</button></div>
                 <div id="tagContainer"></div>
             </div>
-        </div>
-
-        <!-- ==========================================================
-        PAGE: REPORT
-        ========================================================== -->
-        <div class="page" id="page-report">
-            <div class="page-title"><i class="fas fa-file-alt"></i> Report</div>
-            <div class="card">
-                <div class="row"><label>Tag</label><input type="text" id="reportTag" placeholder="FT-1001" /></div>
-                <div class="row"><label>Model</label><input type="text" id="reportModel" placeholder="Rosemount 3051S" /></div>
-                <div class="row"><label>Type</label><select id="reportType"><option value="calibration">Calibration</option><option value="gc">GC</option><option value="commissioning">Commissioning</option></select></div>
-                <div class="row"><label>Tolerance</label><input type="number" id="reportTolerance" value="2" step="0.1" style="flex:0.4;" /><span class="chip">% (calibration only)</span></div>
-                <div style="font-size:0.65rem;color:#64748b;margin:2px 0 4px 0;">For Calibration: enter the <strong>actual</strong> % reading recorded at each nominal test point (defaults show ideal).</div>
-                <div id="calPointsInput" class="cal-points-grid">
-                    <div class="cal-point"><span>0%</span><input type="number" id="rp0" value="0" step="any" class="cal-actual" /></div>
-                    <div class="cal-point"><span>25%</span><input type="number" id="rp25" value="25" step="any" class="cal-actual" /></div>
-                    <div class="cal-point"><span>50%</span><input type="number" id="rp50" value="50" step="any" class="cal-actual" /></div>
-                    <div class="cal-point"><span>75%</span><input type="number" id="rp75" value="75" step="any" class="cal-actual" /></div>
-                    <div class="cal-point"><span>100%</span><input type="number" id="rp100" value="100" step="any" class="cal-actual" /></div>
                 </div>
-                <div class="row"><label>Notes</label><textarea id="reportNotes" placeholder="Notes..."></textarea></div>
-                <button class="btn" id="generateReportBtn"><i class="fas fa-file-alt"></i> Generate</button>
-                <div id="reportPreview" class="report-preview mt-1">Report will appear here.</div>
-                <button class="btn btn-outline mt-1" id="exportReportBtn"><i class="fas fa-download"></i> Export</button>
-            </div>
-        </div>
+            </details>
 
-        <!-- ==========================================================
-        PAGE: SETTINGS
-        ========================================================== -->
-        <div class="page" id="page-settings">
-            <div class="page-title"><i class="fas fa-cog"></i> Settings</div>
             <div class="card">
                 <div class="card-header"><i class="fas fa-palette"></i><h3>Theme Color</h3></div>
                 <div class="theme-grid" id="themeColorGrid">
-                    <div class="theme-option active" data-color="#1e3a5f"><span class="color-dot" style="background:#1e3a5f;"></span>Navy</div>
+                    <div class="theme-option" data-color="#ffffff"><span class="color-dot" style="background:#ffffff;border:1px solid #cbd5e1;"></span>White</div>
+                    <div class="theme-option" data-color="#1e3a5f"><span class="color-dot" style="background:#1e3a5f;"></span>Navy</div>
                     <div class="theme-option" data-color="#2563eb"><span class="color-dot" style="background:#2563eb;"></span>Blue</div>
                     <div class="theme-option" data-color="#7c3aed"><span class="color-dot" style="background:#7c3aed;"></span>Purple</div>
                     <div class="theme-option" data-color="#059669"><span class="color-dot" style="background:#059669;"></span>Green</div>
@@ -2293,23 +2532,28 @@
             themeSelect.addEventListener('change', function() { setTheme(this.value); });
 
             // Theme Colors
-            const savedColor = getStorage('themeColor', '#1e3a5f');
+            const savedColor = getStorage('themeColor', '#ffffff');
 
             function applyThemeColor(color) {
                 document.querySelectorAll('.theme-option').forEach(el => {
                     el.classList.toggle('active', el.dataset.color === color);
                 });
+                const isWhite = color.toLowerCase() === '#ffffff';
+                document.body.classList.toggle('theme-light', isWhite);
                 const greeting = document.querySelector('.greeting');
                 if (!document.body.classList.contains('dark')) {
-                    greeting.style.background = 'linear-gradient(145deg, ' + color + ', ' + adjustColor(color, -20) + ')';
+                    greeting.style.background = isWhite
+                        ? 'linear-gradient(145deg, #ffffff, #f1f5f9)'
+                        : 'linear-gradient(145deg, ' + color + ', ' + adjustColor(color, -20) + ')';
                 }
                 document.querySelectorAll('.btn:not(.btn-outline):not(.btn-danger):not(.btn-success)').forEach(btn => {
-                    btn.style.setProperty('--btn-c1', color);
-                    btn.style.setProperty('--btn-c2', adjustColor(color, -25));
+                    btn.style.setProperty('--btn-c1', isWhite ? '#ffffff' : color);
+                    btn.style.setProperty('--btn-c2', isWhite ? '#f1f5f9' : adjustColor(color, -25));
                 });
                 document.querySelectorAll('.card-header i, .quick-item i, .analytical-card .value').forEach(el => {
-                    if (el.tagName === 'I') el.style.color = color;
-                    if (el.classList.contains('value')) el.style.color = color;
+                    const iconColor = isWhite ? '#1e3a5f' : color;
+                    if (el.tagName === 'I') el.style.color = iconColor;
+                    if (el.classList.contains('value')) el.style.color = iconColor;
                 });
                 setStorage('themeColor', color);
             }
@@ -2451,7 +2695,31 @@
                 const lo = parseFloat(rtdRangeLow.value) || 0;
                 const hi = parseFloat(rtdRangeHigh.value) || 100;
                 rtdRangeNote.textContent = `Range: ${lo}-${hi}°C · 4-20mA · ${rtdType.value.toUpperCase()} (${base}Ω @ 0°C) · α = 0.00385`;
+                document.getElementById('rtdTypeBadge').textContent = rtdType.value.charAt(0).toUpperCase() + rtdType.value.slice(1);
             }
+
+            // Reference: live IEC 60751 resistance table (Callendar-Van Dusen, 0-500°C range)
+            function iec60751Resistance(r0, tempC) {
+                const A = 3.9083e-3, B = -5.775e-7;
+                return r0 * (1 + A * tempC + B * tempC * tempC);
+            }
+            function buildRtdRefTable() {
+                const r0 = parseFloat(document.getElementById('rtdTableBase').value) || 100;
+                const temps = [];
+                for (let t = 0; t <= 500; t += 25) temps.push(t);
+                const half = Math.ceil(temps.length / 2);
+                let rows = '';
+                for (let i = 0; i < half; i++) {
+                    const t1 = temps[i];
+                    const t2 = temps[i + half];
+                    const r1 = iec60751Resistance(r0, t1).toFixed(2);
+                    const r2 = (t2 !== undefined) ? iec60751Resistance(r0, t2).toFixed(2) : '';
+                    rows += `<tr><td>${t1}</td><td>${r1}</td><td>${t2 !== undefined ? t2 : ''}</td><td>${r2}</td></tr>`;
+                }
+                document.querySelector('#rtdRefTable tbody').innerHTML = rows;
+            }
+            document.getElementById('rtdTableBase').addEventListener('change', buildRtdRefTable);
+            buildRtdRefTable();
             rtdType.addEventListener('change', updateRtdNote);
             rtdRangeLow.addEventListener('input', updateRtdNote);
             rtdRangeHigh.addEventListener('input', updateRtdNote);
@@ -2640,6 +2908,56 @@
             speedInputVal.addEventListener('input', convertSpeed);
             convertSpeed();
 
+            // Frequency -> Rotational Speed (RPM)
+            const freqInputVal = document.getElementById('freqInputVal');
+            const freqPulsesPerRev = document.getElementById('freqPulsesPerRev');
+            const freqToSpeedBtn = document.getElementById('freqToSpeedBtn');
+            const freqRpmResult = document.getElementById('freqRpmResult');
+            const freqHzResult = document.getElementById('freqHzResult');
+
+            function calcFreqToSpeed() {
+                const hz = parseFloat(freqInputVal.value) || 0;
+                const pulses = parseFloat(freqPulsesPerRev.value) || 1;
+                const rpm = (hz / pulses) * 60;
+                freqRpmResult.textContent = rpm.toFixed(1) + ' RPM';
+                freqHzResult.textContent = hz.toFixed(2) + ' Hz raw pulse rate';
+            }
+            freqToSpeedBtn.addEventListener('click', calcFreqToSpeed);
+            freqInputVal.addEventListener('input', calcFreqToSpeed);
+            freqPulsesPerRev.addEventListener('input', calcFreqToSpeed);
+            calcFreqToSpeed();
+
+            // Vibration Probe Gap <-> mV
+            const vibProbeScale = document.getElementById('vibProbeScale');
+            const vibCustomScaleRow = document.getElementById('vibCustomScaleRow');
+            const vibCustomScale = document.getElementById('vibCustomScale');
+            const vibGapMils = document.getElementById('vibGapMils');
+            const vibGapToMvBtn = document.getElementById('vibGapToMvBtn');
+            const vibMvResult = document.getElementById('vibMvResult');
+            const vibMvInput = document.getElementById('vibMvInput');
+            const vibMvToGapBtn = document.getElementById('vibMvToGapBtn');
+            const vibGapResult = document.getElementById('vibGapResult');
+
+            function getVibScale() {
+                return vibProbeScale.value === 'custom' ? (parseFloat(vibCustomScale.value) || 0.2) : parseFloat(vibProbeScale.value);
+            }
+            vibProbeScale.addEventListener('change', function() {
+                vibCustomScaleRow.classList.toggle('hidden', this.value !== 'custom');
+            });
+            vibGapToMvBtn.addEventListener('click', function() {
+                const gap = parseFloat(vibGapMils.value) || 0;
+                const scale = getVibScale();
+                const volts = -(gap * scale); // negative supply convention, standard for eddy-current proximitors
+                vibMvResult.textContent = volts.toFixed(2) + ' Vdc';
+            });
+            vibMvToGapBtn.addEventListener('click', function() {
+                const volts = parseFloat(vibMvInput.value) || 0;
+                const scale = getVibScale();
+                const gap = Math.abs(volts) / scale;
+                vibGapResult.textContent = gap.toFixed(1) + ' mils';
+            });
+            vibGapToMvBtn.click();
+
             // =============================================================
             // TEMPERATURE CONVERTER
             // =============================================================
@@ -2688,12 +3006,15 @@
             convertmA();
 
             // =============================================================
-            // PRESSURE CALIBRATION
+            // CALIBRATION (Pressure / Temperature / Control Valve)
             // =============================================================
+            const calType = document.getElementById('calType');
             const calLow = document.getElementById('calLow');
             const calHigh = document.getElementById('calHigh');
             const calUnit = document.getElementById('calUnit');
             const calTolerance = document.getElementById('calTolerance');
+            const calToleranceUnit = document.getElementById('calToleranceUnit');
+            const calInstructions = document.getElementById('calInstructions');
             const calTag = document.getElementById('calTag');
             const calUpdateBtn = document.getElementById('calUpdateBtn');
             const calPointsContainer = document.getElementById('calPointsContainer');
@@ -2702,18 +3023,51 @@
             const calExportBtn = document.getElementById('calExportBtn');
             const calPts = [0, 25, 50, 75, 100];
 
+            const calUnitOptions = {
+                pressure: [['psi', 'PSI'], ['bar', 'bar'], ['kpa', 'kPa'], ['mpa', 'MPa']],
+                temperature: [['c', '°C'], ['f', '°F']],
+                valve: [['pct', '% Travel'], ['deg', 'Degrees']]
+            };
+
+            function onCalTypeChange() {
+                const type = calType.value;
+                const opts = calUnitOptions[type];
+                calUnit.innerHTML = opts.map(o => `<option value="${o[0]}">${o[1]}</option>`).join('');
+                if (type === 'valve') {
+                    calLow.value = 0;
+                    calHigh.value = 100;
+                    calInstructions.innerHTML = 'Apply each input signal point, then enter the <strong>actual measured travel</strong> (from position feedback or the valve\'s travel scale) — error is the deviation from ideal travel.';
+                } else if (type === 'temperature') {
+                    calLow.value = 0;
+                    calHigh.value = 100;
+                    calInstructions.innerHTML = 'Enter the <strong>actual</strong> mA reading measured at each test point — error is calculated from ideal vs. actual (4-20mA transmitter output).';
+                } else {
+                    calLow.value = 0;
+                    calHigh.value = 100;
+                    calInstructions.innerHTML = 'Enter the <strong>actual</strong> mA reading measured at each test point — error is calculated from ideal vs. actual.';
+                }
+                buildCalPoints();
+            }
+
             function buildCalPoints() {
+                const isValve = calType.value === 'valve';
                 const low = parseFloat(calLow.value) || 0;
                 const high = parseFloat(calHigh.value) || 100;
                 const span = high - low;
-                const unit = calUnit.value;
+                const unit = calUnit.options[calUnit.selectedIndex] ? calUnit.options[calUnit.selectedIndex].text : '';
                 let html = '';
                 calPts.forEach(p => {
                     const val = low + (span * p / 100);
-                    const idealMa = 4 + (16 * p / 100);
-                    html += `<div class="cal-point"><span>${p}% (${val.toFixed(2)} ${unit})</span><span>ideal ${idealMa.toFixed(2)} mA</span>` +
-                        `<input type="number" class="cal-actual" data-ideal="${idealMa}" data-percent="${p}" data-target="${val.toFixed(4)}" step="0.01" placeholder="actual mA" style="width:60px;" />` +
-                        `<button type="button" class="fill-live-btn" title="Fill from live reading" style="background:none;border:none;cursor:pointer;font-size:0.9rem;">📥</button></div>`;
+                    if (isValve) {
+                        html += `<div class="cal-point"><span>${p}% signal</span><span>ideal ${val.toFixed(2)} ${unit}</span>` +
+                            `<input type="number" class="cal-actual" data-ideal="${val.toFixed(4)}" data-percent="${p}" data-target="${val.toFixed(4)}" data-span="${span}" step="0.01" placeholder="actual ${unit}" style="width:60px;" />` +
+                            `<button type="button" class="fill-live-btn" title="Fill from live reading" style="background:none;border:none;cursor:pointer;font-size:0.9rem;">📥</button></div>`;
+                    } else {
+                        const idealMa = 4 + (16 * p / 100);
+                        html += `<div class="cal-point"><span>${p}% (${val.toFixed(2)} ${unit})</span><span>ideal ${idealMa.toFixed(2)} mA</span>` +
+                            `<input type="number" class="cal-actual" data-ideal="${idealMa}" data-percent="${p}" data-target="${val.toFixed(4)}" data-span="16" step="0.01" placeholder="actual mA" style="width:60px;" />` +
+                            `<button type="button" class="fill-live-btn" title="Fill from live reading" style="background:none;border:none;cursor:pointer;font-size:0.9rem;">📥</button></div>`;
+                    }
                 });
                 calPointsContainer.innerHTML = html;
                 calPointsContainer.querySelectorAll('.cal-actual').forEach(inp => inp.addEventListener('input', evaluateCal));
@@ -2724,7 +3078,7 @@
                             input.value = window.InstrumentProLive.value;
                             evaluateCal();
                         } else {
-                            alert('No live device connected. Go to Connect Device to pair a Bluetooth or WiFi test instrument first.');
+                            alert('No live device connected. Go to Settings → Connect Device to pair a Bluetooth or WiFi test instrument first.');
                         }
                     });
                 });
@@ -2739,8 +3093,9 @@
                     if (inp.value.trim() === '') return;
                     anyEntered = true;
                     const ideal = parseFloat(inp.dataset.ideal);
+                    const spanRef = parseFloat(inp.dataset.span);
                     const actual = parseFloat(inp.value);
-                    const errorPct = Math.abs(actual - ideal) / 16 * 100; // % of 4-20mA span
+                    const errorPct = Math.abs(actual - ideal) / spanRef * 100;
                     if (errorPct > maxErrorPct) maxErrorPct = errorPct;
                 });
                 if (!anyEntered) {
@@ -2754,19 +3109,22 @@
                 calPassFail.className = pass ? 'badge badge-pass' : 'badge badge-fail';
                 calPassFail.innerHTML = pass ? 'Pass' : 'Fail';
             }
+            calType.addEventListener('change', onCalTypeChange);
             calUpdateBtn.addEventListener('click', buildCalPoints);
             calLow.addEventListener('input', buildCalPoints);
             calHigh.addEventListener('input', buildCalPoints);
             calUnit.addEventListener('change', buildCalPoints);
             calTolerance.addEventListener('input', evaluateCal);
-            buildCalPoints();
+            onCalTypeChange();
 
             // Export calibration record as a downloadable .txt file
             calExportBtn.addEventListener('click', function() {
+                const isValve = calType.value === 'valve';
+                const typeLabel = calType.options[calType.selectedIndex].text;
                 const tag = calTag.value.trim() || 'Untagged';
                 const low = parseFloat(calLow.value) || 0;
                 const high = parseFloat(calHigh.value) || 100;
-                const unit = calUnit.value;
+                const unit = calUnit.options[calUnit.selectedIndex] ? calUnit.options[calUnit.selectedIndex].text : '';
                 const tol = parseFloat(calTolerance.value) || 0.1;
                 const date = new Date().toLocaleString();
                 let maxErrorPct = 0;
@@ -2776,19 +3134,27 @@
                     const percent = inp.dataset.percent;
                     const target = parseFloat(inp.dataset.target);
                     const ideal = parseFloat(inp.dataset.ideal);
+                    const spanRef = parseFloat(inp.dataset.span);
                     const actualRaw = inp.value.trim();
                     const actual = actualRaw === '' ? null : parseFloat(actualRaw);
-                    const errorPct = actual === null ? null : Math.abs(actual - ideal) / 16 * 100;
+                    const errorPct = actual === null ? null : Math.abs(actual - ideal) / spanRef * 100;
                     if (errorPct !== null && errorPct > maxErrorPct) maxErrorPct = errorPct;
-                    lines.push(
-                        `  ${percent.padStart(3)}%  |  Target: ${target.toFixed(2)} ${unit}  |  Ideal: ${ideal.toFixed(2)} mA  |  Actual: ${actual === null ? '—' : actual.toFixed(2) + ' mA'}  |  Error: ${errorPct === null ? '—' : errorPct.toFixed(3) + '%'}`
-                    );
+                    if (isValve) {
+                        lines.push(
+                            `  ${percent.padStart(3)}%  |  Ideal Travel: ${target.toFixed(2)} ${unit}  |  Actual Travel: ${actual === null ? '—' : actual.toFixed(2) + ' ' + unit}  |  Error: ${errorPct === null ? '—' : errorPct.toFixed(3) + '%'}`
+                        );
+                    } else {
+                        lines.push(
+                            `  ${percent.padStart(3)}%  |  Target: ${target.toFixed(2)} ${unit}  |  Ideal: ${ideal.toFixed(2)} mA  |  Actual: ${actual === null ? '—' : actual.toFixed(2) + ' mA'}  |  Error: ${errorPct === null ? '—' : errorPct.toFixed(3) + '%'}`
+                        );
+                    }
                 });
                 const pass = maxErrorPct <= tol;
                 const content =
                     `========================================\n` +
                     `INSTRUMENTPRO CALIBRATION RECORD\n` +
                     `========================================\n` +
+                    `Type: ${typeLabel}\n` +
                     `Tag: ${tag}\n` +
                     `Date: ${date}\n` +
                     `Range: ${low} to ${high} ${unit}\n` +
@@ -2815,6 +3181,7 @@
             // LEVEL DP
             // =============================================================
             const dpHeight = document.getElementById('dpHeight');
+            const dpHeightUnit = document.getElementById('dpHeightUnit');
             const dpSG = document.getElementById('dpSG');
             const dpWetSG = document.getElementById('dpWetSG');
             const dpUnit = document.getElementById('dpUnit');
@@ -2824,6 +3191,9 @@
             const calcDpBtn = document.getElementById('calcDpBtn');
             const wetLegRow = document.getElementById('wetLegRow');
             const wetLegLabel = document.getElementById('wetLegLabel');
+            const dpDiagramDry = document.getElementById('dpDiagramDry');
+            const dpDiagramWet = document.getElementById('dpDiagramWet');
+            const dpDiagramRemote = document.getElementById('dpDiagramRemote');
             let dpMode = 'dry';
 
             document.querySelectorAll('#dpModeSeg button').forEach(btn => {
@@ -2832,6 +3202,9 @@
                     this.classList.add('active');
                     dpMode = this.dataset.mode;
                     wetLegRow.classList.toggle('hidden', dpMode === 'dry');
+                    dpDiagramDry.classList.toggle('hidden', dpMode !== 'dry');
+                    dpDiagramWet.classList.toggle('hidden', dpMode !== 'wet');
+                    dpDiagramRemote.classList.toggle('hidden', dpMode !== 'remote');
                     if (dpMode === 'wet') {
                         wetLegLabel.textContent = 'Wet Leg SG';
                         dpWetSG.value = 1.0;
@@ -2843,8 +3216,11 @@
                 });
             });
 
+            const dpHeightToInches = { in: 1, mm: 0.0393701, cm: 0.393701, ft: 12, m: 39.3701 };
+
             function calcDP() {
-                const h = parseFloat(dpHeight.value) || 0;
+                const hRaw = parseFloat(dpHeight.value) || 0;
+                const h = hRaw * (dpHeightToInches[dpHeightUnit.value] || 1);
                 const sg = parseFloat(dpSG.value) || 1;
                 let lrv = 0,
                     urv = h * sg;
@@ -2859,7 +3235,7 @@
                     urv = h * sg + offset;
                 }
                 const unit = dpUnit.value;
-                const factor = { inH2O: 1, psi: 0.03613, kpa: 0.2491 };
+                const factor = { inH2O: 1, psi: 0.03613, kpa: 0.2491, mbar: 2.491, mmH2O: 25.4 };
                 const f = factor[unit] || 1;
                 dpLRV.textContent = (lrv * f).toFixed(2) + ' ' + unit;
                 dpURV.textContent = (urv * f).toFixed(2) + ' ' + unit;
@@ -2867,6 +3243,7 @@
             }
             calcDpBtn.addEventListener('click', calcDP);
             dpHeight.addEventListener('input', calcDP);
+            dpHeightUnit.addEventListener('change', calcDP);
             dpSG.addEventListener('input', calcDP);
             dpWetSG.addEventListener('input', calcDP);
             dpUnit.addEventListener('change', calcDP);
@@ -2947,6 +3324,31 @@
             flowOutUnit.addEventListener('change', calcFlow);
             calcFlow();
 
+            document.getElementById('flowExportBtn').addEventListener('click', function() {
+                const date = new Date().toLocaleString();
+                const content =
+                    `========================================\n` +
+                    `INSTRUMENTPRO FLOW CALCULATION (√ EXTRACTION)\n` +
+                    `========================================\n` +
+                    `Date: ${date}\n` +
+                    `Mode: ${flowMode === 'dp2flow' ? 'DP → Flow' : 'Flow → DP'}\n` +
+                    `DP Range: ${flowDPLow.value} to ${flowDPHigh.value} ${flowDPUnit.options[flowDPUnit.selectedIndex].text}\n` +
+                    `Max Flow (Qmax): ${flowMax.value} ${flowOutUnit.value}\n` +
+                    `----------------------------------------\n` +
+                    `Input: ${flowInputVal.value} ${flowInputChip.textContent}\n` +
+                    `Flow: ${flowResult.textContent}\n` +
+                    `DP: ${flowDPResult.textContent}\n` +
+                    `% of Range: ${flowPercentResult.textContent}\n` +
+                    `mA (4-20mA): ${flowMaResult.textContent}\n` +
+                    `========================================`;
+                const blob = new Blob([content], { type: 'text/plain' });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = 'InstrumentPro_Flow_' + new Date().toISOString().slice(0, 10) + '.txt';
+                a.click();
+                URL.revokeObjectURL(a.href);
+            });
+
             // =============================================================
             // ANALYTICAL INSTRUMENTS
             // =============================================================
@@ -2965,7 +3367,6 @@
                 phSlopeResult.textContent = slope.toFixed(1) + '% (' + (slope > 95 ? 'Pass' : 'Fail') + ')';
                 phSlopeResult.style.color = slope > 95 ? '#059669' : '#dc2626';
                 phOffsetResult.textContent = (offset > 0 ? '+' : '') + offset.toFixed(2) + ' pH';
-                document.getElementById('statusPh').textContent = slope.toFixed(1) + '%';
             });
 
             // pH: mV -> pH (Nernst equation)
@@ -3004,7 +3405,6 @@
                 const pass = Math.abs(error) < 10;
                 orpStatus.textContent = pass ? '✓ Pass' : '✗ Fail';
                 orpStatus.style.color = pass ? '#059669' : '#dc2626';
-                document.getElementById('statusOrp').textContent = error.toFixed(1) + ' mV';
             });
 
             // Conductivity
@@ -3020,7 +3420,6 @@
                 const corrected = cond * currentCellConstant;
                 const tds = corrected * factor;
                 tdsResult.textContent = tds.toFixed(1) + ' ppm';
-                document.getElementById('statusCond').textContent = corrected.toFixed(0) + ' µS';
             }
             condCalcBtn.addEventListener('click', calcTds);
             condInput.addEventListener('input', calcTds);
@@ -3060,7 +3459,6 @@
                 const adjusted = conc * (sat / 100);
                 doSaturation.textContent = sat.toFixed(1) + '%';
                 doConcentration.textContent = adjusted.toFixed(2) + ' mg/L';
-                document.getElementById('statusDo').textContent = adjusted.toFixed(1) + ' mg/L';
             });
 
             // Gas Detection
@@ -3086,14 +3484,48 @@
                 gasStatus.style.color = status.includes('✓') ? '#059669' : status.includes('⚠️') ? '#b45309' :
                     '#dc2626';
                 gasAlarm.textContent = alarm;
-                const statusGasEl = document.getElementById('statusGas');
-                statusGasEl.textContent = status.replace(/[✓⚠️✗]/g, '').trim();
-                statusGasEl.style.color = gasStatus.style.color;
+            });
+
+            document.getElementById('anaExportBtn').addEventListener('click', function() {
+                const activeTab = document.querySelector('#analyticalTabs .sub-tab.active').dataset.tab;
+                const date = new Date().toLocaleString();
+                let body = '';
+                if (activeTab === 'ana-ph') {
+                    body = `Test: pH Calibration\nBuffer Used: ${document.getElementById('phBuffer').options[document.getElementById('phBuffer').selectedIndex].text}\nSlope: ${phSlopeResult.textContent}\nOffset: ${phOffsetResult.textContent}`;
+                } else if (activeTab === 'ana-orp') {
+                    body = `Test: ORP Calibration\nStandard: ${document.getElementById('orpStandard').value} mV\nMeasured: ${document.getElementById('orpMeasured').value} mV\nResult: ${orpStatus.textContent}`;
+                } else if (activeTab === 'ana-cond') {
+                    body = `Test: Conductivity / TDS\nConductivity Input: ${condInput.value} µS/cm\nTDS Factor: ${tdsFactor.value}\nTDS Result: ${tdsResult.textContent}\nCell Constant: ${cellConstantResult.textContent} (standard ${cellStdCond.value} µS/cm vs displayed ${cellMeasured.value} µS/cm)`;
+                } else if (activeTab === 'ana-do') {
+                    body = `Test: Dissolved Oxygen\nTemperature: ${document.getElementById('doTemp').value} °C\nSalinity: ${document.getElementById('doSalinity').value}\nSaturation: ${doSaturation.textContent}\nConcentration: ${doConcentration.textContent}`;
+                } else if (activeTab === 'ana-gas') {
+                    body = `Test: Gas Detection Check\nGas Type: ${gasType.value}\nReading: ${gasInput.value}\nStatus: ${gasStatus.textContent}\nAlarm Level: ${gasAlarm.textContent}`;
+                }
+                const content =
+                    `========================================\n` +
+                    `INSTRUMENTPRO ANALYTICAL CALIBRATION RECORD\n` +
+                    `========================================\n` +
+                    `Date: ${date}\n` +
+                    `----------------------------------------\n` +
+                    body + `\n` +
+                    `========================================`;
+                const blob = new Blob([content], { type: 'text/plain' });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = 'InstrumentPro_Analytical_' + activeTab.replace('ana-', '') + '_' + new Date().toISOString().slice(0, 10) + '.txt';
+                a.click();
+                URL.revokeObjectURL(a.href);
             });
 
             // =============================================================
             // GC TABS
             // =============================================================
+            const gcDefaults = {
+                daniel: { pressure: 90, temp: 60 },
+                siemens: { pressure: 40, temp: 100 },
+                abb: { pressure: 60, temp: 70 },
+                agilent: { pressure: 25, temp: 35 }
+            };
             document.querySelectorAll('#gcTabs .tab').forEach(tab => {
                 tab.addEventListener('click', function() {
                     document.querySelectorAll('#gcTabs .tab').forEach(t => t.classList.remove('active'));
@@ -3102,7 +3534,97 @@
                     document.querySelectorAll('.gc-panel').forEach(p => p.classList.add('hidden'));
                     const panel = document.getElementById('gc-' + gc);
                     if (panel) panel.classList.remove('hidden');
+                    const d = gcDefaults[gc];
+                    if (d) {
+                        document.getElementById('gcCarrierPressure').value = d.pressure;
+                        document.getElementById('gcOvenTemp').value = d.temp;
+                    }
                 });
+            });
+
+            // =============================================================
+            // GC CALIBRATION CHECK (GPA 2261 typical natural gas blend)
+            // =============================================================
+            const gcComponents = [
+                { name: 'Methane (C1)', cert: 85.00 },
+                { name: 'Ethane (C2)', cert: 5.50 },
+                { name: 'Propane (C3)', cert: 3.00 },
+                { name: 'i-Butane', cert: 0.80 },
+                { name: 'n-Butane', cert: 1.50 },
+                { name: 'i-Pentane', cert: 0.40 },
+                { name: 'n-Pentane', cert: 0.30 },
+                { name: 'Hexanes+ (C6+)', cert: 0.20 },
+                { name: 'Nitrogen', cert: 1.80 },
+                { name: 'CO2', cert: 1.50 }
+            ];
+            function buildGcCalTable() {
+                const tbody = document.querySelector('#gcCalTable tbody');
+                tbody.innerHTML = gcComponents.map((c, i) =>
+                    `<tr><td style="text-align:left;">${c.name}</td><td><input type="number" class="gc-cert" data-i="${i}" value="${c.cert}" step="0.01" style="width:60px;" /></td>` +
+                    `<td><input type="number" class="gc-measured" data-i="${i}" step="0.01" style="width:60px;" placeholder="—" /></td><td class="gc-dev">—</td></tr>`
+                ).join('');
+            }
+            buildGcCalTable();
+
+            document.getElementById('gcCalCheckBtn').addEventListener('click', function() {
+                const tol = parseFloat(document.getElementById('gcTolerance').value) || 2;
+                const rows = document.querySelectorAll('#gcCalTable tbody tr');
+                let maxDev = 0, anyEntered = false;
+                rows.forEach(row => {
+                    const certInput = row.querySelector('.gc-cert');
+                    const measInput = row.querySelector('.gc-measured');
+                    const devCell = row.querySelector('.gc-dev');
+                    const cert = parseFloat(certInput.value) || 0;
+                    const meas = measInput.value.trim();
+                    if (meas === '') { devCell.textContent = '—'; return; }
+                    anyEntered = true;
+                    const measVal = parseFloat(meas);
+                    const relDev = cert !== 0 ? Math.abs(measVal - cert) / cert * 100 : 0;
+                    devCell.textContent = relDev.toFixed(2) + '%';
+                    devCell.style.color = relDev > tol ? '#dc2626' : '#059669';
+                    if (relDev > maxDev) maxDev = relDev;
+                });
+                const resultEl = document.getElementById('gcCalResult');
+                if (!anyEntered) {
+                    resultEl.textContent = 'Enter measured values';
+                    resultEl.style.color = '#64748b';
+                    return;
+                }
+                const pass = maxDev <= tol;
+                resultEl.textContent = (pass ? 'PASS' : 'FAIL') + ' (max dev ' + maxDev.toFixed(2) + '%)';
+                resultEl.style.color = pass ? '#059669' : '#dc2626';
+            });
+
+            document.getElementById('gcExportBtn').addEventListener('click', function() {
+                const activeTab = document.querySelector('#gcTabs .tab.active').dataset.gc;
+                const date = new Date().toLocaleString();
+                const rows = document.querySelectorAll('#gcCalTable tbody tr');
+                let lines = '';
+                rows.forEach((row, i) => {
+                    const cert = row.querySelector('.gc-cert').value;
+                    const meas = row.querySelector('.gc-measured').value || 'n/a';
+                    const dev = row.querySelector('.gc-dev').textContent;
+                    lines += `  ${gcComponents[i].name}: certified ${cert}% · measured ${meas}% · dev ${dev}\n`;
+                });
+                const content =
+                    `========================================\n` +
+                    `INSTRUMENTPRO GC CALIBRATION RECORD\n` +
+                    `========================================\n` +
+                    `Date: ${date}\n` +
+                    `Analyzer: ${activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}\n` +
+                    `Carrier Pressure: ${document.getElementById('gcCarrierPressure').value} psig\n` +
+                    `Oven Temp: ${document.getElementById('gcOvenTemp').value} °C\n` +
+                    `----------------------------------------\n` +
+                    lines +
+                    `----------------------------------------\n` +
+                    `Result: ${document.getElementById('gcCalResult').textContent}\n` +
+                    `========================================`;
+                const blob = new Blob([content], { type: 'text/plain' });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = 'InstrumentPro_GC_' + activeTab + '_' + new Date().toISOString().slice(0, 10) + '.txt';
+                a.click();
+                URL.revokeObjectURL(a.href);
             });
 
             // Note: commissioning tabs use the shared '.sub-tabs' handler defined above — no separate binding needed.
@@ -3402,21 +3924,25 @@
             const bendCalcBtn = document.getElementById('bendCalcBtn');
 
             const benderData = {
-                '0.25': { gain: 0.375, model: 'MS-HTB-4' },
-                '0.375': { gain: 0.563, model: 'MS-HTB-6' },
-                '0.5': { gain: 0.750, model: 'MS-HTB-8' }
+                '0.25': { radius: 0.5625, model: 'MS-HTB-4', wall: '0.028-0.065"' },
+                '0.3125': { radius: 0.75, model: 'MS-HTB-5', wall: '0.028-0.065"' },
+                '0.375': { radius: 0.9375, model: 'MS-HTB-6', wall: '0.028-0.065"' },
+                '0.5': { radius: 1.5, model: 'MS-HTB-8', wall: '0.035-0.083"' }
             };
 
             function calcBend() {
                 const size = tubeSize.value;
-                const angle = parseFloat(bendAngle.value) || 90;
+                const angleDeg = parseFloat(bendAngle.value) || 90;
                 const offset = parseFloat(bendOffset.value) || 0;
                 const data = benderData[size] || benderData['0.375'];
-                const gain = (data.gain * angle) / 90;
+                const R = data.radius;
+                const angleRad = angleDeg * Math.PI / 180;
+                // Real bend-gain geometry: Gain = 2R*tan(angle/2) - R*angle(rad)
+                const gain = (2 * R * Math.tan(angleRad / 2)) - (R * angleRad);
                 const mark = offset + gain;
                 bendGain.textContent = gain.toFixed(3) + ' in';
                 bendMark.textContent = mark.toFixed(2) + ' in';
-                benderModel.textContent = data.model;
+                benderModel.textContent = data.model + ' (R=' + R.toFixed(4) + '", wall ' + data.wall + ')';
             }
             bendCalcBtn.addEventListener('click', calcBend);
             tubeSize.addEventListener('change', calcBend);
@@ -3552,6 +4078,63 @@
             // =============================================================
             const faultDiagnosis = document.getElementById('faultDiagnosis');
             const faultFinderBtn = document.getElementById('faultFinderBtn');
+
+            const troubleDeviceData = {
+                level: `<div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>DP level (wet/dry leg):</strong> check for plugged impulse lines first; verify the SG entered at setup still matches the actual process fluid; purge/blow down lines before assuming the transmitter itself is at fault.</div>
+                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Radar (guided/non-contact):</strong> foam or turbulent surface causes false/weak echoes; check antenna for product coating/buildup; nearby agitators or nozzles can create a false echo the unit "locks" onto.</div>
+                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;"><strong>Capacitance probe:</strong> coating buildup changes the dielectric reading over time — verify against a manual dip/strap reading before re-trimming; check grounding/bonding.</div>`,
+                pressure: `<div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Zero/span shift:</strong> verify with a certified calibrator before adjusting — a "drifting" reading is often actually a process condition (temperature effect, line freezing) not the transmitter.</div>
+                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Impulse line blockage:</strong> the classic cause of a "stuck" reading that doesn't track a known process change — blow down and re-check before replacing anything.</div>
+                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;"><strong>Diaphragm seal systems:</strong> a slow/laggy response can mean fill-fluid loss — compare response time to a fresh unit if you suspect this.</div>`,
+                flow: `<div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>DP/orifice flow:</strong> same wet/dry leg checks as level; also check the orifice plate itself for erosion, damage, or a beta ratio that no longer matches the as-built calc.</div>
+                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Magmeter:</strong> coated electrodes or grounding rings cause noisy/incorrect readings; confirm empty-pipe detection isn't falsely triggering.</div>
+                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;"><strong>Vortex meter:</strong> low/erratic readings can mean cavitation — check that operating conditions keep you above the meter's minimum Reynolds number.</div>`,
+                controlvalve: `<div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Stroke test:</strong> run 0→100→0% and compare actual vs. commanded travel; a gap between increasing and decreasing stroke (hysteresis) points to stiction in the packing or actuator.</div>
+                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Positioner feedback:</strong> check the feedback linkage/potentiometer isn't slipping — a valve that "looks" wrong at the positioner but is fine at the stem usually means this.</div>
+                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;"><strong>Air supply:</strong> verify actual supply pressure at the actuator, not just at the header — a restriction/leak in the tubing run gives slow or incomplete stroke.</div>`,
+                shutdownvalve: `<div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Partial stroke test (PST):</strong> compare current stroke time/torque signature against the established baseline, not just "did it move."</div>
+                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Fail-safe check:</strong> confirm the valve actually fails to its safe position on loss of air/power/signal — don't assume, test it (per your MOC/permit).</div>
+                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;"><strong>Stroke time out of spec:</strong> too slow often means a solenoid or actuator issue; unusually fast can mean a dashpot/speed control device has failed.</div>`,
+                speedprobe: `<div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Magnetic pickup:</strong> check air gap to the gear/wheel matches the manufacturer spec — too large a gap gives weak/dropout pulses.</div>
+                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Coil resistance:</strong> an open or shorted pickup coil reads as no signal or a flatlined speed — check resistance against the nameplate value.</div>
+                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;"><strong>False pulses:</strong> nearby VFD/electrical noise can be miscounted as speed pulses — check shielding and grounding before assuming a mechanical fault.</div>`,
+                vibprobe: `<div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Gap voltage:</strong> confirm it's within the linear range for your probe/proximitor pair (commonly around -1 to -18V DC for an 8mm probe at ~200mV/mil) — see the Speed converter tab's gap↔mV tool.</div>
+                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Mismatched components:</strong> probe, extension cable, and proximitor are a calibrated set — swapping just one piece without matching the system spec throws off the whole reading.</div>
+                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;"><strong>Erratic signal:</strong> check extension cable connectors for moisture/corrosion before condemning the probe itself.</div>`,
+                gasdet: `<div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Bump test vs. calibration:</strong> a bump test only confirms the sensor responds and alarms — it isn't a substitute for a full calibration against a certified gas standard.</div>
+                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Sensor poisoning:</strong> catalytic bead (flammable gas) sensors can be poisoned by silicones/sulfur compounds — a sensor that reads low despite a good bump-test gas can mean this.</div>
+                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;"><strong>Wrong gas calibration:</strong> confirm the unit is actually calibrated for the target gas — a detector calibrated on a surrogate gas needs the correct correction factor applied.</div>`,
+                smokedet: `<div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Addressable trouble:</strong> the panel reports the specific device address — go to that exact device, don't guess.</div>
+                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Dirty sensor drift:</strong> many addressable panels report sensor sensitivity drift before it becomes an outright trouble — check the maintenance menu, not just active alarms.</div>
+                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;"><strong>Testing:</strong> always follow the panel's specific functional test procedure (e.g. NFPA 72 guidance) rather than just a visual check.</div>`,
+                firepanel: `<div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Ground faults:</strong> a very common source of intermittent troubles on a fire alarm loop — isolate circuit by circuit rather than replacing devices at random.</div>
+                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Battery backup:</strong> test under load, not just standby voltage — a battery can read fine at rest and still fail under an alarm current draw.</div>
+                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;"><strong>Disabled/silenced points:</strong> check for zones or devices left disabled from prior maintenance before troubleshooting a "no alarm" complaint.</div>`,
+                genset: `<div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Failure to start:</strong> check start sequence sensors (crank, fuel pressure, cooling water) and battery/charging system condition first — most no-starts trace back to one of these.</div>
+                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Common trip causes:</strong> overspeed, low oil pressure, high coolant temperature, and overcrank are the usual suspects — the panel's event log will show which one tripped first.</div>
+                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;"><strong>Governor/AVR faults:</strong> unstable speed or voltage often traces to the governor or automatic voltage regulator rather than the engine/alternator itself.</div>`,
+                blowdown: `<div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Won't hold / seat leakage:</strong> the most common blowdown valve complaint — check seat condition before assuming an actuator problem.</div>
+                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Actuator/solenoid:</strong> verify air supply and solenoid function directly at the valve, not just at the control system output.</div>
+                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;"><strong>Scaling/plugging:</strong> quick-opening blowdown valves used on level vessels are prone to scale buildup — check travel/position feedback matches the commanded position.</div>`,
+                plcforce: `<div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>General:</strong> forcing overrides a live I/O or logic value for testing — always requires authorization/MOC, should be logged, and must be removed as soon as the test is done. Never leave a force in place "temporarily" without a clear removal plan.</div>
+                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Allen-Bradley (Studio 5000/RSLogix):</strong> force via the tag's right-click menu or the force table; forced tags are highlighted in the editor. Note that "Enable All Forces" is a separate controller-wide switch — individual forces won't take effect until that's on, and turning it off removes every active force at once.</div>
+                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>GE (PACSystems/Proficy):</strong> forces are set via the programming software's data/variable monitor and are flagged in the status display similarly to Allen-Bradley.</div>
+                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;"><strong>Honeywell (Experion/ControlEdge):</strong> overrides are usually done through the control builder or a dedicated manual-override function block, and often require a higher engineering access level given the safety implications.</div>`,
+                fm200: `<div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Cylinder pressure:</strong> check the gauge against the manufacturer's chart (commonly in the 360-600 psi range, but confirm your specific system's spec) — a low reading suggests a slow leak.</div>
+                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Weigh the cylinder, don't just trust pressure:</strong> these systems are nitrogen-superpressurized on top of the liquefied agent, so pressure alone can look normal even if agent has been lost — weight is the real check.</div>
+                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Hissing at the vent valve during recharge:</strong> indicates the piston/seal isn't sealing properly — treat as a real fault, not background noise.</div>
+                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;"><strong>After any maintenance:</strong> confirm the detection zone isn't left in a disabled/bypass state, and that manual release/abort stations test correctly.</div>`,
+                turbinefg: `<div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>General layout:</strong> gas turbine enclosures typically combine heat/rate-of-rise detectors, UV/IR flame detectors, and combustible gas detectors at ventilation outlets, often with CO₂ or clean-agent total-flood suppression rather than water.</div>
+                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Control system specifics:</strong> GE packages are commonly integrated with a Mark VI/Mark VIe turbine control system, while Solar Turbines packages typically use their own PLC-based F&G panel — fault codes and menu structure are specific to that platform.</div>
+                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;"><strong>Always default to the OEM manual:</strong> this is one area where package-specific documentation matters more than general practice — treat this section as orientation, not a substitute for it.</div>`
+            };
+            const troubleDevice = document.getElementById('troubleDevice');
+            const troubleOutput = document.getElementById('troubleOutput');
+            function renderTroubleDevice() {
+                troubleOutput.innerHTML = troubleDeviceData[troubleDevice.value] || '';
+            }
+            troubleDevice.addEventListener('change', renderTroubleDevice);
+            renderTroubleDevice();
 
             const faultDB = {
                 '4ma': '🔍 Stuck at 4mA:\n1. Check power supply\n2. Verify loop wiring\n3. Inspect sensor\n4. Check configuration\n5. Perform loop test',
