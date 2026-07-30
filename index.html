@@ -1288,11 +1288,10 @@
         <a class="nav-item active" data-page="home"><i class="fas fa-home"></i> Home</a>
         <a class="nav-item" data-page="converter"><i class="fas fa-arrows-alt-h"></i> Converter</a>
         <a class="nav-item" data-page="calibration"><i class="fas fa-sliders-h"></i> Calibration</a>
-        <a class="nav-item" data-page="tempcal"><i class="fas fa-thermometer-half"></i> Temp Cal</a>
-        <a class="nav-item" data-page="dp"><i class="fas fa-tachometer-alt"></i> Level DP</a>
-        <a class="nav-item" data-page="flow"><i class="fas fa-water"></i> Flow</a>
+        <a class="nav-item" data-page="dp"><i class="fas fa-tachometer-alt"></i> Level Measurement Tools</a>
+        <a class="nav-item" data-page="flow"><i class="fas fa-water"></i> Complex Measurement Tools</a>
+        <a class="nav-item" data-page="hart"><i class="fas fa-satellite-dish"></i> HART Communicator</a>
         <a class="nav-item" data-page="analytical"><i class="fas fa-flask"></i> Analytical</a>
-        <a class="nav-item" data-page="gc"><i class="fas fa-chart-bar"></i> Gas Chromatography</a>
         <a class="nav-item" data-page="electrical"><i class="fas fa-bolt"></i> Electrical</a>
         <a class="nav-item" data-page="bending"><i class="fas fa-pipe-valve"></i> Tube Bending</a>
         <a class="nav-item" data-page="references"><i class="fas fa-book"></i> References</a>
@@ -1338,7 +1337,7 @@
             <div class="recent-tools">
                 <span class="recent-label"><i class="fas fa-clock"></i> Recent Tools</span>
                 <div id="recentList">
-                    <span class="recent-item" data-page="tempcal">Temp Cal</span>
+                    <span class="recent-item" data-page="calibration">Calibration</span>
                     <span class="recent-item" data-page="analytical">Analytical</span>
                     <span class="recent-item" data-page="converter">Converter</span>
                 </div>
@@ -1348,127 +1347,58 @@
         <!-- ==========================================================
         PAGE: TEMPERATURE CALIBRATION (Enhanced)
         ========================================================== -->
-        <div class="page" id="page-tempcal">
-            <div class="page-title"><i class="fas fa-thermometer-half"></i> Temperature Calibration</div>
 
-            <!-- Sensor Type Selection -->
+        <!-- ==========================================================
+        PAGE: ANALYTICAL (Fully Functional)
+        ========================================================== -->
+        <!-- ==========================================================
+        PAGE: HART COMMUNICATOR
+        ========================================================== -->
+        <div class="page" id="page-hart">
+            <div class="page-title"><i class="fas fa-satellite-dish"></i> HART Communicator</div>
             <div class="card">
-                <div class="segmented" id="sensorTypeSeg">
-                    <button class="active" data-sensor="rtd">RTD</button>
-                    <button data-sensor="tc">Thermocouple</button>
-                </div>
-
-                <!-- ===== RTD SECTION ===== -->
-                <div id="rtdSection">
-                    <div class="card-header"><i class="fas fa-microchip"></i><h3>RTD Calculator</h3><span id="rtdTypeBadge">Pt100</span></div>
-                    <div class="row">
-                        <label>RTD Type</label>
-                        <select id="rtdType">
-                            <option value="pt100">Pt100</option>
-                            <option value="pt500">Pt500</option>
-                            <option value="pt1000">Pt1000</option>
-                        </select>
-                    </div>
-                    <div class="row">
-                        <label>Range</label>
-                        <input type="number" id="rtdRangeLow" value="0" step="any" style="flex:0.5;" /><span>to</span>
-                        <input type="number" id="rtdRangeHigh" value="100" step="any" style="flex:0.5;" /><span class="chip">°C</span>
-                    </div>
-                    <div class="row">
-                        <label>Input</label>
-                        <input type="number" id="rtdInput" value="100" step="any" style="flex:0.6;" />
-                        <select id="rtdInputUnit" style="flex:0.5;">
-                            <option value="ohm">Ω</option>
-                            <option value="ma">mA</option>
-                            <option value="percent">%</option>
-                        </select>
-                    </div>
-                    <div class="row">
-                        <label>Output</label>
-                        <select id="rtdOutputUnit" style="flex:0.6;">
-                            <option value="temp">Temperature</option>
-                            <option value="ma">mA</option>
-                            <option value="percent">%</option>
-                        </select>
-                        <button class="btn" id="rtdConvertBtn"><i class="fas fa-calculator"></i> Convert</button>
-                    </div>
-                    <div class="result-box"><span>Result</span><span id="rtdResult">0.00 °C</span></div>
-                    <div class="result-box"><span>mA Equivalent</span><span id="rtdMaResult">12.00 mA</span></div>
-                    <div class="result-box"><span>% of Range</span><span id="rtdPercentResult">50.00 %</span></div>
-                    <div style="font-size:0.65rem;color:#64748b;margin-top:4px;" id="rtdRangeNote">Range: 0-100°C · 4-20mA · Pt100 · α = 0.00385</div>
-                </div>
-
-                <!-- ===== THERMOCOUPLE SECTION ===== -->
-                <div id="tcSection" class="hidden">
-                    <div class="card-header"><i class="fas fa-fire"></i><h3>Thermocouple Calculator</h3><span>IEC 60584</span></div>
-                    <div class="row">
-                        <label>TC Type</label>
-                        <select id="tcType">
-                            <option value="J">Type J</option>
-                            <option value="K" selected>Type K</option>
-                            <option value="T">Type T</option>
-                            <option value="E">Type E</option>
-                            <option value="N">Type N</option>
-                            <option value="S">Type S</option>
-                            <option value="R">Type R</option>
-                        </select>
-                    </div>
-                    <div class="row">
-                        <label>Range</label>
-                        <input type="number" id="tcRangeLow" value="0" step="any" style="flex:0.5;" /><span>to</span>
-                        <input type="number" id="tcRangeHigh" value="1000" step="any" style="flex:0.5;" /><span class="chip">°C</span>
-                    </div>
-                    <div class="row">
-                        <label>Input</label>
-                        <input type="number" id="tcInput" value="0" step="any" style="flex:0.6;" />
-                        <select id="tcInputUnit" style="flex:0.5;">
-                            <option value="mv">mV</option>
-                            <option value="ma">mA</option>
-                            <option value="percent">%</option>
-                            <option value="temp">°C</option>
-                        </select>
-                    </div>
-                    <div class="row">
-                        <label>Output</label>
-                        <select id="tcOutputUnit" style="flex:0.6;">
-                            <option value="temp">Temperature (°C)</option>
-                            <option value="ma">mA</option>
-                            <option value="percent">%</option>
-                            <option value="mv">mV</option>
-                        </select>
-                        <button class="btn" id="tcConvertBtn"><i class="fas fa-calculator"></i> Convert</button>
-                    </div>
-                    <div class="result-box"><span>Result</span><span id="tcResult">0.00 °C</span></div>
-                    <div class="result-box"><span>mV</span><span id="tcMvResult">0.00 mV</span></div>
-                    <div class="result-box"><span>mA</span><span id="tcMaResult">12.00 mA</span></div>
-                    <div class="result-box"><span>% of Range</span><span id="tcPercentResult">50.00 %</span></div>
-                    <div style="font-size:0.65rem;color:#64748b;margin-top:4px;" id="tcRangeNote">Range: 0-1000°C · 4-20mA · Reference junction: 0°C</div>
-                </div>
-                <button class="btn w-full mt-1" id="tempCalExportBtn" style="justify-content:center;"><i class="fas fa-download"></i> Export as .txt</button>
+                <div class="card-header"><i class="fas fa-plug"></i><h3>Connection Status</h3></div>
+                <div id="hartConnStatus" style="font-size:0.8rem;padding:8px 12px;background:#fee2e2;color:#991b1b;border-radius:12px;">⚠️ Not connected — connect a device in Settings → Connect Device first (Bluetooth), then come back here.</div>
+                <div style="font-size:0.65rem;color:#64748b;margin-top:8px;">This page sends real HART Universal Commands over the same Bluetooth connection. It needs a HART-capable BLE bridge/modem — see Settings for connection setup. Requires Chrome/Edge; Safari/iOS doesn't support Web Bluetooth.</div>
             </div>
 
-            <!-- TC Reference Table -->
             <div class="card">
-                <div class="card-header"><i class="fas fa-table"></i><h3>Thermocouple Reference</h3><span>0°C Reference</span></div>
-                <div class="table-wrap">
-                    <table>
-                        <thead><tr><th>Type</th><th>Range (°C)</th><th>mV @ 100°C</th><th>mV @ 1000°C</th></tr></thead>
-                        <tbody>
-                            <tr><td>J</td><td>-40 to 750</td><td>5.27</td><td>52.70</td></tr>
-                            <tr><td>K</td><td>-200 to 1250</td><td>4.10</td><td>41.30</td></tr>
-                            <tr><td>T</td><td>-200 to 350</td><td>4.28</td><td>—</td></tr>
-                            <tr><td>E</td><td>-200 to 900</td><td>6.32</td><td>63.20</td></tr>
-                            <tr><td>N</td><td>-200 to 1250</td><td>2.77</td><td>27.70</td></tr>
-                            <tr><td>S</td><td>0 to 1450</td><td>0.65</td><td>9.59</td></tr>
-                            <tr><td>R</td><td>0 to 1450</td><td>0.65</td><td>9.59</td></tr>
-                        </tbody>
-                    </table>
-                </div>
+                <div class="card-header"><i class="fas fa-tag"></i><h3>Device Info & PV</h3><span id="hartPvUnitsChip">—</span></div>
+                <div class="row"><label>Address</label><input type="number" id="hartCommAddr" value="0" min="0" max="63" style="flex:0.4;" /><span class="chip">0-63 polling address</span></div>
+                <button class="btn w-full" id="hartReadPvBtn" style="justify-content:center;"><i class="fas fa-download"></i> Read PV (Cmd 1)</button>
+                <div class="result-box"><span>PV</span><span id="hartPvResult">—</span></div>
+                <button class="btn w-full mt-1" id="hartReadCurrentBtn" style="justify-content:center;"><i class="fas fa-download"></i> Read Loop Current & % Range (Cmd 2)</button>
+                <div class="result-box"><span>Loop Current</span><span id="hartCurrentResult">—</span></div>
+                <div class="result-box"><span>% of Range</span><span id="hartPercentResult">—</span></div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><i class="fas fa-edit"></i><h3>Write Range (Cmd 35)</h3></div>
+                <div style="font-size:0.65rem;color:#64748b;margin-bottom:8px;">Universal command — writes new LRV/URV to the connected transmitter. This changes the live device's configuration immediately.</div>
+                <div class="row"><label>Units Code</label><input type="number" id="hartUnitsCode" value="12" style="flex:0.4;" /><span class="chip">12=%, see device manual for full table</span></div>
+                <div class="row"><label>LRV</label><input type="number" id="hartLrvInput" value="0" step="any" /></div>
+                <div class="row"><label>URV</label><input type="number" id="hartUrvInput" value="100" step="any" /></div>
+                <button class="btn btn-danger w-full" id="hartWriteRangeBtn" style="justify-content:center;"><i class="fas fa-paper-plane"></i> Write LRV/URV to Device</button>
+                <div class="result-box"><span>Last Write</span><span id="hartWriteResult">—</span></div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><i class="fas fa-wave-square"></i><h3>Simulate / Fix mA (Cmd 40)</h3></div>
+                <div style="font-size:0.65rem;color:#64748b;margin-bottom:8px;">Forces the transmitter's analog output to a fixed value — most HART transmitters support this natively for loop testing. Remember to exit fixed mode when done.</div>
+                <div class="row"><label>Fix at</label><input type="number" id="hartFixMa" value="12" step="any" /><span class="chip">mA</span></div>
+                <button class="btn btn-danger w-full" id="hartFixBtn" style="justify-content:center;"><i class="fas fa-lock"></i> Enter Fixed Current Mode</button>
+                <button class="btn-outline btn w-full mt-1" id="hartUnfixBtn" style="justify-content:center;"><i class="fas fa-lock-open"></i> Exit Fixed Current Mode</button>
+                <div class="result-box"><span>Status</span><span id="hartFixResult">Not fixed</span></div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><i class="fas fa-terminal"></i><h3>Raw Response Log</h3></div>
+                <div id="hartRawLog" style="font-size:0.65rem;font-family:monospace;background:#f1f5f9;padding:10px;border-radius:12px;max-height:150px;overflow-y:auto;white-space:pre-wrap;">No commands sent yet.</div>
             </div>
         </div>
 
         <!-- ==========================================================
-        PAGE: ANALYTICAL (Fully Functional)
+        PAGE: ANALYTICAL (short)
         ========================================================== -->
         <div class="page" id="page-analytical">
             <div class="page-title"><i class="fas fa-flask"></i> Analytical Instruments</div>
@@ -1480,6 +1410,7 @@
                     <div class="sub-tab" data-tab="ana-cond">Conductivity</div>
                     <div class="sub-tab" data-tab="ana-do">Dissolved O₂</div>
                     <div class="sub-tab" data-tab="ana-gas">Gas Detection</div>
+                    <div class="sub-tab" data-tab="ana-gc">GC</div>
                 </div>
 
                 <!-- pH -->
@@ -1576,6 +1507,57 @@
                     <div class="result-box"><span>Status</span><span id="gasStatus" style="color:#059669;">✓ Safe</span></div>
                     <div class="result-box"><span>Alarm Level</span><span id="gasAlarm">10% LEL</span></div>
                     <div style="font-size:0.65rem;color:#64748b;">Alarm levels: LEL 10%, O₂ 19.5%/23.5%, H₂S 10ppm, CO 35ppm</div>
+                </div>
+                <div class="sub-panel hidden" id="ana-gc">
+                    <img src="assets/gc_elution_order.png" alt="Natural gas GC elution order diagram" style="width:100%;border-radius:16px;border:1px solid #e9edf3;margin-bottom:10px;" />
+                    <div class="tab-scroll" id="gcTabs">
+                        <div class="tab active" data-gc="daniel">Daniel</div>
+                        <div class="tab" data-gc="siemens">Siemens</div>
+                        <div class="tab" data-gc="abb">ABB</div>
+                        <div class="tab" data-gc="agilent">Agilent</div>
+                    </div>
+                    <div id="gcContent">
+                        <div class="gc-panel" id="gc-daniel">
+                            <div><strong>Daniel 700 Series</strong></div>
+                            <div class="chip">TCD · He carrier @ 90 psig</div>
+                            <div class="chip">Temp: -29°C to +55°C ambient</div>
+                            <div style="font-size:0.75rem;margin-top:6px;">Calibration: Certified gas standards · Multi-point</div>
+                        </div>
+                        <div class="gc-panel hidden" id="gc-siemens">
+                            <div><strong>Siemens Maxum II</strong></div>
+                            <div class="chip">TCD · 50-260°C oven</div>
+                            <div class="chip">Dynamic Range: 10⁵</div>
+                            <div style="font-size:0.75rem;margin-top:6px;">Carrier: H₂/N₂/He/Ar (4.6 purity)</div>
+                        </div>
+                        <div class="gc-panel hidden" id="gc-abb">
+                            <div><strong>ABB PGC5000</strong></div>
+                            <div class="chip">DBDID · ppb detection</div>
+                            <div class="chip">Smart Oven™</div>
+                            <div style="font-size:0.75rem;margin-top:6px;">Auto-calibration with internal standards</div>
+                        </div>
+                        <div class="gc-panel hidden" id="gc-agilent">
+                            <div><strong>Agilent 8890</strong></div>
+                            <div class="chip">FID · TCD · µECD</div>
+                            <div class="chip">Temp: 15-35°C ambient</div>
+                            <div style="font-size:0.75rem;margin-top:6px;">Carrier: H₂/He/N₂ (high purity)</div>
+                        </div>
+                    </div>
+                    <hr />
+                    <div><strong>Operating Parameters</strong></div>
+                    <div class="row mt-1"><label>Carrier Pressure</label><input type="number" id="gcCarrierPressure" value="90" step="any" /><span class="chip">psig</span></div>
+                    <div class="row"><label>Oven Temp</label><input type="number" id="gcOvenTemp" value="60" step="any" /><span class="chip">°C</span></div>
+                    <div style="font-size:0.65rem;color:#64748b;margin-bottom:6px;">Defaults auto-fill from the selected analyzer above — edit for your actual unit's setpoints.</div>
+                    <hr />
+                    <div class="card-header" style="margin-bottom:8px;"><i class="fas fa-vial-circle-check"></i><h3 style="font-size:0.85rem;">Calibration Check</h3><span>GPA 2261 blend</span></div>
+                    <div style="font-size:0.65rem;color:#64748b;margin-bottom:8px;">Certified values default to a typical GPA 2261 natural gas calibration blend. Enter your analyzer's measured mol% for each component to check deviation.</div>
+                    <div class="row"><label>Tolerance</label><input type="number" id="gcTolerance" value="2" step="0.1" style="flex:0.4;" /><span class="chip">% relative</span></div>
+                    <div id="gcCalTable" class="table-wrap"><table>
+                            <thead><tr><th>Component</th><th>Certified %</th><th>Measured %</th><th>Dev %</th></tr></thead>
+                            <tbody></tbody>
+                        </table></div>
+                    <button class="btn w-full mt-1" id="gcCalCheckBtn" style="justify-content:center;"><i class="fas fa-check"></i> Check Calibration</button>
+                    <div class="result-box"><span>Overall</span><span id="gcCalResult">—</span></div>
+                    <button class="btn-outline btn w-full mt-1" id="gcExportBtn" style="justify-content:center;"><i class="fas fa-download"></i> Export as .txt</button>
                 </div>
                 <button class="btn w-full mt-1" id="anaExportBtn" style="justify-content:center;"><i class="fas fa-download"></i> Export Calibration as .txt</button>
             </div>
@@ -1693,35 +1675,143 @@
         <div class="page" id="page-calibration">
             <div class="page-title"><i class="fas fa-sliders-h"></i> Calibration</div>
             <div class="card">
-                <div class="row"><label>Type</label>
-                    <select id="calType" style="flex:1;">
-                        <option value="pressure" selected>Pressure Transmitter</option>
-                        <option value="temperature">Temperature Transmitter</option>
-                        <option value="valve">Control Valve (Stroke)</option>
-                    </select>
+                <div class="tab-scroll" id="calMainTabs">
+                    <div class="tab active" data-cal="5point">5-Point (mA)</div>
+                    <div class="tab" data-cal="rtd">RTD</div>
+                    <div class="tab" data-cal="tc">Thermocouple</div>
                 </div>
-                <div class="row"><label>Tag</label><input type="text" id="calTag" placeholder="PT-101" /></div>
-                <div class="row">
-                    <label>Range</label>
-                    <input type="number" id="calLow" value="0" step="any" style="flex:0.5;" />
-                    <span>to</span>
-                    <input type="number" id="calHigh" value="100" step="any" style="flex:0.5;" />
-                    <select id="calUnit" style="flex:0.6;"></select>
-                    <button class="btn btn-sm" id="calUpdateBtn"><i class="fas fa-sync"></i></button>
+                <div class="cal-main-panel" id="cal-5point">
+                    <div class="row"><label>Type</label>
+                        <select id="calType" style="flex:1;">
+                            <option value="pressure" selected>Pressure Transmitter</option>
+                            <option value="temperature">Temperature Transmitter</option>
+                            <option value="valve">Control Valve (Stroke)</option>
+                        </select>
+                    </div>
+                    <div class="row"><label>Tag</label><input type="text" id="calTag" placeholder="PT-101" /></div>
+                    <div class="row">
+                        <label>Range</label>
+                        <input type="number" id="calLow" value="0" step="any" style="flex:0.5;" />
+                        <span>to</span>
+                        <input type="number" id="calHigh" value="100" step="any" style="flex:0.5;" />
+                        <select id="calUnit" style="flex:0.6;"></select>
+                        <button class="btn btn-sm" id="calUpdateBtn"><i class="fas fa-sync"></i></button>
+                    </div>
+                    <div class="row"><label>Tolerance</label><input type="number" id="calTolerance" value="0.1" step="0.01" style="flex:0.4;" /><span class="chip" id="calToleranceUnit">% of span</span></div>
+                    <div style="font-size:0.65rem;color:#64748b;margin-bottom:6px;" id="calInstructions">Enter the <strong>actual</strong> mA reading measured at each test point — error is calculated from ideal vs. actual.</div>
+                    <div id="calLiveBar" class="row hidden" style="background:#f0fdf4;border-radius:16px;padding:8px 12px;">
+                        <i class="fas fa-satellite-dish" style="color:#059669;"></i>
+                        <span style="font-size:0.75rem;flex:1;">Live: <strong id="calLiveValue">—</strong></span>
+                        <span style="font-size:0.6rem;color:#64748b;">Tap a point's 📥 to fill it</span>
+                    </div>
+                    <div id="calPointsContainer" class="cal-points-grid"></div>
+                    <div class="flex mt-1">
+                        <span class="badge badge-pass" id="calPassFail"><i class="fas fa-check"></i> Pass</span>
+                        <span class="chip" id="calErrorDisplay"><i class="fas fa-percent"></i> Max error: 0.00%</span>
+                    </div>
+                    <button class="btn w-full mt-1" id="calExportBtn" style="justify-content:center;"><i class="fas fa-download"></i> Export as .txt</button>
                 </div>
-                <div class="row"><label>Tolerance</label><input type="number" id="calTolerance" value="0.1" step="0.01" style="flex:0.4;" /><span class="chip" id="calToleranceUnit">% of span</span></div>
-                <div style="font-size:0.65rem;color:#64748b;margin-bottom:6px;" id="calInstructions">Enter the <strong>actual</strong> mA reading measured at each test point — error is calculated from ideal vs. actual.</div>
-                <div id="calLiveBar" class="row hidden" style="background:#f0fdf4;border-radius:16px;padding:8px 12px;">
-                    <i class="fas fa-satellite-dish" style="color:#059669;"></i>
-                    <span style="font-size:0.75rem;flex:1;">Live: <strong id="calLiveValue">—</strong></span>
-                    <span style="font-size:0.6rem;color:#64748b;">Tap a point's 📥 to fill it</span>
+
+                <div class="cal-main-panel hidden" id="cal-rtd">
+                    <div class="card-header"><i class="fas fa-microchip"></i><h3>RTD Calculator</h3><span id="rtdTypeBadge">Pt100</span></div>
+                    <div class="row">
+                        <label>RTD Type</label>
+                        <select id="rtdType">
+                            <option value="pt100">Pt100</option>
+                            <option value="pt500">Pt500</option>
+                            <option value="pt1000">Pt1000</option>
+                        </select>
+                    </div>
+                    <div class="row">
+                        <label>Range</label>
+                        <input type="number" id="rtdRangeLow" value="0" step="any" style="flex:0.5;" /><span>to</span>
+                        <input type="number" id="rtdRangeHigh" value="100" step="any" style="flex:0.5;" /><span class="chip">°C</span>
+                    </div>
+                    <div class="row">
+                        <label>Input</label>
+                        <input type="number" id="rtdInput" value="100" step="any" style="flex:0.6;" />
+                        <select id="rtdInputUnit" style="flex:0.5;">
+                            <option value="ohm">Ω</option>
+                            <option value="ma">mA</option>
+                            <option value="percent">%</option>
+                        </select>
+                    </div>
+                    <div class="row">
+                        <label>Output</label>
+                        <select id="rtdOutputUnit" style="flex:0.6;">
+                            <option value="temp">Temperature</option>
+                            <option value="ma">mA</option>
+                            <option value="percent">%</option>
+                        </select>
+                        <button class="btn" id="rtdConvertBtn"><i class="fas fa-calculator"></i> Convert</button>
+                    </div>
+                    <div class="result-box"><span>Result</span><span id="rtdResult">0.00 °C</span></div>
+                    <div class="result-box"><span>mA Equivalent</span><span id="rtdMaResult">12.00 mA</span></div>
+                    <div class="result-box"><span>% of Range</span><span id="rtdPercentResult">50.00 %</span></div>
+                    <div style="font-size:0.65rem;color:#64748b;margin-top:4px;" id="rtdRangeNote">Range: 0-100°C · 4-20mA · Pt100 · α = 0.00385</div>
+                    <button class="btn w-full mt-1" id="tempCalExportBtn" style="justify-content:center;"><i class="fas fa-download"></i> Export as .txt</button>
                 </div>
-                <div id="calPointsContainer" class="cal-points-grid"></div>
-                <div class="flex mt-1">
-                    <span class="badge badge-pass" id="calPassFail"><i class="fas fa-check"></i> Pass</span>
-                    <span class="chip" id="calErrorDisplay"><i class="fas fa-percent"></i> Max error: 0.00%</span>
+
+                <div class="cal-main-panel hidden" id="cal-tc">
+                    <div class="card-header"><i class="fas fa-fire"></i><h3>Thermocouple Calculator</h3><span>IEC 60584</span></div>
+                    <div class="row">
+                        <label>TC Type</label>
+                        <select id="tcType">
+                            <option value="J">Type J</option>
+                            <option value="K" selected>Type K</option>
+                            <option value="T">Type T</option>
+                            <option value="E">Type E</option>
+                            <option value="N">Type N</option>
+                            <option value="S">Type S</option>
+                            <option value="R">Type R</option>
+                        </select>
+                    </div>
+                    <div class="row">
+                        <label>Range</label>
+                        <input type="number" id="tcRangeLow" value="0" step="any" style="flex:0.5;" /><span>to</span>
+                        <input type="number" id="tcRangeHigh" value="1000" step="any" style="flex:0.5;" /><span class="chip">°C</span>
+                    </div>
+                    <div class="row">
+                        <label>Input</label>
+                        <input type="number" id="tcInput" value="0" step="any" style="flex:0.6;" />
+                        <select id="tcInputUnit" style="flex:0.5;">
+                            <option value="mv">mV</option>
+                            <option value="ma">mA</option>
+                            <option value="percent">%</option>
+                            <option value="temp">°C</option>
+                        </select>
+                    </div>
+                    <div class="row">
+                        <label>Output</label>
+                        <select id="tcOutputUnit" style="flex:0.6;">
+                            <option value="temp">Temperature (°C)</option>
+                            <option value="ma">mA</option>
+                            <option value="percent">%</option>
+                            <option value="mv">mV</option>
+                        </select>
+                        <button class="btn" id="tcConvertBtn"><i class="fas fa-calculator"></i> Convert</button>
+                    </div>
+                    <div class="result-box"><span>Result</span><span id="tcResult">0.00 °C</span></div>
+                    <div class="result-box"><span>mV</span><span id="tcMvResult">0.00 mV</span></div>
+                    <div class="result-box"><span>mA</span><span id="tcMaResult">12.00 mA</span></div>
+                    <div class="result-box"><span>% of Range</span><span id="tcPercentResult">50.00 %</span></div>
+                    <div style="font-size:0.65rem;color:#64748b;margin-top:4px;" id="tcRangeNote">Range: 0-1000°C · 4-20mA · Reference junction: 0°C</div>
+                    <div class="table-wrap mt-1">
+                        <table>
+                            <thead><tr><th>Type</th><th>Range (°C)</th><th>mV @ 100°C</th><th>mV @ 1000°C</th></tr></thead>
+                            <tbody>
+                                <tr><td>J</td><td>-40 to 750</td><td>5.27</td><td>52.70</td></tr>
+                                <tr><td>K</td><td>-200 to 1250</td><td>4.10</td><td>41.30</td></tr>
+                                <tr><td>T</td><td>-200 to 350</td><td>4.28</td><td>—</td></tr>
+                                <tr><td>E</td><td>-200 to 900</td><td>6.32</td><td>63.20</td></tr>
+                                <tr><td>N</td><td>-200 to 1250</td><td>2.77</td><td>27.70</td></tr>
+                                <tr><td>S</td><td>0 to 1450</td><td>0.65</td><td>9.59</td></tr>
+                                <tr><td>R</td><td>0 to 1450</td><td>0.65</td><td>9.59</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                <button class="btn w-full mt-1" id="calExportBtn" style="justify-content:center;"><i class="fas fa-download"></i> Export as .txt</button>
+                <button class="btn w-full mt-1" id="tcExportBtn" style="justify-content:center;"><i class="fas fa-download"></i> Export as .txt</button>
             </div>
         </div>
 
@@ -1729,38 +1819,65 @@
         PAGE: LEVEL DP (short)
         ========================================================== -->
         <div class="page" id="page-dp">
-            <div class="page-title"><i class="fas fa-tachometer-alt"></i> Level DP</div>
+            <div class="page-title"><i class="fas fa-tachometer-alt"></i> Level Measurement Tools</div>
             <div class="card">
-                <div class="segmented" id="dpModeSeg">
-                    <button class="active" data-mode="dry">Dry</button>
-                    <button data-mode="wet">Wet</button>
-                    <button data-mode="remote">Remote</button>
+                <div class="tab-scroll" id="levelMainTabs">
+                    <div class="tab active" data-level="dp">DP Level</div>
+                    <div class="tab" data-level="radar">Radar Level</div>
                 </div>
-                <div class="row"><label>Height</label><input type="number" id="dpHeight" value="120" step="any" style="flex:0.6;" /><select id="dpHeightUnit" style="flex:0.5;"><option value="in" selected>in</option><option value="mm">mm</option><option value="cm">cm</option><option value="ft">ft</option><option value="m">m</option></select></div>
-                <div class="row"><label>SG</label><input type="number" id="dpSG" value="1.0" step="0.01" /></div>
-                <div id="wetLegRow" class="row hidden"><label id="wetLegLabel">Wet SG</label><input type="number" id="dpWetSG" value="1.0" step="0.01" /></div>
-                <div class="row">
-                    <label>Output</label>
-                    <select id="dpUnit"><option value="inH2O">inH₂O</option><option value="psi">PSI</option><option value="kpa">kPa</option><option value="mbar">mbar</option><option value="mmH2O">mmH₂O</option></select>
-                    <button class="btn" id="calcDpBtn"><i class="fas fa-calculator"></i> Calculate</button>
+
+                <div class="level-main-panel" id="level-dp">
+                    <div class="segmented" id="dpModeSeg">
+                        <button class="active" data-mode="dry">Dry</button>
+                        <button data-mode="wet">Wet</button>
+                        <button data-mode="remote">Remote</button>
+                    </div>
+                    <div class="row"><label>Height</label><input type="number" id="dpHeight" value="120" step="any" style="flex:0.6;" /><select id="dpHeightUnit" style="flex:0.5;"><option value="in" selected>in</option><option value="mm">mm</option><option value="cm">cm</option><option value="ft">ft</option><option value="m">m</option></select></div>
+                    <div class="row"><label>SG</label><input type="number" id="dpSG" value="1.0" step="0.01" /></div>
+                    <div id="wetLegRow" class="row hidden"><label id="wetLegLabel">Wet SG</label><input type="number" id="dpWetSG" value="1.0" step="0.01" /></div>
+                    <div class="row">
+                        <label>Output</label>
+                        <select id="dpUnit"><option value="inH2O">inH₂O</option><option value="psi">PSI</option><option value="kpa">kPa</option><option value="mbar">mbar</option><option value="mmH2O">mmH₂O</option></select>
+                        <button class="btn" id="calcDpBtn"><i class="fas fa-calculator"></i> Calculate</button>
+                    </div>
+                    <div class="result-box"><span>LRV</span><span id="dpLRV">0.00</span></div>
+                    <div class="result-box"><span>URV</span><span id="dpURV">120.00</span></div>
+                    <div class="result-box"><span>Span</span><span id="dpSpan">120.00</span></div>
+                    <hr />
+                    <div class="card-header" style="margin-bottom:6px;"><i class="fas fa-image"></i><h3 style="font-size:0.85rem;">Reference Diagrams</h3></div>
+                    <div id="dpDiagramDry" style="text-align:center;">
+                        <img src="images/dp-dry-leg.png" alt="Dry leg DP level diagram" style="max-width:100%;border-radius:16px;" />
+                        <div style="font-size:0.65rem;color:#64748b;margin-top:4px;">Dry leg: HP tap at tank bottom, LP tap at top (vapor space), no fill fluid in the LP impulse line.</div>
+                    </div>
+                    <div id="dpDiagramWet" class="hidden" style="text-align:center;">
+                        <img src="images/dp-wet-leg.png" alt="Wet leg DP level diagram" style="max-width:100%;border-radius:16px;" />
+                        <div style="font-size:0.65rem;color:#64748b;margin-top:4px;">Wet leg: LP impulse line is filled with a reference/seal fluid, which is why LRV is negative (suppressed zero).</div>
+                    </div>
+                    <div id="dpDiagramRemote" class="hidden" style="text-align:center;">
+                        <img src="images/dp-remote-seal.png" alt="Remote seal DP level diagram" style="max-width:100%;border-radius:16px;" />
+                        <div style="font-size:0.65rem;color:#64748b;margin-top:4px;">Remote seal: capillary-filled diaphragm seals eliminate impulse lines entirely — elevation/suppression is set electronically or via the capillary fill fluid head.</div>
+                    </div>
                 </div>
-                <div class="result-box"><span>LRV</span><span id="dpLRV">0.00</span></div>
-                <div class="result-box"><span>URV</span><span id="dpURV">120.00</span></div>
-                <div class="result-box"><span>Span</span><span id="dpSpan">120.00</span></div>
-            </div>
-            <div class="card">
-                <div class="card-header"><i class="fas fa-image"></i><h3 style="font-size:0.85rem;">Reference Diagrams</h3></div>
-                <div id="dpDiagramDry" style="text-align:center;">
-                    <img src="images/dp-dry-leg.png" alt="Dry leg DP level diagram" style="max-width:100%;border-radius:16px;" />
-                    <div style="font-size:0.65rem;color:#64748b;margin-top:4px;">Dry leg: HP tap at tank bottom, LP tap at top (vapor space), no fill fluid in the LP impulse line.</div>
-                </div>
-                <div id="dpDiagramWet" class="hidden" style="text-align:center;">
-                    <img src="images/dp-wet-leg.png" alt="Wet leg DP level diagram" style="max-width:100%;border-radius:16px;" />
-                    <div style="font-size:0.65rem;color:#64748b;margin-top:4px;">Wet leg: LP impulse line is filled with a reference/seal fluid, which is why LRV is negative (suppressed zero).</div>
-                </div>
-                <div id="dpDiagramRemote" class="hidden" style="text-align:center;">
-                    <img src="images/dp-remote-seal.png" alt="Remote seal DP level diagram" style="max-width:100%;border-radius:16px;" />
-                    <div style="font-size:0.65rem;color:#64748b;margin-top:4px;">Remote seal: capillary-filled diaphragm seals eliminate impulse lines entirely — elevation/suppression is set electronically or via the capillary fill fluid head.</div>
+
+                <div class="level-main-panel hidden" id="level-radar">
+                    <div style="font-size:0.65rem;color:#64748b;margin-bottom:8px;">Radar measures the <strong>distance</strong> from the sensor face down to the product surface — level is derived, not measured directly.</div>
+                    <div class="row"><label>Tank Height</label><input type="number" id="radarTankHeight" value="120" step="any" style="flex:0.6;" /><select id="radarHeightUnit" style="flex:0.5;"><option value="in" selected>in</option><option value="mm">mm</option><option value="cm">cm</option><option value="ft">ft</option><option value="m">m</option></select></div>
+                    <div class="row"><label>Blocking Dist.</label><input type="number" id="radarBlocking" value="12" step="any" /><span class="chip">in (dead zone near sensor)</span></div>
+                    <div class="row"><label>Measured Dist.</label><input type="number" id="radarDistance" value="20" step="any" /></div>
+                    <button class="btn" id="radarCalcBtn"><i class="fas fa-calculator"></i> Calculate</button>
+                    <div class="result-box"><span>Level</span><span id="radarLevel">100.00 in</span></div>
+                    <div class="result-box"><span>Level %</span><span id="radarPercent">83.3 %</span></div>
+                    <div class="result-box"><span>mA Equivalent</span><span id="radarMa">17.33 mA</span></div>
+                    <div id="radarBlockWarning" class="hidden" style="background:#fee2e2;color:#991b1b;padding:8px 12px;border-radius:12px;font-size:0.7rem;margin-top:4px;">⚠️ Measured distance is within the blocking distance — reading is unreliable in this zone.</div>
+                    <hr />
+                    <div><strong>Dielectric Constant Reference</strong></div>
+                    <div style="font-size:0.65rem;color:#64748b;margin:4px 0 8px 0;">Non-contact radar needs a minimum reflectivity to get a clean echo — very low dielectric products are harder to see, and guided-wave radar (GWR) handles them better than non-contact.</div>
+                    <div class="chip">Water: DC ≈ 80</div>
+                    <div class="chip">Ammonia: DC ≈ 17</div>
+                    <div class="chip">Most alcohols: DC ≈ 15-30</div>
+                    <div class="chip">Hydrocarbons/oils: DC ≈ 2-3</div>
+                    <div class="chip">LPG/light hydrocarbons: DC ≈ 1.9-2.0 (marginal — consider GWR)</div>
+                    <div style="font-size:0.6rem;color:#94a3b8;margin-top:6px;">DC below ~1.9 is generally too low for reliable non-contact radar reflection — a guided-wave or other technology may be needed.</div>
                 </div>
             </div>
         </div>
@@ -1769,98 +1886,99 @@
         PAGE: FLOW (short)
         ========================================================== -->
         <div class="page" id="page-flow">
-            <div class="page-title"><i class="fas fa-water"></i> Flow Calculator (√ Extraction)</div>
+            <div class="page-title"><i class="fas fa-water"></i> Complex Measurement Tools</div>
             <div class="card">
-                <div class="card-header"><i class="fas fa-info-circle"></i><h3 style="font-size:0.85rem;">DP Flow Transmitter</h3></div>
-                <div style="font-size:0.65rem;color:#64748b;margin-bottom:8px;">For orifice/venturi/DP-type flow elements: Flow is proportional to the <strong>square root</strong> of differential pressure. Set your calibrated DP range and max flow (Qmax) once below.</div>
-                <div class="row">
-                    <label>DP Range</label>
-                    <input type="number" id="flowDPLow" value="0" step="any" style="flex:0.4;" /><span>to</span>
-                    <input type="number" id="flowDPHigh" value="100" step="any" style="flex:0.4;" />
-                    <select id="flowDPUnit" style="flex:0.5;"><option value="inH2O">inH₂O</option><option value="psi">PSI</option><option value="kpa">kPa</option><option value="bar">bar</option></select>
+                <div class="tab-scroll" id="flowMainTabs">
+                    <div class="tab active" data-flow="dp">DP/Orifice</div>
+                    <div class="tab" data-flow="vortex">Vortex</div>
+                    <div class="tab" data-flow="coriolis">Coriolis</div>
+                    <div class="tab" data-flow="mag">Magnetic</div>
+                    <div class="tab" data-flow="nuclear">Radiometric</div>
                 </div>
-                <div class="row">
-                    <label>Max Flow</label>
-                    <input type="number" id="flowMax" value="1000" step="any" style="flex:0.6;" />
-                    <select id="flowOutUnit" style="flex:0.5;"><option value="GPM">GPM</option><option value="L/min">L/min</option><option value="m3/hr">m³/hr</option><option value="MMSCFD">MMSCFD</option></select>
+
+                <div class="flow-main-panel" id="flow-dp">
+                    <div style="font-size:0.65rem;color:#64748b;margin-bottom:8px;">For orifice/venturi/DP-type flow elements: Flow is proportional to the <strong>square root</strong> of differential pressure. Set your calibrated DP range and max flow (Qmax) once below.</div>
+                    <div class="row">
+                        <label>DP Range</label>
+                        <input type="number" id="flowDPLow" value="0" step="any" style="flex:0.4;" /><span>to</span>
+                        <input type="number" id="flowDPHigh" value="100" step="any" style="flex:0.4;" />
+                        <select id="flowDPUnit" style="flex:0.5;"><option value="inH2O">inH₂O</option><option value="psi">PSI</option><option value="kpa">kPa</option><option value="bar">bar</option></select>
+                    </div>
+                    <div class="row">
+                        <label>Max Flow</label>
+                        <input type="number" id="flowMax" value="1000" step="any" style="flex:0.6;" />
+                        <select id="flowOutUnit" style="flex:0.5;"><option value="GPM">GPM</option><option value="L/min">L/min</option><option value="m3/hr">m³/hr</option><option value="MMSCFD">MMSCFD</option></select>
+                    </div>
+                    <div class="segmented" id="flowModeSeg">
+                        <button class="active" data-mode="dp2flow">DP → Flow</button>
+                        <button data-mode="flow2dp">Flow → DP</button>
+                    </div>
+                    <div class="row" id="flowInputRow">
+                        <label id="flowInputLabel">DP Reading</label>
+                        <input type="number" id="flowInputVal" value="100" step="any" style="flex:0.6;" />
+                        <span class="chip" id="flowInputChip">inH₂O</span>
+                    </div>
+                    <button class="btn" id="flowCalcBtn"><i class="fas fa-calculator"></i> Calculate</button>
+                    <div class="result-box"><span>Flow</span><span id="flowResult">1000.00 GPM</span></div>
+                    <div class="result-box"><span>DP</span><span id="flowDPResult">100.00 inH₂O</span></div>
+                    <div class="result-box"><span>% of Range</span><span id="flowPercentResult">100.0 %</span></div>
+                    <div class="result-box"><span>mA (4-20mA)</span><span id="flowMaResult">20.00 mA</span></div>
+                    <div style="font-size:0.65rem;color:#64748b;margin-top:4px;">Flow = Qmax × √(%DP ÷ 100). Reverse: DP% = (Flow ÷ Qmax)².</div>
+                    <button class="btn w-full mt-1" id="flowExportBtn" style="justify-content:center;"><i class="fas fa-download"></i> Export as .txt</button>
                 </div>
-                <div class="segmented" id="flowModeSeg">
-                    <button class="active" data-mode="dp2flow">DP → Flow</button>
-                    <button data-mode="flow2dp">Flow → DP</button>
+
+                <div class="flow-main-panel hidden" id="flow-vortex">
+                    <div style="font-size:0.65rem;color:#64748b;margin-bottom:8px;">Vortex meters shed pulses at a frequency proportional to velocity (Strouhal principle). Flow = frequency ÷ K-factor. K-factor is independent of fluid density above Re ≈ 20,000, but drifts with fouling/blockage of the bluff body.</div>
+                    <div class="row"><label>Frequency</label><input type="number" id="vortexFreq" value="96" step="any" /><span class="chip">Hz</span></div>
+                    <div class="row"><label>K-Factor</label><input type="number" id="vortexK" value="32" step="any" /><span class="chip">pulses/L</span></div>
+                    <button class="btn" id="vortexCalcBtn"><i class="fas fa-calculator"></i> Calculate</button>
+                    <div class="result-box"><span>Flow</span><span id="vortexResultLs">3.00 L/s</span></div>
+                    <div class="result-box"><span>Flow</span><span id="vortexResultLmin">180.0 L/min</span></div>
+                    <div class="result-box"><span>Flow</span><span id="vortexResultGpm">47.6 GPM</span></div>
                 </div>
-                <div class="row" id="flowInputRow">
-                    <label id="flowInputLabel">DP Reading</label>
-                    <input type="number" id="flowInputVal" value="100" step="any" style="flex:0.6;" />
-                    <span class="chip" id="flowInputChip">inH₂O</span>
+
+                <div class="flow-main-panel hidden" id="flow-coriolis">
+                    <div style="font-size:0.65rem;color:#64748b;margin-bottom:8px;">Coriolis meters measure mass flow directly from the phase/time delay between inlet and outlet tube sensors, and density from the tube's natural oscillation period. FCF and K0/K1 are calibration constants from the meter's tag/datasheet.</div>
+                    <div><strong>Mass Flow</strong></div>
+                    <div class="row mt-1"><label>FCF</label><input type="number" id="coriolisFcf" value="10" step="any" /><span class="chip">(g/s)/µs</span></div>
+                    <div class="row"><label>Time Delay</label><input type="number" id="coriolisDt" value="2.5" step="any" /><span class="chip">µs</span></div>
+                    <button class="btn" id="coriolisMassBtn"><i class="fas fa-calculator"></i> Calculate</button>
+                    <div class="result-box"><span>Mass Flow</span><span id="coriolisMassResult">25.0 g/s</span></div>
+                    <hr />
+                    <div><strong>Density (from tube period)</strong></div>
+                    <div class="row mt-1"><label>K0</label><input type="number" id="coriolisK0" value="0" step="any" /><label>K1</label><input type="number" id="coriolisK1" value="0.001" step="any" /></div>
+                    <div class="row"><label>Period</label><input type="number" id="coriolisPeriod" value="1000" step="any" /><span class="chip">µs</span></div>
+                    <button class="btn" id="coriolisDensityBtn"><i class="fas fa-calculator"></i> Calculate</button>
+                    <div class="result-box"><span>Density</span><span id="coriolisDensityResult">1.00 g/cc</span></div>
+                    <div style="font-size:0.6rem;color:#94a3b8;margin-top:4px;">ρ = K0 + K1×T². Use the exact constants from your meter's calibration sheet — these vary per device and aren't universal.</div>
                 </div>
-                <button class="btn" id="flowCalcBtn"><i class="fas fa-calculator"></i> Calculate</button>
-                <div class="result-box"><span>Flow</span><span id="flowResult">1000.00 GPM</span></div>
-                <div class="result-box"><span>DP</span><span id="flowDPResult">100.00 inH₂O</span></div>
-                <div class="result-box"><span>% of Range</span><span id="flowPercentResult">100.0 %</span></div>
-                <div class="result-box"><span>mA (4-20mA)</span><span id="flowMaResult">20.00 mA</span></div>
-                <div style="font-size:0.65rem;color:#64748b;margin-top:4px;">Flow = Qmax × √(%DP ÷ 100). Reverse: DP% = (Flow ÷ Qmax)².</div>
-                <button class="btn w-full mt-1" id="flowExportBtn" style="justify-content:center;"><i class="fas fa-download"></i> Export as .txt</button>
+
+                <div class="flow-main-panel hidden" id="flow-mag">
+                    <div style="font-size:0.65rem;color:#64748b;margin-bottom:8px;">Magnetic (electromagnetic) flow meters output <strong>linearly</strong> with velocity (Faraday's law) — unlike DP/orifice, no square-root extraction is needed. Requires a conductive fluid.</div>
+                    <div class="row"><label>Pipe ID</label><input type="number" id="magDiameter" value="4" step="any" /><span class="chip">in</span></div>
+                    <div class="row"><label>Max Velocity</label><input type="number" id="magVmax" value="10" step="any" /><span class="chip">ft/s (at 20mA)</span></div>
+                    <div class="row"><label>Input</label><input type="number" id="magMa" value="12" step="any" /><span class="chip">mA</span></div>
+                    <button class="btn" id="magCalcBtn"><i class="fas fa-calculator"></i> Calculate</button>
+                    <div class="result-box"><span>Velocity</span><span id="magVelocity">5.00 ft/s</span></div>
+                    <div class="result-box"><span>Flow</span><span id="magFlowGpm">0.00 GPM</span></div>
+                    <div style="font-size:0.6rem;color:#94a3b8;margin-top:4px;">Velocity = Vmax × (mA-4)/16 (linear). Flow = Velocity × pipe area.</div>
+                </div>
+
+                <div class="flow-main-panel hidden" id="flow-nuclear">
+                    <div style="font-size:0.65rem;color:#64748b;margin-bottom:8px;">Radiometric (nuclear) gauges measure <strong>density</strong> via gamma-ray attenuation (Beer-Lambert law), typically using Cs-137 or Co-60. Combined with a separate velocity/volumetric flow signal, this gives mass flow — it's not a standalone "flow meter" by itself.</div>
+                    <div class="row"><label>I₀ (reference)</label><input type="number" id="nuclearI0" value="10000" step="any" /><span class="chip">cps</span></div>
+                    <div class="row"><label>I (measured)</label><input type="number" id="nuclearI" value="6000" step="any" /><span class="chip">cps</span></div>
+                    <div class="row"><label>μ (attenuation)</label><input type="number" id="nuclearMu" value="0.09" step="any" /><span class="chip">cm²/g</span></div>
+                    <div class="row"><label>Path Length</label><input type="number" id="nuclearX" value="10" step="any" /><span class="chip">cm</span></div>
+                    <button class="btn" id="nuclearCalcBtn"><i class="fas fa-calculator"></i> Calculate</button>
+                    <div class="result-box"><span>Density</span><span id="nuclearDensity">0.57 g/cc</span></div>
+                    <div style="font-size:0.6rem;color:#94a3b8;margin-top:4px;">ρ = −ln(I/I₀) ÷ (μ×x). Isotope choice: Cs-137 (0.662 MeV, 30.17yr half-life) is more common than Co-60 (higher energy, 5.27yr half-life) for routine process gauging.</div>
+                </div>
             </div>
         </div>
         <!-- ==========================================================
         PAGE: GAS CHROMATOGRAPHY
         ========================================================== -->
-        <div class="page" id="page-gc">
-            <div class="page-title"><i class="fas fa-chart-bar"></i> Gas Chromatography</div>
-            <div class="card">
-                <img src="assets/gc_elution_order.png" alt="Natural gas GC elution order diagram" style="width:100%;border-radius:16px;border:1px solid #e9edf3;margin-bottom:10px;" />
-                <div class="tab-scroll" id="gcTabs">
-                    <div class="tab active" data-gc="daniel">Daniel</div>
-                    <div class="tab" data-gc="siemens">Siemens</div>
-                    <div class="tab" data-gc="abb">ABB</div>
-                    <div class="tab" data-gc="agilent">Agilent</div>
-                </div>
-                <div id="gcContent">
-                    <div class="gc-panel" id="gc-daniel">
-                        <div><strong>Daniel 700 Series</strong></div>
-                        <div class="chip">TCD · He carrier @ 90 psig</div>
-                        <div class="chip">Temp: -29°C to +55°C ambient</div>
-                        <div style="font-size:0.75rem;margin-top:6px;">Calibration: Certified gas standards · Multi-point</div>
-                    </div>
-                    <div class="gc-panel hidden" id="gc-siemens">
-                        <div><strong>Siemens Maxum II</strong></div>
-                        <div class="chip">TCD · 50-260°C oven</div>
-                        <div class="chip">Dynamic Range: 10⁵</div>
-                        <div style="font-size:0.75rem;margin-top:6px;">Carrier: H₂/N₂/He/Ar (4.6 purity)</div>
-                    </div>
-                    <div class="gc-panel hidden" id="gc-abb">
-                        <div><strong>ABB PGC5000</strong></div>
-                        <div class="chip">DBDID · ppb detection</div>
-                        <div class="chip">Smart Oven™</div>
-                        <div style="font-size:0.75rem;margin-top:6px;">Auto-calibration with internal standards</div>
-                    </div>
-                    <div class="gc-panel hidden" id="gc-agilent">
-                        <div><strong>Agilent 8890</strong></div>
-                        <div class="chip">FID · TCD · µECD</div>
-                        <div class="chip">Temp: 15-35°C ambient</div>
-                        <div style="font-size:0.75rem;margin-top:6px;">Carrier: H₂/He/N₂ (high purity)</div>
-                    </div>
-                </div>
-                <hr />
-                <div><strong>Operating Parameters</strong></div>
-                <div class="row mt-1"><label>Carrier Pressure</label><input type="number" id="gcCarrierPressure" value="90" step="any" /><span class="chip">psig</span></div>
-                <div class="row"><label>Oven Temp</label><input type="number" id="gcOvenTemp" value="60" step="any" /><span class="chip">°C</span></div>
-                <div style="font-size:0.65rem;color:#64748b;margin-bottom:6px;">Defaults auto-fill from the selected analyzer above — edit for your actual unit's setpoints.</div>
-            </div>
-
-            <div class="card">
-                <div class="card-header"><i class="fas fa-vial-circle-check"></i><h3>Calibration Check</h3><span>GPA 2261 blend</span></div>
-                <div style="font-size:0.65rem;color:#64748b;margin-bottom:8px;">Certified values default to a typical GPA 2261 natural gas calibration blend. Enter your analyzer's measured mol% for each component to check deviation.</div>
-                <div class="row"><label>Tolerance</label><input type="number" id="gcTolerance" value="2" step="0.1" style="flex:0.4;" /><span class="chip">% relative</span></div>
-                <div id="gcCalTable" class="table-wrap"><table>
-                        <thead><tr><th>Component</th><th>Certified %</th><th>Measured %</th><th>Dev %</th></tr></thead>
-                        <tbody></tbody>
-                    </table></div>
-                <button class="btn w-full mt-1" id="gcCalCheckBtn" style="justify-content:center;"><i class="fas fa-check"></i> Check Calibration</button>
-                <div class="result-box"><span>Overall</span><span id="gcCalResult">—</span></div>
-                <button class="btn-outline btn w-full mt-1" id="gcExportBtn" style="justify-content:center;"><i class="fas fa-download"></i> Export as .txt</button>
-            </div>
-        </div>
 
         <!-- ==========================================================
         PAGE: ELECTRICAL (short)
@@ -2185,13 +2303,17 @@
                 <div id="troubleOutput" style="font-size:0.75rem;"></div>
                 <hr />
                 <div><strong>Generic Loop Faults</strong></div>
-                <div class="trouble-item" data-fault="4ma"><i class="fas fa-bolt" style="color:#b45309;"></i> Stuck at 4mA</div>
-                <div class="trouble-item" data-fault="22ma"><i class="fas fa-wave-square" style="color:#2563eb;"></i> 22mA alarm</div>
-                <div class="trouble-item" data-fault="hart"><i class="fas fa-sync-alt" style="color:#1e7e34;"></i> No HART comms</div>
-                <div class="trouble-item" data-fault="drift"><i class="fas fa-chart-line" style="color:#7c3aed;"></i> Reading drifts over time</div>
-                <div class="trouble-item" data-fault="erratic"><i class="fas fa-random" style="color:#dc2626;"></i> Erratic / noisy signal</div>
-                <div class="trouble-item" data-fault="nodisplay"><i class="fas fa-tv" style="color:#0891b2;"></i> Blank local display</div>
-                <div class="trouble-item" data-fault="groundloop"><i class="fas fa-bolt" style="color:#b45309;"></i> Ground loop / noise</div>
+                <div class="row"><label>Fault</label>
+                    <select id="faultSelect" style="flex:1;">
+                        <option value="4ma">Stuck at 4mA</option>
+                        <option value="22ma">22mA alarm</option>
+                        <option value="hart">No HART comms</option>
+                        <option value="drift">Reading drifts over time</option>
+                        <option value="erratic">Erratic / noisy signal</option>
+                        <option value="nodisplay">Blank local display</option>
+                        <option value="groundloop">Ground loop / noise</option>
+                    </select>
+                </div>
                 <button class="btn w-full" id="faultFinderBtn" style="justify-content:center;margin-top:6px;"><i class="fas fa-list"></i> Show Full Guide</button>
                 <div id="faultDiagnosis" class="mt-1" style="background:#f1f5f9;padding:12px 16px;border-radius:20px;min-height:40px;">Select a fault above.</div>
             </div>
@@ -2387,10 +2509,10 @@
     ============================================================ -->
     <div class="bottom-tabs" id="bottomTabs">
         <button class="tab-item active" data-page="home"><i class="fas fa-home"></i> Home</button>
-        <button class="tab-item" data-page="converter"><i class="fas fa-calculator"></i> Calc</button>
-        <button class="tab-item" data-page="analytical"><i class="fas fa-flask"></i> Analytical</button>
-        <button class="tab-item" data-page="tempcal"><i class="fas fa-thermometer-half"></i> Temp Cal</button>
-        <button class="tab-item" data-page="trouble"><i class="fas fa-headset"></i> Support</button>
+        <button class="tab-item" data-page="converter"><i class="fas fa-calculator"></i> Converter</button>
+        <button class="tab-item" data-page="electrical"><i class="fas fa-bolt"></i> Electrical</button>
+        <button class="tab-item" data-page="report"><i class="fas fa-file-alt"></i> Report</button>
+        <button class="tab-item" data-page="settings"><i class="fas fa-cog"></i> Settings</button>
     </div>
 
     <!-- ============================================================
@@ -2618,57 +2740,49 @@
                 });
             });
 
-            // =============================================================
-            // TEMPERATURE CALIBRATION — SENSOR TYPE TOGGLE
-            // =============================================================
-            document.querySelectorAll('#sensorTypeSeg button').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    document.querySelectorAll('#sensorTypeSeg button').forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
-                    const sensor = this.dataset.sensor;
-                    document.getElementById('rtdSection').classList.toggle('hidden', sensor !== 'rtd');
-                    document.getElementById('tcSection').classList.toggle('hidden', sensor !== 'tc');
-                });
-            });
-
             document.getElementById('tempCalExportBtn').addEventListener('click', function() {
-                const activeSensor = document.querySelector('#sensorTypeSeg button.active').dataset.sensor;
                 const date = new Date().toLocaleString();
-                let content;
-                if (activeSensor === 'rtd') {
-                    content =
-                        `========================================\n` +
-                        `INSTRUMENTPRO RTD CALIBRATION RECORD\n` +
-                        `========================================\n` +
-                        `Date: ${date}\n` +
-                        `RTD Type: ${rtdType.value.toUpperCase()}\n` +
-                        `Range: ${rtdRangeLow.value} to ${rtdRangeHigh.value} °C\n` +
-                        `----------------------------------------\n` +
-                        `Input: ${rtdInput.value} ${rtdInputUnit.options[rtdInputUnit.selectedIndex].text}\n` +
-                        `Result: ${rtdResult.textContent}\n` +
-                        `mA Equivalent: ${rtdMaResult.textContent}\n` +
-                        `% of Range: ${rtdPercentResult.textContent}\n` +
-                        `========================================`;
-                } else {
-                    content =
-                        `========================================\n` +
-                        `INSTRUMENTPRO THERMOCOUPLE CALIBRATION RECORD\n` +
-                        `========================================\n` +
-                        `Date: ${date}\n` +
-                        `TC Type: ${tcType.value}\n` +
-                        `Range: ${tcRangeLow.value} to ${tcRangeHigh.value} °C\n` +
-                        `----------------------------------------\n` +
-                        `Input: ${tcInput.value} ${tcInputUnit.options[tcInputUnit.selectedIndex].text}\n` +
-                        `Result: ${tcResult.textContent}\n` +
-                        `mV: ${tcMvResult.textContent}\n` +
-                        `mA: ${tcMaResult.textContent}\n` +
-                        `% of Range: ${tcPercentResult.textContent}\n` +
-                        `========================================`;
-                }
+                const content =
+                    `========================================\n` +
+                    `INSTRUMENTPRO RTD CALIBRATION RECORD\n` +
+                    `========================================\n` +
+                    `Date: ${date}\n` +
+                    `RTD Type: ${rtdType.value.toUpperCase()}\n` +
+                    `Range: ${rtdRangeLow.value} to ${rtdRangeHigh.value} °C\n` +
+                    `----------------------------------------\n` +
+                    `Input: ${rtdInput.value} ${rtdInputUnit.options[rtdInputUnit.selectedIndex].text}\n` +
+                    `Result: ${rtdResult.textContent}\n` +
+                    `mA Equivalent: ${rtdMaResult.textContent}\n` +
+                    `% of Range: ${rtdPercentResult.textContent}\n` +
+                    `========================================`;
                 const blob = new Blob([content], { type: 'text/plain' });
                 const a = document.createElement('a');
                 a.href = URL.createObjectURL(blob);
-                a.download = 'InstrumentPro_TempCal_' + activeSensor.toUpperCase() + '_' + new Date().toISOString().slice(0, 10) + '.txt';
+                a.download = 'InstrumentPro_RTD_' + new Date().toISOString().slice(0, 10) + '.txt';
+                a.click();
+                URL.revokeObjectURL(a.href);
+            });
+
+            document.getElementById('tcExportBtn').addEventListener('click', function() {
+                const date = new Date().toLocaleString();
+                const content =
+                    `========================================\n` +
+                    `INSTRUMENTPRO THERMOCOUPLE CALIBRATION RECORD\n` +
+                    `========================================\n` +
+                    `Date: ${date}\n` +
+                    `TC Type: ${tcType.value}\n` +
+                    `Range: ${tcRangeLow.value} to ${tcRangeHigh.value} °C\n` +
+                    `----------------------------------------\n` +
+                    `Input: ${tcInput.value} ${tcInputUnit.options[tcInputUnit.selectedIndex].text}\n` +
+                    `Result: ${tcResult.textContent}\n` +
+                    `mV: ${tcMvResult.textContent}\n` +
+                    `mA: ${tcMaResult.textContent}\n` +
+                    `% of Range: ${tcPercentResult.textContent}\n` +
+                    `========================================`;
+                const blob = new Blob([content], { type: 'text/plain' });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = 'InstrumentPro_TC_' + new Date().toISOString().slice(0, 10) + '.txt';
                 a.click();
                 URL.revokeObjectURL(a.href);
             });
@@ -3662,6 +3776,7 @@
             const bleLastReading = document.getElementById('bleLastReading');
             const bleRawData = document.getElementById('bleRawData');
             let bleDevice = null, bleWriteChar = null;
+            let lastBleRawBytes = null, pendingHartResolve = null;
 
             async function connectBluetooth() {
                 if (!navigator.bluetooth) {
@@ -3685,6 +3800,13 @@
                     }
                     await notifyChar.startNotifications();
                     notifyChar.addEventListener('characteristicvaluechanged', function(event) {
+                        const rawBytes = new Uint8Array(event.target.value.buffer);
+                        lastBleRawBytes = rawBytes;
+                        if (pendingHartResolve) {
+                            const resolve = pendingHartResolve;
+                            pendingHartResolve = null;
+                            resolve(rawBytes);
+                        }
                         const text = new TextDecoder().decode(event.target.value);
                         bleRawData.textContent = text.trim().slice(0, 40);
                         const num = extractFirstFloat(text);
@@ -3802,6 +3924,79 @@
                 return bytes.map(b => b.toString(16).toUpperCase().padStart(2, '0')).join(' ');
             }
 
+            // =============================================================
+            // SHARED HART PROTOCOL HELPERS (used by both the raw Frame
+            // Builder above and the HART Communicator page)
+            // =============================================================
+            function hartFloatToBytes(val) {
+                const buf = new ArrayBuffer(4);
+                new DataView(buf).setFloat32(0, val, false); // big-endian per HART spec
+                return Array.from(new Uint8Array(buf));
+            }
+            function hartBytesToFloat(bytes) {
+                const buf = new Uint8Array(bytes).buffer;
+                return new DataView(buf).getFloat32(0, false);
+            }
+            function buildHartFrame(cmd, addr, dataBytes) {
+                const preamble = [0xFF, 0xFF, 0xFF, 0xFF, 0xFF];
+                const start = 0x02; // short frame, primary master
+                const addressByte = 0x80 | (Math.min(63, Math.max(0, addr)) & 0x3F);
+                const frameBody = [start, addressByte, cmd, dataBytes.length, ...dataBytes];
+                let checksum = 0;
+                frameBody.forEach(b => { checksum ^= b; });
+                return [...preamble, ...frameBody, checksum];
+            }
+            // Parses a HART short-frame response. Returns {cmd, status, data} or null if it doesn't look like a valid frame.
+            function parseHartResponse(rawBytes) {
+                if (!rawBytes || rawBytes.length < 8) return null;
+                const bytes = Array.from(rawBytes);
+                let i = 0;
+                while (i < bytes.length && bytes[i] === 0xFF) i++; // skip preamble
+                const delim = bytes[i];
+                if (delim !== 0x06 && delim !== 0x86) return null; // expect a slave short/long-frame response
+                const isLong = delim === 0x86;
+                const addrLen = isLong ? 5 : 1;
+                const addrStart = i + 1;
+                const cmdIdx = addrStart + addrLen;
+                if (cmdIdx + 1 >= bytes.length) return null;
+                const cmd = bytes[cmdIdx];
+                const byteCount = bytes[cmdIdx + 1];
+                const dataStart = cmdIdx + 2;
+                const dataEnd = dataStart + byteCount;
+                if (dataEnd > bytes.length) return null;
+                const respBytes = bytes.slice(dataStart, dataEnd);
+                // Verify checksum: XOR of everything from delimiter through last data byte
+                const checksumIdx = dataEnd;
+                let checksum = 0;
+                for (let k = i; k < dataEnd; k++) checksum ^= bytes[k];
+                const checksumOk = bytes[checksumIdx] === checksum;
+                // First 2 response bytes are normally [Command Response Code, Device Status]
+                const status = respBytes.slice(0, 2);
+                const data = respBytes.slice(2);
+                return { cmd, status, data, checksumOk, raw: bytes };
+            }
+            function sendHartAndWait(frameBytes, timeoutMs) {
+                return new Promise(function(resolve, reject) {
+                    if (!bleWriteChar) {
+                        reject(new Error('No connected Bluetooth device with a write characteristic. Connect one in Settings → Connect Device first.'));
+                        return;
+                    }
+                    const timer = setTimeout(function() {
+                        pendingHartResolve = null;
+                        reject(new Error('No response within ' + (timeoutMs / 1000) + 's — check the connection and that the device supports this command.'));
+                    }, timeoutMs);
+                    pendingHartResolve = function(rawBytes) {
+                        clearTimeout(timer);
+                        resolve(rawBytes);
+                    };
+                    bleWriteChar.writeValue(new Uint8Array(frameBytes)).catch(function(err) {
+                        clearTimeout(timer);
+                        pendingHartResolve = null;
+                        reject(err);
+                    });
+                });
+            }
+
             hartBuildBtn.addEventListener('click', function() {
                 const cmd = hartCommand.value === 'custom' ? parseInt(hartCustomCmd.value) || 0 : parseInt(hartCommand.value);
                 const addr = Math.min(63, Math.max(0, parseInt(hartAddress.value) || 0));
@@ -3873,6 +4068,114 @@
                 hexDecResult.textContent = val.toString();
             });
             floatToHexBtn.click();
+
+            // =============================================================
+            // HART COMMUNICATOR PAGE
+            // =============================================================
+            const hartConnStatus = document.getElementById('hartConnStatus');
+            const hartCommAddr = document.getElementById('hartCommAddr');
+            const hartRawLog = document.getElementById('hartRawLog');
+
+            function logHartRaw(label, bytes) {
+                const line = `[${new Date().toLocaleTimeString()}] ${label}: ${toHexStr(Array.from(bytes))}`;
+                hartRawLog.textContent = (hartRawLog.textContent === 'No commands sent yet.' ? '' : hartRawLog.textContent + '\n') + line;
+                hartRawLog.scrollTop = hartRawLog.scrollHeight;
+            }
+
+            function updateHartConnStatus() {
+                if (bleDevice && bleDevice.gatt && bleDevice.gatt.connected) {
+                    hartConnStatus.style.background = '#d1fae5';
+                    hartConnStatus.style.color = '#065f46';
+                    hartConnStatus.textContent = '✅ Connected to ' + (bleDevice.name || 'Bluetooth device') + ' — ready to send HART commands.';
+                } else {
+                    hartConnStatus.style.background = '#fee2e2';
+                    hartConnStatus.style.color = '#991b1b';
+                    hartConnStatus.textContent = '⚠️ Not connected — connect a device in Settings → Connect Device first (Bluetooth), then come back here.';
+                }
+            }
+            // Re-check whenever this page is opened
+            document.querySelectorAll('[data-page="hart"]').forEach(el => {
+                el.addEventListener('click', updateHartConnStatus);
+            });
+            updateHartConnStatus();
+
+            async function hartSendCommand(cmd, dataBytes, label) {
+                const addr = parseInt(hartCommAddr.value) || 0;
+                const frame = buildHartFrame(cmd, addr, dataBytes);
+                logHartRaw('TX ' + label, frame);
+                const respBytes = await sendHartAndWait(frame, 4000);
+                logHartRaw('RX ' + label, respBytes);
+                const parsed = parseHartResponse(respBytes);
+                if (!parsed) throw new Error('Response didn\'t look like a valid HART frame — check RX log above.');
+                if (!parsed.checksumOk) throw new Error('Checksum mismatch on response — data may be corrupted.');
+                if (parsed.status[0] !== 0) throw new Error('Device returned an error status (code ' + parsed.status[0] + ') — command may not be supported by this device.');
+                return parsed;
+            }
+
+            document.getElementById('hartReadPvBtn').addEventListener('click', async function() {
+                try {
+                    const parsed = await hartSendCommand(1, [], 'Read PV');
+                    const unitsCode = parsed.data[0];
+                    const pv = hartBytesToFloat(parsed.data.slice(1, 5));
+                    document.getElementById('hartPvResult').textContent = pv.toFixed(3);
+                    document.getElementById('hartPvUnitsChip').textContent = 'units code ' + unitsCode;
+                    pushLiveReading(pv, 'HART PV');
+                } catch (err) {
+                    alert('Read PV failed: ' + err.message);
+                }
+            });
+
+            document.getElementById('hartReadCurrentBtn').addEventListener('click', async function() {
+                try {
+                    const parsed = await hartSendCommand(2, [], 'Read Current & % Range');
+                    const current = hartBytesToFloat(parsed.data.slice(0, 4));
+                    const percent = hartBytesToFloat(parsed.data.slice(4, 8));
+                    document.getElementById('hartCurrentResult').textContent = current.toFixed(3) + ' mA';
+                    document.getElementById('hartPercentResult').textContent = percent.toFixed(1) + ' %';
+                } catch (err) {
+                    alert('Read current/%range failed: ' + err.message);
+                }
+            });
+
+            document.getElementById('hartWriteRangeBtn').addEventListener('click', async function() {
+                const lrv = parseFloat(document.getElementById('hartLrvInput').value) || 0;
+                const urv = parseFloat(document.getElementById('hartUrvInput').value) || 0;
+                const units = parseInt(document.getElementById('hartUnitsCode').value) || 0;
+                const confirmed = confirm('This will WRITE LRV=' + lrv + ' / URV=' + urv + ' to the connected transmitter right now. This changes live configuration. Continue?');
+                if (!confirmed) return;
+                try {
+                    const dataBytes = [units, ...hartFloatToBytes(urv), ...hartFloatToBytes(lrv)];
+                    await hartSendCommand(35, dataBytes, 'Write Range');
+                    document.getElementById('hartWriteResult').textContent = 'LRV=' + lrv + ', URV=' + urv + ' sent ✓';
+                } catch (err) {
+                    document.getElementById('hartWriteResult').textContent = 'Failed';
+                    alert('Write range failed: ' + err.message);
+                }
+            });
+
+            document.getElementById('hartFixBtn').addEventListener('click', async function() {
+                const ma = parseFloat(document.getElementById('hartFixMa').value) || 4;
+                const confirmed = confirm('This will FORCE the transmitter output to a fixed ' + ma + ' mA, overriding the real process reading, until you exit fixed mode. Continue?');
+                if (!confirmed) return;
+                try {
+                    await hartSendCommand(40, hartFloatToBytes(ma), 'Enter Fixed Current');
+                    document.getElementById('hartFixResult').textContent = 'Fixed at ' + ma + ' mA ⚠️';
+                    document.getElementById('hartFixResult').style.color = '#dc2626';
+                } catch (err) {
+                    alert('Enter fixed current failed: ' + err.message);
+                }
+            });
+
+            document.getElementById('hartUnfixBtn').addEventListener('click', async function() {
+                try {
+                    // Command 40 with a single 0x00 data byte exits fixed-current mode per the HART spec convention
+                    await hartSendCommand(40, [0x00], 'Exit Fixed Current');
+                    document.getElementById('hartFixResult').textContent = 'Not fixed';
+                    document.getElementById('hartFixResult').style.color = '';
+                } catch (err) {
+                    alert('Exit fixed current failed: ' + err.message);
+                }
+            });
 
             // =============================================================
             // SOLENOID
@@ -4060,6 +4363,141 @@
             calcAmpacity();
 
             // =============================================================
+            // =============================================================
+            // =============================================================
+            // =============================================================
+            // COMPLEX MEASUREMENT TOOLS MAIN TABS (Flow)
+            // =============================================================
+            document.querySelectorAll('#flowMainTabs .tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    document.querySelectorAll('#flowMainTabs .tab').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    const fl = this.dataset.flow;
+                    document.querySelectorAll('.flow-main-panel').forEach(p => p.classList.add('hidden'));
+                    const panel = document.getElementById('flow-' + fl);
+                    if (panel) panel.classList.remove('hidden');
+                });
+            });
+
+            // Vortex: Flow = frequency / K-factor
+            function calcVortex() {
+                const freq = parseFloat(document.getElementById('vortexFreq').value) || 0;
+                const k = parseFloat(document.getElementById('vortexK').value) || 1;
+                const flowLs = freq / k;
+                document.getElementById('vortexResultLs').textContent = flowLs.toFixed(3) + ' L/s';
+                document.getElementById('vortexResultLmin').textContent = (flowLs * 60).toFixed(1) + ' L/min';
+                document.getElementById('vortexResultGpm').textContent = (flowLs * 15.850) .toFixed(1) + ' GPM';
+            }
+            document.getElementById('vortexCalcBtn').addEventListener('click', calcVortex);
+            calcVortex();
+
+            // Coriolis: Mass flow = FCF x time delay; Density = K0 + K1*T^2
+            function calcCoriolisMass() {
+                const fcf = parseFloat(document.getElementById('coriolisFcf').value) || 0;
+                const dt = parseFloat(document.getElementById('coriolisDt').value) || 0;
+                document.getElementById('coriolisMassResult').textContent = (fcf * dt).toFixed(2) + ' g/s';
+            }
+            document.getElementById('coriolisMassBtn').addEventListener('click', calcCoriolisMass);
+            calcCoriolisMass();
+
+            function calcCoriolisDensity() {
+                const k0 = parseFloat(document.getElementById('coriolisK0').value) || 0;
+                const k1 = parseFloat(document.getElementById('coriolisK1').value) || 0;
+                const t = parseFloat(document.getElementById('coriolisPeriod').value) || 0;
+                const density = k0 + k1 * t * t;
+                document.getElementById('coriolisDensityResult').textContent = density.toFixed(3) + ' g/cc';
+            }
+            document.getElementById('coriolisDensityBtn').addEventListener('click', calcCoriolisDensity);
+
+            // Magnetic: linear velocity from mA, no sqrt
+            function calcMag() {
+                const dia = parseFloat(document.getElementById('magDiameter').value) || 0; // inches
+                const vmax = parseFloat(document.getElementById('magVmax').value) || 0; // ft/s
+                const ma = parseFloat(document.getElementById('magMa').value) || 4;
+                const velocity = vmax * Math.max(0, Math.min(1, (ma - 4) / 16));
+                const areaFt2 = Math.PI * Math.pow((dia / 12) / 2, 2); // convert in to ft
+                const flowCfs = velocity * areaFt2; // ft3/s
+                const flowGpm = flowCfs * 448.831;
+                document.getElementById('magVelocity').textContent = velocity.toFixed(2) + ' ft/s';
+                document.getElementById('magFlowGpm').textContent = flowGpm.toFixed(1) + ' GPM';
+            }
+            document.getElementById('magCalcBtn').addEventListener('click', calcMag);
+            calcMag();
+
+            // Radiometric: density from Beer-Lambert attenuation
+            function calcNuclear() {
+                const i0 = parseFloat(document.getElementById('nuclearI0').value) || 1;
+                const i = parseFloat(document.getElementById('nuclearI').value) || 0;
+                const mu = parseFloat(document.getElementById('nuclearMu').value) || 1;
+                const x = parseFloat(document.getElementById('nuclearX').value) || 1;
+                let density = 0;
+                if (i > 0 && i0 > 0) {
+                    density = -Math.log(i / i0) / (mu * x);
+                }
+                document.getElementById('nuclearDensity').textContent = density.toFixed(3) + ' g/cc';
+            }
+            document.getElementById('nuclearCalcBtn').addEventListener('click', calcNuclear);
+            calcNuclear();
+
+            // =============================================================
+            // LEVEL MEASUREMENT MAIN TABS (DP / Radar)
+            // =============================================================
+            document.querySelectorAll('#levelMainTabs .tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    document.querySelectorAll('#levelMainTabs .tab').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    const lvl = this.dataset.level;
+                    document.querySelectorAll('.level-main-panel').forEach(p => p.classList.add('hidden'));
+                    const panel = document.getElementById('level-' + lvl);
+                    if (panel) panel.classList.remove('hidden');
+                });
+            });
+
+            // Radar Level calculator
+            const radarTankHeight = document.getElementById('radarTankHeight');
+            const radarHeightUnit = document.getElementById('radarHeightUnit');
+            const radarBlocking = document.getElementById('radarBlocking');
+            const radarDistance = document.getElementById('radarDistance');
+            const radarCalcBtn = document.getElementById('radarCalcBtn');
+            const radarLevel = document.getElementById('radarLevel');
+            const radarPercent = document.getElementById('radarPercent');
+            const radarMa = document.getElementById('radarMa');
+            const radarBlockWarning = document.getElementById('radarBlockWarning');
+
+            function calcRadar() {
+                const tankHeight = parseFloat(radarTankHeight.value) || 0;
+                const blocking = parseFloat(radarBlocking.value) || 0;
+                const distance = parseFloat(radarDistance.value) || 0;
+                const unit = radarHeightUnit.options[radarHeightUnit.selectedIndex].text;
+                const level = tankHeight - distance;
+                const percent = tankHeight > 0 ? (level / tankHeight) * 100 : 0;
+                const ma = 4 + (Math.max(0, Math.min(100, percent)) / 100) * 16;
+                radarLevel.textContent = level.toFixed(2) + ' ' + unit;
+                radarPercent.textContent = percent.toFixed(1) + ' %';
+                radarMa.textContent = ma.toFixed(2) + ' mA';
+                radarBlockWarning.classList.toggle('hidden', distance > blocking);
+            }
+            radarCalcBtn.addEventListener('click', calcRadar);
+            radarTankHeight.addEventListener('input', calcRadar);
+            radarBlocking.addEventListener('input', calcRadar);
+            radarDistance.addEventListener('input', calcRadar);
+            calcRadar();
+
+            // =============================================================
+            // CALIBRATION MAIN TABS (5-Point / RTD / Thermocouple)
+            // =============================================================
+            document.querySelectorAll('#calMainTabs .tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    document.querySelectorAll('#calMainTabs .tab').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    const cal = this.dataset.cal;
+                    document.querySelectorAll('.cal-main-panel').forEach(p => p.classList.add('hidden'));
+                    const panel = document.getElementById('cal-' + cal);
+                    if (panel) panel.classList.remove('hidden');
+                });
+            });
+
+            // =============================================================
             // REFERENCES TABS
             // =============================================================
             document.querySelectorAll('#refTabs .tab').forEach(tab => {
@@ -4146,13 +4584,13 @@
                 'groundloop': '🔍 Ground Loop / Noise:\n1. Ground cable shield at ONE end only\n2. Check for multiple earth grounds on same loop\n3. Use isolated barrier/isolator if unavoidable\n4. Verify power supply common isn\'t shared incorrectly\n5. Route signal cable away from power cables'
             };
 
-            document.querySelectorAll('.trouble-item').forEach(item => {
-                item.addEventListener('click', function() {
-                    const fault = this.dataset.fault;
-                    const msg = faultDB[fault] || 'No diagnosis available.';
-                    faultDiagnosis.innerHTML = msg.replace(/\n/g, '<br/>');
-                });
+            const faultSelect = document.getElementById('faultSelect');
+            faultSelect.addEventListener('change', function() {
+                const fault = this.value;
+                const msg = faultDB[fault] || 'No diagnosis available.';
+                faultDiagnosis.innerHTML = msg.replace(/\n/g, '<br/>');
             });
+            faultSelect.dispatchEvent(new Event('change'));
 
             faultFinderBtn.addEventListener('click', function() {
                 const all = Object.keys(faultDB).map(k => faultDB[k]).join('\n\n');
