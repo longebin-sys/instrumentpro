@@ -1,15 +1,15 @@
 // InstrumentPro Toolbox — Service Worker
 // Caches the app shell so it keeps working offline once installed/saved.
 // Bump CACHE_NAME whenever index.html or assets change to force an update.
-const CACHE_NAME = 'instrumentpro-cache-v1';
+const CACHE_NAME = 'instrumentpro-cache-v2';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
   './manifest.json',
-  './icons/icon-192.png',
-  './icons/icon-512.png',
-  './icons/icon-512-maskable.png',
-  './icons/favicon.ico'
+  './icon-192.png',
+  './icon-512.png',
+  './icon-512-maskable.png',
+  './favicon.ico'
 ];
 
 self.addEventListener('install', (event) => {
