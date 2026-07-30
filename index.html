@@ -165,15 +165,22 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2.5rem;
-            color: #7fc9ff;
             margin: 0 auto 18px auto;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            animation: splashPulse 1.8s ease-in-out infinite;
+            animation: splashGlow 1.8s ease-in-out infinite;
         }
-        @keyframes splashPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.08); }
+        @keyframes splashGlow {
+            0%, 100% { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); }
+            50% { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 0 22px rgba(127, 201, 255, 0.45); }
+        }
+        #splashNeedle {
+            transform-origin: 50px 78px;
+            animation: splashNeedleSweep 1.6s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+        }
+        @keyframes splashNeedleSweep {
+            0% { transform: rotate(-52deg); }
+            50% { transform: rotate(52deg); }
+            100% { transform: rotate(-52deg); }
         }
         .splash-title {
             font-size: 1.6rem;
@@ -219,7 +226,7 @@
             text-transform: uppercase;
         }
         @media (prefers-reduced-motion: reduce) {
-            .splash-icon, .splash-loader-bar, .splash-title, .splash-sub {
+            .splash-icon, .splash-loader-bar, .splash-title, .splash-sub, #splashNeedle {
                 animation: none;
             }
         }
@@ -1269,7 +1276,16 @@
     ============================================================ -->
     <div id="splashScreen">
         <div class="splash-content">
-            <div class="splash-icon"><i class="fas fa-gauge-high"></i></div>
+            <div class="splash-icon">
+                <svg viewBox="0 0 100 100" width="56" height="56">
+                    <path d="M 18 78 A 36 36 0 1 1 82 78" fill="none" stroke="#ffffff" stroke-width="9" stroke-linecap="round" opacity="0.9" />
+                    <line x1="50" y1="20" x2="50" y2="28" stroke="#7fc9ff" stroke-width="3" stroke-linecap="round" />
+                    <line x1="14" y1="78" x2="21" y2="74" stroke="#7fc9ff" stroke-width="3" stroke-linecap="round" />
+                    <line x1="86" y1="78" x2="79" y2="74" stroke="#7fc9ff" stroke-width="3" stroke-linecap="round" />
+                    <line id="splashNeedle" x1="50" y1="78" x2="50" y2="38" stroke="#ffffff" stroke-width="4" stroke-linecap="round" />
+                    <circle cx="50" cy="78" r="5.5" fill="#ffffff" />
+                </svg>
+            </div>
             <div class="splash-title">InstrumentPro</div>
             <div class="splash-sub">Field Toolbox for Technicians</div>
             <div class="splash-loader"><div class="splash-loader-bar"></div></div>
