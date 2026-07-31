@@ -2069,39 +2069,70 @@
                     <div class="tab" data-ref="fluke">Fluke 789</div>
                     <div class="tab" data-ref="fault-ref">Fault Codes</div>
                     <div class="tab" data-ref="network">Networking</div>
-                    <div class="tab" data-ref="commissioning">Commissioning</div>
+                    <div class="tab" data-ref="formulas">Formulas</div>
+                    <div class="tab" data-ref="actuators">Valve Actuators</div>
                 </div>
-                <div class="ref-panel hidden" id="ref-commissioning">
-                    <div class="sub-tabs" id="commTabs">
-                        <div class="sub-tab active" data-tab="comm-general">General</div>
-                        <div class="sub-tab" data-tab="comm-vfd">VFD</div>
-                        <div class="sub-tab" data-tab="comm-switchgear">Switchgear</div>
-                    </div>
-                    <div class="sub-panel active" id="comm-general">
-                        <div style="font-size:0.75rem;padding:4px 0;">
-                            <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:4px;">1. Pre-Commissioning · 2. Installation · 3. Calibration</div>
-                            <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:4px;">4. Configuration · 5. Loop Checking · 6. Handover</div>
-                        </div>
-                    </div>
-                    <div class="sub-panel hidden" id="comm-vfd">
-                        <div style="font-size:0.75rem;padding:4px 0;">
-                            <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:4px;">✅ Input voltage · Grounding · Control wiring</div>
-                            <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:4px;">✅ Motor parameters · I/O config · Ramp settings</div>
-                            <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:4px;">✅ Communication · Rotation check · Load test</div>
-                        </div>
-                    </div>
-                    <div class="sub-panel hidden" id="comm-switchgear">
-                        <div style="font-size:0.75rem;padding:4px 0;">
-                            <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:4px;">✅ Visual inspection · Mechanical operation</div>
-                            <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:4px;">✅ MEG test · Contact resistance · Timing tests</div>
-                            <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:4px;">✅ Protective relay testing · CT/VT check · Load test</div>
-                        </div>
-                    </div>
-                    <div class="row mt-1"><label>Project</label><input type="text" id="commProject" placeholder="Project" /></div>
-                    <div class="row"><label>Tag</label><input type="text" id="commTag" placeholder="FT-1001" /></div>
-                    <button class="btn" id="commCheckBtn"><i class="fas fa-check"></i> Generate</button>
-                    <div id="commOutput" class="report-preview mt-1">Checklist will appear here.</div>
+
+                <div class="ref-panel hidden" id="ref-formulas">
+                    <div><strong>Pressure</strong></div>
+                    <div style="font-size:0.75rem;margin:4px 0 10px 0;">P = F ÷ A  (Pa)<br/>Head of liquid column: P = ρ·g·h</div>
+                    <div><strong>Flow</strong></div>
+                    <div style="font-size:0.75rem;margin:4px 0 10px 0;">Q = V ÷ t = A·v  (volumetric, m³/s)<br/>Mass flow: ṁ = ρ·Q</div>
+                    <div><strong>Level</strong></div>
+                    <div style="font-size:0.75rem;margin:4px 0 10px 0;">Hydrostatic: P = ρ·g·h<br/>From a DP transmitter: h = ΔP ÷ (ρ·g)</div>
+                    <div><strong>Temperature</strong></div>
+                    <div style="font-size:0.75rem;margin:4px 0 10px 0;">°F = (°C × 9/5) + 32<br/>RTD resistance: Rₜ = R₀ [1 + α(T − T₀)]</div>
+                    <div><strong>Density / Specific Gravity</strong></div>
+                    <div style="font-size:0.75rem;margin:4px 0 10px 0;">ρ = m ÷ V<br/>SG = ρ(fluid) ÷ ρ(water)</div>
+                    <div><strong>Viscosity</strong></div>
+                    <div style="font-size:0.75rem;margin:4px 0 10px 0;">Shear stress: τ = μ·(dv/dy)<br/>Kinematic viscosity: ν = μ ÷ ρ</div>
+                    <div><strong>Gas Law</strong></div>
+                    <div style="font-size:0.75rem;margin:4px 0 10px 0;">Ideal gas: PV = nRT (R = 8.314 J/mol·K)<br/>Gas density: ρ = PM ÷ RT (P = absolute pressure)</div>
+                    <div><strong>Signals & 4-20mA</strong></div>
+                    <div style="font-size:0.75rem;margin:4px 0 10px 0;">% of Span = (PV − LRV) ÷ (URV − LRV) × 100<br/>Linear transmitter: I = 4 + [(PV − LRV) ÷ (URV − LRV)] × 16</div>
+                    <hr />
+                    <div><strong>Common Unit Conversions</strong></div>
+                    <div class="chip">1 bar = 100 kPa</div>
+                    <div class="chip">1 MPa = 10 bar</div>
+                    <div class="chip">1 mH₂O = 9,806.65 Pa</div>
+                    <div class="chip">1 psi = 6.89476 kPa</div>
+                    <div class="chip">1 gpm (US) = 3.78541 L/min</div>
+                    <div class="chip">1 m³/h = 16.6667 L/min</div>
+                    <div class="chip">1 Pa·s = 1000 cP</div>
+                    <div class="chip">1 cP = 1 mPa·s</div>
+                    <div style="font-size:0.6rem;color:#94a3b8;margin-top:8px;">g = 9.80665 m/s² · Always keep units consistent across a calculation — mixing e.g. psi with m and kg/m³ will silently give a wrong answer.</div>
                 </div>
+
+                <div class="ref-panel hidden" id="ref-actuators">
+                    <div><strong>Direct-Acting vs. Reverse-Acting Actuators</strong></div>
+                    <div style="font-size:0.72rem;margin:6px 0;">
+                        <strong>Direct-acting actuator:</strong> air pressure applied above the diaphragm pushes the stem <strong>down</strong> as pressure increases. On a normally-seated (push-down-to-close) body, this closes the valve — air pressure is what closes it, so it's called <strong>Air-to-Close (ATC)</strong>. Losing air lets the spring push the stem back up, so it fails <strong>open (FO)</strong>.
+                    </div>
+                    <div style="font-size:0.72rem;margin:6px 0;">
+                        <strong>Reverse-acting actuator:</strong> air pressure applied below the diaphragm pushes the stem <strong>up</strong> as pressure increases, opening the same style of body. Air pressure is what opens it, so it's called <strong>Air-to-Open (ATO)</strong>. Losing air lets the spring push the stem back down, so it fails <strong>closed (FC)</strong>.
+                    </div>
+                    <div style="font-size:0.65rem;color:#64748b;margin:8px 0;">The overall fail-safe behavior of a valve is set by <em>both</em> the actuator's action (direct/reverse) <em>and</em> the valve body's seating style together — the same actuator can give a different fail action on a differently-seated body. Always confirm the actual fail position on the specific valve, not just the actuator type.</div>
+                    <div class="dp-diagram" style="font-family:sans-serif;font-size:0.7rem;text-align:left;padding:14px;">
+                        <div style="display:flex;justify-content:space-between;gap:10px;">
+                            <div style="flex:1;">
+                                <div style="font-weight:700;color:#0b2d4e;margin-bottom:4px;">Reverse-Acting</div>
+                                <div>Air enters <strong>below</strong> diaphragm</div>
+                                <div>↑ Air pressure → stem moves <strong>up</strong> → valve opens</div>
+                                <div style="color:#2563eb;font-weight:600;margin-top:4px;">Air-to-Open (ATO)</div>
+                                <div style="color:#dc2626;font-weight:600;">Fail-Closed (FC)</div>
+                            </div>
+                            <div style="flex:1;border-left:1px solid #cbd5e1;padding-left:10px;">
+                                <div style="font-weight:700;color:#0b2d4e;margin-bottom:4px;">Direct-Acting</div>
+                                <div>Air enters <strong>above</strong> diaphragm</div>
+                                <div>↑ Air pressure → stem moves <strong>down</strong> → valve closes</div>
+                                <div style="color:#2563eb;font-weight:600;margin-top:4px;">Air-to-Close (ATC)</div>
+                                <div style="color:#dc2626;font-weight:600;">Fail-Open (FO)</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="font-size:0.6rem;color:#94a3b8;margin-top:8px;">Safety-critical: the fail position is chosen based on which state is safer for the process if air/power is lost — e.g. an ESD valve on a fuel line is typically fail-closed; a vent or relief path is typically fail-open. Always verify against the specific P&ID/datasheet, not assumption.</div>
+                </div>
+
                 <div id="refContent">
                     <div class="ref-panel" id="ref-tc">
                         <div><strong>TC Color Codes</strong></div>
@@ -2336,22 +2367,61 @@
         <div class="page" id="page-report">
             <div class="page-title"><i class="fas fa-file-alt"></i> Report</div>
             <div class="card">
-                <div class="row"><label>Tag</label><input type="text" id="reportTag" placeholder="FT-1001" /></div>
-                <div class="row"><label>Model</label><input type="text" id="reportModel" placeholder="Rosemount 3051S" /></div>
-                <div class="row"><label>Type</label><select id="reportType"><option value="calibration">Calibration</option><option value="gc">GC</option><option value="commissioning">Commissioning</option></select></div>
-                <div class="row"><label>Tolerance</label><input type="number" id="reportTolerance" value="2" step="0.1" style="flex:0.4;" /><span class="chip">% (calibration only)</span></div>
-                <div style="font-size:0.65rem;color:#64748b;margin:2px 0 4px 0;">For Calibration: enter the <strong>actual</strong> % reading recorded at each nominal test point (defaults show ideal).</div>
-                <div id="calPointsInput" class="cal-points-grid">
-                    <div class="cal-point"><span>0%</span><input type="number" id="rp0" value="0" step="any" class="cal-actual" /></div>
-                    <div class="cal-point"><span>25%</span><input type="number" id="rp25" value="25" step="any" class="cal-actual" /></div>
-                    <div class="cal-point"><span>50%</span><input type="number" id="rp50" value="50" step="any" class="cal-actual" /></div>
-                    <div class="cal-point"><span>75%</span><input type="number" id="rp75" value="75" step="any" class="cal-actual" /></div>
-                    <div class="cal-point"><span>100%</span><input type="number" id="rp100" value="100" step="any" class="cal-actual" /></div>
+                <div class="tab-scroll" id="reportMainTabs">
+                    <div class="tab active" data-report="field">Field Report</div>
+                    <div class="tab" data-report="commissioning">Commissioning</div>
                 </div>
-                <div class="row"><label>Notes</label><textarea id="reportNotes" placeholder="Notes..."></textarea></div>
-                <button class="btn" id="generateReportBtn"><i class="fas fa-file-alt"></i> Generate</button>
-                <div id="reportPreview" class="report-preview mt-1">Report will appear here.</div>
-                <button class="btn btn-outline mt-1" id="exportReportBtn"><i class="fas fa-download"></i> Export</button>
+
+                <div class="report-main-panel" id="reportpanel-field">
+                    <div class="row"><label>Tag</label><input type="text" id="reportTag" placeholder="FT-1001" /></div>
+                    <div class="row"><label>Model</label><input type="text" id="reportModel" placeholder="Rosemount 3051S" /></div>
+                    <div class="row"><label>Type</label><select id="reportType"><option value="calibration">Calibration</option><option value="gc">GC</option><option value="commissioning">Commissioning</option></select></div>
+                    <div class="row"><label>Tolerance</label><input type="number" id="reportTolerance" value="2" step="0.1" style="flex:0.4;" /><span class="chip">% (calibration only)</span></div>
+                    <div style="font-size:0.65rem;color:#64748b;margin:2px 0 4px 0;">For Calibration: enter the <strong>actual</strong> % reading recorded at each nominal test point (defaults show ideal).</div>
+                    <div id="calPointsInput" class="cal-points-grid">
+                        <div class="cal-point"><span>0%</span><input type="number" id="rp0" value="0" step="any" class="cal-actual" /></div>
+                        <div class="cal-point"><span>25%</span><input type="number" id="rp25" value="25" step="any" class="cal-actual" /></div>
+                        <div class="cal-point"><span>50%</span><input type="number" id="rp50" value="50" step="any" class="cal-actual" /></div>
+                        <div class="cal-point"><span>75%</span><input type="number" id="rp75" value="75" step="any" class="cal-actual" /></div>
+                        <div class="cal-point"><span>100%</span><input type="number" id="rp100" value="100" step="any" class="cal-actual" /></div>
+                    </div>
+                    <div class="row"><label>Notes</label><textarea id="reportNotes" placeholder="Notes..."></textarea></div>
+                    <button class="btn" id="generateReportBtn"><i class="fas fa-file-alt"></i> Generate</button>
+                    <div id="reportPreview" class="report-preview mt-1">Report will appear here.</div>
+                    <button class="btn btn-outline mt-1" id="exportReportBtn"><i class="fas fa-download"></i> Export</button>
+                </div>
+
+                <div class="report-main-panel hidden" id="reportpanel-commissioning">
+                    <div class="sub-tabs" id="commTabs">
+                        <div class="sub-tab active" data-tab="comm-general">General</div>
+                        <div class="sub-tab" data-tab="comm-vfd">VFD</div>
+                        <div class="sub-tab" data-tab="comm-switchgear">Switchgear</div>
+                    </div>
+                    <div class="sub-panel active" id="comm-general">
+                        <div style="font-size:0.75rem;padding:4px 0;">
+                            <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:4px;">1. Pre-Commissioning · 2. Installation · 3. Calibration</div>
+                            <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:4px;">4. Configuration · 5. Loop Checking · 6. Handover</div>
+                        </div>
+                    </div>
+                    <div class="sub-panel hidden" id="comm-vfd">
+                        <div style="font-size:0.75rem;padding:4px 0;">
+                            <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:4px;">✅ Input voltage · Grounding · Control wiring</div>
+                            <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:4px;">✅ Motor parameters · I/O config · Ramp settings</div>
+                            <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:4px;">✅ Communication · Rotation check · Load test</div>
+                        </div>
+                    </div>
+                    <div class="sub-panel hidden" id="comm-switchgear">
+                        <div style="font-size:0.75rem;padding:4px 0;">
+                            <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:4px;">✅ Visual inspection · Mechanical operation</div>
+                            <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:4px;">✅ MEG test · Contact resistance · Timing tests</div>
+                            <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:4px;">✅ Protective relay testing · CT/VT check · Load test</div>
+                        </div>
+                    </div>
+                    <div class="row mt-1"><label>Project</label><input type="text" id="commProject" placeholder="Project" /></div>
+                    <div class="row"><label>Tag</label><input type="text" id="commTag" placeholder="FT-1001" /></div>
+                    <button class="btn" id="commCheckBtn"><i class="fas fa-check"></i> Generate</button>
+                    <div id="commOutput" class="report-preview mt-1">Checklist will appear here.</div>
+                </div>
             </div>
         </div>
 
@@ -4456,6 +4526,21 @@
             }
             document.getElementById('nuclearCalcBtn').addEventListener('click', calcNuclear);
             calcNuclear();
+
+            // =============================================================
+            // =============================================================
+            // REPORT PAGE MAIN TABS (Field Report / Commissioning)
+            // =============================================================
+            document.querySelectorAll('#reportMainTabs .tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    document.querySelectorAll('#reportMainTabs .tab').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    const rp = this.dataset.report;
+                    document.querySelectorAll('.report-main-panel').forEach(p => p.classList.add('hidden'));
+                    const panel = document.getElementById('reportpanel-' + rp);
+                    if (panel) panel.classList.remove('hidden');
+                });
+            });
 
             // =============================================================
             // LEVEL MEASUREMENT MAIN TABS (DP / Radar)
