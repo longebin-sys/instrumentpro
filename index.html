@@ -2071,6 +2071,16 @@
                     <div class="tab" data-ref="network">Networking</div>
                     <div class="tab" data-ref="formulas">Formulas</div>
                     <div class="tab" data-ref="actuators">Valve Actuators</div>
+                    <div class="tab" data-ref="sensors">Sensors</div>
+                    <div class="tab" data-ref="signals">Signals</div>
+                    <div class="tab" data-ref="flowlevel">Flow &amp; Level</div>
+                    <div class="tab" data-ref="tempsensors">Temp Sensors</div>
+                    <div class="tab" data-ref="plcbasics">PLC Basics</div>
+                    <div class="tab" data-ref="plcwiring">PLC Wiring</div>
+                    <div class="tab" data-ref="plcfamilies">PLC Families</div>
+                    <div class="tab" data-ref="hazarea">Hazardous Area</div>
+                    <div class="tab" data-ref="motorcontrol">Motor Control</div>
+                    <div class="tab" data-ref="cables">Cables &amp; Breakers</div>
                 </div>
 
                 <div class="ref-panel hidden" id="ref-formulas">
@@ -2131,7 +2141,643 @@
                         </div>
                     </div>
                     <div style="font-size:0.6rem;color:#94a3b8;margin-top:8px;">Safety-critical: the fail position is chosen based on which state is safer for the process if air/power is lost — e.g. an ESD valve on a fuel line is typically fail-closed; a vent or relief path is typically fail-open. Always verify against the specific P&ID/datasheet, not assumption.</div>
+                    <hr />
+                    <div><strong>Control Valve Working Principle</strong></div>
+                    <div style="font-size:0.72rem;margin:6px 0;">A controller sends a 4-20mA signal to an I/P converter, which converts it to a 3-15psi pneumatic signal. The positioner compares this against actual valve position and adjusts actuator air pressure. The actuator moves the stem, which moves the plug, changing flow through the valve — closing the loop with a position feedback signal back to the controller.</div>
+                    <div class="chip">Actuator (diaphragm) — provides force to move the stem</div>
+                    <div class="chip">Positioner — ensures accurate valve positioning</div>
+                    <div class="chip">Stem — transmits motion from actuator to plug</div>
+                    <div class="chip">Plug — regulates flow by opening/closing against the seat</div>
+                    <div class="chip">Seat ring — provides tight shut-off</div>
+                    <div class="chip">Valve body — contains the flow, connects to the pipeline</div>
+                    <div style="margin-top:8px;"><strong>Flow characteristics</strong></div>
+                    <div class="chip">Linear — equal change in travel produces equal change in flow</div>
+                    <div class="chip">Equal percentage — equal change in travel produces increasing change in flow</div>
+                    <div class="chip">Quick opening — large change in flow occurs early in the travel</div>
+                    <div style="margin-top:8px;"><strong>Common valve body types</strong></div>
+                    <div class="chip">Globe — good throttling control, moderate cost</div>
+                    <div class="chip">Ball — tight shutoff, fast quarter-turn action</div>
+                    <div class="chip">Butterfly — compact, lightweight, good for large pipe sizes</div>
+                    <div class="chip">Rotary plug — high rangeability, good throttling in demanding service</div>
                 </div>
+
+                <div class="ref-panel hidden" id="ref-sensors">
+                    <div class="sub-tabs" id="sensorsRefTabs">
+                        <div class="sub-tab active" data-tab="sens-overview">Overview</div>
+                        <div class="sub-tab" data-tab="sens-vs-trans">Sensor vs Transmitter</div>
+                        <div class="sub-tab" data-tab="sens-active">Active vs Passive</div>
+                        <div class="sub-tab" data-tab="sens-limitprox">Limit vs Proximity</div>
+                        <div class="sub-tab" data-tab="sens-level">Level Switches</div>
+                        <div class="sub-tab" data-tab="sens-piezo">Piezoelectric</div>
+                    </div>
+
+                    <div class="sub-panel active" id="sens-overview">
+                        <div style="font-size:0.72rem;">A sensor's <strong>measurand</strong> is the physical thing it detects, and its typical output tells you how to wire/read it:</div>
+                        <div class="table-wrap mt-1"><table>
+                                <thead><tr><th>Sensor</th><th>Measures</th><th>Typical Output</th></tr></thead>
+                                <tbody>
+                                    <tr><td>Temperature</td><td>°C/°F</td><td>mV (TC), Ω (RTD/Thermistor), 4-20mA</td></tr>
+                                    <tr><td>Pressure</td><td>Pa/bar/psi</td><td>4-20mA, 0-10V, HART</td></tr>
+                                    <tr><td>Level</td><td>liquid/solid height</td><td>4-20mA, 0-10V, digital</td></tr>
+                                    <tr><td>Proximity</td><td>presence/absence</td><td>PNP/NPN, NO/NC, digital</td></tr>
+                                    <tr><td>Flow</td><td>liquid/gas rate</td><td>4-20mA, pulse/frequency</td></tr>
+                                    <tr><td>Humidity</td><td>%RH</td><td>4-20mA, 0-10V</td></tr>
+                                    <tr><td>Vibration</td><td>accel/velocity</td><td>4-20mA, ICP/mV</td></tr>
+                                    <tr><td>Position</td><td>linear/rotary</td><td>0-10V, 4-20mA, digital</td></tr>
+                                </tbody>
+                            </table></div>
+                    </div>
+
+                    <div class="sub-panel hidden" id="sens-vs-trans">
+                        <div style="font-size:0.72rem;margin-bottom:6px;"><strong>Sensor</strong> measures the physical parameter directly — e.g. an RTD element's own resistance changes with temperature. That raw signal (Ω, mV) usually isn't usable by a control system on its own.</div>
+                        <div style="font-size:0.72rem;">A <strong>transmitter</strong> takes that raw sensor signal, conditions it, and converts it into a standardized output — typically 4-20mA, 0-10V, or a digital protocol — so a PLC/DCS can actually use it.</div>
+                        <div class="chip mt-1">RTD → Resistance (Ω, raw)</div>
+                        <div class="chip">Transmitter → 4-20mA (standardized)</div>
+                        <div class="chip">PLC/DCS → reads the 4-20mA</div>
+                    </div>
+
+                    <div class="sub-panel hidden" id="sens-active">
+                        <div style="font-size:0.72rem;margin-bottom:6px;"><strong>Active (self-generating) sensors</strong> produce their own electrical output from the energy of what they're measuring — no external power needed to generate the signal itself.</div>
+                        <div class="chip">Thermocouple</div>
+                        <div class="chip">Piezoelectric sensor</div>
+                        <div class="chip">Magnetic pickup (speed)</div>
+                        <div style="font-size:0.72rem;margin:8px 0 6px 0;"><strong>Passive (modulating) sensors</strong> need external excitation power — they change an electrical property (resistance, capacitance, inductance) that has to be measured with an external circuit.</div>
+                        <div class="chip">RTD (Pt100/Pt1000)</div>
+                        <div class="chip">Strain gauge / load cell</div>
+                        <div class="chip">Potentiometer</div>
+                        <div class="chip">LVDT</div>
+                    </div>
+
+                    <div class="sub-panel hidden" id="sens-limitprox">
+                        <div style="font-size:0.72rem;margin-bottom:6px;"><strong>Limit switch:</strong> physical contact — an actuator lever changes internal contact state (NO↔NC) when touched. Simple, cheap, but has moving parts that wear and respond slower.</div>
+                        <div style="font-size:0.72rem;margin-bottom:6px;"><strong>Proximity sensor:</strong> detects an object without contact (inductive/capacitive/photoelectric/ultrasonic depending on type). Faster, no mechanical wear, better in harsh/dirty environments, but costs more and inductive types only see metal.</div>
+                        <div class="table-wrap"><table>
+                                <thead><tr><th></th><th>Limit Switch</th><th>Proximity</th></tr></thead>
+                                <tbody>
+                                    <tr><td>Contact</td><td>Yes</td><td>No</td></tr>
+                                    <tr><td>Wear/Life</td><td>Higher wear</td><td>Longer life</td></tr>
+                                    <tr><td>Speed</td><td>Slower</td><td>Faster</td></tr>
+                                    <tr><td>Cost</td><td>Lower</td><td>Higher</td></tr>
+                                </tbody>
+                            </table></div>
+                    </div>
+
+                    <div class="sub-panel hidden" id="sens-level">
+                        <div style="font-size:0.72rem;margin-bottom:4px;">Point-level switches for high/low/interface detection — pick by media (liquid vs bulk solid) and process conditions:</div>
+                        <div class="chip">Vibrating fork — liquids/solids, no moving parts</div>
+                        <div class="chip">Conductivity — conductive liquids only</div>
+                        <div class="chip">Capacitive — liquids, powders, wide media range</div>
+                        <div class="chip">Displacer — buoyancy-based, interface/liquid level</div>
+                        <div class="chip">Magnetic float — simple, reliable liquid level</div>
+                        <div class="chip">Vibrating rod — powders/granules</div>
+                        <div class="chip">Tilt switch — simple bulk-solid high level</div>
+                        <div class="chip">Paddle — rotating paddle stalls on contact, bulk solids</div>
+                        <div class="chip">Optical — small tanks, leak detection</div>
+                        <div class="chip">Diaphragm — powders/granular via pressure on a flexible diaphragm</div>
+                    </div>
+
+                    <div class="sub-panel hidden" id="sens-piezo">
+                        <div style="font-size:0.72rem;margin-bottom:6px;">Piezoelectric crystals convert mechanical energy ↔ electrical energy. Common uses:</div>
+                        <div class="chip">Dynamic pressure sensors</div>
+                        <div class="chip">Ultrasonic transducers (level/flow, NDT)</div>
+                        <div class="chip">Quartz frequency references (clocks, timers)</div>
+                        <div class="chip">Fuel injectors (precise fast actuation)</div>
+                        <div class="chip">Micro-positioning actuators</div>
+                        <div class="chip">Accelerometers / vibration sensors</div>
+                        <div class="chip">Knock/impact detection</div>
+                        <div class="chip">Buzzers & acoustic transducers</div>
+                    </div>
+                </div>
+
+                <div class="ref-panel hidden" id="ref-signals">
+                    <div class="sub-tabs" id="signalsRefTabs">
+                        <div class="sub-tab active" data-tab="sig-420">4-20mA Basics</div>
+                        <div class="sub-tab" data-tab="sig-420v10">4-20mA vs 0-10V</div>
+                        <div class="sub-tab" data-tab="sig-analogdigital">Analog vs Digital</div>
+                        <div class="sub-tab" data-tab="sig-spanrange">Span vs Range</div>
+                        <div class="sub-tab" data-tab="sig-errors">Zero vs Span Error</div>
+                        <div class="sub-tab" data-tab="sig-wiring">Transmitter Wiring</div>
+                    </div>
+
+                    <div class="sub-panel active" id="sig-420">
+                        <div style="font-size:0.72rem;margin-bottom:6px;">4-20mA is a DC current-loop signal — the industry standard for transmitting a process variable because it's simple, reliable, and highly immune to electrical noise over long distances.</div>
+                        <div class="chip">4mA = 0% (LRV)</div>
+                        <div class="chip">20mA = 100% (URV)</div>
+                        <div class="chip">Typical loop supply: 24VDC (12-36VDC device dependent)</div>
+                        <hr />
+                        <div><strong>NAMUR NE43 fault indication</strong></div>
+                        <div class="chip">&lt;3.6mA — under-range / loop fault</div>
+                        <div class="chip">4-20mA — normal operating range</div>
+                        <div class="chip">&gt;20.5/21mA — over-range / diagnostic</div>
+                        <div style="font-size:0.65rem;color:#64748b;margin-top:6px;">Starting at 4mA (not 0) means the loop can still power a 2-wire transmitter AND distinguish a real fault (0mA/dead loop) from a valid 0% reading.</div>
+                    </div>
+
+                    <div class="sub-panel hidden" id="sig-420v10">
+                        <div class="table-wrap"><table>
+                                <thead><tr><th></th><th>4-20mA</th><th>0-10V</th></tr></thead>
+                                <tbody>
+                                    <tr><td>Noise immunity</td><td>Excellent</td><td>Lower — more susceptible</td></tr>
+                                    <tr><td>Distance</td><td>Long (minimal loss)</td><td>Short (&lt;100m typical)</td></tr>
+                                    <tr><td>Wiring</td><td>2-wire, loop powered</td><td>Typically 3-wire</td></tr>
+                                    <tr><td>Fault detection</td><td>Easy (0mA/&gt;20mA = fault)</td><td>Hard to detect wiring issues</td></tr>
+                                    <tr><td>Best for</td><td>Process industry, long runs, harsh environments</td><td>Short-distance, cost-sensitive, HVAC/lab</td></tr>
+                                </tbody>
+                            </table></div>
+                    </div>
+
+                    <div class="sub-panel hidden" id="sig-analogdigital">
+                        <div style="font-size:0.72rem;margin-bottom:6px;"><strong>Analog:</strong> continuous signal, infinite values within a range (4-20mA, 0-10V, mV). More susceptible to noise/distortion; distance depends on cable/signal type.</div>
+                        <div style="font-size:0.72rem;"><strong>Digital:</strong> discrete signal, only two states (0/1, OFF/ON), or structured data over a protocol (Modbus, Profibus, HART, Ethernet/IP). Better noise immunity and error detection, generally supports longer distances with repeaters.</div>
+                    </div>
+
+                    <div class="sub-panel hidden" id="sig-spanrange">
+                        <div style="font-size:0.72rem;margin-bottom:6px;"><strong>Range</strong> is the measurement interval an instrument is calibrated for — from LRV to URV. It defines the instrument's overall capability.</div>
+                        <div style="font-size:0.72rem;margin-bottom:6px;"><strong>Span</strong> is the numeric difference between URV and LRV — it tells you the size of that measurement window.</div>
+                        <div class="chip">Range = LRV to URV (e.g. 0°C to 100°C)</div>
+                        <div class="chip">Span = URV − LRV (e.g. 100 − 0 = 100°C)</div>
+                        <div style="font-size:0.65rem;color:#64748b;margin-top:6px;">LRV isn't always 0 — e.g. LRV=50°C, URV=150°C gives a range of "50 to 150°C" but a span of 100°C.</div>
+                    </div>
+
+                    <div class="sub-panel hidden" id="sig-errors">
+                        <div style="font-size:0.72rem;margin-bottom:6px;"><strong>Zero error:</strong> deviation at the LOWER range point (0%/LRV) only. Shifts the whole calibration curve up or down, parallel to the ideal line — doesn't change the slope. Usually from improper zero adjustment or sensor offset.</div>
+                        <div style="font-size:0.72rem;margin-bottom:6px;"><strong>Span error:</strong> deviation at the UPPER range point (100%/URV) only. Changes the slope of the calibration curve — zero point stays correct. Usually from incorrect span adjustment or component drift.</div>
+                        <div class="chip">Example: reads 0.5 bar at true 0 bar (range 0-10 bar) → Zero Error = +0.5 bar (5% of span)</div>
+                        <div class="chip">Example: reads 9.5 bar at true 10 bar → Span Error = −0.5 bar (5% of span)</div>
+                    </div>
+
+                    <div class="sub-panel hidden" id="sig-wiring">
+                        <div style="font-size:0.72rem;margin-bottom:6px;"><strong>2-wire:</strong> power and signal share the same two wires (the 4-20mA loop itself powers the transmitter). Simplest wiring, most common for pressure/level/temperature transmitters.</div>
+                        <div style="font-size:0.72rem;margin-bottom:6px;"><strong>3-wire:</strong> separate power supply wires, with the signal sharing a common return. Common on proximity/photoelectric sensors.</div>
+                        <div style="font-size:0.72rem;margin-bottom:6px;"><strong>4-wire:</strong> completely separate power and signal circuits. Used for flow meters, gas analyzers, and other transmitters that need more power than a 2-wire loop can supply.</div>
+                        <hr />
+                        <div><strong>Smart vs Conventional Transmitters</strong></div>
+                        <div style="font-size:0.7rem;margin:4px 0;">Smart transmitters add digital communication (HART, Fieldbus, Profibus PA, Modbus) on top of the 4-20mA signal, giving remote configuration, advanced diagnostics, and generally higher accuracy. Conventional transmitters give 4-20mA only, with configuration limited to physical zero/span adjustments and little to no self-diagnostics.</div>
+                    </div>
+                </div>
+
+                <div class="ref-panel hidden" id="ref-flowlevel">
+                    <div class="sub-tabs" id="flowlevelRefTabs">
+                        <div class="sub-tab active" data-tab="fl-overview">Flow Meter Types</div>
+                        <div class="sub-tab" data-tab="fl-dp">DP/Orifice</div>
+                        <div class="sub-tab" data-tab="fl-em">Electromagnetic</div>
+                        <div class="sub-tab" data-tab="fl-ultrasonic">Ultrasonic</div>
+                        <div class="sub-tab" data-tab="fl-emvult">EM vs Ultrasonic</div>
+                        <div class="sub-tab" data-tab="fl-levelcompare">Ultrasonic vs Radar Level</div>
+                        <div class="sub-tab" data-tab="fl-manifold">Manifolds</div>
+                    </div>
+
+                    <div class="sub-panel active" id="fl-overview">
+                        <div class="chip">Positive displacement — traps a fixed volume, counts cycles; highly accurate for liquids</div>
+                        <div class="chip">Electromagnetic — Faraday's law, conductive liquids only, no moving parts</div>
+                        <div class="chip">Vortex — shedding frequency ∝ velocity, works on liquids/gas/steam</div>
+                        <div class="chip">DP/orifice — pressure drop across a restriction, √ relationship to flow</div>
+                        <div class="chip">Ultrasonic — transit-time or Doppler, non-invasive clamp-on option</div>
+                        <div class="chip">Mass (Coriolis/thermal) — measures mass flow directly, very high accuracy</div>
+                    </div>
+
+                    <div class="sub-panel hidden" id="fl-dp">
+                        <div style="font-size:0.72rem;margin-bottom:6px;">An orifice plate restricts the pipe, speeding up flow and dropping pressure at the restriction (vena contracta). The DP transmitter reads ΔP = P₁ − P₂ across the plate — flow is proportional to <strong>√ΔP</strong>, not ΔP directly.</div>
+                        <div class="chip">Requires straight pipe runs upstream/downstream for accuracy</div>
+                        <div class="chip">Impulse lines must stay free of air (liquids) or condensate (gases)</div>
+                        <div class="chip">Simple, rugged, well-understood — but has a permanent pressure loss across the plate</div>
+                    </div>
+
+                    <div class="sub-panel hidden" id="fl-em">
+                        <div style="font-size:0.72rem;margin-bottom:6px;">Based on Faraday's Law: a coil generates a magnetic field (B) across the pipe; as conductive liquid flows through it at velocity (v), a voltage (e) is induced across two electrodes, proportional to velocity. e = k×B×D×v.</div>
+                        <div class="chip">Requires conductivity typically &gt;5 µS/cm</div>
+                        <div class="chip">Pipe must run completely full</div>
+                        <div class="chip">No moving parts, no pressure drop, bidirectional</div>
+                        <div class="chip">Not suitable for gases or hydrocarbons (non-conductive)</div>
+                    </div>
+
+                    <div class="sub-panel hidden" id="fl-ultrasonic">
+                        <div style="font-size:0.72rem;margin-bottom:6px;">Transit-time principle: two transducers send ultrasonic pulses across the pipe, one with the flow and one against it. Flow moving with a pulse speeds it up (t₁), flow against a pulse slows it down (t₂) — the difference Δt = |t₂−t₁| is proportional to flow velocity.</div>
+                        <div class="chip">Clamp-on (non-invasive) — no pipe cutting, easy retrofit</div>
+                        <div class="chip">Inline — transducers integrated into a spool piece, more accurate</div>
+                        <div class="chip">No moving parts, works with clean fluids, wide range of pipe sizes</div>
+                    </div>
+
+                    <div class="sub-panel hidden" id="fl-emvult">
+                        <div class="table-wrap"><table>
+                                <thead><tr><th></th><th>Electromagnetic</th><th>Ultrasonic</th></tr></thead>
+                                <tbody>
+                                    <tr><td>Best for</td><td>Conductive liquids</td><td>Clean liquids &amp; gases</td></tr>
+                                    <tr><td>Install</td><td>Inline (cutting required)</td><td>Clamp-on (no cutting) or insertion</td></tr>
+                                    <tr><td>Accuracy</td><td>±0.2-0.5% typical</td><td>±0.5-2% typical</td></tr>
+                                    <tr><td>Conductivity</td><td>Required (&gt;5 µS/cm)</td><td>Not required</td></tr>
+                                    <tr><td>Cost</td><td>Higher initial</td><td>Clamp-on: lower initial</td></tr>
+                                </tbody>
+                            </table></div>
+                    </div>
+
+                    <div class="sub-panel hidden" id="fl-levelcompare">
+                        <div class="table-wrap"><table>
+                                <thead><tr><th></th><th>Ultrasonic</th><th>Radar</th></tr></thead>
+                                <tbody>
+                                    <tr><td>Principle</td><td>Sound waves</td><td>Microwave</td></tr>
+                                    <tr><td>Affected by temp.</td><td>Yes (speed of sound changes)</td><td>Minimal</td></tr>
+                                    <tr><td>Affected by steam/foam/dust</td><td>Yes, notably</td><td>Low/minimal</td></tr>
+                                    <tr><td>Pressure capability</td><td>Limited (low pressure)</td><td>Excellent (high pressure/vacuum)</td></tr>
+                                    <tr><td>Accuracy</td><td>±3 to ±10mm</td><td>±1 to ±2mm</td></tr>
+                                    <tr><td>Range</td><td>Up to ~30m</td><td>Up to 80m+</td></tr>
+                                    <tr><td>Best for</td><td>Clean liquids, open/ventilated tanks, budget-driven</td><td>Chemicals, oil &amp; gas, steam, high temp/pressure, critical service</td></tr>
+                                </tbody>
+                            </table></div>
+                    </div>
+
+                    <div class="sub-panel hidden" id="fl-manifold">
+                        <div style="font-size:0.72rem;margin-bottom:6px;">DP manifolds sit between the process taps and the DP transmitter, letting you isolate/equalize/vent without removing the transmitter.</div>
+                        <div style="font-size:0.72rem;margin-bottom:6px;"><strong>3-valve manifold:</strong> 2 isolation (block) valves + 1 equalize valve. Provides isolation and equalization only — simple, compact, lower cost. Standard choice for routine DP transmitter service.</div>
+                        <div style="font-size:0.72rem;margin-bottom:6px;"><strong>5-valve manifold:</strong> 2 isolation + 1 equalize + 2 vent/test valves (one per side). Adds safe venting/calibration ports on both sides, protecting the transmitter and making loop checks/calibration much easier without disturbing the process connection.</div>
+                        <div class="chip">3-valve: standard DP flow/level, filter monitoring</div>
+                        <div class="chip">5-valve: custody transfer, critical DP measurement, shutdown-critical processes</div>
+                    </div>
+                </div>
+
+                <div class="ref-panel hidden" id="ref-cables">
+                    <div class="sub-tabs" id="cablesRefTabs">
+                        <div class="sub-tab active" data-tab="cb-schedule">Cable Schedule</div>
+                        <div class="sub-tab" data-tab="cb-types">Cable Types</div>
+                        <div class="sub-tab" data-tab="cb-shielding">Shielding</div>
+                        <div class="sub-tab" data-tab="cb-breakers">MCB vs MCCB vs ACB</div>
+                    </div>
+
+                    <div class="sub-panel active" id="cb-schedule">
+                        <div style="font-size:0.72rem;margin-bottom:6px;">A cable schedule is an engineering document listing every cable's details — used for planning, installation, troubleshooting, and handover.</div>
+                        <div class="chip">Cable number — unique ID for each cable (e.g. CAB-001)</div>
+                        <div class="chip">Core details — number of cores, size, type</div>
+                        <div class="chip">Source &amp; destination — where it starts and ends</div>
+                        <div class="chip">Cable type — voltage rating, armouring, shielding</div>
+                        <div class="chip">Routing — cable tray, conduit, duct, trench</div>
+                        <div class="chip">Service — the cable's function (power, control, signal, fire alarm, etc.)</div>
+                        <div style="font-size:0.6rem;color:#94a3b8;margin-top:6px;">Common abbreviations: MDB (Main Distribution Board), PDB (Power Distribution Board), MCC (Motor Control Center), JB/LJB/FJB (Junction Box/Local/Field), FACP (Fire Alarm Control Panel), CT (Cable Tray), CND (Conduit).</div>
+                    </div>
+
+                    <div class="sub-panel hidden" id="cb-types">
+                        <div style="font-size:0.72rem;margin-bottom:6px;"><strong>Signal cables:</strong> transmit analog/digital signals from field instruments to control systems with high accuracy and minimal interference. Twisted pairs, shielded, low signal loss. Used for transmitters/sensors, PLC/DCS/SCADA analog signals.</div>
+                        <div style="font-size:0.72rem;margin-bottom:6px;"><strong>Control cables:</strong> carry control signals between panels, instruments, and field devices. Multi-core, flexible, higher current-carrying capacity. Used for control circuits, motor starters, solenoid valves, relays/I/O.</div>
+                        <div style="font-size:0.72rem;margin-bottom:6px;"><strong>Communication cables:</strong> digital data transmission between devices/systems. High data integrity, low attenuation, EMI/RFI protection. Used for Modbus/Profibus/Fieldbus, industrial Ethernet, RS485/RS422/CAN, SCADA networks.</div>
+                    </div>
+
+                    <div class="sub-panel hidden" id="cb-shielding">
+                        <div style="font-size:0.72rem;margin-bottom:6px;">Shielding in signal cables exists primarily to protect the signal from electromagnetic interference (EMI) — stray magnetic/electric fields from nearby power cables, VFDs, or motors inducing noise into a low-level instrument signal.</div>
+                        <div style="font-size:0.65rem;color:#64748b;">Standard practice: ground the shield at ONE end only (typically at the control room/PLC end), not both, to avoid creating a ground loop through the shield itself.</div>
+                    </div>
+
+                    <div class="sub-panel hidden" id="cb-breakers">
+                        <div class="table-wrap"><table>
+                                <thead><tr><th></th><th>MCB</th><th>MCCB</th><th>ACB</th></tr></thead>
+                                <tbody>
+                                    <tr><td>Full name</td><td>Miniature Circuit Breaker</td><td>Molded Case Circuit Breaker</td><td>Air Circuit Breaker</td></tr>
+                                    <tr><td>Application</td><td>Homes, small buildings</td><td>Commercial/industrial, heavy loads</td><td>Large industries, power plants, main distribution</td></tr>
+                                    <tr><td>Breaking capacity</td><td>~6-10 kA</td><td>~25-100 kA</td><td>~50-150 kA</td></tr>
+                                    <tr><td>Current rating</td><td>0.5-125A</td><td>16-1600A</td><td>630-6300A</td></tr>
+                                    <tr><td>Adjustable trip</td><td>No (fixed)</td><td>Yes (thermal &amp; magnetic)</td><td>Yes (thermal/magnetic/electronic)</td></tr>
+                                    <tr><td>Cost/size</td><td>Low / compact</td><td>Medium</td><td>High / large</td></tr>
+                                </tbody>
+                            </table></div>
+                        <div style="font-size:0.6rem;color:#94a3b8;margin-top:6px;">MCB for homes (low current), MCCB for industrial loads (medium-high current), ACB for power systems (very high current, highest breaking capacity).</div>
+                    </div>
+                </div>
+
+                <div class="ref-panel hidden" id="ref-hazarea">
+                    <div class="sub-tabs" id="hazareaRefTabs">
+                        <div class="sub-tab active" data-tab="hz-zones">Zone Classification</div>
+                        <div class="sub-tab" data-tab="hz-isvexd">IS vs Explosion Proof</div>
+                        <div class="sub-tab" data-tab="hz-zenerbarrier">Zener Barrier</div>
+                        <div class="sub-tab" data-tab="hz-isolator">Galvanic Isolator</div>
+                    </div>
+
+                    <div class="sub-panel active" id="hz-zones">
+                        <div style="font-size:0.72rem;margin-bottom:6px;">Zones classify how often/long an explosive gas atmosphere is present:</div>
+                        <div class="chip">Zone 0 — present continuously or for long periods (highest risk). Typical: inside tanks/vessels</div>
+                        <div class="chip">Zone 1 — likely to occur in normal operation. Typical: around tank openings, pump seals, flanges, valves</div>
+                        <div class="chip">Zone 2 — not likely in normal operation, and if it occurs, only briefly. Typical: under roofed areas near low-leak-probability equipment</div>
+                        <div style="font-size:0.65rem;color:#64748b;margin-top:6px;">Actual classification depends on process, ventilation, leak sources, and operating conditions — always refer to the site's formal risk assessment (e.g. IEC 60079-10-1), not a rule of thumb.</div>
+                    </div>
+
+                    <div class="sub-panel hidden" id="hz-isvexd">
+                        <div style="font-size:0.72rem;margin-bottom:6px;"><strong>Intrinsic Safety (Ex i):</strong> equipment is designed so it simply can't release enough electrical/thermal energy to ignite a hazardous atmosphere. Low power only (signals/instruments) — but suitable for Zone 0, 1, and 2. Easy maintenance, can often be worked on live under approved procedures.</div>
+                        <div style="font-size:0.72rem;margin-bottom:6px;"><strong>Explosion Proof (Ex d):</strong> equipment is enclosed in a flameproof housing that can contain an internal explosion and stop it from igniting the surrounding atmosphere. Handles high power (motors, panels) but only suitable for Zone 1 and 2 — not Zone 0. Enclosure generally shouldn't be opened while energized.</div>
+                        <div class="chip">Example marking: Ex ia IIC T4 Ga (intrinsic safety, highest category)</div>
+                        <div class="chip">Example marking: Ex d IIC T6 Gb (explosion proof)</div>
+                        <div style="font-size:0.65rem;color:#64748b;margin-top:6px;">Choose Ex i for low-power instrumentation/signals in continuous hazardous atmospheres. Choose Ex d for high-power equipment (motors, junction boxes, lighting) in harsher, less-continuous zones.</div>
+                    </div>
+
+                    <div class="sub-panel hidden" id="hz-zenerbarrier">
+                        <div style="font-size:0.72rem;margin-bottom:6px;">A Zener barrier limits voltage and current using a Zener diode, protecting intrinsically-safe circuits from excess energy reaching the hazardous area.</div>
+                        <div style="font-size:0.72rem;margin-bottom:6px;">Normally the Zener diode sits in reverse bias (not conducting). If voltage tries to exceed the safe limit, it conducts and clamps the voltage to a safe value (Vz) — a fuse protects the diode itself from being overstressed in the process.</div>
+                        <div class="chip">Requires dedicated, reliable earth grounding to work safely</div>
+                        <div class="chip">Does NOT provide electrical isolation, and does NOT eliminate ground loops</div>
+                        <div class="chip">Lower cost, simple, no power supply required</div>
+                    </div>
+
+                    <div class="sub-panel hidden" id="hz-isolator">
+                        <div style="font-size:0.72rem;margin-bottom:6px;">A galvanic isolator transfers an analog/digital signal while electrically isolating input and output circuits completely — using a transformer, opto-isolator, or capacitive coupling. No direct electrical connection between the two sides.</div>
+                        <div class="chip">No dedicated grounding required</div>
+                        <div class="chip">Eliminates ground loops and reduces electrical noise</div>
+                        <div class="chip">Typical isolation: 1.5kV to 4kV</div>
+                        <div class="chip">Higher cost than a Zener barrier, but better signal quality</div>
+                        <hr />
+                        <div style="font-size:0.7rem;"><strong>Zener barrier vs galvanic isolator:</strong> Zener barrier is cheaper and needs dedicated grounding but gives no isolation and doesn't fix ground loops. Galvanic isolator costs more but needs no dedicated ground, gives true isolation, and eliminates ground loops/noise — better choice where signal quality or grounding is a challenge.</div>
+                    </div>
+                </div>
+
+                <div class="ref-panel hidden" id="ref-motorcontrol">
+                    <div class="sub-tabs" id="motorcontrolRefTabs">
+                        <div class="sub-tab active" data-tab="mc-stardelta">Star vs Delta</div>
+                        <div class="sub-tab" data-tab="mc-softvfd">Soft Starter vs VFD</div>
+                        <div class="sub-tab" data-tab="mc-dolsoft">DOL vs Soft Starter</div>
+                    </div>
+
+                    <div class="sub-panel active" id="mc-stardelta">
+                        <div style="font-size:0.72rem;margin-bottom:6px;"><strong>Star (Y):</strong> one end of all three phase windings joins at a common neutral point. Each phase only sees line voltage ÷ √3, giving lower starting current and torque (~1/3 of delta) — used to reduce inrush current when starting a motor.</div>
+                        <div style="font-size:0.72rem;margin-bottom:6px;"><strong>Delta (Δ):</strong> the end of one phase connects to the start of the next, forming a closed loop. Each phase sees full line voltage, giving higher starting current and full torque — used for normal running once the motor is up to speed.</div>
+                        <div class="chip">Star: lower starting current, used for starting</div>
+                        <div class="chip">Delta: higher torque, used for running</div>
+                        <div class="chip">Remember: Star for Start, Delta for Run</div>
+                    </div>
+
+                    <div class="sub-panel hidden" id="mc-softvfd">
+                        <div class="table-wrap"><table>
+                                <thead><tr><th></th><th>Soft Starter</th><th>VFD</th></tr></thead>
+                                <tbody>
+                                    <tr><td>Function</td><td>Reduces starting current/torque via thyristors</td><td>Controls speed &amp; torque by varying frequency/voltage</td></tr>
+                                    <tr><td>Speed control</td><td>None — fixed speed run</td><td>Full variable speed control</td></tr>
+                                    <tr><td>Starting current</td><td>~2-4× FLC</td><td>~1-1.5× FLC</td></tr>
+                                    <tr><td>Energy saving</td><td>No significant saving</td><td>High, especially variable-load apps</td></tr>
+                                    <tr><td>Cost/complexity</td><td>Lower cost, simpler</td><td>Higher cost, complex parameter setup</td></tr>
+                                </tbody>
+                            </table></div>
+                        <div style="font-size:0.65rem;color:#64748b;margin-top:6px;">Use a soft starter for simple, fixed-speed start/stop applications. Use a VFD when you need actual speed control and energy savings across variable loads.</div>
+                    </div>
+
+                    <div class="sub-panel hidden" id="mc-dolsoft">
+                        <div style="font-size:0.72rem;margin-bottom:6px;"><strong>DOL (Direct On Line):</strong> applies full voltage to the motor immediately. Very high starting current (6-8× FLC), high mechanical stress, causes voltage dip/flicker — but low cost and simple. Best for small motors (up to ~7.5kW) where high starting current is acceptable.</div>
+                        <div style="font-size:0.72rem;margin-bottom:6px;"><strong>Soft Starter:</strong> ramps voltage up gradually. Lower starting current (2-3× FLC), reduces mechanical stress and voltage disturbance, built-in protection features — but higher cost and larger. Best for medium/large motors (&gt;7.5kW), pumps/fans/conveyors/compressors needing a smooth start.</div>
+                    </div>
+                </div>
+
+                <div class="ref-panel hidden" id="ref-plcwiring">
+                    <div class="sub-tabs" id="plcwiringRefTabs">
+                        <div class="sub-tab active" data-tab="pw-pnpnpn">PNP vs NPN</div>
+                        <div class="sub-tab" data-tab="pw-outputs">Relay vs Transistor Output</div>
+                        <div class="sub-tab" data-tab="pw-iocalc">I/O Calc for Valves</div>
+                        <div class="sub-tab" data-tab="pw-analogio">Analog I/O Modules</div>
+                    </div>
+
+                    <div class="sub-panel active" id="pw-pnpnpn">
+                        <div style="font-size:0.72rem;margin-bottom:6px;"><strong>PNP (Sourcing):</strong> the sensor's output provides +24V — current flows OUT of the sensor, into the PLC input, and back to 0V. Common in Europe and most of Asia (IEC standard). Pair a PNP sensor with a <strong>sinking</strong> PLC input.</div>
+                        <div style="font-size:0.72rem;margin-bottom:6px;"><strong>NPN (Sinking):</strong> the sensor's output pulls to 0V — current flows from the PLC's +24V, into the sensor, and to ground. Common in Japan and some legacy Asian equipment. Pair an NPN sensor with a <strong>sourcing</strong> PLC input.</div>
+                        <div class="chip">Memory tip: PNP "Provides (+)" → Sources. NPN "Not providing (+)" → Sinks.</div>
+                        <div style="font-size:0.65rem;color:#64748b;margin-top:6px;">Common mistakes: mismatching sensor/PLC input type (no signal), reversing +24V/0V, floating 0V (no common reference), mixing PNP and NPN sensors on the same input card. Always check the PLC input type matches the sensor's output type before wiring.</div>
+                    </div>
+
+                    <div class="sub-panel hidden" id="pw-outputs">
+                        <div class="table-wrap"><table>
+                                <thead><tr><th></th><th>Relay Output</th><th>Transistor Output</th></tr></thead>
+                                <tbody>
+                                    <tr><td>Switching</td><td>Mechanical contact</td><td>Solid-state (semiconductor)</td></tr>
+                                    <tr><td>Speed</td><td>5-15ms</td><td>&lt;1ms (very fast)</td></tr>
+                                    <tr><td>AC/DC</td><td>Both AC and DC</td><td>DC only</td></tr>
+                                    <tr><td>Life</td><td>100k-10M operations (wears)</td><td>Tens of millions+ (no wear)</td></tr>
+                                    <tr><td>Best for</td><td>AC motors, contactors, high-current/inductive loads</td><td>High-speed counting, pulse outputs, servo/stepper drives</td></tr>
+                                </tbody>
+                            </table></div>
+                        <div style="font-size:0.65rem;color:#64748b;margin-top:6px;">Relay: switches high voltage/current, both AC and DC, but slower and wears out. Transistor: fast, silent, very long life, but DC loads only and can't switch AC directly (use a relay or SSR for that).</div>
+                    </div>
+
+                    <div class="sub-panel hidden" id="pw-iocalc">
+                        <div style="font-size:0.65rem;color:#64748b;margin-bottom:6px;">Before selecting a PLC, count the total I/O needed for all valves in the system:</div>
+                        <div class="chip">Motorised valve (electric actuator): DO-03 (open/close/stop cmd), DI-03 (open/close/local-remote feedback)</div>
+                        <div class="chip">Solenoid valve (on/off): DO-01 (energize), DI-01 optional (status feedback)</div>
+                        <div class="chip">Pneumatic on/off (air-actuated ball valve): DO-01 (solenoid cmd), DI-02 optional (open/close limit feedback)</div>
+                        <div class="chip">Control valve (modulating): AO-01 (position cmd 4-20mA), AI-01 optional (position feedback 4-20mA)</div>
+                        <div style="font-size:0.65rem;color:#64748b;margin-top:6px;">Add all DI/DO/AI/AO across every valve, then reserve 10-20% spare I/O for future expansion before picking a PLC.</div>
+                    </div>
+
+                    <div class="sub-panel hidden" id="pw-analogio">
+                        <div style="font-size:0.72rem;margin-bottom:6px;"><strong>Analog Input module (A/D converter):</strong> takes continuous field signals (4-20mA, 0-10V), conditions them (isolation, filtering, scaling), then converts to a digital value the PLC stores in memory/registers.</div>
+                        <div class="chip">4mA → scaled value 0</div>
+                        <div class="chip">12mA (50%) → scaled value ~13824</div>
+                        <div class="chip">20mA → scaled value 27648</div>
+                        <div style="font-size:0.72rem;margin:8px 0 6px 0;"><strong>Analog Output module (D/A converter):</strong> takes a digital value from PLC memory, converts it to a continuous signal, and drives field devices like control valve positioners, I/P converters, or VFD speed references.</div>
+                        <div style="font-size:0.65rem;color:#64748b;">Typical output ranges: 4-20mA, 0-10V, ±10V, 0-5V (module dependent).</div>
+                    </div>
+                </div>
+
+                <div class="ref-panel hidden" id="ref-plcfamilies">
+                    <div class="sub-tabs" id="plcfamiliesRefTabs">
+                        <div class="sub-tab active" data-tab="pf-compactmodular">Compact vs Modular</div>
+                        <div class="sub-tab" data-tab="pf-safety">Safety vs Standard</div>
+                        <div class="sub-tab" data-tab="pf-siemens">Siemens Family</div>
+                        <div class="sub-tab" data-tab="pf-ab">Allen-Bradley Family</div>
+                    </div>
+
+                    <div class="sub-panel active" id="pf-compactmodular">
+                        <div style="font-size:0.72rem;margin-bottom:6px;"><strong>Compact PLC:</strong> all components (CPU, I/O, power) built into a single unit. Lower cost, quick to install, but fixed configuration and limited expansion — if one part fails, the whole unit may need replacing.</div>
+                        <div style="font-size:0.72rem;margin-bottom:6px;"><strong>Modular PLC:</strong> built from separate modules (CPU, I/O, power, comms) that can be added as needed. Higher cost and more setup time, but highly flexible, easy to expand, and modules can be swapped individually for troubleshooting.</div>
+                        <div class="chip">Compact: small/simple applications, fixed I/O count</div>
+                        <div class="chip">Modular: large, complex, scalable applications</div>
+                    </div>
+
+                    <div class="sub-panel hidden" id="pf-safety">
+                        <div style="font-size:0.72rem;margin-bottom:6px;"><strong>Safety PLC:</strong> certified to functional safety standards (IEC 61508, IEC 62061, ISO 13849). Redundant hardware, self-diagnostics, fail-safe design — built to keep operating safely even when a fault occurs. Used for E-stop, safe shutdown, safety-critical interlocks.</div>
+                        <div style="font-size:0.72rem;margin-bottom:6px;"><strong>Standard PLC:</strong> built for general automation/control (sequencing, timing, counting) — not certified for dedicated safety functions and not guaranteed to fail to a safe state.</div>
+                        <div style="font-size:0.65rem;color:#64748b;">Rule of thumb: use a Safety PLC wherever a failure could cause injury, loss of life, or major equipment damage; standard PLC for everything else.</div>
+                    </div>
+
+                    <div class="sub-panel hidden" id="pf-siemens">
+                        <div class="chip">S7-200 SMART — entry level, compact, small machines/basic automation</div>
+                        <div class="chip">S7-1200 — compact, flexible, small-to-medium automation</div>
+                        <div class="chip">S7-1500 — advanced, high-performance, complex/large machines</div>
+                        <div class="chip">S7-300 — legacy modular series, still widely used in existing plants</div>
+                        <div class="chip">S7-400 — legacy high-end, large process plants/mission-critical</div>
+                        <div style="font-size:0.65rem;color:#64748b;margin-top:6px;">S7-300/400 are legacy (no longer in new production) but common in existing installed bases. S7-200 SMART/1200/1500 are programmed in TIA Portal; S7-300/400 can use STEP 7 Classic or TIA Portal depending on CPU/model.</div>
+                    </div>
+
+                    <div class="sub-panel hidden" id="pf-ab">
+                        <div class="chip">Micro800 (820/830) — entry level, compact, small/stand-alone machines</div>
+                        <div class="chip">MicroLogix (1100/1400/1500) — legacy, versatile, small-to-mid applications</div>
+                        <div class="chip">CompactLogix — high-performance, scalable, OEM/machine/motion control</div>
+                        <div class="chip">ControlLogix — high-end, plant-wide automation, critical applications</div>
+                        <div class="chip">GuardLogix — safety + standard control integrated (SIL3/PLe), high-risk applications</div>
+                        <div style="font-size:0.65rem;color:#64748b;margin-top:6px;">Micro800 uses Connected Components Workbench (CCW); MicroLogix uses RSLogix 500 (legacy); CompactLogix/ControlLogix/GuardLogix use Studio 5000 Logix Designer.</div>
+                    </div>
+                </div>
+
+                <div class="ref-panel hidden" id="ref-plcbasics">
+                    <div class="sub-tabs" id="plcbasicsRefTabs">
+                        <div class="sub-tab active" data-tab="pb-fundamentals">10 Fundamentals</div>
+                        <div class="sub-tab" data-tab="pb-nonc">NO vs NC</div>
+                        <div class="sub-tab" data-tab="pb-gates">Logic Gates</div>
+                        <div class="sub-tab" data-tab="pb-timers">Timers</div>
+                        <div class="sub-tab" data-tab="pb-iotypes">I/O Types</div>
+                        <div class="sub-tab" data-tab="pb-datatypes">Data Types</div>
+                        <div class="sub-tab" data-tab="pb-memtypes">Memory Types</div>
+                        <div class="sub-tab" data-tab="pb-wiringmistakes">Wiring Mistakes</div>
+                    </div>
+
+                    <div class="sub-panel active" id="pb-fundamentals">
+                        <div class="chip">1. Scan cycle — reads inputs, runs logic, updates outputs, repeats</div>
+                        <div class="chip">2. NO/NC contacts — one symbol flips the whole logic</div>
+                        <div class="chip">3. Start/Stop logic — the classic seal-in circuit</div>
+                        <div class="chip">4. Set/Reset (latching) — for alarms and holding states</div>
+                        <div class="chip">5. Timers (TON/TOF/TP) — delays, sequences, timing control</div>
+                        <div class="chip">6. Counters — count products, events, cycles</div>
+                        <div class="chip">7. Memory bits — internal states/intermediate logic</div>
+                        <div class="chip">8. Analog signals — not everything is just ON/OFF</div>
+                        <div class="chip">9. Interlocks — a machine should never start without the right conditions</div>
+                        <div class="chip">10. Alarms — help operators identify/troubleshoot faults quickly</div>
+                    </div>
+
+                    <div class="sub-panel hidden" id="pb-nonc">
+                        <div style="font-size:0.72rem;margin-bottom:6px;"><strong>Normally Open (NO):</strong> open (not conducting) at rest, closes when activated. Used for start buttons, "object detected" sensors, permissive interlocks.</div>
+                        <div style="font-size:0.72rem;margin-bottom:6px;"><strong>Normally Closed (NC):</strong> closed (conducting) at rest, opens when activated. Used for stop buttons, E-stops, safety interlocks — so a broken wire or lost power reads the same as "activated" (fails safe).</div>
+                        <div class="chip">NO: open at rest → closes when activated → allows current to flow</div>
+                        <div class="chip">NC: closed at rest → opens when activated → stops current flow</div>
+                    </div>
+
+                    <div class="sub-panel hidden" id="pb-gates">
+                        <div style="font-size:0.65rem;color:#64748b;margin-bottom:6px;">In ladder logic: NO contact = closes when input ON. NC contact = closes when input OFF. Output coil energizes when the logic path is true.</div>
+                        <div class="table-wrap"><table>
+                                <thead><tr><th>Gate</th><th>Formula</th><th>Output ON when</th></tr></thead>
+                                <tbody>
+                                    <tr><td>AND</td><td>Y = A·B</td><td>ALL inputs ON</td></tr>
+                                    <tr><td>OR</td><td>Y = A+B</td><td>ANY input ON</td></tr>
+                                    <tr><td>NOT</td><td>Y = ¬A</td><td>input is OFF</td></tr>
+                                    <tr><td>NAND</td><td>Y = ¬(A·B)</td><td>NOT all inputs ON (otherwise ON)</td></tr>
+                                    <tr><td>NOR</td><td>Y = ¬(A+B)</td><td>ALL inputs OFF</td></tr>
+                                    <tr><td>XOR</td><td>Y = A⊕B</td><td>inputs are DIFFERENT</td></tr>
+                                    <tr><td>XNOR</td><td>Y = ¬(A⊕B)</td><td>inputs are the SAME</td></tr>
+                                </tbody>
+                            </table></div>
+                        <div style="font-size:0.6rem;color:#94a3b8;margin-top:6px;">NAND=NOT(AND), NOR=NOT(OR), XNOR=NOT(XOR). Used to build interlocks, alarms, sequencing, and general control logic.</div>
+                    </div>
+
+                    <div class="sub-panel hidden" id="pb-timers">
+                        <div style="font-size:0.72rem;margin-bottom:6px;"><strong>TON (on-delay):</strong> output turns ON only after the input has stayed ON continuously for the preset time. Example: conveyor starts 5s after pressing START.</div>
+                        <div style="font-size:0.72rem;margin-bottom:6px;"><strong>TOF (off-delay):</strong> output stays ON for the preset time AFTER the input turns OFF. Example: cooling fan keeps running 30s after the motor stops.</div>
+                        <div style="font-size:0.72rem;margin-bottom:6px;"><strong>TP (pulse timer):</strong> output generates one fixed-duration pulse on the rising edge of the input, regardless of how long the input stays on. Example: a solenoid gets a 1-second pulse to extend a cylinder.</div>
+                        <div class="chip">TON → delay before ON → motor start delay</div>
+                        <div class="chip">TOF → delay before OFF → fan/blower run-on</div>
+                        <div class="chip">TP → fixed pulse → one-shot trigger, pulse output</div>
+                    </div>
+
+                    <div class="sub-panel hidden" id="pb-iotypes">
+                        <div class="chip">DI — Digital Input: reads ON/OFF (0/1) from field devices (push buttons, limit switches), typically 24VDC</div>
+                        <div class="chip">DO — Digital Output: sends ON/OFF to field devices (contactors, solenoids, lamps), 24VDC or relay up to 230VAC</div>
+                        <div class="chip">AI — Analog Input: reads continuous signals (4-20mA, 0-10V) from transmitters</div>
+                        <div class="chip">AO — Analog Output: sends continuous signals to control valves, VFDs, positioners</div>
+                        <div class="chip">HSI/HSO — High-Speed Input/Output, for encoder counting and precise pulse timing</div>
+                        <div class="chip">Communication module — Modbus/Profibus/Ethernet etc. for networked I/O</div>
+                    </div>
+
+                    <div class="sub-panel hidden" id="pb-datatypes">
+                        <div class="table-wrap"><table>
+                                <thead><tr><th>Type</th><th>Size</th><th>Range</th><th>Use</th></tr></thead>
+                                <tbody>
+                                    <tr><td>BOOL</td><td>1 bit</td><td>0/1 (F/T)</td><td>Conditions, status bits</td></tr>
+                                    <tr><td>INT</td><td>16 bit</td><td>-32,768 to 32,767</td><td>Counters, setpoints</td></tr>
+                                    <tr><td>DINT</td><td>32 bit</td><td>±2.1 billion</td><td>Totalizers, encoder counts</td></tr>
+                                    <tr><td>REAL</td><td>32 bit</td><td>±3.4×10³⁸ (approx)</td><td>Measurements (pressure, flow, etc.)</td></tr>
+                                </tbody>
+                            </table></div>
+                        <div style="font-size:0.6rem;color:#94a3b8;margin-top:6px;">Exact ranges vary slightly by manufacturer/platform. Always match data types in calculations and comparisons to avoid truncation errors.</div>
+                    </div>
+
+                    <div class="sub-panel hidden" id="pb-memtypes">
+                        <div class="chip">I (Input) — status of input signals from the field; read from field devices</div>
+                        <div class="chip">Q (Output) — status of output signals; written by PLC, read by the program</div>
+                        <div class="chip">M (Marker) — internal bits for flags, logic states, interlocks</div>
+                        <div class="chip">DB (Data Block) — user-defined data: integers, REALs, strings, arrays</div>
+                        <div class="chip">T (Timer) — ON-delay/OFF-delay/pulse timing, elapsed time</div>
+                        <div class="chip">C (Counter) — counts pulses/events</div>
+                        <div style="font-size:0.6rem;color:#94a3b8;margin-top:6px;">I = from field to PLC · Q = from PLC to field · M/DB/T/C = internal use.</div>
+                    </div>
+
+                    <div class="sub-panel hidden" id="pb-wiringmistakes">
+                        <div style="font-size:0.65rem;color:#64748b;margin-bottom:6px;">Common PLC wiring mistakes and their symptoms:</div>
+                        <div class="chip">Wrong power connections — PLC fails to start or is permanently damaged</div>
+                        <div class="chip">Wrong I/O wiring — inputs not detected, outputs behave incorrectly</div>
+                        <div class="chip">Missing input common (0V/M) — inputs work randomly or not at all</div>
+                        <div class="chip">Wrong voltage (e.g. 230VAC into a 24VDC input) — permanently damages the input module</div>
+                        <div class="chip">Loose connections — intermittent faults, unexpected instability</div>
+                        <div class="chip">Poor wire termination — loose strands cause shorts/overheating</div>
+                        <div class="chip">No separation of power &amp; signal cables — noise, false signals, comms errors</div>
+                        <div class="chip">Poor grounding/shielding — noise interference, unstable analog readings</div>
+                        <div class="chip">Crossed/mislabeled wires — wiring errors, harder troubleshooting</div>
+                        <div style="font-size:0.65rem;color:#64748b;margin-top:6px;">Best practice: check the wiring diagram first, verify voltage/polarity with a multimeter before powering up, terminate properly, label everything, separate power/signal runs, and ground correctly.</div>
+                    </div>
+                </div>
+
+                <div class="ref-panel hidden" id="ref-tempsensors">
+                    <div class="sub-tabs" id="tempsensorsRefTabs">
+                        <div class="sub-tab active" data-tab="ts-rtdtypes">RTD Types</div>
+                        <div class="sub-tab" data-tab="ts-rtdvtc">RTD vs TC</div>
+                        <div class="sub-tab" data-tab="ts-threeway">RTD vs TC vs Thermistor</div>
+                        <div class="sub-tab" data-tab="ts-thermistor">Thermistor NTC/PTC</div>
+                    </div>
+
+                    <div class="sub-panel active" id="ts-rtdtypes">
+                        <div><strong>By metal</strong></div>
+                        <div class="chip">Platinum (Pt100/Pt1000) — most widely used, high accuracy/stability</div>
+                        <div class="chip">Copper — high linearity, limited temp range, oxidizes</div>
+                        <div class="chip">Nickel — lower cost, less stable/linear than platinum</div>
+                        <div style="margin-top:8px;"><strong>By construction</strong></div>
+                        <div class="chip">Wire-wound — fine wire on ceramic/glass core, robust, high accuracy</div>
+                        <div class="chip">Thin/metal film — platinum film on ceramic substrate, fast response, vibration resistant</div>
+                        <div style="margin-top:8px;"><strong>By lead configuration</strong></div>
+                        <div class="chip">2-wire — simplest/cheapest, but lead resistance adds measurement error</div>
+                        <div class="chip">3-wire — compensates for lead resistance, most common industrial config</div>
+                        <div class="chip">4-wire — eliminates lead resistance error entirely, highest accuracy</div>
+                    </div>
+
+                    <div class="sub-panel hidden" id="ts-rtdvtc">
+                        <div class="table-wrap"><table>
+                                <thead><tr><th></th><th>RTD</th><th>Thermocouple</th></tr></thead>
+                                <tbody>
+                                    <tr><td>Principle</td><td>Resistance changes with temp</td><td>Voltage from junction of 2 dissimilar metals (Seebeck effect)</td></tr>
+                                    <tr><td>Output</td><td>Resistance (Ω)</td><td>Millivolts (mV)</td></tr>
+                                    <tr><td>Range</td><td>-200°C to 850°C</td><td>Type-dependent, up to ~1800°C</td></tr>
+                                    <tr><td>Accuracy</td><td>High</td><td>Moderate</td></tr>
+                                    <tr><td>Response</td><td>Slower</td><td>Faster</td></tr>
+                                    <tr><td>Stability</td><td>More stable long-term</td><td>Can drift</td></tr>
+                                    <tr><td>Wiring</td><td>3 or 4 wires</td><td>2 wires (needs cold-junction compensation)</td></tr>
+                                    <tr><td>Cost</td><td>Higher</td><td>Lower</td></tr>
+                                </tbody>
+                            </table></div>
+                        <div style="font-size:0.65rem;color:#64748b;margin-top:6px;">Use RTD for high accuracy/stability; use thermocouple for wide range, rugged environments, and lower cost.</div>
+                    </div>
+
+                    <div class="sub-panel hidden" id="ts-threeway">
+                        <div class="table-wrap"><table>
+                                <thead><tr><th></th><th>RTD</th><th>TC</th><th>Thermistor</th></tr></thead>
+                                <tbody>
+                                    <tr><td>Range</td><td>-200 to 850°C</td><td>Type-dependent (e.g. K: -200 to 1260°C)</td><td>-50 to 150°C typical</td></tr>
+                                    <tr><td>Accuracy</td><td>±0.1-0.5°C</td><td>±1-2°C</td><td>Very high, but only over a limited range</td></tr>
+                                    <tr><td>Response</td><td>1-10s</td><td>0.1-1s</td><td>0.1-1s</td></tr>
+                                    <tr><td>Stability</td><td>Excellent</td><td>Good</td><td>Moderate — can drift with temp/time</td></tr>
+                                    <tr><td>Linearity</td><td>Good</td><td>Non-linear</td><td>Very non-linear</td></tr>
+                                    <tr><td>Cost</td><td>High</td><td>Low</td><td>Very low</td></tr>
+                                </tbody>
+                            </table></div>
+                        <div style="font-size:0.65rem;color:#64748b;margin-top:6px;">RTD → precision/stability. Thermocouple → wide range + rugged. Thermistor → fast, sensitive, small, but narrow range.</div>
+                    </div>
+
+                    <div class="sub-panel hidden" id="ts-thermistor">
+                        <div style="font-size:0.72rem;margin-bottom:6px;">A thermistor is a thermally-sensitive resistor — two types, opposite behavior:</div>
+                        <div style="font-size:0.72rem;margin-bottom:4px;"><strong>NTC (Negative Temperature Coefficient):</strong> resistance <em>decreases</em> as temperature increases.</div>
+                        <div class="chip">Digital thermostats</div>
+                        <div class="chip">Thermometers</div>
+                        <div class="chip">Battery-pack temp monitoring</div>
+                        <div class="chip">Current limiting (inrush protection)</div>
+                        <div style="font-size:0.72rem;margin:8px 0 4px 0;"><strong>PTC (Positive Temperature Coefficient):</strong> resistance <em>increases</em> as temperature increases.</div>
+                        <div class="chip">Overcurrent protection (resettable fuse behavior)</div>
+                        <div class="chip">Current-limiting protection circuits</div>
+                    </div>
+                </div>
+
 
                 <div id="refContent">
                     <div class="ref-panel" id="ref-tc">
@@ -2236,6 +2882,18 @@
                             <strong>SpanCheck:</strong> automatically steps 0%→100%→0% so you can watch the receiving instrument respond, without touching buttons between steps.
                         </div>
                         <div style="font-size:0.65rem;color:#64748b;margin-top:8px;">HART IN/OUT terminals let the 789 pass HART communication through while it measures — handy for reading a HART variable at the same time as the raw mA.</div>
+                        <hr />
+                        <div><strong>Common Field Technician Tools</strong></div>
+                        <div class="chip">Multimeter — voltage/current/resistance/continuity</div>
+                        <div class="chip">Temperature calibrator — sources/reads RTD, TC, mA</div>
+                        <div class="chip">Loop calibrator — sources/measures 4-20mA loops</div>
+                        <div class="chip">HART communicator — configure/diagnose HART devices</div>
+                        <div class="chip">Multi-function calibrator — combines pressure/temp/electrical in one unit</div>
+                        <div class="chip">Hydraulic pressure pump — generates high test pressure for calibration</div>
+                        <div class="chip">Pressure comparator — compares a reference gauge against the device under test</div>
+                        <div class="chip">Temperature bath/dry block — stable reference temperature source for calibrating sensors</div>
+                        <div class="chip">Earth tester — verifies grounding resistance</div>
+                        <div class="chip">Decade resistance box — simulates precise RTD resistance values for bench testing</div>
                     </div>
                     <div class="ref-panel hidden" id="ref-fault-ref">
                         <div><strong>Fault Codes</strong></div>
@@ -2278,25 +2936,74 @@
                         </div>
                     </div>
                     <div class="ref-panel hidden" id="ref-network">
-                        <div><strong>TCP vs UDP</strong></div>
-                        <div style="font-size:0.75rem;margin:6px 0;">
-                            <strong>TCP</strong> — connection-based; both ends handshake (SYN → SYN-ACK → ACK) before data flows, and every packet is acknowledged and re-sent if lost. Reliable and ordered, but has more overhead/latency. Used where data loss isn't acceptable.
+                        <div class="sub-tabs" id="networkRefTabs">
+                            <div class="sub-tab active" data-tab="net-tcpudp">TCP vs UDP</div>
+                            <div class="sub-tab" data-tab="net-profi">Profibus vs Profinet</div>
+                            <div class="sub-tab" data-tab="net-dcsscada">DCS vs SCADA</div>
+                            <div class="sub-tab" data-tab="net-rtu">RTU</div>
+                            <div class="sub-tab" data-tab="net-loop">Open vs Closed Loop</div>
                         </div>
-                        <div style="font-size:0.75rem;margin:6px 0;">
-                            <strong>UDP</strong> — connectionless; packets are just sent with no handshake and no guarantee of delivery or order. Lower latency and overhead, but the application has to tolerate (or handle) dropped/out-of-order packets. Used where speed matters more than perfection.
+
+                        <div class="sub-panel active" id="net-tcpudp">
+                            <div><strong>TCP vs UDP</strong></div>
+                            <div style="font-size:0.75rem;margin:6px 0;">
+                                <strong>TCP</strong> — connection-based; both ends handshake (SYN → SYN-ACK → ACK) before data flows, and every packet is acknowledged and re-sent if lost. Reliable and ordered, but has more overhead/latency. Used where data loss isn't acceptable.
+                            </div>
+                            <div style="font-size:0.75rem;margin:6px 0;">
+                                <strong>UDP</strong> — connectionless; packets are just sent with no handshake and no guarantee of delivery or order. Lower latency and overhead, but the application has to tolerate (or handle) dropped/out-of-order packets. Used where speed matters more than perfection.
+                            </div>
+                            <div class="chip">TCP: web, email, file transfer, Modbus TCP</div>
+                            <div class="chip">UDP: streaming, broadcast, discovery, DNS</div>
+                            <hr />
+                            <div><strong>Common Industrial Ports</strong></div>
+                            <div class="chip">Modbus TCP: 502 (TCP)</div>
+                            <div class="chip">EtherNet/IP: 44818 (TCP) / 2222 (UDP)</div>
+                            <div class="chip">DNP3: 20000 (TCP/UDP)</div>
+                            <div class="chip">OPC UA: 4840 (TCP)</div>
+                            <div class="chip">HART-IP: 5094 (TCP/UDP)</div>
+                            <div class="chip">BACnet: 47808 (UDP)</div>
+                            <div class="chip">PROFINET RT: real-time, runs over raw Ethernet (no TCP/UDP)</div>
+                            <div style="font-size:0.65rem;color:#64748b;margin-top:6px;">PROFINET IO messaging itself is time-critical and bypasses TCP/UDP; only its non-real-time services (e.g. diagnostics, config) use UDP/TCP.</div>
                         </div>
-                        <div class="chip">TCP: web, email, file transfer, Modbus TCP</div>
-                        <div class="chip">UDP: streaming, broadcast, discovery, DNS</div>
-                        <hr />
-                        <div><strong>Common Industrial Ports</strong></div>
-                        <div class="chip">Modbus TCP: 502 (TCP)</div>
-                        <div class="chip">EtherNet/IP: 44818 (TCP) / 2222 (UDP)</div>
-                        <div class="chip">DNP3: 20000 (TCP/UDP)</div>
-                        <div class="chip">OPC UA: 4840 (TCP)</div>
-                        <div class="chip">HART-IP: 5094 (TCP/UDP)</div>
-                        <div class="chip">BACnet: 47808 (UDP)</div>
-                        <div class="chip">PROFINET RT: real-time, runs over raw Ethernet (no TCP/UDP)</div>
-                        <div style="font-size:0.65rem;color:#64748b;margin-top:6px;">PROFINET IO messaging itself is time-critical and bypasses TCP/UDP; only its non-real-time services (e.g. diagnostics, config) use UDP/TCP.</div>
+
+                        <div class="sub-panel hidden" id="net-profi">
+                            <div class="table-wrap"><table>
+                                    <thead><tr><th></th><th>Profibus</th><th>Profinet</th></tr></thead>
+                                    <tbody>
+                                        <tr><td>Medium</td><td>RS-485 (shielded twisted pair) or fiber</td><td>Industrial Ethernet (copper RJ45 or fiber)</td></tr>
+                                        <tr><td>Speed</td><td>Up to 12 Mbps</td><td>100 Mbps full duplex</td></tr>
+                                        <tr><td>Topology</td><td>Linear bus with terminators</td><td>Star/Line/Ring/Tree, flexible</td></tr>
+                                        <tr><td>Determinism</td><td>Medium</td><td>Very high (RT and IRT)</td></tr>
+                                        <tr><td>Max devices</td><td>Up to 126 per segment</td><td>Practically unlimited (network dependent)</td></tr>
+                                        <tr><td>Future readiness</td><td>Mature, widely used in legacy plants</td><td>IIoT-ready, Industry 4.0 enabled</td></tr>
+                                    </tbody>
+                                </table></div>
+                            <div style="font-size:0.65rem;color:#64748b;margin-top:6px;">Profibus remains common in existing plants for its reliability; Profinet is the preferred choice for new systems due to speed, flexibility, and diagnostics.</div>
+                        </div>
+
+                        <div class="sub-panel hidden" id="net-dcsscada">
+                            <div style="font-size:0.72rem;margin-bottom:6px;"><strong>DCS (Distributed Control System):</strong> used for complex, continuous process control inside a plant. Control intelligence is distributed across multiple controllers on a high-speed industrial network. High reliability/redundancy, handles large numbers of data points with fast response, advanced control (PID, cascade, predictive).</div>
+                            <div style="font-size:0.72rem;margin-bottom:6px;"><strong>SCADA (Supervisory Control and Data Acquisition):</strong> used to monitor and control remote locations spread over a wide area. One master station monitors multiple remote sites (RTU/PLC) via WAN/cellular/radio/satellite. Basic control — mostly monitoring, alarming, data logging.</div>
+                            <div class="chip">DCS: refineries, chemical plants, power plants — continuous process</div>
+                            <div class="chip">SCADA: water/oil&amp;gas/power distribution — geographically dispersed sites</div>
+                        </div>
+
+                        <div class="sub-panel hidden" id="net-rtu">
+                            <div style="font-size:0.72rem;margin-bottom:6px;">An RTU (Remote Terminal Unit) is an intelligent interface between field instruments and the control center — collects field data, processes it, and communicates with SCADA.</div>
+                            <div class="chip">Measure — collects data from sensors/digital inputs</div>
+                            <div class="chip">Acquire — converts/filters raw signals into usable data</div>
+                            <div class="chip">Process — performs logic, calculations, event detection</div>
+                            <div class="chip">Communicate — sends data to SCADA, receives control commands</div>
+                            <div class="chip">Control — executes commands on field devices (DO/AO)</div>
+                            <div style="font-size:0.65rem;color:#64748b;margin-top:6px;">Communication options: cellular (4G/5G), Ethernet (TCP/IP), fiber optic, radio (VHF/UHF), satellite — chosen based on how remote/dispersed the site is.</div>
+                        </div>
+
+                        <div class="sub-panel hidden" id="net-loop">
+                            <div style="font-size:0.72rem;margin-bottom:6px;"><strong>Open loop:</strong> no feedback path — the process variable is never compared for error. Output depends only on input and the system itself; it can't automatically correct disturbances. Example: a timer-based washing machine runs a fixed time regardless of how clean the load actually is.</div>
+                            <div style="font-size:0.72rem;margin-bottom:6px;"><strong>Closed loop:</strong> output is measured and fed back to a comparator, which detects any error between setpoint and actual value, and the controller adjusts to minimize it. More accurate, self-correcting. Example: a room thermostat maintains a set temperature by continuously comparing actual vs desired.</div>
+                            <div class="chip">Open loop: timer-based systems (traffic light timer, toaster)</div>
+                            <div class="chip">Closed loop: thermostat, cruise control, pressure regulator</div>
+                        </div>
                     </div>
                 </div>
             </div>
