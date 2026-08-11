@@ -1477,6 +1477,7 @@
         <a class="nav-item" data-page="dp"><i class="fas fa-tachometer-alt"></i> Level Measurement Tools<i class="fas fa-star fav-star" data-page="dp" title="Pin to Favorites"></i></a>
         <a class="nav-item" data-page="flow"><i class="fas fa-water"></i> Complex Measurement Tools<i class="fas fa-star fav-star" data-page="flow" title="Pin to Favorites"></i></a>
         <a class="nav-item" data-page="hart"><i class="fas fa-satellite-dish"></i> HART Communicator<i class="fas fa-star fav-star" data-page="hart" title="Pin to Favorites"></i></a>
+        <a class="nav-item" data-page="notes"><i class="fas fa-clipboard-list"></i> Field Notes<i class="fas fa-star fav-star" data-page="notes" title="Pin to Favorites"></i></a>
         <a class="nav-item" data-page="analytical"><i class="fas fa-flask"></i> Analytical<i class="fas fa-star fav-star" data-page="analytical" title="Pin to Favorites"></i></a>
         <a class="nav-item" data-page="electrical"><i class="fas fa-bolt"></i> Electrical<i class="fas fa-star fav-star" data-page="electrical" title="Pin to Favorites"></i></a>
         <a class="nav-item" data-page="bending"><i class="fas fa-pipe-valve"></i> Tube Bending<i class="fas fa-star fav-star" data-page="bending" title="Pin to Favorites"></i></a>
@@ -1582,6 +1583,37 @@
             <div class="card">
                 <div class="card-header"><i class="fas fa-terminal"></i><h3>Raw Response Log</h3></div>
                 <div id="hartRawLog" style="font-size:0.65rem;font-family:monospace;background:#f1f5f9;padding:10px;border-radius:12px;max-height:150px;overflow-y:auto;white-space:pre-wrap;">No commands sent yet.</div>
+            </div>
+        </div>
+
+        <!-- ==========================================================
+        PAGE: FIELD NOTES
+        ========================================================== -->
+        <div class="page" id="page-notes">
+            <div class="page-title"><i class="fas fa-clipboard-list"></i> Field Notes</div>
+
+            <div class="card">
+                <div class="row"><label>Category</label>
+                    <select id="noteCategory">
+                        <option value="General">General</option>
+                        <option value="Issue">Issue</option>
+                        <option value="TODO">TODO</option>
+                        <option value="Handover">Handover</option>
+                    </select>
+                </div>
+                <div class="row"><label>Tag</label><input type="text" id="noteTag" placeholder="e.g. PT-101 (optional)" /></div>
+                <div class="row"><label>Note</label><textarea id="noteText" placeholder="What happened, what you found, what's still open..."></textarea></div>
+                <button class="btn w-full" id="noteAddBtn" style="justify-content:center;"><i class="fas fa-plus"></i> Add Note</button>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><i class="fas fa-search"></i><h3 style="font-size:0.85rem;">Notes</h3><span id="noteCount">0</span></div>
+                <input type="text" id="noteSearch" placeholder="Search notes..." style="width:100%;box-sizing:border-box;padding:8px 14px;border:1px solid #dce1e9;border-radius:60px;background:#fafcff;font-size:0.85rem;margin-bottom:10px;" />
+                <div id="notesList"><div style="font-size:0.75rem;color:#94a3b8;text-align:center;padding:16px;">No notes yet — add one above.</div></div>
+                <div class="flex mt-1">
+                    <button class="btn-outline btn" id="noteExportBtn" style="justify-content:center;flex:1;"><i class="fas fa-download"></i> Export All</button>
+                    <button class="btn-outline btn" id="noteClearBtn" style="justify-content:center;flex:1;color:#dc2626;"><i class="fas fa-trash"></i> Clear All</button>
+                </div>
             </div>
         </div>
 
@@ -3553,6 +3585,35 @@
                 <div class="result-box"><span>Hex (big-endian)</span><span id="floatHexResult">42 C8 00 00</span></div>
                 <div class="row mt-1"><label>Hex</label><input type="text" id="hexDecInput" placeholder="42 C8 00 00" style="flex:1;font-family:monospace;" /><button class="btn btn-sm" id="hexToFloatBtn">→ Dec</button></div>
                 <div class="result-box"><span>Decimal</span><span id="hexDecResult">—</span></div>
+            </div>
+                </div>
+            </details>
+
+            <details class="card settings-accordion">
+                <summary><i class="fas fa-cloud-upload-alt"></i> Report Sync (Google Sheets / Excel)</summary>
+                <div class="settings-accordion-body">
+            <div class="card" style="background:#fff7ed;border-color:#fde68a;">
+                <div style="font-size:0.7rem;color:#92400e;"><i class="fas fa-triangle-exclamation"></i> <strong>How this actually works:</strong> a real "sign into your Google/Microsoft account" connection needs a registered backend app, which this static site doesn't have. Instead, this uses a <strong>webhook URL</strong> — a link to a small script you set up once, that this app sends report data to, which then writes a row into your actual sheet/workbook. Same end result (data lands in your spreadsheet automatically), just set up via a link instead of a login.</div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><i class="fas fa-table"></i><h3>Google Sheets</h3><span id="sheetsSyncChip">Not linked</span></div>
+                <div style="font-size:0.65rem;color:#64748b;margin-bottom:8px;">Deploy a Google Apps Script Web App bound to your sheet (Extensions → Apps Script → a script that reads <code>e.postData.contents</code> as JSON and appends a row → Deploy → Web App, access "Anyone"), then paste its URL below.</div>
+                <div class="row"><label>Webhook URL</label><input type="text" id="sheetsWebhookUrl" placeholder="https://script.google.com/macros/s/.../exec" style="flex:1;font-size:0.7rem;" /></div>
+                <button class="btn w-full" id="sheetsSaveBtn" style="justify-content:center;"><i class="fas fa-save"></i> Save</button>
+                <button class="btn-outline btn w-full mt-1" id="sheetsTestBtn" style="justify-content:center;"><i class="fas fa-paper-plane"></i> Send Test Row</button>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><i class="fas fa-file-excel"></i><h3>Excel</h3><span id="excelSyncChip">Not linked</span></div>
+                <div style="font-size:0.65rem;color:#64748b;margin-bottom:8px;">Use a Power Automate flow with an HTTP-request trigger that adds a row to an Excel Online table (OneDrive/SharePoint), then paste the flow's HTTP POST URL below. Zapier/Make.com webhooks pointed at Excel work the same way.</div>
+                <div class="row"><label>Webhook URL</label><input type="text" id="excelWebhookUrl" placeholder="https://prod-00.westus.logic.azure.com/..." style="flex:1;font-size:0.7rem;" /></div>
+                <button class="btn w-full" id="excelSaveBtn" style="justify-content:center;"><i class="fas fa-save"></i> Save</button>
+                <button class="btn-outline btn w-full mt-1" id="excelTestBtn" style="justify-content:center;"><i class="fas fa-paper-plane"></i> Send Test Row</button>
+            </div>
+
+            <div class="card">
+                <div style="font-size:0.65rem;color:#64748b;">Once a webhook is saved here, a "Sync" button appears next to Export on Field Notes, Field Report, Commissioning, Loop Check, and Setpoints — tapping it sends that record to whichever webhook(s) you've linked. Browser security means this app can't confirm the row actually landed (the response can't be read back) — check your sheet/workbook directly the first time to confirm it's working, using Send Test Row above.</div>
             </div>
                 </div>
             </details>
@@ -6315,6 +6376,109 @@
                 }, true);
 
                 window.enhanceAllSelects = enhanceAllSelects;
+            })();
+
+            // =============================================================
+            // FIELD NOTES
+            // =============================================================
+            (function() {
+                const catColors = {
+                    General: { bg: '#e2e8f0', fg: '#334155' },
+                    Issue: { bg: '#fee2e2', fg: '#991b1b' },
+                    TODO: { bg: '#fef3c7', fg: '#92400e' },
+                    Handover: { bg: '#ede9fe', fg: '#5b21b6' }
+                };
+
+                function loadNotes() { return getStorage('fieldNotes', []); }
+                function saveNotes(notes) { setStorage('fieldNotes', notes); }
+
+                function formatTimestamp(ts) {
+                    const d = new Date(ts);
+                    return d.toLocaleString();
+                }
+
+                function renderNotes() {
+                    const notes = loadNotes().slice().sort(function(a, b) { return b.ts - a.ts; });
+                    const query = (document.getElementById('noteSearch').value || '').toLowerCase().trim();
+                    const filtered = query ? notes.filter(function(n) {
+                        return n.text.toLowerCase().includes(query) || (n.tag || '').toLowerCase().includes(query) || n.category.toLowerCase().includes(query);
+                    }) : notes;
+
+                    document.getElementById('noteCount').textContent = notes.length;
+                    const listEl = document.getElementById('notesList');
+
+                    if (filtered.length === 0) {
+                        listEl.innerHTML = '<div style="font-size:0.75rem;color:#94a3b8;text-align:center;padding:16px;">' + (notes.length === 0 ? 'No notes yet — add one above.' : 'No notes match your search.') + '</div>';
+                        return;
+                    }
+
+                    listEl.innerHTML = filtered.map(function(n) {
+                        const colors = catColors[n.category] || catColors.General;
+                        const tagHtml = n.tag ? '<span class="chip" style="margin-left:6px;">' + escapeHtml(n.tag) + '</span>' : '';
+                        return '<div style="background:#f8fafc;border-radius:16px;padding:12px 14px;margin-bottom:8px;" data-note-id="' + n.id + '">' +
+                            '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">' +
+                            '<div><span class="badge" style="background:' + colors.bg + ';color:' + colors.fg + ';">' + n.category + '</span>' + tagHtml + '</div>' +
+                            '<i class="fas fa-trash note-delete-btn" data-note-id="' + n.id + '" style="color:#94a3b8;cursor:pointer;font-size:0.8rem;padding:6px 8px;display:inline-block;"></i>' +
+                            '</div>' +
+                            '<div style="font-size:0.8rem;color:#1a2639;white-space:pre-wrap;">' + escapeHtml(n.text) + '</div>' +
+                            '<div style="font-size:0.6rem;color:#94a3b8;margin-top:6px;">' + formatTimestamp(n.ts) + '</div>' +
+                            '</div>';
+                    }).join('');
+
+                    listEl.querySelectorAll('.note-delete-btn').forEach(function(btn) {
+                        btn.addEventListener('click', function() {
+                            const id = this.dataset.noteId;
+                            const notes = loadNotes().filter(function(n) { return String(n.id) !== String(id); });
+                            saveNotes(notes);
+                            renderNotes();
+                        });
+                    });
+                }
+
+                function escapeHtml(str) {
+                    const div = document.createElement('div');
+                    div.textContent = str;
+                    return div.innerHTML;
+                }
+
+                document.getElementById('noteAddBtn').addEventListener('click', function() {
+                    const text = document.getElementById('noteText').value.trim();
+                    if (!text) { alert('Write something before adding a note.'); return; }
+                    const category = document.getElementById('noteCategory').value;
+                    const tag = document.getElementById('noteTag').value.trim();
+                    const notes = loadNotes();
+                    notes.push({ id: Date.now(), category: category, tag: tag, text: text, ts: Date.now() });
+                    saveNotes(notes);
+                    document.getElementById('noteText').value = '';
+                    document.getElementById('noteTag').value = '';
+                    renderNotes();
+                });
+
+                document.getElementById('noteSearch').addEventListener('input', renderNotes);
+
+                document.getElementById('noteExportBtn').addEventListener('click', function() {
+                    const notes = loadNotes().slice().sort(function(a, b) { return a.ts - b.ts; });
+                    if (notes.length === 0) { alert('No notes to export yet.'); return; }
+                    let content = '========================================\nINSTRUMENTPRO FIELD NOTES\n========================================\nExported: ' + new Date().toLocaleString() + '\n\n';
+                    notes.forEach(function(n) {
+                        content += '[' + formatTimestamp(n.ts) + '] (' + n.category + (n.tag ? ' — ' + n.tag : '') + ')\n' + n.text + '\n----------------------------------------\n';
+                    });
+                    const blob = new Blob([content], { type: 'text/plain' });
+                    const a = document.createElement('a');
+                    a.href = URL.createObjectURL(blob);
+                    a.download = 'InstrumentPro_FieldNotes_' + new Date().toISOString().slice(0, 10) + '.txt';
+                    a.click();
+                    URL.revokeObjectURL(a.href);
+                });
+
+                document.getElementById('noteClearBtn').addEventListener('click', function() {
+                    if (loadNotes().length === 0) return;
+                    if (!confirm('Delete ALL field notes? This cannot be undone.')) return;
+                    saveNotes([]);
+                    renderNotes();
+                });
+
+                renderNotes();
             })();
 
             console.log('✅ InstrumentPro v7.0 loaded!');
