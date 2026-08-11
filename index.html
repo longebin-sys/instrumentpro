@@ -338,7 +338,9 @@
             padding-top: 10px;
         }
         .sidebar .nav-item {
-            display: block;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             padding: 10px 12px;
             border-radius: 16px;
             margin-bottom: 4px;
@@ -348,6 +350,28 @@
             font-size: 0.9rem;
             cursor: pointer;
             transition: 0.15s;
+        }
+        .sidebar .nav-item > i:first-child {
+            margin-right: 8px;
+        }
+        .fav-star {
+            font-size: 0.8rem;
+            padding: 4px 6px;
+            transition: 0.15s;
+        }
+        .sidebar .nav-item i.fav-star {
+            width: auto;
+            margin-right: 0;
+            color: #cbd5e1;
+        }
+        .sidebar .nav-item i.fav-star.active {
+            color: #f59e0b;
+        }
+        body.dark .sidebar .nav-item i.fav-star {
+            color: #475569;
+        }
+        body.dark .sidebar .nav-item i.fav-star.active {
+            color: #fbbf24;
         }
         .sidebar .nav-item:hover {
             background: #f1f5f9;
@@ -646,6 +670,152 @@
             font-size: 0.8rem;
             color: #475569;
             min-width: 50px;
+        }
+        /* ===== CUSTOM SELECT PICKER (replaces native OS dropdown) ===== */
+        .custom-select-wrap {
+            position: relative;
+            display: block;
+            box-sizing: border-box;
+        }
+        .custom-select-wrap > select {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            pointer-events: none;
+        }
+        .custom-select-trigger {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 8px 14px;
+            border: 1px solid #dce1e9;
+            border-radius: 60px;
+            background: #fafcff;
+            font-size: 0.85rem;
+            color: #1a2639;
+            cursor: pointer;
+            gap: 6px;
+            transition: 0.15s;
+        }
+        .custom-select-trigger:active {
+            background: #eef2f7;
+        }
+        .custom-select-trigger span {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .custom-select-trigger i {
+            font-size: 0.65rem;
+            color: #94a3b8;
+            flex-shrink: 0;
+            transition: transform 0.2s;
+        }
+        .custom-select-trigger.open i {
+            transform: rotate(180deg);
+        }
+        body.dark .custom-select-trigger {
+            background: #1e293b;
+            border-color: #334155;
+            color: #e2e8f0;
+        }
+        body.dark .custom-select-trigger:active {
+            background: #29374d;
+        }
+        .select-sheet-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.5);
+            z-index: 3000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+        }
+        .select-sheet-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .select-sheet {
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #ffffff;
+            border-radius: 24px 24px 0 0;
+            max-height: 65vh;
+            display: flex;
+            flex-direction: column;
+            transform: translateY(100%);
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.25);
+        }
+        .select-sheet-overlay.active .select-sheet {
+            transform: translateY(0);
+        }
+        body.dark .select-sheet {
+            background: #1e293b;
+        }
+        .select-sheet-handle {
+            width: 40px;
+            height: 4px;
+            background: #dce1e9;
+            border-radius: 4px;
+            margin: 10px auto 2px auto;
+            flex-shrink: 0;
+        }
+        body.dark .select-sheet-handle {
+            background: #475569;
+        }
+        .select-sheet-title {
+            text-align: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+            padding: 8px 16px 12px 16px;
+            color: #1a2639;
+            border-bottom: 1px solid #eef1f5;
+            flex-shrink: 0;
+        }
+        body.dark .select-sheet-title {
+            color: #e2e8f0;
+            border-color: #334155;
+        }
+        .select-sheet-options {
+            overflow-y: auto;
+            padding: 6px 0 calc(env(safe-area-inset-bottom, 0px) + 12px) 0;
+        }
+        .select-sheet-option {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 13px 20px;
+            font-size: 0.9rem;
+            color: #1a2639;
+            cursor: pointer;
+        }
+        .select-sheet-option:active {
+            background: #f1f5f9;
+        }
+        .select-sheet-option.selected {
+            color: #2563eb;
+            font-weight: 600;
+        }
+        .select-sheet-option i {
+            color: #2563eb;
+            font-size: 0.85rem;
+            opacity: 0;
+        }
+        .select-sheet-option.selected i {
+            opacity: 1;
+        }
+        body.dark .select-sheet-option {
+            color: #e2e8f0;
+        }
+        body.dark .select-sheet-option:active {
+            background: #334155;
         }
         .row input,
         .row select,
@@ -1302,19 +1472,19 @@
         <h2><i class="fas fa-toolbox"></i> InstrumentPro</h2>
         <hr />
         <a class="nav-item active" data-page="home"><i class="fas fa-home"></i> Home</a>
-        <a class="nav-item" data-page="converter"><i class="fas fa-arrows-alt-h"></i> Converter</a>
-        <a class="nav-item" data-page="calibration"><i class="fas fa-sliders-h"></i> Calibration</a>
-        <a class="nav-item" data-page="dp"><i class="fas fa-tachometer-alt"></i> Level Measurement Tools</a>
-        <a class="nav-item" data-page="flow"><i class="fas fa-water"></i> Complex Measurement Tools</a>
-        <a class="nav-item" data-page="hart"><i class="fas fa-satellite-dish"></i> HART Communicator</a>
-        <a class="nav-item" data-page="analytical"><i class="fas fa-flask"></i> Analytical</a>
-        <a class="nav-item" data-page="electrical"><i class="fas fa-bolt"></i> Electrical</a>
-        <a class="nav-item" data-page="bending"><i class="fas fa-pipe-valve"></i> Tube Bending</a>
-        <a class="nav-item" data-page="references"><i class="fas fa-book"></i> References</a>
-        <a class="nav-item" data-page="trouble"><i class="fas fa-exclamation-triangle"></i> Troubleshooting</a>
-        <a class="nav-item" data-page="ai"><i class="fas fa-robot"></i> AI Chat</a>
-        <a class="nav-item" data-page="report"><i class="fas fa-file-alt"></i> Report</a>
-        <a class="nav-item" data-page="settings"><i class="fas fa-cog"></i> Settings</a>
+        <a class="nav-item" data-page="converter"><i class="fas fa-arrows-alt-h"></i> Converter<i class="fas fa-star fav-star" data-page="converter" title="Pin to Favorites"></i></a>
+        <a class="nav-item" data-page="calibration"><i class="fas fa-sliders-h"></i> Calibration<i class="fas fa-star fav-star" data-page="calibration" title="Pin to Favorites"></i></a>
+        <a class="nav-item" data-page="dp"><i class="fas fa-tachometer-alt"></i> Level Measurement Tools<i class="fas fa-star fav-star" data-page="dp" title="Pin to Favorites"></i></a>
+        <a class="nav-item" data-page="flow"><i class="fas fa-water"></i> Complex Measurement Tools<i class="fas fa-star fav-star" data-page="flow" title="Pin to Favorites"></i></a>
+        <a class="nav-item" data-page="hart"><i class="fas fa-satellite-dish"></i> HART Communicator<i class="fas fa-star fav-star" data-page="hart" title="Pin to Favorites"></i></a>
+        <a class="nav-item" data-page="analytical"><i class="fas fa-flask"></i> Analytical<i class="fas fa-star fav-star" data-page="analytical" title="Pin to Favorites"></i></a>
+        <a class="nav-item" data-page="electrical"><i class="fas fa-bolt"></i> Electrical<i class="fas fa-star fav-star" data-page="electrical" title="Pin to Favorites"></i></a>
+        <a class="nav-item" data-page="bending"><i class="fas fa-pipe-valve"></i> Tube Bending<i class="fas fa-star fav-star" data-page="bending" title="Pin to Favorites"></i></a>
+        <a class="nav-item" data-page="references"><i class="fas fa-book"></i> References<i class="fas fa-star fav-star" data-page="references" title="Pin to Favorites"></i></a>
+        <a class="nav-item" data-page="trouble"><i class="fas fa-exclamation-triangle"></i> Troubleshooting<i class="fas fa-star fav-star" data-page="trouble" title="Pin to Favorites"></i></a>
+        <a class="nav-item" data-page="ai"><i class="fas fa-robot"></i> AI Chat<i class="fas fa-star fav-star" data-page="ai" title="Pin to Favorites"></i></a>
+        <a class="nav-item" data-page="report"><i class="fas fa-file-alt"></i> Report<i class="fas fa-star fav-star" data-page="report" title="Pin to Favorites"></i></a>
+        <a class="nav-item" data-page="settings"><i class="fas fa-cog"></i> Settings<i class="fas fa-star fav-star" data-page="settings" title="Pin to Favorites"></i></a>
         <hr />
         <div style="font-size:0.7rem;color:#94a3b8;padding:10px 12px;">v7.0 · Temp Cal & Analytical Enhanced<br/>© 2026 Valentino Raimbuse</div>
     </div>
@@ -1349,6 +1519,10 @@
                 <div class="quick-item color-1" data-page="converter"><i class="fas fa-arrows-alt-h"></i> Converter</div>
                 <div class="quick-item color-5" data-page="electrical"><i class="fas fa-bolt"></i> Electrical</div>
                 <div class="quick-item color-3" data-page="references"><i class="fas fa-book"></i> References</div>
+            </div>
+            <div class="recent-tools hidden" id="favoritesSection">
+                <span class="recent-label"><i class="fas fa-star" style="color:#f59e0b;"></i> Favorites</span>
+                <div id="favoritesList"></div>
             </div>
             <div class="recent-tools">
                 <span class="recent-label"><i class="fas fa-clock"></i> Recent Tools</span>
@@ -1990,6 +2164,7 @@
                     <div class="sub-tab" data-tab="elec-vd">Voltage Drop</div>
                     <div class="sub-tab" data-tab="elec-amp">Ampacity</div>
                     <div class="sub-tab" data-tab="elec-solenoid">Solenoid</div>
+                    <div class="sub-tab" data-tab="elec-conduit">Conduit Fill</div>
                 </div>
                 <div class="sub-panel active" id="elec-ohm">
                     <div class="row"><label>V</label><input type="number" id="ohmV" value="24" step="any" /><span class="chip">V</span></div>
@@ -2028,6 +2203,20 @@
                     <button class="btn" id="solenoidCalcBtn"><i class="fas fa-calculator"></i> Calculate</button>
                     <div class="result-box"><span>Power</span><span id="solenoidPower">8.0 W</span></div>
                     <div class="result-box"><span>Current</span><span id="solenoidCurrent">0.33 A</span></div>
+                </div>
+
+                <div class="sub-panel hidden" id="elec-conduit">
+                    <div style="font-size:0.65rem;color:#64748b;margin-bottom:8px;">NEC fill limits: 1 conductor ≤53%, 2 conductors ≤31%, 3+ conductors ≤40% of the conduit's internal cross-sectional area.</div>
+                    <div class="row"><label>Conduit ID</label><input type="number" id="conduitID" value="0.824" step="any" /><span class="chip">in (e.g. 1/2" EMT ≈0.622", 3/4"≈0.824")</span></div>
+                    <div class="row"><label>Wire OD</label><input type="number" id="conduitWireOD" value="0.13" step="any" /><span class="chip">in (per conductor, incl. insulation)</span></div>
+                    <div class="row"><label>Conductors</label><input type="number" id="conduitCount" value="3" step="1" min="1" /></div>
+                    <button class="btn" id="conduitCalcBtn"><i class="fas fa-calculator"></i> Calculate</button>
+                    <div class="result-box"><span>Conduit Area</span><span id="conduitAreaResult">0.533 in²</span></div>
+                    <div class="result-box"><span>Wire Area (total)</span><span id="conduitWireAreaResult">0.040 in²</span></div>
+                    <div class="result-box"><span>Fill %</span><span id="conduitFillResult">7.5%</span></div>
+                    <div class="result-box"><span>NEC Max Allowed</span><span id="conduitMaxResult">40% (3+ conductors)</span></div>
+                    <div id="conduitStatus" class="badge badge-pass mt-1"><i class="fas fa-check"></i> Within NEC fill limit</div>
+                    <div style="font-size:0.6rem;color:#94a3b8;margin-top:8px;">Enter actual wire OD (including insulation) from the cable's datasheet and conduit internal diameter from the conduit spec/trade size table for an accurate result — this doesn't include a built-in dimensional lookup table.</div>
                 </div>
             </div>
         </div>
@@ -2081,6 +2270,12 @@
                     <div class="tab" data-ref="hazarea">Hazardous Area</div>
                     <div class="tab" data-ref="motorcontrol">Motor Control</div>
                     <div class="tab" data-ref="cables">Cables &amp; Breakers</div>
+                    <div class="tab" data-ref="isatags">ISA Tags</div>
+                    <div class="tab" data-ref="pid">P&amp;ID Symbols</div>
+                    <div class="tab" data-ref="vibration">Vibration (ISO 10816)</div>
+                    <div class="tab" data-ref="grounding">Grounding &amp; Bonding</div>
+                    <div class="tab" data-ref="orifice">Orifice Sizing</div>
+                    <div class="tab" data-ref="torque">Torque Specs</div>
                 </div>
 
                 <div class="ref-panel hidden" id="ref-formulas">
@@ -2159,6 +2354,115 @@
                     <div class="chip">Ball — tight shutoff, fast quarter-turn action</div>
                     <div class="chip">Butterfly — compact, lightweight, good for large pipe sizes</div>
                     <div class="chip">Rotary plug — high rangeability, good throttling in demanding service</div>
+                </div>
+
+                <div class="ref-panel hidden" id="ref-isatags">
+                    <div style="font-size:0.72rem;margin-bottom:6px;">ISA S5.1 tag numbers: the <strong>first letter</strong> is the measured/initiating variable, following letters describe the function. E.g. <strong>PIC-101</strong> = Pressure, Indicating, Controller, loop 101.</div>
+                    <div><strong>First Letter (Variable)</strong></div>
+                    <div class="table-wrap mt-1"><table>
+                            <tbody>
+                                <tr><td>A</td><td>Analysis</td><td>F</td><td>Flow</td><td>P</td><td>Pressure</td></tr>
+                                <tr><td>B</td><td>Burner/Combustion</td><td>H</td><td>Hand (manual)</td><td>Q</td><td>Quantity</td></tr>
+                                <tr><td>C</td><td>Conductivity</td><td>I</td><td>Current</td><td>S</td><td>Speed</td></tr>
+                                <tr><td>D</td><td>Density</td><td>L</td><td>Level</td><td>T</td><td>Temperature</td></tr>
+                                <tr><td>E</td><td>Voltage</td><td>M</td><td>Moisture</td><td>V</td><td>Vibration</td></tr>
+                                <tr><td>W</td><td>Weight</td><td>Z</td><td>Position</td><td>Y</td><td>Event/State</td></tr>
+                            </tbody>
+                        </table></div>
+                    <div style="margin-top:8px;"><strong>Succeeding Letters (Function)</strong></div>
+                    <div class="table-wrap"><table>
+                            <tbody>
+                                <tr><td>I</td><td>Indicate</td><td>C</td><td>Control</td><td>T</td><td>Transmit</td></tr>
+                                <tr><td>R</td><td>Record</td><td>A</td><td>Alarm</td><td>S</td><td>Switch</td></tr>
+                                <tr><td>G</td><td>Glass/Gauge (local)</td><td>E</td><td>Sensor/Element</td><td>Y</td><td>Relay/Compute</td></tr>
+                            </tbody>
+                        </table></div>
+                    <div style="margin-top:8px;"><strong>Common Examples</strong></div>
+                    <div class="chip">PT-101 — Pressure Transmitter, loop 101</div>
+                    <div class="chip">TIC-205 — Temperature Indicating Controller</div>
+                    <div class="chip">FE-310 — Flow Element (e.g. orifice plate)</div>
+                    <div class="chip">LSH-402 — Level Switch, High</div>
+                    <div class="chip">LSL-402 — Level Switch, Low</div>
+                    <div class="chip">PSHH-501 — Pressure Switch, High-High (shutdown trip)</div>
+                    <div class="chip">FIT-620 — Flow Indicating Transmitter</div>
+                    <div style="font-size:0.6rem;color:#94a3b8;margin-top:8px;">Some site standards deviate slightly from ISA S5.1 — always confirm against the project's own tag-numbering philosophy document if one exists.</div>
+                </div>
+
+                <div class="ref-panel hidden" id="ref-pid">
+                    <div><strong>Line Types</strong></div>
+                    <div style="font-size:0.72rem;margin:6px 0;">
+                        <div style="border-top:2px solid #0b2d4e;margin:6px 0;"></div>Solid line — process piping (main flow path)
+                        <div style="border-top:2px dashed #0b2d4e;margin:10px 0 6px 0;"></div>Dashed line — electrical signal / wiring
+                        <div style="border-top:1px dashed #0b2d4e;margin:10px 0 6px 0;letter-spacing:4px;">-·-·-·-·-·-</div>Dash-dot line — pneumatic signal
+                        <div style="border:1px dotted #0b2d4e;margin:10px 0 6px 0;height:1px;"></div>Dotted line — software/data link (e.g. Modbus, Ethernet)
+                    </div>
+                    <div style="margin-top:10px;"><strong>Instrument Bubbles</strong></div>
+                    <div class="chip">Plain circle — field-mounted, single instrument (not shared display)</div>
+                    <div class="chip">Circle in a square — panel/control-room mounted, primary location</div>
+                    <div class="chip">Dashed circle — inaccessible or behind-panel mounted</div>
+                    <div class="chip">Circle with horizontal line — shared display/control (DCS/PLC function)</div>
+                    <div class="chip">Diamond — logic/computing function (interlock, ESD logic)</div>
+                    <div style="font-size:0.6rem;color:#94a3b8;margin-top:8px;">Exact symbol conventions can vary between ISA S5.1, company standards, and drawing vintage — always check the P&ID's own legend/symbol sheet before interpreting an unfamiliar drawing.</div>
+                </div>
+
+                <div class="ref-panel hidden" id="ref-vibration">
+                    <div style="font-size:0.72rem;margin-bottom:6px;">ISO 10816 (superseded by ISO 20816) classifies broadband RMS vibration velocity (mm/s, 10-1000Hz) on bearing housings into 4 severity zones. Thresholds depend on machine <strong>group</strong> — shown below for Group 2 (medium machines, 15-75kW, rigid foundation), the most common industrial case.</div>
+                    <div class="table-wrap"><table>
+                            <thead><tr><th>Zone</th><th>Velocity (mm/s RMS)</th><th>Meaning</th></tr></thead>
+                            <tbody>
+                                <tr><td>A</td><td>up to ~1.4</td><td>Good — newly commissioned/reconditioned</td></tr>
+                                <tr><td>B</td><td>~1.4 to 2.8</td><td>Satisfactory — acceptable for unrestricted long-term operation</td></tr>
+                                <tr><td>C</td><td>~2.8 to 4.5</td><td>Unsatisfactory — short-term OK, plan a repair</td></tr>
+                                <tr><td>D</td><td>above ~4.5</td><td>Unacceptable — damage likely, act immediately</td></tr>
+                            </tbody>
+                        </table></div>
+                    <div style="font-size:0.65rem;color:#64748b;margin-top:6px;">These numbers are for Group 2 machines on a rigid foundation only — Group 1 (small, &lt;15kW), Group 3/4 (large, or flexible foundations), reciprocating machines (ISO 10816-6), and machine tools (ISO 10816-8) all have different thresholds. Always confirm the correct group/sub-part for the actual machine before judging a reading. A recommended alarm setpoint sits at the B/C boundary, and a trip setpoint at the C/D boundary.</div>
+                    <div style="font-size:0.6rem;color:#94a3b8;margin-top:6px;">Velocity is used (not displacement or acceleration) because it correlates best with the fatigue-causing energy across normal industrial running speeds.</div>
+                </div>
+
+                <div class="ref-panel hidden" id="ref-grounding">
+                    <div style="font-size:0.72rem;margin-bottom:6px;">Grounding/earthing protects people and equipment and gives noise a return path. Bonding ties conductive parts together so they sit at the same potential, preventing dangerous voltage differences.</div>
+                    <div><strong>Typical Resistance Targets</strong></div>
+                    <div class="chip">General equipment grounding: ≤25Ω (many codes' minimum) — ≤5Ω or ≤1Ω is common for critical/substation grounds</div>
+                    <div class="chip">Intrinsically-safe system grounding: typically ≤1Ω, per the specific IS system's documentation</div>
+                    <div class="chip">Sensitive electronics/instrumentation: often ≤5Ω target where practical</div>
+                    <div style="font-size:0.6rem;color:#94a3b8;margin-top:4px;">Exact required values vary by code/standard/site spec — treat these as general orientation, not a pass/fail spec for a specific job.</div>
+                    <div style="margin-top:8px;"><strong>Single-Point vs Multi-Point Grounding</strong></div>
+                    <div style="font-size:0.72rem;margin-bottom:6px;"><strong>Single-point:</strong> all grounds tie back to one common reference point. Avoids ground loops — preferred for sensitive low-frequency instrumentation/signal cable shields.</div>
+                    <div style="font-size:0.72rem;">Multi-point: equipment grounds locally to the nearest ground plane/structure at many points. Better for high-frequency noise control — common in large facilities and for equipment frames/racks.</div>
+                    <div style="margin-top:8px;"><strong>Common Test Methods</strong></div>
+                    <div class="chip">Fall-of-potential (3-point) test — the traditional, most accurate method for a ground rod/system</div>
+                    <div class="chip">Clamp-on ground resistance test — no need to disconnect the ground, faster for routine checks, best on multi-grounded systems</div>
+                </div>
+
+                <div class="ref-panel hidden" id="ref-orifice">
+                    <div style="font-size:0.72rem;margin-bottom:6px;">An orifice plate's bore is sized relative to the pipe using the <strong>beta ratio (β)</strong>:</div>
+                    <div class="result-box"><span>β</span><span>= d ÷ D (bore diameter ÷ pipe internal diameter)</span></div>
+                    <div class="chip">Typical usable range: β ≈ 0.2 to 0.75</div>
+                    <div class="chip">Low β (~0.2-0.4): higher ΔP for a given flow, better turndown/sensitivity, but more permanent pressure loss</div>
+                    <div class="chip">High β (~0.6-0.75): lower permanent pressure loss, but less sensitive at low flow</div>
+                    <div style="margin-top:8px;"><strong>Pressure Tap Types</strong></div>
+                    <div class="chip">Flange taps — most common in industry, taps 1" from each face of the plate</div>
+                    <div class="chip">Corner taps — taps right at the plate corners, common for smaller pipe sizes</div>
+                    <div class="chip">D and D/2 taps (vena contracta) — upstream tap 1×D, downstream tap at ~0.5×D where the vena contracta forms</div>
+                    <div class="chip">Pipe taps — furthest from the plate (2.5D upstream, 8D downstream), less common, higher recoverable-loss accuracy tradeoffs</div>
+                    <div style="font-size:0.6rem;color:#94a3b8;margin-top:8px;">Sizing per ISO 5167 / ASME MFC-3M requires knowing the fluid properties, required flow range, and acceptable permanent pressure loss — use a proper sizing calc or vendor software for a final design, this is orientation only.</div>
+                </div>
+
+                <div class="ref-panel hidden" id="ref-torque">
+                    <div style="font-size:0.72rem;margin-bottom:6px;">Bolt torque converts to clamping (preload) force via: <strong>T = K × D × F</strong></div>
+                    <div class="chip">T = target torque</div>
+                    <div class="chip">K = nut factor (friction — depends heavily on lubrication)</div>
+                    <div class="chip">D = nominal bolt diameter</div>
+                    <div class="chip">F = target bolt preload force (from required gasket seating stress)</div>
+                    <div style="margin-top:8px;"><strong>Typical K-Factor Ranges</strong></div>
+                    <div class="chip">Well-lubricated (moly/copper/nickel anti-seize): K ≈ 0.13-0.16</div>
+                    <div class="chip">Lightly lubricated (machine oil): K ≈ 0.18-0.20</div>
+                    <div class="chip">Dry / unlubricated threads: K ≈ 0.20-0.30</div>
+                    <div style="font-size:0.65rem;color:#64748b;margin:8px 0;">The same torque wrench setting can produce roughly 2× different actual clamp load depending only on whether threads are lubricated, dry, or corroded — the lubricant condition matters more than almost anything else in this calculation.</div>
+                    <div><strong>Tightening Sequence</strong></div>
+                    <div style="font-size:0.72rem;margin:6px 0;">Use a star/cross pattern (never sequential around the flange), applied in stages — typically ~30% → 60% → 100% of target torque — to keep gasket compression even and avoid flange rotation or misalignment.</div>
+                    <div style="background:#fee2e2;color:#991b1b;padding:10px 14px;border-radius:14px;font-size:0.68rem;margin-top:8px;">⚠️ This is not a substitute for a real torque value. Actual target torque depends on flange class, gasket type, bolt material/grade, and lubricant — always use the project's engineering spec or the gasket/flange manufacturer's torque chart (e.g. per ASME PCC-1) for the actual number used on a real joint.</div>
                 </div>
 
                 <div class="ref-panel hidden" id="ref-sensors">
@@ -3077,6 +3381,8 @@
                 <div class="tab-scroll" id="reportMainTabs">
                     <div class="tab active" data-report="field">Field Report</div>
                     <div class="tab" data-report="commissioning">Commissioning</div>
+                    <div class="tab" data-report="loopcheck">Loop Check</div>
+                    <div class="tab" data-report="setpoints">Setpoints</div>
                 </div>
 
                 <div class="report-main-panel" id="reportpanel-field">
@@ -3128,6 +3434,40 @@
                     <div class="row"><label>Tag</label><input type="text" id="commTag" placeholder="FT-1001" /></div>
                     <button class="btn" id="commCheckBtn"><i class="fas fa-check"></i> Generate</button>
                     <div id="commOutput" class="report-preview mt-1">Checklist will appear here.</div>
+                </div>
+
+                <div class="report-main-panel hidden" id="reportpanel-loopcheck">
+                    <div style="font-size:0.65rem;color:#64748b;margin-bottom:8px;">End-to-end loop verification sign-off — confirms a loop works correctly from field device through to the DCS/PLC before startup.</div>
+                    <div class="row"><label>Loop Tag</label><input type="text" id="loopTag" placeholder="PT-101" /></div>
+                    <div class="row"><label>Description</label><input type="text" id="loopDesc" placeholder="Reactor feed pressure" /></div>
+                    <div id="loopCheckItems" class="cal-points-grid" style="display:block;">
+                        <label class="row" style="align-items:center;"><input type="checkbox" id="loopChk1" style="width:auto;flex:none;margin-right:8px;" /> Source signal verified at field device</label>
+                        <label class="row" style="align-items:center;"><input type="checkbox" id="loopChk2" style="width:auto;flex:none;margin-right:8px;" /> Field wiring / termination verified</label>
+                        <label class="row" style="align-items:center;"><input type="checkbox" id="loopChk3" style="width:auto;flex:none;margin-right:8px;" /> Range verified at 0%, 50%, 100%</label>
+                        <label class="row" style="align-items:center;"><input type="checkbox" id="loopChk4" style="width:auto;flex:none;margin-right:8px;" /> Alarm/trip setpoints verified</label>
+                        <label class="row" style="align-items:center;"><input type="checkbox" id="loopChk5" style="width:auto;flex:none;margin-right:8px;" /> HMI/DCS point reads correctly, correct engineering units</label>
+                        <label class="row" style="align-items:center;"><input type="checkbox" id="loopChk6" style="width:auto;flex:none;margin-right:8px;" /> Fail-safe action confirmed (loss of signal/power)</label>
+                    </div>
+                    <div class="row"><label>Technician</label><input type="text" id="loopTech" placeholder="Name" /></div>
+                    <div class="row"><label>Witness</label><input type="text" id="loopWitness" placeholder="Name (optional)" /></div>
+                    <div class="row"><label>Notes</label><textarea id="loopNotes" placeholder="Notes..."></textarea></div>
+                    <button class="btn" id="loopCheckGenBtn"><i class="fas fa-file-alt"></i> Generate</button>
+                    <div id="loopCheckPreview" class="report-preview mt-1">Sign-off sheet will appear here.</div>
+                    <button class="btn btn-outline mt-1" id="loopCheckExportBtn"><i class="fas fa-download"></i> Export</button>
+                </div>
+
+                <div class="report-main-panel hidden" id="reportpanel-setpoints">
+                    <div style="font-size:0.65rem;color:#64748b;margin-bottom:8px;">Document alarm/trip setpoints for a tag — useful for handover packages and change records.</div>
+                    <div class="row"><label>Tag</label><input type="text" id="spTag" placeholder="LT-201" /></div>
+                    <div class="row"><label>Units</label><input type="text" id="spUnits" placeholder="e.g. %, mH2O, bar" /></div>
+                    <div class="row"><label>LO-LO</label><input type="number" id="spLoLo" step="any" placeholder="value" /><select id="spLoLoAction"><option value="Alarm">Alarm</option><option value="Trip">Trip</option><option value="Interlock">Interlock</option></select></div>
+                    <div class="row"><label>LO</label><input type="number" id="spLo" step="any" placeholder="value" /><select id="spLoAction"><option value="Alarm">Alarm</option><option value="Trip">Trip</option><option value="Interlock">Interlock</option></select></div>
+                    <div class="row"><label>HI</label><input type="number" id="spHi" step="any" placeholder="value" /><select id="spHiAction"><option value="Alarm">Alarm</option><option value="Trip">Trip</option><option value="Interlock">Interlock</option></select></div>
+                    <div class="row"><label>HI-HI</label><input type="number" id="spHiHi" step="any" placeholder="value" /><select id="spHiHiAction"><option value="Alarm">Alarm</option><option value="Trip">Trip</option><option value="Interlock">Interlock</option></select></div>
+                    <div class="row"><label>Notes</label><textarea id="spNotes" placeholder="Notes / basis for setpoints..."></textarea></div>
+                    <button class="btn" id="spGenBtn"><i class="fas fa-file-alt"></i> Generate</button>
+                    <div id="spPreview" class="report-preview mt-1">Setpoint record will appear here.</div>
+                    <button class="btn btn-outline mt-1" id="spExportBtn"><i class="fas fa-download"></i> Export</button>
                 </div>
             </div>
         </div>
@@ -3505,6 +3845,55 @@
                 ).join('');
             }
             renderRecent();
+
+            // =============================================================
+            // FAVORITES
+            // =============================================================
+            let favorites = getStorage('favorites', []);
+
+            function toggleFavorite(pageId) {
+                if (favorites.includes(pageId)) {
+                    favorites = favorites.filter(f => f !== pageId);
+                } else {
+                    favorites.push(pageId);
+                }
+                setStorage('favorites', favorites);
+                renderFavorites();
+                updateFavStars();
+            }
+
+            function renderFavorites() {
+                const section = document.getElementById('favoritesSection');
+                const container = document.getElementById('favoritesList');
+                if (favorites.length === 0) {
+                    section.classList.add('hidden');
+                    container.innerHTML = '';
+                    return;
+                }
+                section.classList.remove('hidden');
+                container.innerHTML = favorites.map(pageId => {
+                    const navEl = document.querySelector('.sidebar .nav-item[data-page="' + pageId + '"]');
+                    const label = navEl ? navEl.textContent.trim() : pageId;
+                    return '<span class="recent-item" data-page="' + pageId + '">' + label + '</span>';
+                }).join('');
+            }
+
+            function updateFavStars() {
+                document.querySelectorAll('.fav-star').forEach(star => {
+                    star.classList.toggle('active', favorites.includes(star.dataset.page));
+                });
+            }
+
+            document.querySelectorAll('.fav-star').forEach(star => {
+                star.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    toggleFavorite(this.dataset.page);
+                });
+            });
+
+            updateFavStars();
+            renderFavorites();
 
             // =============================================================
             // SEARCH
@@ -5010,6 +5399,37 @@
             solenoidR.addEventListener('input', calcSolenoid);
             calcSolenoid();
 
+            // Conduit Fill calculator (NEC method)
+            function calcConduitFill() {
+                const id = parseFloat(document.getElementById('conduitID').value) || 0;
+                const wireOD = parseFloat(document.getElementById('conduitWireOD').value) || 0;
+                const count = parseInt(document.getElementById('conduitCount').value) || 1;
+                const conduitArea = Math.PI * Math.pow(id / 2, 2);
+                const wireArea = count * Math.PI * Math.pow(wireOD / 2, 2);
+                const fillPct = conduitArea > 0 ? (wireArea / conduitArea) * 100 : 0;
+                let maxAllowed, maxLabel;
+                if (count === 1) { maxAllowed = 53; maxLabel = '53% (1 conductor)'; }
+                else if (count === 2) { maxAllowed = 31; maxLabel = '31% (2 conductors)'; }
+                else { maxAllowed = 40; maxLabel = '40% (3+ conductors)'; }
+                document.getElementById('conduitAreaResult').textContent = conduitArea.toFixed(3) + ' in²';
+                document.getElementById('conduitWireAreaResult').textContent = wireArea.toFixed(3) + ' in²';
+                document.getElementById('conduitFillResult').textContent = fillPct.toFixed(1) + '%';
+                document.getElementById('conduitMaxResult').textContent = maxLabel;
+                const statusEl = document.getElementById('conduitStatus');
+                if (fillPct <= maxAllowed) {
+                    statusEl.className = 'badge badge-pass mt-1';
+                    statusEl.innerHTML = '<i class="fas fa-check"></i> Within NEC fill limit';
+                } else {
+                    statusEl.className = 'badge badge-fail mt-1';
+                    statusEl.innerHTML = '<i class="fas fa-times"></i> Exceeds NEC fill limit — use a larger conduit';
+                }
+            }
+            document.getElementById('conduitCalcBtn').addEventListener('click', calcConduitFill);
+            document.getElementById('conduitID').addEventListener('input', calcConduitFill);
+            document.getElementById('conduitWireOD').addEventListener('input', calcConduitFill);
+            document.getElementById('conduitCount').addEventListener('input', calcConduitFill);
+            calcConduitFill();
+
             // =============================================================
             // BENDING
             // =============================================================
@@ -5067,7 +5487,78 @@
             });
 
             // =============================================================
-            // OHM'S LAW
+            // LOOP CHECK SIGN-OFF SHEET
+            // =============================================================
+            document.getElementById('loopCheckGenBtn').addEventListener('click', function() {
+                const tag = document.getElementById('loopTag').value.trim() || 'N/A';
+                const desc = document.getElementById('loopDesc').value.trim() || 'N/A';
+                const tech = document.getElementById('loopTech').value.trim() || 'N/A';
+                const witness = document.getElementById('loopWitness').value.trim() || '—';
+                const notes = document.getElementById('loopNotes').value.trim() || 'None';
+                const date = new Date().toLocaleString();
+                const items = [
+                    ['Source signal verified at field device', 'loopChk1'],
+                    ['Field wiring / termination verified', 'loopChk2'],
+                    ['Range verified at 0%, 50%, 100%', 'loopChk3'],
+                    ['Alarm/trip setpoints verified', 'loopChk4'],
+                    ['HMI/DCS point reads correctly, correct units', 'loopChk5'],
+                    ['Fail-safe action confirmed', 'loopChk6']
+                ];
+                let checklist = '';
+                let allChecked = true;
+                items.forEach(function(item) {
+                    const checked = document.getElementById(item[1]).checked;
+                    if (!checked) allChecked = false;
+                    checklist += (checked ? '[x] ' : '[ ] ') + item[0] + '\n';
+                });
+                const content =
+                    `========================================\nLOOP CHECK SIGN-OFF\n========================================\nTag: ${tag}\nDescription: ${desc}\nDate: ${date}\n----------------------------------------\n${checklist}----------------------------------------\nNotes: ${notes}\nTechnician: ${tech}\nWitness: ${witness}\n========================================\nStatus: ${allChecked ? 'COMPLETE — READY FOR STARTUP' : 'INCOMPLETE — items outstanding'}`;
+                document.getElementById('loopCheckPreview').textContent = content;
+            });
+            document.getElementById('loopCheckExportBtn').addEventListener('click', function() {
+                const content = document.getElementById('loopCheckPreview').textContent;
+                if (content === 'Sign-off sheet will appear here.') { alert('Generate the sign-off sheet first.'); return; }
+                const blob = new Blob([content], { type: 'text/plain' });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = 'LoopCheck_' + (document.getElementById('loopTag').value.trim() || 'tag') + '_' + new Date().toISOString().slice(0, 10) + '.txt';
+                a.click();
+                URL.revokeObjectURL(a.href);
+            });
+
+            // =============================================================
+            // ALARM/TRIP SETPOINT DOCUMENTATION
+            // =============================================================
+            document.getElementById('spGenBtn').addEventListener('click', function() {
+                const tag = document.getElementById('spTag').value.trim() || 'N/A';
+                const units = document.getElementById('spUnits').value.trim() || '—';
+                const notes = document.getElementById('spNotes').value.trim() || 'None';
+                const date = new Date().toLocaleString();
+                function row(label, valId, actionId) {
+                    const v = document.getElementById(valId).value;
+                    const a = document.getElementById(actionId).value;
+                    return v !== '' ? `${label}: ${v} ${units} → ${a}\n` : `${label}: not set\n`;
+                }
+                const content =
+                    `========================================\nALARM/TRIP SETPOINT RECORD\n========================================\nTag: ${tag}\nDate: ${date}\n----------------------------------------\n` +
+                    row('HI-HI', 'spHiHi', 'spHiHiAction') +
+                    row('HI', 'spHi', 'spHiAction') +
+                    row('LO', 'spLo', 'spLoAction') +
+                    row('LO-LO', 'spLoLo', 'spLoLoAction') +
+                    `----------------------------------------\nNotes: ${notes}\n========================================`;
+                document.getElementById('spPreview').textContent = content;
+            });
+            document.getElementById('spExportBtn').addEventListener('click', function() {
+                const content = document.getElementById('spPreview').textContent;
+                if (content === 'Setpoint record will appear here.') { alert('Generate the setpoint record first.'); return; }
+                const blob = new Blob([content], { type: 'text/plain' });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = 'Setpoints_' + (document.getElementById('spTag').value.trim() || 'tag') + '_' + new Date().toISOString().slice(0, 10) + '.txt';
+                a.click();
+                URL.revokeObjectURL(a.href);
+            });
+
             // =============================================================
             const ohmV = document.getElementById('ohmV');
             const ohmI = document.getElementById('ohmI');
@@ -5696,6 +6187,135 @@
                     });
                 });
             }
+
+            // =============================================================
+            // CUSTOM SELECT PICKER — replaces every native <select> dropdown
+            // with an in-app bottom-sheet picker (the native OS popup can't
+            // be restyled with CSS, so this swaps in a real custom component
+            // while keeping every underlying <select> fully functional —
+            // existing calculators keep reading .value / 'change' as before).
+            // =============================================================
+            (function() {
+                let overlayEl, sheetEl, titleEl, optionsEl;
+
+                function buildSheetDOM() {
+                    if (overlayEl) return;
+                    overlayEl = document.createElement('div');
+                    overlayEl.className = 'select-sheet-overlay';
+                    overlayEl.innerHTML =
+                        '<div class="select-sheet">' +
+                        '<div class="select-sheet-handle"></div>' +
+                        '<div class="select-sheet-title" id="customSelectTitle"></div>' +
+                        '<div class="select-sheet-options" id="customSelectOptions"></div>' +
+                        '</div>';
+                    document.body.appendChild(overlayEl);
+                    sheetEl = overlayEl.querySelector('.select-sheet');
+                    titleEl = overlayEl.querySelector('#customSelectTitle');
+                    optionsEl = overlayEl.querySelector('#customSelectOptions');
+                    overlayEl.addEventListener('click', function(e) {
+                        if (e.target === overlayEl) closeSheet();
+                    });
+                }
+
+                function closeSheet() {
+                    if (!overlayEl) return;
+                    overlayEl.classList.remove('active');
+                    document.querySelectorAll('.custom-select-trigger.open').forEach(function(t) { t.classList.remove('open'); });
+                    document.body.style.overflow = '';
+                }
+
+                function openSheet(select, trigger) {
+                    buildSheetDOM();
+                    const label = trigger.dataset.label || '';
+                    titleEl.textContent = label;
+                    titleEl.style.display = label ? '' : 'none';
+                    const opts = Array.from(select.options);
+                    optionsEl.innerHTML = opts.map(function(o, i) {
+                        const selected = o.value === select.value;
+                        return '<div class="select-sheet-option' + (selected ? ' selected' : '') + '" data-index="' + i + '"><span>' + o.textContent + '</span><i class="fas fa-check"></i></div>';
+                    }).join('');
+                    optionsEl.querySelectorAll('.select-sheet-option').forEach(function(el) {
+                        el.addEventListener('click', function() {
+                            const idx = parseInt(this.dataset.index);
+                            const opt = opts[idx];
+                            if (select.value !== opt.value) {
+                                select.value = opt.value;
+                                select.dispatchEvent(new Event('input', { bubbles: true }));
+                                select.dispatchEvent(new Event('change', { bubbles: true }));
+                            }
+                            syncTrigger(select);
+                            closeSheet();
+                        });
+                    });
+                    overlayEl.classList.add('active');
+                    trigger.classList.add('open');
+                    document.body.style.overflow = 'hidden';
+                }
+
+                function syncTrigger(select) {
+                    const trigger = select._customTrigger;
+                    if (!trigger) return;
+                    const selectedOpt = select.options[select.selectedIndex];
+                    const span = trigger.querySelector('span');
+                    if (span) span.textContent = selectedOpt ? selectedOpt.textContent : '';
+                }
+
+                function enhanceSelect(select) {
+                    if (select._enhanced) return;
+                    select._enhanced = true;
+
+                    const wrap = document.createElement('div');
+                    wrap.className = 'custom-select-wrap';
+                    if (select.getAttribute('style')) {
+                        wrap.setAttribute('style', select.getAttribute('style'));
+                        select.removeAttribute('style');
+                    }
+
+                    let labelText = '';
+                    const row = select.closest('.row');
+                    if (row) {
+                        const lbl = row.querySelector('label');
+                        if (lbl) labelText = lbl.textContent.trim();
+                    }
+
+                    select.parentNode.insertBefore(wrap, select);
+                    wrap.appendChild(select);
+
+                    const trigger = document.createElement('div');
+                    trigger.className = 'custom-select-trigger';
+                    if (labelText) trigger.dataset.label = labelText;
+                    trigger.innerHTML = '<span></span><i class="fas fa-chevron-down"></i>';
+                    wrap.appendChild(trigger);
+
+                    select._customTrigger = trigger;
+                    syncTrigger(select);
+
+                    trigger.addEventListener('click', function() {
+                        openSheet(select, trigger);
+                    });
+                }
+
+                function enhanceAllSelects() {
+                    document.querySelectorAll('select').forEach(enhanceSelect);
+                }
+
+                function syncAllTriggers() {
+                    document.querySelectorAll('select').forEach(function(s) {
+                        if (s._enhanced) syncTrigger(s);
+                    });
+                }
+
+                enhanceAllSelects();
+
+                // Catches selects whose value is changed programmatically elsewhere
+                // in the app (e.g. a preset picker updating other unit dropdowns) by
+                // resyncing every trigger's label shortly after any click on the page.
+                document.addEventListener('click', function() {
+                    setTimeout(syncAllTriggers, 0);
+                }, true);
+
+                window.enhanceAllSelects = enhanceAllSelects;
+            })();
 
             console.log('✅ InstrumentPro v7.0 loaded!');
         })();
