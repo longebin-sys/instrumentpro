@@ -1796,6 +1796,7 @@
                     <div class="sub-tab active" data-tab="conv-pressure">Pressure</div>
                     <div class="sub-tab" data-tab="conv-temp">Temperature</div>
                     <div class="sub-tab" data-tab="conv-speed">Speed</div>
+                    <div class="sub-tab" data-tab="conv-vibration">Vibration</div>
                     <div class="sub-tab" data-tab="conv-ma">4-20mA</div>
                 </div>
                 <div class="sub-panel active" id="conv-pressure">
@@ -1848,7 +1849,8 @@
                     <div class="result-box"><span>Speed</span><span id="freqRpmResult">3600.0 RPM</span></div>
                     <div class="result-box"><span></span><span id="freqHzResult">60.00 Hz shaft rotation</span></div>
                     <div style="font-size:0.65rem;color:#64748b;margin-top:4px;">RPM = (Frequency ÷ Pulses per Rev) × 60. For a magnetic pickup/gear-tooth speed probe, "Pulses/Rev" = number of gear teeth.</div>
-                    <hr />
+                </div>
+                <div class="sub-panel hidden" id="conv-vibration">
                     <div class="card-header" style="margin-bottom:8px;"><i class="fas fa-ruler-horizontal"></i><h3 style="font-size:0.85rem;">Vibration Probe Gap ↔ mV (DC)</h3></div>
                     <div style="font-size:0.65rem;color:#64748b;margin-bottom:6px;">Eddy-current proximity probes (e.g. Bently Nevada 3300 series) output a DC gap voltage proportional to sensor-to-shaft distance. Standard scale factor is <strong>200 mV/mil</strong> for 8mm probes, <strong>100 mV/mil</strong> for 11mm probes — verify against your probe's actual datasheet since this varies by system.</div>
                     <div class="row">
