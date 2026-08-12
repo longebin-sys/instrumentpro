@@ -1611,7 +1611,11 @@
                 <input type="text" id="noteSearch" placeholder="Search notes..." style="width:100%;box-sizing:border-box;padding:8px 14px;border:1px solid #dce1e9;border-radius:60px;background:#fafcff;font-size:0.85rem;margin-bottom:10px;" />
                 <div id="notesList"><div style="font-size:0.75rem;color:#94a3b8;text-align:center;padding:16px;">No notes yet — add one above.</div></div>
                 <div class="flex mt-1">
-                    <button class="btn-outline btn" id="noteExportBtn" style="justify-content:center;flex:1;"><i class="fas fa-download"></i> Export All</button>
+                    <button class="btn-outline btn" id="noteExportBtn" style="justify-content:center;flex:1;"><i class="fas fa-download"></i> Export .txt</button>
+                    <button class="btn-outline btn" id="noteExportCsvBtn" style="justify-content:center;flex:1;"><i class="fas fa-file-csv"></i> Export .csv</button>
+                </div>
+                <div class="flex mt-1">
+                    <button class="btn-outline btn" id="noteSyncBtn" style="justify-content:center;flex:1;"><i class="fas fa-cloud-upload-alt"></i> Sync All</button>
                     <button class="btn-outline btn" id="noteClearBtn" style="justify-content:center;flex:1;color:#dc2626;"><i class="fas fa-trash"></i> Clear All</button>
                 </div>
             </div>
@@ -3434,6 +3438,7 @@
                     <button class="btn" id="generateReportBtn"><i class="fas fa-file-alt"></i> Generate</button>
                     <div id="reportPreview" class="report-preview mt-1">Report will appear here.</div>
                     <button class="btn btn-outline mt-1" id="exportReportBtn"><i class="fas fa-download"></i> Export</button>
+                    <button class="btn btn-outline mt-1" id="syncReportBtn"><i class="fas fa-cloud-upload-alt"></i> Sync</button>
                 </div>
 
                 <div class="report-main-panel hidden" id="reportpanel-commissioning">
@@ -3466,6 +3471,7 @@
                     <div class="row"><label>Tag</label><input type="text" id="commTag" placeholder="FT-1001" /></div>
                     <button class="btn" id="commCheckBtn"><i class="fas fa-check"></i> Generate</button>
                     <div id="commOutput" class="report-preview mt-1">Checklist will appear here.</div>
+                    <button class="btn btn-outline mt-1" id="commSyncBtn"><i class="fas fa-cloud-upload-alt"></i> Sync</button>
                 </div>
 
                 <div class="report-main-panel hidden" id="reportpanel-loopcheck">
@@ -3486,6 +3492,7 @@
                     <button class="btn" id="loopCheckGenBtn"><i class="fas fa-file-alt"></i> Generate</button>
                     <div id="loopCheckPreview" class="report-preview mt-1">Sign-off sheet will appear here.</div>
                     <button class="btn btn-outline mt-1" id="loopCheckExportBtn"><i class="fas fa-download"></i> Export</button>
+                    <button class="btn btn-outline mt-1" id="loopCheckSyncBtn"><i class="fas fa-cloud-upload-alt"></i> Sync</button>
                 </div>
 
                 <div class="report-main-panel hidden" id="reportpanel-setpoints">
@@ -3500,6 +3507,7 @@
                     <button class="btn" id="spGenBtn"><i class="fas fa-file-alt"></i> Generate</button>
                     <div id="spPreview" class="report-preview mt-1">Setpoint record will appear here.</div>
                     <button class="btn btn-outline mt-1" id="spExportBtn"><i class="fas fa-download"></i> Export</button>
+                    <button class="btn btn-outline mt-1" id="spSyncBtn"><i class="fas fa-cloud-upload-alt"></i> Sync</button>
                 </div>
             </div>
         </div>
@@ -5547,6 +5555,19 @@
                     `========================================\nCOMMISSIONING CHECKLIST\n========================================\nProject: ${project}\nTag: ${tag}\nType: ${type}\nDate: ${date}\n----------------------------------------\n✅ Pre-Commissioning\n✅ Installation Verification\n✅ Calibration\n✅ Configuration\n✅ Loop Checking\n✅ Documentation & Handover\n========================================\nStatus: PENDING SIGN-OFF`;
             });
 
+            document.getElementById('commSyncBtn').addEventListener('click', function() {
+                const text = commOutput.textContent;
+                if (!text || text === 'Checklist will appear here.') { alert('Generate the checklist first.'); return; }
+                window.syncReportToWebhooks({
+                    source: 'InstrumentPro',
+                    type: 'Commissioning',
+                    timestamp: new Date().toISOString(),
+                    project: commProject.value.trim(),
+                    tag: commTag.value.trim(),
+                    checklist: text
+                });
+            });
+
             // =============================================================
             // LOOP CHECK SIGN-OFF SHEET
             // =============================================================
@@ -5586,6 +5607,18 @@
                 a.click();
                 URL.revokeObjectURL(a.href);
             });
+            document.getElementById('loopCheckSyncBtn').addEventListener('click', function() {
+                const content = document.getElementById('loopCheckPreview').textContent;
+                if (content === 'Sign-off sheet will appear here.') { alert('Generate the sign-off sheet first.'); return; }
+                window.syncReportToWebhooks({
+                    source: 'InstrumentPro',
+                    type: 'LoopCheck',
+                    timestamp: new Date().toISOString(),
+                    tag: document.getElementById('loopTag').value.trim(),
+                    description: document.getElementById('loopDesc').value.trim(),
+                    signoff: content
+                });
+            });
 
             // =============================================================
             // ALARM/TRIP SETPOINT DOCUMENTATION
@@ -5618,6 +5651,17 @@
                 a.download = 'Setpoints_' + (document.getElementById('spTag').value.trim() || 'tag') + '_' + new Date().toISOString().slice(0, 10) + '.txt';
                 a.click();
                 URL.revokeObjectURL(a.href);
+            });
+            document.getElementById('spSyncBtn').addEventListener('click', function() {
+                const content = document.getElementById('spPreview').textContent;
+                if (content === 'Setpoint record will appear here.') { alert('Generate the setpoint record first.'); return; }
+                window.syncReportToWebhooks({
+                    source: 'InstrumentPro',
+                    type: 'Setpoints',
+                    timestamp: new Date().toISOString(),
+                    tag: document.getElementById('spTag').value.trim(),
+                    record: content
+                });
             });
 
             // =============================================================
@@ -6164,6 +6208,20 @@
                 URL.revokeObjectURL(a.href);
             });
 
+            document.getElementById('syncReportBtn').addEventListener('click', function() {
+                const text = reportPreview.textContent;
+                if (!text || text === 'Report will appear here.') { alert('Generate a report first.'); return; }
+                window.syncReportToWebhooks({
+                    source: 'InstrumentPro',
+                    type: 'FieldReport',
+                    timestamp: new Date().toISOString(),
+                    tag: reportTag.value.trim(),
+                    model: reportModel.value.trim(),
+                    reportType: reportType.value,
+                    report: text
+                });
+            });
+
             // =============================================================
             // SETTINGS
             // =============================================================
@@ -6379,6 +6437,77 @@
             })();
 
             // =============================================================
+            // REPORT SYNC (Google Sheets / Excel via webhook)
+            // =============================================================
+            (function() {
+                const sheetsUrlInput = document.getElementById('sheetsWebhookUrl');
+                const excelUrlInput = document.getElementById('excelWebhookUrl');
+                const sheetsChip = document.getElementById('sheetsSyncChip');
+                const excelChip = document.getElementById('excelSyncChip');
+
+                function loadUrls() {
+                    sheetsUrlInput.value = getStorage('sheetsWebhookUrl', '');
+                    excelUrlInput.value = getStorage('excelWebhookUrl', '');
+                    updateChips();
+                }
+                function updateChips() {
+                    const sUrl = getStorage('sheetsWebhookUrl', '');
+                    const eUrl = getStorage('excelWebhookUrl', '');
+                    sheetsChip.textContent = sUrl ? 'Linked' : 'Not linked';
+                    excelChip.textContent = eUrl ? 'Linked' : 'Not linked';
+                }
+
+                document.getElementById('sheetsSaveBtn').addEventListener('click', function() {
+                    setStorage('sheetsWebhookUrl', sheetsUrlInput.value.trim());
+                    updateChips();
+                    alert('Google Sheets webhook saved.');
+                });
+                document.getElementById('excelSaveBtn').addEventListener('click', function() {
+                    setStorage('excelWebhookUrl', excelUrlInput.value.trim());
+                    updateChips();
+                    alert('Excel webhook saved.');
+                });
+
+                function sendToWebhook(url, payload) {
+                    if (!url) return Promise.resolve(false);
+                    return fetch(url, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'text/plain' },
+                        body: JSON.stringify(payload)
+                    }).then(function() { return true; }).catch(function() { return false; });
+                }
+
+                document.getElementById('sheetsTestBtn').addEventListener('click', function() {
+                    const url = sheetsUrlInput.value.trim();
+                    if (!url) { alert('Enter a webhook URL first.'); return; }
+                    sendToWebhook(url, { source: 'InstrumentPro', type: 'Test', timestamp: new Date().toISOString(), message: 'Test row from InstrumentPro Settings' });
+                    alert('Test row sent — check your Google Sheet to confirm it arrived (the app can\'t read the response back, so this can\'t confirm success on its own).');
+                });
+                document.getElementById('excelTestBtn').addEventListener('click', function() {
+                    const url = excelUrlInput.value.trim();
+                    if (!url) { alert('Enter a webhook URL first.'); return; }
+                    sendToWebhook(url, { source: 'InstrumentPro', type: 'Test', timestamp: new Date().toISOString(), message: 'Test row from InstrumentPro Settings' });
+                    alert('Test row sent — check your Excel workbook to confirm it arrived (the app can\'t read the response back, so this can\'t confirm success on its own).');
+                });
+
+                // Exposed globally so every report tool's "Sync" button can call this directly
+                window.syncReportToWebhooks = function(payload) {
+                    const sUrl = getStorage('sheetsWebhookUrl', '');
+                    const eUrl = getStorage('excelWebhookUrl', '');
+                    if (!sUrl && !eUrl) {
+                        alert('No Google Sheets or Excel webhook linked yet. Add one in Settings → Report Sync first.');
+                        return;
+                    }
+                    if (sUrl) sendToWebhook(sUrl, payload);
+                    if (eUrl) sendToWebhook(eUrl, payload);
+                    alert('Sent to linked webhook(s). Check your sheet/workbook to confirm — the app can\'t read the response back to verify automatically.');
+                };
+
+                loadUrls();
+            })();
+
+            // =============================================================
             // FIELD NOTES
             // =============================================================
             (function() {
@@ -6469,6 +6598,37 @@
                     a.download = 'InstrumentPro_FieldNotes_' + new Date().toISOString().slice(0, 10) + '.txt';
                     a.click();
                     URL.revokeObjectURL(a.href);
+                });
+
+                function csvEscape(val) {
+                    const s = String(val == null ? '' : val);
+                    return '"' + s.replace(/"/g, '""') + '"';
+                }
+
+                document.getElementById('noteExportCsvBtn').addEventListener('click', function() {
+                    const notes = loadNotes().slice().sort(function(a, b) { return a.ts - b.ts; });
+                    if (notes.length === 0) { alert('No notes to export yet.'); return; }
+                    let csv = ['Timestamp,Category,Tag,Note'].join('\n') + '\n';
+                    notes.forEach(function(n) {
+                        csv += [csvEscape(formatTimestamp(n.ts)), csvEscape(n.category), csvEscape(n.tag), csvEscape(n.text)].join(',') + '\n';
+                    });
+                    const blob = new Blob([csv], { type: 'text/csv' });
+                    const a = document.createElement('a');
+                    a.href = URL.createObjectURL(blob);
+                    a.download = 'InstrumentPro_FieldNotes_' + new Date().toISOString().slice(0, 10) + '.csv';
+                    a.click();
+                    URL.revokeObjectURL(a.href);
+                });
+
+                document.getElementById('noteSyncBtn').addEventListener('click', function() {
+                    const notes = loadNotes();
+                    if (notes.length === 0) { alert('No notes to sync yet.'); return; }
+                    window.syncReportToWebhooks({
+                        source: 'InstrumentPro',
+                        type: 'FieldNotes',
+                        timestamp: new Date().toISOString(),
+                        notes: notes.map(function(n) { return { timestamp: formatTimestamp(n.ts), category: n.category, tag: n.tag, text: n.text }; })
+                    });
                 });
 
                 document.getElementById('noteClearBtn').addEventListener('click', function() {
