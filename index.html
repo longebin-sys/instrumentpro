@@ -2111,6 +2111,207 @@ body {
   }
 }
 </style>
+
+<style id="instrumentpro-home-upgrade">
+/* ==========================================================
+   HOME PAGE UPGRADE — dashboard, quick actions, mobile polish
+   Other application pages are intentionally untouched.
+   ========================================================== */
+#page-home{
+  padding-bottom:96px;
+  overflow-x:hidden;
+}
+#page-home .search-bar{
+  position:sticky;
+  top:0;
+  z-index:5;
+  margin-bottom:10px;
+  box-shadow:0 6px 18px rgba(15,23,42,.06);
+}
+.home-hero{
+  position:relative;
+  overflow:hidden;
+  border-radius:22px;
+  padding:16px;
+  background:
+    radial-gradient(circle at 100% 0%,rgba(255,255,255,.42),transparent 34%),
+    linear-gradient(135deg,rgba(37,99,235,.14),rgba(124,58,237,.10));
+  border:1px solid rgba(191,219,254,.85);
+  box-shadow:0 10px 26px rgba(37,99,235,.08);
+}
+.home-hero:after{
+  content:"";
+  position:absolute;
+  width:150px;height:150px;
+  right:-62px;bottom:-74px;
+  border-radius:50%;
+  background:rgba(37,99,235,.08);
+}
+.home-hero-main{
+  position:relative;z-index:1;
+  display:flex;align-items:flex-start;justify-content:space-between;gap:12px;
+}
+.home-hero-copy{min-width:0}
+.home-eyebrow{
+  font-size:.62rem;font-weight:800;color:#2563eb;text-transform:uppercase;
+  letter-spacing:.09em;
+}
+.home-hero-title{
+  font-size:1.28rem;font-weight:850;line-height:1.15;margin-top:5px;
+  overflow-wrap:anywhere;
+}
+.home-hero-sub{
+  font-size:.72rem;line-height:1.45;color:#475569;margin-top:6px;
+}
+.home-hero-icon{
+  flex:0 0 48px;width:48px;height:48px;border-radius:16px;
+  display:grid;place-items:center;background:rgba(37,99,235,.14);color:#2563eb;
+  font-size:1.2rem;
+}
+.home-status-line{
+  position:relative;z-index:1;
+  display:flex;align-items:center;gap:7px;margin-top:12px;
+  font-size:.61rem;font-weight:700;color:#475569;
+}
+.home-live-dot{
+  width:8px;height:8px;border-radius:50%;background:#22c55e;
+  box-shadow:0 0 0 4px rgba(34,197,94,.14);
+}
+.home-kpis{
+  position:relative;z-index:1;
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin-top:12px;
+}
+.home-kpi{
+  min-width:0;text-align:center;padding:9px 4px;border-radius:14px;
+  background:rgba(255,255,255,.72);border:1px solid rgba(255,255,255,.75);
+}
+.home-kpi-value{
+  font-size:1rem;font-weight:850;color:#0f172a;line-height:1.1;
+}
+.home-kpi-label{
+  margin-top:3px;font-size:.5rem;font-weight:800;color:#64748b;
+  text-transform:uppercase;letter-spacing:.04em;overflow-wrap:anywhere;
+}
+
+.home-section-title{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+  margin:14px 2px 7px;
+}
+.home-section-title strong{font-size:.76rem;font-weight:850;color:#334155}
+.home-section-title span{font-size:.58rem;color:#94a3b8}
+.home-quick-grid{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;
+}
+.home-quick-action{
+  min-width:0;min-height:76px;padding:10px 6px;border-radius:17px;
+  border:1px solid #e2e8f0;background:#fff;
+  box-shadow:0 6px 16px rgba(15,23,42,.05);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;cursor:pointer;
+  transition:transform .12s ease,box-shadow .12s ease,border-color .12s ease;
+  -webkit-tap-highlight-color:transparent;
+}
+.home-quick-action:active{transform:scale(.97)}
+.home-quick-action:hover{border-color:#bfdbfe;box-shadow:0 10px 20px rgba(37,99,235,.10)}
+.home-quick-icon{
+  width:34px;height:34px;border-radius:11px;display:grid;place-items:center;
+  margin-bottom:5px;font-size:.85rem;
+}
+.home-quick-label{
+  font-size:.6rem;font-weight:800;color:#334155;line-height:1.2;
+  overflow-wrap:anywhere;
+}
+.home-quick-meta{
+  margin-top:2px;font-size:.49rem;color:#94a3b8;
+}
+
+.home-mobile-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:9px;
+}
+.home-mini-card{
+  min-width:0;padding:12px;border-radius:17px;background:#fff;
+  border:1px solid #e2e8f0;box-shadow:0 6px 16px rgba(15,23,42,.045);
+}
+.home-mini-head{
+  display:flex;align-items:center;gap:8px;margin-bottom:7px;
+}
+.home-mini-icon{
+  width:32px;height:32px;border-radius:10px;display:grid;place-items:center;
+  background:#eff6ff;color:#2563eb;flex:none;
+}
+.home-mini-title{font-size:.67rem;font-weight:850;color:#334155}
+.home-mini-text{font-size:.58rem;line-height:1.4;color:#64748b;overflow-wrap:anywhere}
+.home-mobile-btn{
+  width:100%;margin-top:8px;min-height:38px;border-radius:11px;
+  font-size:.61rem;font-weight:800;
+}
+
+body.dark #page-home .home-hero{
+  background:linear-gradient(135deg,rgba(37,99,235,.18),rgba(124,58,237,.12));
+  border-color:#334155;
+}
+body.dark #page-home .home-hero-title{color:#f8fafc}
+body.dark #page-home .home-hero-sub,
+body.dark #page-home .home-status-line{color:#94a3b8}
+body.dark #page-home .home-kpi,
+body.dark #page-home .home-quick-action,
+body.dark #page-home .home-mini-card{
+  background:#1e293b;border-color:#334155;
+}
+body.dark #page-home .home-kpi-value,
+body.dark #page-home .home-section-title strong,
+body.dark #page-home .home-quick-label,
+body.dark #page-home .home-mini-title{color:#e2e8f0}
+
+@media(max-width:390px){
+  #page-home{padding-bottom:92px}
+  #page-home .search-bar{margin-left:4px;margin-right:4px}
+  .home-hero{padding:13px;border-radius:19px}
+  .home-hero-title{font-size:1.14rem}
+  .home-hero-sub{font-size:.67rem}
+  .home-hero-icon{width:42px;height:42px;flex-basis:42px;border-radius:14px}
+  .home-kpis{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+  .home-quick-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+  .home-quick-action{min-height:72px}
+  .home-mobile-grid{grid-template-columns:1fr}
+}
+@media(max-width:320px){
+  .home-hero-main{gap:7px}
+  .home-hero-icon{display:none}
+  .home-quick-grid{grid-template-columns:1fr 1fr}
+  .home-kpi-value{font-size:.92rem}
+}
+</style>
+
+
+<style id="trouble-qa-css">
+#page-trouble{padding-bottom:96px;overflow-x:hidden}
+.trouble-top{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:17px;border-radius:22px;background:linear-gradient(135deg,#0f2744,#2563eb);color:#fff;box-shadow:0 12px 28px rgba(15,39,68,.18)}
+.trouble-kicker{font-size:.55rem;font-weight:900;letter-spacing:.1em;opacity:.72}
+.trouble-title{font-size:1.2rem;font-weight:900;line-height:1.15;margin-top:4px}
+.trouble-sub{font-size:.66rem;opacity:.86;margin-top:5px;line-height:1.4}
+.trouble-top-icon{width:46px;height:46px;flex:0 0 46px;border-radius:15px;background:rgba(255,255,255,.12);display:grid;place-items:center}
+.trouble-start{width:100%;margin-top:9px;border:0;border-radius:16px;padding:13px 14px;background:#fff;color:#1d4ed8;box-shadow:0 7px 18px rgba(15,23,42,.08);display:flex;align-items:center;justify-content:space-between;font-weight:850;font-size:.67rem}
+.trouble-label-row{display:flex;justify-content:space-between;align-items:center;margin:15px 2px 7px;font-size:.64rem}
+.trouble-label-row strong{font-size:.74rem}.trouble-label-row span{color:#94a3b8}
+.trouble-quick{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.trouble-quick button{min-width:0;min-height:70px;border:1px solid #e2e8f0;background:#fff;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font-size:.57rem;font-weight:800;color:#334155;box-shadow:0 5px 14px rgba(15,23,42,.045)}
+.trouble-quick button i{font-size:.9rem;color:#2563eb}.trouble-quick button:active{transform:scale(.97)}
+.trouble-modal{display:none;position:fixed;inset:0;z-index:10000;align-items:flex-end;justify-content:center}
+.trouble-modal.open{display:flex}
+.trouble-backdrop{position:absolute;inset:0;background:rgba(2,8,23,.62);backdrop-filter:blur(4px)}
+.trouble-dialog{position:relative;z-index:1;width:min(560px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:24px 24px 0 0;padding:15px;box-shadow:0 -15px 45px rgba(0,0,0,.22);animation:troubleUp .18s ease-out}
+@keyframes troubleUp{from{transform:translateY(25px);opacity:.5}to{transform:none;opacity:1}}
+.trouble-dialog-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.trouble-dialog-title{font-size:.94rem;font-weight:900;color:#1e293b;margin-top:3px}
+.trouble-close{border:0;background:#f1f5f9;width:34px;height:34px;border-radius:11px;color:#475569}
+.trouble-progress{display:flex;gap:5px;margin:13px 0 10px}.trouble-progress span{height:4px;flex:1;border-radius:9px;background:#e2e8f0}.trouble-progress span.active{background:#2563eb}
+.trouble-step{font-size:.55rem;font-weight:850;color:#2563eb;text-transform:uppercase}.trouble-question{font-size:.92rem;font-weight:900;color:#1e293b;line-height:1.25;margin:5px 0 12px}
+.trouble-options{display:grid;grid-template-columns:1fr 1fr;gap:7px}.trouble-options button{text-align:left;min-width:0;border:1px solid #e2e8f0;background:#f8fafc;border-radius:14px;padding:11px;font-size:.62rem;font-weight:750;color:#334155;overflow-wrap:anywhere}.trouble-options button.selected{border-color:#2563eb;background:#eff6ff;color:#1d4ed8;box-shadow:inset 0 0 0 1px #2563eb}
+.trouble-result{display:none;margin-top:10px}.trouble-result.show{display:block}.trouble-result-tag{font-size:.55rem;font-weight:900;color:#2563eb;letter-spacing:.06em}.trouble-result-title{font-size:.86rem;font-weight:900;color:#1e3a8a;margin:5px 0 8px}.trouble-result-grid{display:grid;grid-template-columns:1fr;gap:7px}.trouble-result-grid>div{padding:9px;border:1px solid #e2e8f0;border-radius:13px;background:#f8fafc}.trouble-result-grid b{font-size:.58rem;color:#334155}.trouble-result-grid p{font-size:.57rem;line-height:1.45;color:#64748b;margin:4px 0 0}.trouble-safety{display:flex;gap:7px;margin-top:8px;padding:9px;border-radius:12px;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;font-size:.55rem;line-height:1.4}.trouble-footer{display:grid;grid-template-columns:auto 1fr;gap:7px;margin-top:11px}.trouble-footer .trouble-next{width:100%;justify-content:center}.trouble-footer .btn-outline{min-height:40px}.trouble-footer .btn{min-height:40px}
+body.dark .trouble-dialog{background:#111827}.dark .trouble-dialog-title,.dark .trouble-question{color:#f8fafc}.dark .trouble-options button{background:#1e293b;border-color:#334155;color:#cbd5e1}.dark .trouble-result-grid>div{background:#1e293b;border-color:#334155}.dark .trouble-result-grid b{color:#e2e8f0}
+@media(max-width:390px){.trouble-quick{grid-template-columns:repeat(2,minmax(0,1fr))}.trouble-options{grid-template-columns:1fr}.trouble-dialog{padding:13px;border-radius:22px 22px 0 0}.trouble-top{padding:14px}.trouble-top-icon{display:none}}
+</style>
+
 </head>
 <body>
 
@@ -2187,86 +2388,126 @@ body {
         PAGE: HOME
         ========================================================== -->
         <div class="page active" id="page-home">
-            <div class="search-bar">
-                <i class="fas fa-search"></i>
-                <input type="text" id="searchInput" placeholder="Search tools..." />
-            </div>
-            
-            <div class="card" style="background:linear-gradient(135deg, rgba(37,99,235,0.12), rgba(124,58,237,0.10)); border:1px solid rgba(191,219,254,0.8);">
-                <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:14px;">
-                    <div>
-                        <div style="font-size:0.72rem; font-weight:700; color:#2563eb; text-transform:uppercase; letter-spacing:0.08em;">Field Dashboard</div>
-                        <div style="font-size:1.45rem; font-weight:800; margin-top:6px;">Modern Technician Workspace</div>
-                        <div style="font-size:0.82rem; color:#475569; margin-top:6px;">Calibration, HART diagnostics, analytical tools, and reporting in one mobile-first interface.</div>
-                    </div>
-                    <div style="width:54px; height:54px; border-radius:18px; background:rgba(37,99,235,0.14); display:flex; align-items:center; justify-content:center;">
-                        <i class="fas fa-wave-square" style="font-size:1.4rem; color:#2563eb;"></i>
-                    </div>
-                </div>
-                <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; margin-top:14px;">
-                    <div style="background:rgba(255,255,255,0.68); border-radius:16px; padding:12px; text-align:center;">
-                        <div style="font-size:1.05rem; font-weight:800; color:#0f172a;">25+</div>
-                        <div style="font-size:0.66rem; color:#64748b; text-transform:uppercase; letter-spacing:0.06em;">Field Tools</div>
-                    </div>
-                    <div style="background:rgba(255,255,255,0.68); border-radius:16px; padding:12px; text-align:center;">
-                        <div style="font-size:1.05rem; font-weight:800; color:#0f172a;">PWA</div>
-                        <div style="font-size:0.66rem; color:#64748b; text-transform:uppercase; letter-spacing:0.06em;">Offline Ready</div>
-                    </div>
-                    <div style="background:rgba(255,255,255,0.68); border-radius:16px; padding:12px; text-align:center;">
-                        <div style="font-size:1.05rem; font-weight:800; color:#0f172a;">Live</div>
-                        <div style="font-size:0.66rem; color:#64748b; text-transform:uppercase; letter-spacing:0.06em;">Quick Access</div>
-                    </div>
-                </div>
-            </div>
+    <div class="search-bar">
+        <i class="fas fa-search"></i>
+        <input type="text" id="searchInput" placeholder="Search tools..." autocomplete="off" />
+    </div>
 
-<div class="quick-grid" id="quickAccess" style="grid-template-columns: repeat(3, 1fr);">
-                <div class="quick-item color-1" data-page="converter"><i class="fas fa-arrows-alt-h"></i> Converter</div>
-                <div class="quick-item color-5" data-page="electrical"><i class="fas fa-bolt"></i> Electrical</div>
-                <div class="quick-item color-3" data-page="references"><i class="fas fa-book"></i> References</div>
+    <!-- Technician Dashboard -->
+    <div class="home-hero">
+        <div class="home-hero-main">
+            <div class="home-hero-copy">
+                <div class="home-eyebrow">Field Dashboard</div>
+                <div class="home-hero-title">Technician Workspace</div>
+                <div class="home-hero-sub">Your field tools, active work, and quick actions in one place.</div>
             </div>
-            
-            <div class="card">
-                <div class="card-header">
-                    <i class="fas fa-layer-group"></i>
-                    <h3>Productivity Shortcuts</h3>
-                    <span>Modernized</span>
-                </div>
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-                    <div style="padding:14px; border-radius:18px; background:rgba(37,99,235,0.08); border:1px solid rgba(191,219,254,0.7);">
-                        <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
-                            <div style="width:40px; height:40px; border-radius:14px; background:rgba(37,99,235,0.16); display:flex; align-items:center; justify-content:center;">
-                                <i class="fas fa-bolt" style="color:#2563eb;"></i>
-                            </div>
-                            <div style="font-weight:700;">Electrical</div>
-                        </div>
-                        <div style="font-size:0.76rem; color:#475569;">Fast access to Ohm’s law, power, current, and troubleshooting calculators.</div>
-                    </div>
-                    <div style="padding:14px; border-radius:18px; background:rgba(5,150,105,0.08); border:1px solid rgba(167,243,208,0.75);">
-                        <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
-                            <div style="width:40px; height:40px; border-radius:14px; background:rgba(5,150,105,0.16); display:flex; align-items:center; justify-content:center;">
-                                <i class="fas fa-flask" style="color:#059669;"></i>
-                            </div>
-                            <div style="font-weight:700;">Analytical</div>
-                        </div>
-                        <div style="font-size:0.76rem; color:#475569;">Gas chromatography, pH, conductivity, and process chemistry reference tools.</div>
-                    </div>
-                </div>
-            </div>
-
-<div class="recent-tools hidden" id="favoritesSection">
-                <span class="recent-label"><i class="fas fa-star" style="color:#f59e0b;"></i> Favorites</span>
-                <div id="favoritesList"></div>
-            </div>
-            <div class="recent-tools">
-                <span class="recent-label"><i class="fas fa-clock"></i> Recent Tools</span>
-                <div id="recentList">
-                    <span class="recent-item" data-page="calibration">Calibration</span>
-                    <span class="recent-item" data-page="analytical">Analytical</span>
-                    <span class="recent-item" data-page="converter">Converter</span>
-                </div>
-            </div>
-            <div style="text-align:center;font-size:0.6rem;color:#94a3b8;padding:18px 12px 6px 12px;">© 2026 Valentino Raimbuse · InstrumentPro</div>
+            <div class="home-hero-icon"><i class="fas fa-toolbox"></i></div>
         </div>
+
+        <div class="home-status-line">
+            <span class="home-live-dot"></span>
+            <span id="homeStatusText">Ready for field work</span>
+        </div>
+
+        <div class="home-kpis">
+            <div class="home-kpi">
+                <div class="home-kpi-value" id="homeToolsCount">25+</div>
+                <div class="home-kpi-label">Field Tools</div>
+            </div>
+            <div class="home-kpi">
+                <div class="home-kpi-value" id="homeNotesCount">0</div>
+                <div class="home-kpi-label">Open Notes</div>
+            </div>
+            <div class="home-kpi">
+                <div class="home-kpi-value" id="homeFavoritesCount">0</div>
+                <div class="home-kpi-label">Favorites</div>
+            </div>
+            <div class="home-kpi">
+                <div class="home-kpi-value" id="homeRecentCount">0</div>
+                <div class="home-kpi-label">Recent Tools</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="home-section-title">
+        <strong><i class="fas fa-bolt" style="color:#2563eb;margin-right:5px;"></i> Quick Actions</strong>
+        <span>Tap to open</span>
+    </div>
+    <div class="home-quick-grid" id="homeQuickActions">
+        <button class="home-quick-action" type="button" data-page="notes">
+            <span class="home-quick-icon" style="background:#fff7ed;color:#c2410c;"><i class="fas fa-clipboard-list"></i></span>
+            <span class="home-quick-label">New Field Note</span>
+            <span class="home-quick-meta">Capture finding</span>
+        </button>
+        <button class="home-quick-action" type="button" data-page="calibration">
+            <span class="home-quick-icon" style="background:#eff6ff;color:#2563eb;"><i class="fas fa-sliders-h"></i></span>
+            <span class="home-quick-label">Calibration</span>
+            <span class="home-quick-meta">Start test</span>
+        </button>
+        <button class="home-quick-action" type="button" data-page="analytical">
+            <span class="home-quick-icon" style="background:#ecfdf5;color:#059669;"><i class="fas fa-flask"></i></span>
+            <span class="home-quick-label">Analytical</span>
+            <span class="home-quick-meta">Instrument tools</span>
+        </button>
+        <button class="home-quick-action" type="button" data-page="report">
+            <span class="home-quick-icon" style="background:#f5f3ff;color:#7c3aed;"><i class="fas fa-file-alt"></i></span>
+            <span class="home-quick-label">Reports</span>
+            <span class="home-quick-meta">Open reporting</span>
+        </button>
+        <button class="home-quick-action" type="button" data-page="converter">
+            <span class="home-quick-icon" style="background:#f0fdfa;color:#0d9488;"><i class="fas fa-arrows-alt-h"></i></span>
+            <span class="home-quick-label">Converter</span>
+            <span class="home-quick-meta">Units & values</span>
+        </button>
+        <button class="home-quick-action" type="button" data-page="electrical">
+            <span class="home-quick-icon" style="background:#fef2f2;color:#dc2626;"><i class="fas fa-bolt"></i></span>
+            <span class="home-quick-label">Electrical</span>
+            <span class="home-quick-meta">Calculate & test</span>
+        </button>
+    </div>
+
+    <!-- Technician workspace shortcuts -->
+    <div class="home-section-title">
+        <strong><i class="fas fa-compass" style="color:#64748b;margin-right:5px;"></i> Technician Workspace</strong>
+        <span>Fast access</span>
+    </div>
+    <div class="home-mobile-grid">
+        <div class="home-mini-card">
+            <div class="home-mini-head">
+                <div class="home-mini-icon"><i class="fas fa-book"></i></div>
+                <div class="home-mini-title">References</div>
+            </div>
+            <div class="home-mini-text">Access instrument references, field procedures, and technical information.</div>
+            <button class="btn home-mobile-btn" type="button" data-page="references">Open References</button>
+        </div>
+        <div class="home-mini-card">
+            <div class="home-mini-head">
+                <div class="home-mini-icon" style="background:#fef2f2;color:#dc2626;"><i class="fas fa-exclamation-triangle"></i></div>
+                <div class="home-mini-title">Troubleshooting</div>
+            </div>
+            <div class="home-mini-text">Find practical troubleshooting guidance while working in the field.</div>
+            <button class="btn-outline btn home-mobile-btn" type="button" data-page="trouble">Open Troubleshooting</button>
+        </div>
+    </div>
+
+    <!-- Favorites / Recent -->
+    <div class="recent-tools hidden" id="favoritesSection">
+        <span class="recent-label"><i class="fas fa-star" style="color:#f59e0b;"></i> Favorites</span>
+        <div id="favoritesList"></div>
+    </div>
+
+    <div class="recent-tools">
+        <span class="recent-label"><i class="fas fa-clock"></i> Recent Tools</span>
+        <div id="recentList">
+            <span class="recent-item" data-page="calibration">Calibration</span>
+            <span class="recent-item" data-page="analytical">Analytical</span>
+            <span class="recent-item" data-page="converter">Converter</span>
+        </div>
+    </div>
+
+    <div style="text-align:center;font-size:0.6rem;color:#94a3b8;padding:18px 12px 6px 12px;">© 2026 Valentino Raimbuse · InstrumentPro</div>
+</div>
 
         <!-- ==========================================================
         PAGE: TEMPERATURE CALIBRATION (Enhanced)
@@ -4112,45 +4353,65 @@ body {
         PAGE: TROUBLESHOOTING (short)
         ========================================================== -->
         <div class="page" id="page-trouble">
-            <div class="page-title"><i class="fas fa-exclamation-triangle"></i> Troubleshooting</div>
-            <div class="card">
-                <div class="row"><label>Device</label>
-                    <select id="troubleDevice" style="flex:1;">
-                        <option value="level">Level Transmitters</option>
-                        <option value="pressure">Pressure Transmitters</option>
-                        <option value="flow">Flow Meters</option>
-                        <option value="controlvalve">Control Valves</option>
-                        <option value="shutdownvalve">Shutdown/ESD Valves</option>
-                        <option value="speedprobe">Speed Probes</option>
-                        <option value="vibprobe">Vibration Probes</option>
-                        <option value="gasdet">Gas Detectors</option>
-                        <option value="smokedet">Smoke Detectors</option>
-                        <option value="firepanel">Fire Panels (FACP)</option>
-                        <option value="genset">Generator Control Panel</option>
-                        <option value="blowdown">Blowdown Valves</option>
-                        <option value="plcforce">PLC Forcing (AB/GE/Honeywell)</option>
-                        <option value="fm200">FM-200 Fire Suppression</option>
-                        <option value="turbinefg">GE/Solar Turbines Fire & Gas</option>
-                    </select>
-                </div>
-                <div id="troubleOutput" style="font-size:0.75rem;"></div>
-                <hr />
-                <div><strong>Generic Loop Faults</strong></div>
-                <div class="row"><label>Fault</label>
-                    <select id="faultSelect" style="flex:1;">
-                        <option value="4ma">Stuck at 4mA</option>
-                        <option value="22ma">22mA alarm</option>
-                        <option value="hart">No HART comms</option>
-                        <option value="drift">Reading drifts over time</option>
-                        <option value="erratic">Erratic / noisy signal</option>
-                        <option value="nodisplay">Blank local display</option>
-                        <option value="groundloop">Ground loop / noise</option>
-                    </select>
-                </div>
-                <button class="btn w-full" id="faultFinderBtn" style="justify-content:center;margin-top:6px;"><i class="fas fa-list"></i> Show Full Guide</button>
-                <div id="faultDiagnosis" class="mt-1" style="background:#f1f5f9;padding:12px 16px;border-radius:20px;min-height:40px;">Select a fault above.</div>
-            </div>
+  <div class="trouble-top">
+    <div>
+      <div class="trouble-kicker">FIELD DIAGNOSTIC</div>
+      <div class="trouble-title">Troubleshooting Assistant</div>
+      <div class="trouble-sub">Answer a few quick questions. Get the next check.</div>
+    </div>
+    <div class="trouble-top-icon"><i class="fas fa-stethoscope"></i></div>
+  </div>
+
+  <button class="trouble-start" id="troubleStartBtn" type="button">
+    <span><i class="fas fa-play"></i> Start Troubleshooting</span>
+    <i class="fas fa-chevron-right"></i>
+  </button>
+
+  <div class="trouble-label-row"><strong>Quick problems</strong><span>Tap to start</span></div>
+  <div class="trouble-quick" id="troubleQuick">
+    <button type="button" data-quick="low"><i class="fas fa-arrow-down"></i><span>Reading low</span></button>
+    <button type="button" data-quick="high"><i class="fas fa-arrow-up"></i><span>Reading high</span></button>
+    <button type="button" data-quick="erratic"><i class="fas fa-wave-square"></i><span>Erratic signal</span></button>
+    <button type="button" data-quick="drift"><i class="fas fa-chart-line"></i><span>Reading drifting</span></button>
+    <button type="button" data-quick="comm"><i class="fas fa-link"></i><span>No communication</span></button>
+    <button type="button" data-quick="nodisplay"><i class="fas fa-desktop"></i><span>No display</span></button>
+  </div>
+
+  <div class="trouble-modal" id="troubleModal" aria-hidden="true">
+    <div class="trouble-backdrop" data-close-trouble></div>
+    <div class="trouble-dialog" role="dialog" aria-modal="true">
+      <div class="trouble-dialog-head">
+        <div>
+          <div class="trouble-kicker">FIELD ASSISTANT</div>
+          <div class="trouble-dialog-title" id="troubleModalTitle">Let's diagnose it</div>
         </div>
+        <button class="trouble-close" type="button" data-close-trouble><i class="fas fa-times"></i></button>
+      </div>
+
+      <div class="trouble-progress" id="troubleProgress"><span class="active"></span><span></span><span></span></div>
+      <div class="trouble-step" id="troubleStep">Question 1 of 2</div>
+      <div class="trouble-question" id="troubleQuestion">What are you troubleshooting?</div>
+      <div class="trouble-options" id="troubleOptions"></div>
+
+      <div class="trouble-result" id="troubleResult">
+        <div class="trouble-result-tag"><i class="fas fa-lightbulb"></i> NEXT STEP</div>
+        <div class="trouble-result-title" id="troubleResultTitle"></div>
+        <div class="trouble-result-grid">
+          <div><b><i class="fas fa-search"></i> Check first</b><p id="troubleCheck"></p></div>
+          <div><b><i class="fas fa-microscope"></i> Possible cause</b><p id="troubleCause"></p></div>
+          <div><b><i class="fas fa-vial"></i> Verify</b><p id="troubleVerify"></p></div>
+        </div>
+        <div class="trouble-safety"><i class="fas fa-shield-alt"></i><span>Follow approved isolation, permit and OEM procedures before intrusive testing.</span></div>
+      </div>
+
+      <div class="trouble-footer">
+        <button class="btn-outline btn" id="troubleBack" type="button"><i class="fas fa-arrow-left"></i> Back</button>
+        <button class="btn" id="troubleNext" type="button" disabled>Next <i class="fas fa-arrow-right"></i></button>
+        <button class="btn" id="troubleDone" type="button" style="display:none;">Done <i class="fas fa-check"></i></button>
+      </div>
+    </div>
+  </div>
+</div>
 
         <!-- ==========================================================
         PAGE: AI CHAT
@@ -7412,5 +7673,151 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 })();
 </script>
 
+
+<script id="instrumentpro-home-upgrade-js">
+(function(){
+  'use strict';
+
+  function homeStorage(key, fallback){
+    try{
+      const raw=localStorage.getItem('instrumentpro_'+key);
+      return raw ? JSON.parse(raw) : fallback;
+    }catch(e){ return fallback; }
+  }
+
+  function homeNotesCount(){
+    try{
+      const raw=localStorage.getItem('instrumentpro_notes');
+      const notes=raw?JSON.parse(raw):[];
+      return Array.isArray(notes) ? notes.length : 0;
+    }catch(e){ return 0; }
+  }
+
+  function updateHomeDashboard(){
+    const notes=homeNotesCount();
+    const fav=homeStorage('favorites',[]);
+    const recent=homeStorage('recent',[]);
+
+    const notesEl=document.getElementById('homeNotesCount');
+    const favEl=document.getElementById('homeFavoritesCount');
+    const recentEl=document.getElementById('homeRecentCount');
+
+    if(notesEl) notesEl.textContent=String(notes);
+    if(favEl) favEl.textContent=String(Array.isArray(fav)?fav.length:0);
+    if(recentEl) recentEl.textContent=String(Array.isArray(recent)?recent.length:0);
+
+    const status=document.getElementById('homeStatusText');
+    if(status){
+      if(notes>0) status.textContent=notes+' field note'+(notes===1?'':'s')+' saved locally';
+      else status.textContent='Ready for field work';
+    }
+  }
+
+  function homeNavigate(page){
+    const target=document.querySelector('.nav-item[data-page="'+page+'"]');
+    if(target) target.click();
+  }
+
+  function initHomeActions(){
+    document.querySelectorAll('#homeQuickActions [data-page], #page-home .home-mobile-btn[data-page]')
+      .forEach(btn=>{
+        btn.addEventListener('click',function(){
+          homeNavigate(this.dataset.page);
+        });
+      });
+    updateHomeDashboard();
+    window.addEventListener('storage',updateHomeDashboard);
+  }
+
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',initHomeActions);
+  }else{
+    initHomeActions();
+  }
+})();
+</script>
+
+
+<script id="instrumentpro-home-search-js">
+(function(){
+  function init(){
+    const input=document.getElementById('searchInput');
+    if(!input)return;
+    input.addEventListener('input',function(){
+      const q=this.value.toLowerCase().trim();
+      document.querySelectorAll('#page-home .home-quick-action, #page-home .home-mini-card').forEach(el=>{
+        const text=(el.innerText||'').toLowerCase();
+        el.style.display=(!q||text.includes(q))?'':'none';
+      });
+    });
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script>
+
+<script id="trouble-qa-js">
+(function(){
+'use strict';
+const D={
+level:{n:'Level transmitter',s:{low:['Reading low','Compare with an independent level indication.','Check the impulse/sensing path and process condition.'],high:['Reading high','Verify actual level with a trusted reference.','Check sensing path, configuration and calibration.'],erratic:['Reading unstable','Compare signal with process behavior and a reference.','Check turbulence, restrictions, wiring and noise.'],drift:['Reading drifting','Repeat after the process is stable.','Check temperature, sensing path and zero shift.'],comm:['No communication','Verify loop power first.','Check wiring, load/address and communication hardware.'],nodisplay:['No display','Verify device power and connection.','Check supply, terminals and display status.']}},
+pressure:{n:'Pressure transmitter',s:{low:['Reading low','Compare with a certified pressure reference.','Check impulse line restriction and process isolation.'],high:['Reading high','Verify pressure independently.','Check impulse path, configuration and zero/span.'],erratic:['Reading unstable','Compare with a stable reference.','Check impulse path, vibration and electrical noise.'],drift:['Reading drifting','Repeat against a stable reference.','Check temperature, impulse condition and zero shift.'],comm:['No communication','Verify loop power.','Check wiring, load/address and communication hardware.'],nodisplay:['No display','Verify transmitter supply.','Check power path and display status.']}},
+flow:{n:'Flow meter',s:{low:['Flow reading low','Compare with an independent flow indication.','Check process condition, sensing surfaces and configuration.'],high:['Flow reading high','Verify actual flow independently.','Check scaling, installation and sensing condition.'],erratic:['Flow signal noisy','Compare signal behavior with process changes.','Check grounding, EMI, turbulence and pulsation.'],drift:['Flow reading drifting','Repeat at stable operating conditions.','Check fouling, temperature and configuration.'],comm:['No communication','Verify power and communication path.','Check wiring and device addressing/load.'],nodisplay:['No display','Verify instrument power/status.','Check supply and display connection.']}},
+controlvalve:{n:'Control valve',s:{low:['Valve does not reach command','Compare commanded position with actual travel.','Check actuator supply, positioner and linkage.'],high:['Valve overtravels','Compare command with feedback.','Check positioner feedback and mechanical travel.'],erratic:['Valve hunts / oscillates','Compare command and actual travel over time.','Check stiction and positioner response.'],drift:['Position drifts','Observe travel at a steady command.','Check actuator supply, linkage and positioner.'],comm:['No communication','Verify supply and communication path.','Check wiring, load/address and positioner status.'],nodisplay:['Feedback missing','Verify positioner power/status.','Check feedback linkage/sensor and wiring.']}},
+shutdownvalve:{n:'Shutdown / ESD valve',s:{low:['Stroke is slow','Compare stroke time with the approved baseline.','Check actuator supply, solenoid, speed control and friction.'],high:['Travel is excessive','Verify travel feedback and limits.','Check position feedback and mechanical stops under procedure.'],erratic:['Stroke is inconsistent','Repeat a controlled test if authorized.','Check actuator/solenoid response and mechanical travel.'],drift:['Position does not hold','Verify actuator pressure and feedback.','Check leakage, actuator and solenoid behavior.'],comm:['No diagnostics communication','Check controller/device status.','Verify the approved communication path.'],nodisplay:['Feedback missing','Check ESD feedback indication.','Inspect approved feedback diagnostics.']}}
+};
+D.speedprobe=D.pressure;D.speedprobe.n='Speed probe';
+D.vibprobe=D.flow;D.vibprobe.n='Vibration probe';
+D.gasdet=D.flow;D.gasdet.n='Gas detector';
+D.firepanel=D.controlvalve;D.firepanel.n='Fire alarm panel';
+D.genset=D.pressure;D.genset.n='Generator control panel';
+
+const devices=[['level','Level transmitter'],['pressure','Pressure transmitter'],['flow','Flow meter'],['controlvalve','Control valve'],['shutdownvalve','Shutdown / ESD valve'],['speedprobe','Speed probe'],['vibprobe','Vibration probe'],['gasdet','Gas detector'],['firepanel','Fire alarm panel'],['genset','Generator control panel']];
+const state={device:null,symptom:null,quick:null};
+
+function $(x){return document.getElementById(x)}
+function openModal(quick){
+ state.device=null;state.symptom=null;state.quick=quick||null;
+ $('troubleModal').classList.add('open');$('troubleModal').setAttribute('aria-hidden','false');
+ $('troubleResult').classList.remove('show');$('troubleDone').style.display='none';$('troubleNext').style.display='block';$('troubleBack').style.display='block';
+ if(quick){renderDevice();$('troubleStep').textContent='Question 1 of 2';$('troubleQuestion').textContent='Which instrument is showing the problem?'}
+ else renderDevice();
+ document.body.style.overflow='hidden';
+}
+function closeModal(){ $('troubleModal').classList.remove('open');$('troubleModal').setAttribute('aria-hidden','true');document.body.style.overflow='';}
+function progress(n){$('troubleProgress').querySelectorAll('span').forEach((x,i)=>x.classList.toggle('active',i<n))}
+function options(items){
+ const box=$('troubleOptions');box.innerHTML='';
+ items.forEach(([id,label])=>{
+  const b=document.createElement('button');b.type='button';b.textContent=label;b.dataset.id=id;
+  b.onclick=()=>{box.querySelectorAll('button').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');$('troubleNext').disabled=false};
+  box.appendChild(b);
+ });
+}
+function renderDevice(){
+ progress(1);$('troubleStep').textContent='Question 1 of 2';$('troubleQuestion').textContent='Which instrument is showing the problem?';options(devices);$('troubleNext').disabled=true;
+}
+function renderSymptoms(){
+ const d=D[state.device];progress(2);$('troubleStep').textContent='Question 2 of 2';$('troubleQuestion').textContent='What is the main symptom on the '+d.n.toLowerCase()+'?';options(Object.entries(d.s).map(x=>[x[0],x[1][0]]));$('troubleNext').disabled=true;
+}
+function showResult(){
+ const d=D[state.device],r=d.s[state.symptom];progress(3);
+ $('troubleStep').textContent='Diagnostic direction';$('troubleQuestion').textContent='Start with this check before changing settings or replacing parts.';
+ $('troubleOptions').innerHTML='';$('troubleResult').classList.add('show');
+ $('troubleResultTitle').textContent=r[0];$('troubleCheck').textContent=r[1];$('troubleCause').textContent='The symptom may be caused by the sensing path, process condition, wiring, configuration or the instrument itself. Isolate the physical cause before recalibration.';
+ $('troubleVerify').textContent=r[2];$('troubleNext').style.display='none';$('troubleBack').style.display='none';$('troubleDone').style.display='block';
+}
+$('troubleStartBtn').onclick=()=>openModal();
+document.querySelectorAll('#troubleQuick button').forEach(b=>b.onclick=()=>openModal(b.dataset.quick));
+document.querySelectorAll('[data-close-trouble]').forEach(x=>x.onclick=closeModal);
+$('troubleBack').onclick=()=>{if(state.device){state.device=null;renderDevice()}};
+$('troubleNext').onclick=()=>{
+ const selected=$('troubleOptions').querySelector('.selected');if(!selected)return;
+ if(!state.device){state.device=selected.dataset.id;renderSymptoms()}
+ else{state.symptom=selected.dataset.id;showResult()}
+};
+$('troubleDone').onclick=closeModal;
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('troubleModal').classList.contains('open'))closeModal()});
+})();
+</script>
 </body>
 </html>
