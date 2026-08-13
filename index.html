@@ -2590,11 +2590,8 @@ body.dark .trouble-dialog{background:#111827}.dark .trouble-dialog-title,.dark .
                     <div><label>Discipline</label><select id="fnDiscipline"><option>Instrumentation</option><option>Electrical</option><option>Control</option><option>Mechanical</option><option>Process</option><option>Safety</option><option>Other</option></select></div>
                     <div><label>Tag / Asset</label><input id="fnTag" placeholder="PT-101 / PLC-02" /></div>
                     <div><label>Location</label><input id="fnLocation" placeholder="Area / Unit / Panel" /></div>
-                    <div><label>Work Order</label><input id="fnWO" placeholder="WO-2026-001" /></div>
                     <div><label>Follow-up</label><input id="fnDue" type="date" /></div>
                     <div class="fn-wide"><label>Field Observation</label><textarea id="fnText" placeholder="What did you observe, measure, find or change?"></textarea></div>
-                    <div><label>Measured / Reference</label><input id="fnMeasurement" placeholder="12.04 mA / 12.00 mA" /></div>
-                    <div><label>Action / Next Step</label><input id="fnAction" placeholder="Inspect, retest, replace..." /></div>
                     <div class="fn-wide"><label>Keywords</label><input id="fnKeywords" placeholder="drift, HART, calibration, alarm" /></div>
                 </div>
                 <button class="btn w-full fn-primary" id="fnAddBtn" style="justify-content:center;margin-top:10px;"><i class="fas fa-plus-circle"></i> Save Field Note</button>
@@ -7584,11 +7581,11 @@ body.dark .trouble-dialog{background:#111827}.dark .trouble-dialog-title,.dark .
                           '<div class="fn-note-top">'+
                           '<div><div class="fn-note-tags"><span class="badge" style="background:'+colors[n.priority]+';color:'+fg[n.priority]+';">'+esc(n.priority)+'</span><span class="badge" style="background:#f1f5f9;color:#334155;">'+esc(n.category)+'</span><span class="badge" style="background:#f1f5f9;color:#334155;">'+esc(n.status)+'</span></div>'+ 
                           '<div class="fn-note-title">'+esc(n.tag||'Unassigned asset')+(n.location?' · '+esc(n.location):'')+'</div>'+ 
-                          '<div class="fn-note-meta">'+fmt(n.ts)+' · '+esc(n.discipline)+(n.workOrder?' · '+esc(n.workOrder):'')+(n.dueDate?' · Due '+esc(n.dueDate):'')+(overdue?' · <b style="color:#dc2626;">OVERDUE</b>':'')+'</div></div>'+ 
+                          '<div class="fn-note-meta">'+fmt(n.ts)+' · '+esc(n.discipline)++(n.dueDate?' · Due '+esc(n.dueDate):'')+(overdue?' · <b style="color:#dc2626;">OVERDUE</b>':'')+'</div></div>'+ 
                           '<div style="display:flex;gap:4px;"><button class="btn-outline btn fn-report" data-id="'+n.id+'" title="Report"><i class="fas fa-file-alt"></i></button><button class="btn-outline btn fn-delete" data-id="'+n.id+'" title="Delete"><i class="fas fa-trash"></i></button></div></div>'+ 
                           '<div class="fn-note-body">'+esc(n.text)+'</div>'+ 
-                          (n.measurement?'<div class="fn-note-meta"><b>Measurement:</b> '+esc(n.measurement)+'</div>':'')+
-                          (n.action?'<div class="fn-note-meta"><b>Next:</b> '+esc(n.action)+'</div>':'')+
+                          
+                          
                           (n.keywords?'<div class="fn-note-tags">'+n.keywords.split(',').map(x=>x.trim()).filter(Boolean).map(x=>'<span class="fn-note-tag">#'+esc(x)+'</span>').join('')+'</div>':'')+
                           '</div>';
                     }).join('');
@@ -7597,22 +7594,22 @@ body.dark .trouble-dialog{background:#111827}.dark .trouble-dialog-title,.dark .
                 }
                 function capture(){
                     const text=document.getElementById('fnText').value.trim(); if(!text){alert('Enter a field observation first.');return;}
-                    const n={id:Date.now(),ts:Date.now(),category:document.getElementById('fnCategory').value,priority:document.getElementById('fnPriority').value,status:document.getElementById('fnStatus').value,discipline:document.getElementById('fnDiscipline').value,tag:document.getElementById('fnTag').value.trim(),location:document.getElementById('fnLocation').value.trim(),workOrder:document.getElementById('fnWO').value.trim(),dueDate:document.getElementById('fnDue').value,measurement:document.getElementById('fnMeasurement').value.trim(),action:document.getElementById('fnAction').value.trim(),keywords:document.getElementById('fnKeywords').value.trim(),text:text};
+                    const n={id:Date.now(),ts:Date.now(),category:document.getElementById('fnCategory').value,priority:document.getElementById('fnPriority').value,status:document.getElementById('fnStatus').value,discipline:document.getElementById('fnDiscipline').value,tag:document.getElementById('fnTag').value.trim(),location:document.getElementById('fnLocation').value.trim(),dueDate:document.getElementById('fnDue').value,keywords:document.getElementById('fnKeywords').value.trim(),text:text};
                     const a=notes(); a.push(n); save(a);
-                    ['fnTag','fnLocation','fnWO','fnDue','fnMeasurement','fnAction','fnKeywords','fnText'].forEach(id=>document.getElementById(id).value='');
+                    ['fnTag','fnLocation','fnDue','fnKeywords','fnText'].forEach(id=>document.getElementById(id).value='');
                     document.getElementById('fnStatus').value='Open'; document.getElementById('fnPriority').value='Normal'; render();
                 }
                 function download(name,data,type){const blob=new Blob([data],{type:type});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500);}
                 function csv(v){return '"'+String(v==null?'':v).replace(/"/g,'""')+'"';}
                 function makeReport(n){
                     if(!n){alert('Select a note first.');return;}
-                    const report='INSTRUMENTPRO — FIELD OBSERVATION REPORT\n========================================\nReport ID: FN-'+n.id+'\nRecorded: '+fmt(n.ts)+'\nType: '+n.category+'\nPriority: '+n.priority+'\nStatus: '+n.status+'\nDiscipline: '+n.discipline+'\nTag/Asset: '+(n.tag||'—')+'\nLocation: '+(n.location||'—')+'\nWork Order: '+(n.workOrder||'—')+'\nFollow-up: '+(n.dueDate||'—')+'\n\nOBSERVATION\n'+n.text+'\n\nMEASUREMENT / REFERENCE\n'+(n.measurement||'—')+'\n\nACTION / NEXT STEP\n'+(n.action||'—')+'\n\nKEYWORDS\n'+(n.keywords||'—')+'\n';
+                    const report='INSTRUMENTPRO — FIELD OBSERVATION REPORT\n========================================\nReport ID: FN-'+n.id+'\nRecorded: '+fmt(n.ts)+'\nType: '+n.category+'\nPriority: '+n.priority+'\nStatus: '+n.status+'\nDiscipline: '+n.discipline+'\nTag/Asset: '+(n.tag||'—')+'\nLocation: '+(n.location||'—')+'\nFollow-up: '+(n.dueDate||'—')+'\n\nOBSERVATION\n'+n.text+'\n\nKEYWORDS\n'+(n.keywords||'—')+'\n';
                     download('InstrumentPro_Field_Report_FN-'+n.id+'.txt',report,'text/plain');
                 }
                 document.getElementById('fnAddBtn').onclick=capture;
                 ['noteSearch','fnFilterStatus','fnFilterPriority'].forEach(id=>document.getElementById(id).addEventListener('input',render));
                 document.getElementById('noteExportBtn').onclick=()=>{const a=notes().sort((x,y)=>x.ts-y.ts);if(!a.length){alert('No notes to export.');return;}let t='INSTRUMENTPRO FIELD LOG\nExported: '+new Date().toLocaleString()+'\n\n';a.forEach(n=>t+='['+fmt(n.ts)+'] '+n.priority+' | '+n.category+' | '+(n.tag||'')+' | '+n.status+'\n'+n.text+'\nAction: '+(n.action||'')+'\n\n');download('InstrumentPro_FieldLog_'+new Date().toISOString().slice(0,10)+'.txt',t,'text/plain');};
-                document.getElementById('noteExportCsvBtn').onclick=()=>{const a=notes().sort((x,y)=>x.ts-y.ts);if(!a.length){alert('No notes to export.');return;}let c='Timestamp,Category,Priority,Status,Discipline,Tag,Location,Work Order,Follow-up,Measurement,Action,Keywords,Observation\n';a.forEach(n=>c+=[fmt(n.ts),n.category,n.priority,n.status,n.discipline,n.tag,n.location,n.workOrder,n.dueDate,n.measurement,n.action,n.keywords,n.text].map(csv).join(',')+'\n');download('InstrumentPro_FieldLog_'+new Date().toISOString().slice(0,10)+'.csv',c,'text/csv');};
+                document.getElementById('noteExportCsvBtn').onclick=()=>{const a=notes().sort((x,y)=>x.ts-y.ts);if(!a.length){alert('No notes to export.');return;}let c='Timestamp,Category,Priority,Status,Discipline,Tag,Location,Follow-up,Keywords,Observation\n';a.forEach(n=>c+=[fmt(n.ts),n.category,n.priority,n.status,n.discipline,n.tag,n.location,n.dueDate,n.keywords,n.text].map(csv).join(',')+'\n');download('InstrumentPro_FieldLog_'+new Date().toISOString().slice(0,10)+'.csv',c,'text/csv');};
                 document.getElementById('fnJsonBtn').onclick=()=>download('InstrumentPro_FieldLog_'+new Date().toISOString().slice(0,10)+'.json',JSON.stringify(notes(),null,2),'application/json');
                 document.getElementById('fnReportBtn').onclick=()=>{const a=notes(); if(!a.length){alert('No field notes available.');return;} makeReport(a[0]);};
                 document.getElementById('noteSyncBtn').onclick=()=>{const a=notes();if(!a.length){alert('No notes to sync.');return;}window.syncReportToWebhooks({source:'InstrumentPro',type:'FieldNotesAdvanced',timestamp:new Date().toISOString(),notes:a});};
