@@ -4522,7 +4522,7 @@ body.dark .trouble-dialog{background:#111827}.dark .trouble-dialog-title,.dark .
                                 <div class="row"><label>Technician Sign</label><input type="text" id="rsTechSign" placeholder="Type name to sign" /></div>
                                 <div class="row"><label>Supervisor</label><input type="text" id="rsSupervisor" placeholder="Supervisor / witness" /></div>
                                 <div class="rs-actions">
-                                    <button class="btn" id="generateReportBtn"><i class="fas fa-sync"></i> Build</button>
+                                    <button type="button" class="btn" id="generateReportBtn"><i class="fas fa-sync"></i> Build</button>
                                     <button class="btn btn-outline" id="rsIssueBtn"><i class="fas fa-stamp"></i> Issue</button>
                                     <button class="btn btn-outline" id="rsPrintBtn"><i class="fas fa-print"></i> Print</button>
                                 </div>
@@ -4586,7 +4586,7 @@ body.dark .trouble-dialog{background:#111827}.dark .trouble-dialog-title,.dark .
                         <div class="comm-section-title"><i class="fas fa-signature"></i><span>Approval & Handover</span></div>
                         <div class="comm-grid"><input id="commTechnician" placeholder="Commissioning technician"/><input id="commWitness" placeholder="Witness / client representative"/><input id="commSupervisor" placeholder="Supervisor / approver"/><select id="commFinalStatus"><option>Pending Sign-off</option><option>Ready for Handover</option><option>Accepted</option><option>Accepted with Punch List</option><option>Rejected / Rework Required</option></select></div>
                     </div>
-                    <div class="comm-actions"><button class="btn" id="commCheckBtn"><i class="fas fa-file-signature"></i> Build Report</button><button class="btn btn-outline" id="commPrintBtn"><i class="fas fa-print"></i> Print</button><button class="btn btn-outline" id="commExportBtn"><i class="fas fa-download"></i> Export</button><button class="btn btn-outline" id="commSyncBtn"><i class="fas fa-cloud-upload-alt"></i> Sync</button></div>
+                    <div class="comm-actions"><button type="button" class="btn" id="commCheckBtn"><i class="fas fa-file-signature"></i> Build Report</button><button class="btn btn-outline" id="commPrintBtn"><i class="fas fa-print"></i> Print</button><button class="btn btn-outline" id="commExportBtn"><i class="fas fa-download"></i> Export</button><button class="btn btn-outline" id="commSyncBtn"><i class="fas fa-cloud-upload-alt"></i> Sync</button></div>
                     <div class="comm-section"><div class="comm-section-title"><i class="fas fa-file-contract"></i><span>Live Commissioning Certificate</span></div><div id="commOutput" class="comm-preview">Build the report to generate the professional commissioning certificate.</div></div>
                 </div>
 
@@ -4812,6 +4812,18 @@ body.dark .trouble-dialog{background:#111827}.dark .trouble-dialog-title,.dark .
     JAVASCRIPT — Full Application
     ============================================================ -->
     <script>
+            // Safe HTML escaping used by report builders.
+            // The commissioning report builder depends on this helper when rendering
+            // user-entered project, tag, findings and signature fields.
+            function escapeHtml(value) {
+                return String(value == null ? '' : value)
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#39;');
+            }
+
         (function() {
             'use strict';
 
@@ -6683,7 +6695,7 @@ body.dark .trouble-dialog{background:#111827}.dark .trouble-dialog-title,.dark .
                     document.getElementById('commStatusChip').textContent=status;
                     document.getElementById('commOutput').innerHTML=`<div class="cert-head"><div><small>INSTRUMENTPRO · COMMISSIONING CONTROL</small><h2>COMMISSIONING CERTIFICATE</h2><p>${escapeHtml(project)} · ${escapeHtml(tag)}</p></div><div class="cert-result ${failed?'fail':status==='READY FOR HANDOVER'?'pass':''}">${status}</div></div><div class="cert-meta"><div><small>REPORT ID</small><b>${id}</b></div><div><small>TYPE</small><b>${escapeHtml(document.getElementById('commType').value)}</b></div><div><small>DATE</small><b>${document.getElementById('commDate').value||'—'}</b></div><div><small>COMPLETION</small><b>${score}%</b></div></div><div class="cert-block"><h4>Scope & Equipment</h4><p><b>System:</b> ${escapeHtml(document.getElementById('commSystem').value||'N/A')} &nbsp; <b>Location:</b> ${escapeHtml(document.getElementById('commLocation').value||'N/A')}<br><b>Manufacturer:</b> ${escapeHtml(document.getElementById('commManufacturer').value||'N/A')} &nbsp; <b>Model/Serial:</b> ${escapeHtml(document.getElementById('commModel').value||'N/A')}</p></div><div class="cert-block"><h4>Verification Summary</h4><table class="rs-table"><tr><th>Area</th><th>Completed</th><th>Result</th></tr>${['PRE-COMMISSIONING','INSTALLATION','WIRING & I/O','CONFIGURATION','FUNCTIONAL TEST','HANDOVER'].map(g=>{const arr=checklist.map((x,i)=>({g:x[0],ok:checks[i].checked})).filter(x=>x.g===g);return `<tr><td>${g}</td><td>${arr.filter(x=>x.ok).length}/${arr.length}</td><td>${arr.every(x=>x.ok)?'PASS':'PENDING'}</td></tr>`}).join('')}</table></div><div class="cert-block"><h4>Test Records</h4><p>${tests.map(x=>escapeHtml(x)).join(' · ')}</p></div><div class="cert-block"><h4>Punch List</h4>${punches.length?punches.map(p=>`<p>• <b>${p.priority}</b> ${escapeHtml(p.text)}</p>`).join(''):'<p>No open punch items.</p>'}</div><div class="cert-block"><h4>Findings & Handover Notes</h4><p>${escapeHtml(document.getElementById('commFindings').value||'No additional findings recorded.')}</p></div><div class="cert-sign"><div><small>COMMISSIONING TECHNICIAN</small><b>${escapeHtml(document.getElementById('commTechnician').value||'Pending')}</b></div><div><small>WITNESS / CLIENT</small><b>${escapeHtml(document.getElementById('commWitness').value||'Pending')}</b></div><div><small>SUPERVISOR / APPROVER</small><b>${escapeHtml(document.getElementById('commSupervisor').value||'Pending')}</b></div></div>`; update(); return {id,project,tag,status,score,tests,punches};
                 }
-                document.getElementById('commCheckBtn').addEventListener('click',build);
+                document.getElementById('commCheckBtn').addEventListener('click',function(){ try { build(); } catch (err) { console.error('Commissioning report build failed:', err); alert('Unable to build the report: ' + (err && err.message ? err.message : err)); } });
                 document.getElementById('commPrintBtn').addEventListener('click',function(){build();const w=window.open('','_blank');w.document.write('<html><head><title>Commissioning Certificate</title><style>body{font-family:Arial;padding:28px;color:#172033}table{width:100%;border-collapse:collapse}td,th{padding:8px;border:1px solid #ddd;text-align:left}</style></head><body>'+document.getElementById('commOutput').innerHTML+'</body></html>');w.document.close();w.print();});
                 document.getElementById('commExportBtn').addEventListener('click',function(){const r=build();const blob=new Blob([document.getElementById('commOutput').innerText],{type:'text/plain'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=r.id+'.txt';a.click();});
                 document.getElementById('commSyncBtn').addEventListener('click',function(){const r=build();window.syncReportToWebhooks({source:'InstrumentPro',type:'Commissioning',reportId:r.id,project:r.project,tag:r.tag,status:r.status,completion:r.score,tests:r.tests,punchList:r.punches,timestamp:new Date().toISOString()});});
