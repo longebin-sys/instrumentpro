@@ -1808,6 +1808,112 @@ body.dark .rs-section{background:#111827;border-color:#334155}body.dark .rs-sect
    ========================================================== */
 
 
+
+/* ==========================================================
+   POLISHED MOBILE UI — FIELD NOTES + COMMISSIONING
+   ========================================================== */
+#page-notes{padding-bottom:110px;}
+#page-notes .page-title{margin-bottom:12px;}
+#page-notes .card{border-radius:20px;box-shadow:0 8px 24px rgba(15,23,42,.06);border:1px solid rgba(148,163,184,.18);overflow:hidden;}
+.fn-dashboard{display:grid!important;grid-template-columns:repeat(4,1fr)!important;gap:7px!important;}
+.fn-stat{background:linear-gradient(145deg,#f8fafc,#eef4fb)!important;border:1px solid #e2e8f0;border-radius:15px!important;padding:10px 5px!important;min-width:0;}
+.fn-stat .fn-stat-label{font-size:.55rem!important;letter-spacing:.06em;font-weight:700;color:#64748b!important;}
+.fn-stat strong{font-size:1.15rem!important;color:#172033;display:block;margin-top:2px;}
+.fn-capture-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px;}
+.fn-capture-title{display:flex;align-items:center;gap:9px;font-size:.92rem;font-weight:800;}
+.fn-capture-icon{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;background:#fff1e6;color:#c65b00;flex:none;}
+.fn-section-note{font-size:.62rem;color:#64748b;margin-top:2px;}
+.fn-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+#page-notes label{display:block;font-size:.63rem;font-weight:700;color:#64748b;margin:0 0 4px 2px;}
+#page-notes input,#page-notes select,#page-notes textarea{width:100%;min-width:0;border-radius:12px;border:1px solid #d7dee8;background:#fff;padding:9px 10px;font-size:.72rem;line-height:1.25;box-sizing:border-box;}
+#page-notes textarea{min-height:82px;resize:vertical;}
+.fn-wide{grid-column:1/-1;}
+.fn-primary{height:44px!important;border-radius:13px!important;font-size:.76rem!important;font-weight:800!important;box-shadow:0 7px 16px rgba(194,82,0,.18);}
+.fn-log-tools{display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:8px;}
+.fn-log-tools input,.fn-log-tools select{width:100%;min-width:0;}
+#notesList{display:grid;gap:8px;}
+.fn-note-card{border:1px solid #e2e8f0;border-radius:15px;padding:11px;background:#fbfdff;}
+.fn-note-top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start;}
+.fn-note-title{font-size:.73rem;font-weight:800;color:#172033;line-height:1.25;}
+.fn-note-meta{font-size:.59rem;color:#64748b;margin-top:3px;line-height:1.4;}
+.fn-note-body{font-size:.68rem;color:#334155;margin-top:7px;line-height:1.45;}
+.fn-note-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:7px;}
+.fn-note-tag{font-size:.53rem;padding:3px 6px;border-radius:999px;background:#eef2ff;color:#475569;}
+.fn-tool-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;}
+.fn-tool-grid .btn{justify-content:center!important;font-size:.62rem!important;padding:8px 5px!important;}
+body.dark #page-notes .card{box-shadow:none;border-color:#334155;}
+body.dark .fn-stat{background:linear-gradient(145deg,#1e293b,#172033)!important;border-color:#334155;}
+body.dark .fn-stat strong{color:#e2e8f0;}
+body.dark #page-notes input,body.dark #page-notes select,body.dark #page-notes textarea{background:#0f172a;border-color:#334155;color:#e2e8f0;}
+body.dark .fn-note-card{background:#172033;border-color:#334155;}
+body.dark .fn-note-title{color:#e2e8f0;}
+
+/* Commissioning */
+#reportpanel-commissioning{padding-bottom:110px;}
+#reportpanel-commissioning .card{margin-bottom:0;}
+#reportpanel-commissioning .comm-hero{position:relative;overflow:hidden;border-radius:20px;padding:16px;background:linear-gradient(135deg,#14253d 0%,#1e3a5f 62%,#264c6e 100%);color:#fff;box-shadow:0 10px 26px rgba(15,35,58,.22);}
+#reportpanel-commissioning .comm-hero:after{content:"";position:absolute;width:140px;height:140px;border-radius:50%;right:-45px;top:-55px;background:rgba(255,255,255,.07);}
+.comm-hero h3{margin:3px 0 3px!important;font-size:1rem!important;position:relative;z-index:1;}
+.comm-hero p{font-size:.62rem!important;color:#cbd5e1!important;margin:0!important;max-width:82%;position:relative;z-index:1;}
+.comm-eyebrow{font-size:.55rem;font-weight:800;letter-spacing:.12em;color:#93c5fd;position:relative;z-index:1;}
+.comm-hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:13px;position:relative;z-index:1;}
+.comm-hero-stat{background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:7px 5px;text-align:center;}
+.comm-hero-stat b{display:block;font-size:.88rem;}
+.comm-hero-stat span{font-size:.48rem;color:#cbd5e1;text-transform:uppercase;letter-spacing:.04em;}
+.comm-section{background:#fff;border:1px solid #e2e8f0;border-radius:18px;padding:12px;margin-top:9px;box-shadow:0 6px 18px rgba(15,23,42,.045);}
+.comm-section-title{display:flex;align-items:center;gap:7px;min-height:24px;margin-bottom:9px;color:#172033;}
+.comm-section-title i{width:26px;height:26px;border-radius:8px;background:#eff6ff;color:#2563eb;display:grid;place-items:center;font-size:.68rem;flex:none;}
+.comm-section-title span{font-size:.72rem;font-weight:800;flex:1;}
+.comm-section-title small{font-size:.56rem;color:#64748b;font-weight:700;white-space:nowrap;}
+.comm-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.comm-grid input,.comm-grid select,#reportpanel-commissioning textarea{width:100%;min-width:0;box-sizing:border-box;border:1px solid #d8e0ea;border-radius:11px;background:#fbfdff;padding:9px 10px;font-size:.66rem;}
+#reportpanel-commissioning textarea{min-height:78px;resize:vertical;display:block;margin-top:8px;}
+.comm-grid input[type=date]{min-height:34px;}
+.comm-check-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.comm-check,.comm-check,.comm-check-item{display:grid!important;grid-template-columns:20px 1fr!important;align-items:start!important;gap:7px!important;min-height:46px;padding:8px 9px!important;border:1px solid #e5eaf0;border-radius:12px!important;background:#f8fafc!important;margin:0!important;font-size:.6rem!important;line-height:1.35!important;color:#334155!important;}
+.comm-check input, .comm-check input,.comm-check-item input{width:18px!important;height:18px!important;margin:1px 0 0!important;flex:none!important;}
+.comm-check .comm-category,.comm-check .comm-category,.comm-check-item .comm-category{display:block;font-size:.46rem;font-weight:800;letter-spacing:.06em;color:#64748b;text-transform:uppercase;margin-bottom:2px;}
+.comm-test-grid{grid-template-columns:1fr 1fr 1fr;}
+.comm-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px;}
+.comm-actions .btn{flex:1;min-width:95px;justify-content:center;font-size:.61rem!important;padding:8px 7px!important;}
+.comm-punch-list{display:grid;gap:6px;margin-top:8px;}
+.comm-punch-item{display:flex;align-items:center;justify-content:space-between;gap:7px;border:1px solid #e2e8f0;border-radius:10px;padding:7px 8px;font-size:.6rem;background:#fbfdff;}
+.comm-preview{border:1px solid #dbe3ec;border-radius:14px;background:#fbfdff;padding:12px;overflow:hidden;font-size:.62rem;line-height:1.45;}
+.comm-preview table{font-size:.57rem!important;width:100%;}
+body.dark .comm-section{background:#1e293b;border-color:#334155;box-shadow:none;}
+body.dark .comm-section-title{color:#e2e8f0;}
+body.dark .comm-section-title i{background:#172554;color:#60a5fa;}
+body.dark .comm-grid input,body.dark .comm-grid select,body.dark #reportpanel-commissioning textarea{background:#0f172a;border-color:#334155;color:#e2e8f0;}
+body.dark .comm-check,.comm-check,.comm-check-item{background:#172033!important;border-color:#334155;color:#cbd5e1!important;}
+body.dark .comm-punch-item,body.dark .comm-preview{background:#172033;border-color:#334155;}
+body.dark .comm-section-title small{color:#94a3b8;}
+
+@media(max-width:420px){
+  .fn-dashboard{gap:5px!important;}
+  .fn-stat{padding:8px 3px!important;}
+  .fn-stat strong{font-size:1rem!important;}
+  .fn-stat .fn-stat-label{font-size:.48rem!important;}
+  .fn-form-grid{grid-template-columns:1fr 1fr;gap:8px;}
+  #page-notes input,#page-notes select,#page-notes textarea{font-size:.68rem;padding:8px;}
+  .fn-log-tools{grid-template-columns:1fr 1fr;}
+  .fn-log-tools input{grid-column:1/-1;}
+  .fn-tool-grid{grid-template-columns:1fr 1fr 1fr;}
+  .fn-tool-grid .btn{font-size:.55rem!important;}
+  .comm-check-grid{grid-template-columns:1fr;}
+  .comm-test-grid{grid-template-columns:1fr 1fr;}
+  .comm-grid{grid-template-columns:1fr 1fr;}
+  .comm-hero-stats{gap:4px;}
+  .comm-hero-stat{padding:6px 3px;}
+  .comm-hero-stat b{font-size:.8rem;}
+}
+@media(max-width:350px){
+  .comm-grid,.comm-test-grid{grid-template-columns:1fr;}
+  .fn-form-grid{grid-template-columns:1fr;}
+  .fn-wide{grid-column:auto;}
+}
+
+    html,body{overflow-x:hidden;}
+.page,.report-main-panel{min-width:0;}
 </style>
 </head>
 <body>
@@ -2017,36 +2123,61 @@ body.dark .rs-section{background:#111827;border-color:#334155}body.dark .rs-sect
         </div>
 
         <!-- ==========================================================
-        PAGE: FIELD NOTES
+        PAGE: FIELD NOTES — ADVANCED
         ========================================================== -->
         <div class="page" id="page-notes">
             <div class="page-title"><i class="fas fa-clipboard-list"></i> Field Notes</div>
 
-            <div class="card">
-                <div class="row"><label>Category</label>
-                    <select id="noteCategory">
-                        <option value="General">General</option>
-                        <option value="Issue">Issue</option>
-                        <option value="TODO">TODO</option>
-                        <option value="Handover">Handover</option>
-                    </select>
+            <div class="card" style="padding:12px;">
+                <div class="fn-dashboard">
+                    <div class="fn-stat"><div class="fn-stat-label">TOTAL</div><strong id="fnTotal">0</strong></div>
+                    <div class="fn-stat"><div class="fn-stat-label">OPEN</div><strong id="fnOpen">0</strong></div>
+                    <div class="fn-stat"><div class="fn-stat-label">HIGH</div><strong id="fnHigh">0</strong></div>
+                    <div class="fn-stat"><div class="fn-stat-label">TODAY</div><strong id="fnToday">0</strong></div>
                 </div>
-                <div class="row"><label>Tag</label><input type="text" id="noteTag" placeholder="e.g. PT-101 (optional)" /></div>
-                <div class="row"><label>Note</label><textarea id="noteText" placeholder="What happened, what you found, what's still open..."></textarea></div>
-                <button class="btn w-full" id="noteAddBtn" style="justify-content:center;"><i class="fas fa-plus"></i> Add Note</button>
             </div>
 
             <div class="card">
-                <div class="card-header"><i class="fas fa-search"></i><h3 style="font-size:0.85rem;">Notes</h3><span id="noteCount">0</span></div>
-                <input type="text" id="noteSearch" placeholder="Search notes..." style="width:100%;box-sizing:border-box;padding:8px 14px;border:1px solid #dce1e9;border-radius:60px;background:#fafcff;font-size:0.85rem;margin-bottom:10px;" />
-                <div id="notesList"><div style="font-size:0.75rem;color:#94a3b8;text-align:center;padding:16px;">No notes yet — add one above.</div></div>
-                <div class="flex mt-1">
-                    <button class="btn-outline btn" id="noteExportBtn" style="justify-content:center;flex:1;"><i class="fas fa-download"></i> Export .txt</button>
-                    <button class="btn-outline btn" id="noteExportCsvBtn" style="justify-content:center;flex:1;"><i class="fas fa-file-csv"></i> Export .csv</button>
+                <div class="fn-capture-head">
+                    <div><div class="fn-capture-title"><span class="fn-capture-icon"><i class="fas fa-bolt"></i></span>Quick Field Capture</div><div class="fn-section-note">Capture a useful field record in under a minute.</div></div>
+                    <span class="badge" style="background:#fff1e6;color:#b45309;">FAST</span>
                 </div>
-                <div class="flex mt-1">
-                    <button class="btn-outline btn" id="noteSyncBtn" style="justify-content:center;flex:1;"><i class="fas fa-cloud-upload-alt"></i> Sync All</button>
-                    <button class="btn-outline btn" id="noteClearBtn" style="justify-content:center;flex:1;color:#dc2626;"><i class="fas fa-trash"></i> Clear All</button>
+                <div class="fn-form-grid">
+                    <div><label>Type</label><select id="fnCategory"><option>Observation</option><option>Issue</option><option>Finding</option><option>Inspection</option><option>Handover</option><option>Safety</option><option>TODO</option><option>General</option></select></div>
+                    <div><label>Priority</label><select id="fnPriority"><option>Low</option><option selected>Normal</option><option>High</option><option>Critical</option></select></div>
+                    <div><label>Status</label><select id="fnStatus"><option>Open</option><option>In Progress</option><option>Resolved</option><option>Deferred</option></select></div>
+                    <div><label>Discipline</label><select id="fnDiscipline"><option>Instrumentation</option><option>Electrical</option><option>Control</option><option>Mechanical</option><option>Process</option><option>Safety</option><option>Other</option></select></div>
+                    <div><label>Tag / Asset</label><input id="fnTag" placeholder="PT-101 / PLC-02" /></div>
+                    <div><label>Location</label><input id="fnLocation" placeholder="Area / Unit / Panel" /></div>
+                    <div><label>Work Order</label><input id="fnWO" placeholder="WO-2026-001" /></div>
+                    <div><label>Follow-up</label><input id="fnDue" type="date" /></div>
+                    <div class="fn-wide"><label>Field Observation</label><textarea id="fnText" placeholder="What did you observe, measure, find or change?"></textarea></div>
+                    <div><label>Measured / Reference</label><input id="fnMeasurement" placeholder="12.04 mA / 12.00 mA" /></div>
+                    <div><label>Action / Next Step</label><input id="fnAction" placeholder="Inspect, retest, replace..." /></div>
+                    <div class="fn-wide"><label>Keywords</label><input id="fnKeywords" placeholder="drift, HART, calibration, alarm" /></div>
+                </div>
+                <button class="btn w-full fn-primary" id="fnAddBtn" style="justify-content:center;margin-top:10px;"><i class="fas fa-plus-circle"></i> Save Field Note</button>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><i class="fas fa-layer-group"></i><h3>Field Log</h3><span id="noteCount">0</span></div>
+                <div class="fn-log-tools">
+                    <input id="noteSearch" placeholder="Search tag, note, location, WO, keywords..." />
+                    <select id="fnFilterStatus"><option value="">All status</option><option>Open</option><option>In Progress</option><option>Resolved</option><option>Deferred</option></select>
+                    <select id="fnFilterPriority"><option value="">All priority</option><option>Critical</option><option>High</option><option>Normal</option><option>Low</option></select>
+                </div>
+                <div id="notesList" style="margin-top:10px;"><div style="font-size:0.75rem;color:#94a3b8;text-align:center;padding:16px;">No field notes yet.</div></div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><i class="fas fa-file-export"></i><h3>Field Log Tools</h3></div>
+                <div class="fn-tool-grid">
+                    <button class="btn-outline btn" id="noteExportBtn"><i class="fas fa-file-alt"></i> TXT</button>
+                    <button class="btn-outline btn" id="noteExportCsvBtn"><i class="fas fa-file-csv"></i> CSV</button>
+                    <button class="btn-outline btn" id="fnJsonBtn"><i class="fas fa-code"></i> JSON</button>
+                    <button class="btn-outline btn" id="fnReportBtn"><i class="fas fa-file-signature"></i> Report</button>
+                    <button class="btn-outline btn" id="noteSyncBtn"><i class="fas fa-cloud-upload-alt"></i> Sync</button>
+                    <button class="btn-outline btn" id="noteClearBtn" style="color:#dc2626;"><i class="fas fa-trash"></i> Clear</button>
                 </div>
             </div>
         </div>
@@ -3954,36 +4085,48 @@ body.dark .rs-section{background:#111827;border-color:#334155}body.dark .rs-sect
                 </div>
 
                 <div class="report-main-panel hidden" id="reportpanel-commissioning">
-                    <div class="sub-tabs" id="commTabs">
-                        <div class="sub-tab active" data-tab="comm-general">General</div>
-                        <div class="sub-tab" data-tab="comm-vfd">VFD</div>
-                        <div class="sub-tab" data-tab="comm-switchgear">Switchgear</div>
+                    <div class="comm-hero">
+                        <div><div class="comm-eyebrow">COMMISSIONING CONTROL</div><h3>Advanced Commissioning Report</h3><p>Structured pre-start checks, installation verification, functional testing, punch-list control and handover.</p></div>
+                        <div class="comm-status" id="commStatusChip">DRAFT</div>
                     </div>
-                    <div class="sub-panel active" id="comm-general">
-                        <div style="font-size:0.75rem;padding:4px 0;">
-                            <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:4px;">1. Pre-Commissioning · 2. Installation · 3. Calibration</div>
-                            <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:4px;">4. Configuration · 5. Loop Checking · 6. Handover</div>
+                    <div class="comm-kpis"><div><b id="commScore">0%</b><span>COMPLETION</span></div><div><b id="commPassed">0</b><span>PASS</span></div><div><b id="commOpen">0</b><span>OPEN ITEMS</span></div><div><b id="commReportId">COMM-DRAFT</b><span>REPORT ID</span></div></div>
+                    <div class="comm-section">
+                        <div class="comm-section-title"><i class="fas fa-id-card"></i><span>Project & Equipment</span></div>
+                        <div class="comm-grid">
+                            <input id="commProject" placeholder="Project / plant area"/><input id="commTag" placeholder="Equipment / tag"/>
+                            <input id="commSystem" placeholder="System / package"/><input id="commLocation" placeholder="Location"/>
+                            <input id="commManufacturer" placeholder="Manufacturer"/><input id="commModel" placeholder="Model / serial"/>
+                            <input id="commDate" type="date"/><select id="commType"><option>General Instrument</option><option>VFD / Motor</option><option>Switchgear</option><option>Control Valve</option><option>PLC / DCS I/O</option></select>
                         </div>
                     </div>
-                    <div class="sub-panel hidden" id="comm-vfd">
-                        <div style="font-size:0.75rem;padding:4px 0;">
-                            <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:4px;">✅ Input voltage · Grounding · Control wiring</div>
-                            <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:4px;">✅ Motor parameters · I/O config · Ramp settings</div>
-                            <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:4px;">✅ Communication · Rotation check · Load test</div>
+                    <div class="comm-section">
+                        <div class="comm-section-title"><i class="fas fa-list-check"></i><span>Commissioning Checklist</span><small id="commProgress">0 / 24</small></div>
+                        <div class="comm-check-grid" id="commChecklist"></div>
+                    </div>
+                    <div class="comm-section">
+                        <div class="comm-section-title"><i class="fas fa-vial"></i><span>Functional / Test Records</span></div>
+                        <div class="comm-grid comm-test-grid">
+                            <select id="commPower"><option>Power / supply: Not Tested</option><option>Power / supply: PASS</option><option>Power / supply: FAIL</option><option>Power / supply: N/A</option></select>
+                            <select id="commCalibration"><option>Calibration: Not Tested</option><option>Calibration: PASS</option><option>Calibration: FAIL</option><option>Calibration: N/A</option></select>
+                            <select id="commLoop"><option>Loop / I-O: Not Tested</option><option>Loop / I-O: PASS</option><option>Loop / I-O: FAIL</option><option>Loop / I-O: N/A</option></select>
+                            <select id="commFunction"><option>Functional test: Not Tested</option><option>Functional test: PASS</option><option>Functional test: FAIL</option><option>Functional test: N/A</option></select>
+                            <select id="commAlarm"><option>Alarm / trip: Not Tested</option><option>Alarm / trip: PASS</option><option>Alarm / trip: FAIL</option><option>Alarm / trip: N/A</option></select>
+                            <select id="commHandover"><option>Handover docs: Not Tested</option><option>Handover docs: PASS</option><option>Handover docs: FAIL</option><option>Handover docs: N/A</option></select>
                         </div>
                     </div>
-                    <div class="sub-panel hidden" id="comm-switchgear">
-                        <div style="font-size:0.75rem;padding:4px 0;">
-                            <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:4px;">✅ Visual inspection · Mechanical operation</div>
-                            <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:4px;">✅ MEG test · Contact resistance · Timing tests</div>
-                            <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:4px;">✅ Protective relay testing · CT/VT check · Load test</div>
-                        </div>
+                    <div class="comm-section">
+                        <div class="comm-section-title"><i class="fas fa-triangle-exclamation"></i><span>Punch List & Findings</span><small id="commPunchCount">0 open</small></div>
+                        <div class="comm-grid"><input id="commPunchItem" placeholder="Punch item / deficiency"/><select id="commPunchPriority"><option>LOW</option><option selected>MEDIUM</option><option>HIGH</option><option>CRITICAL</option></select></div>
+                        <div class="comm-actions"><button class="btn btn-sm" id="commAddPunch"><i class="fas fa-plus"></i> Add Item</button><button class="btn btn-outline btn-sm" id="commClearPunch"><i class="fas fa-trash"></i> Clear</button></div>
+                        <div id="commPunchList" class="comm-punch-list">No punch items.</div>
+                        <textarea id="commFindings" placeholder="Overall findings, observations, corrective actions and special notes..."></textarea>
                     </div>
-                    <div class="row mt-1"><label>Project</label><input type="text" id="commProject" placeholder="Project" /></div>
-                    <div class="row"><label>Tag</label><input type="text" id="commTag" placeholder="FT-1001" /></div>
-                    <button class="btn" id="commCheckBtn"><i class="fas fa-check"></i> Generate</button>
-                    <div id="commOutput" class="report-preview mt-1">Checklist will appear here.</div>
-                    <button class="btn btn-outline mt-1" id="commSyncBtn"><i class="fas fa-cloud-upload-alt"></i> Sync</button>
+                    <div class="comm-section">
+                        <div class="comm-section-title"><i class="fas fa-signature"></i><span>Approval & Handover</span></div>
+                        <div class="comm-grid"><input id="commTechnician" placeholder="Commissioning technician"/><input id="commWitness" placeholder="Witness / client representative"/><input id="commSupervisor" placeholder="Supervisor / approver"/><select id="commFinalStatus"><option>Pending Sign-off</option><option>Ready for Handover</option><option>Accepted</option><option>Accepted with Punch List</option><option>Rejected / Rework Required</option></select></div>
+                    </div>
+                    <div class="comm-actions"><button class="btn" id="commCheckBtn"><i class="fas fa-file-signature"></i> Build Report</button><button class="btn btn-outline" id="commPrintBtn"><i class="fas fa-print"></i> Print</button><button class="btn btn-outline" id="commExportBtn"><i class="fas fa-download"></i> Export</button><button class="btn btn-outline" id="commSyncBtn"><i class="fas fa-cloud-upload-alt"></i> Sync</button></div>
+                    <div class="comm-section"><div class="comm-section-title"><i class="fas fa-file-contract"></i><span>Live Commissioning Certificate</span></div><div id="commOutput" class="comm-preview">Build the report to generate the professional commissioning certificate.</div></div>
                 </div>
 
                 <div class="report-main-panel hidden" id="reportpanel-loopcheck">
@@ -6045,35 +6188,46 @@ body.dark .rs-section{background:#111827;border-color:#334155}body.dark .rs-sect
             calcBend();
 
             // =============================================================
-            // COMMISSIONING
+            // ADVANCED COMMISSIONING
             // =============================================================
-            const commProject = document.getElementById('commProject');
-            const commTag = document.getElementById('commTag');
-            const commOutput = document.getElementById('commOutput');
-            const commCheckBtn = document.getElementById('commCheckBtn');
-
-            commCheckBtn.addEventListener('click', function() {
-                const project = commProject.value.trim() || 'N/A';
-                const tag = commTag.value.trim() || 'N/A';
-                const date = new Date().toLocaleString();
-                const activeTab = document.querySelector('#commTabs .sub-tab.active');
-                const type = activeTab ? activeTab.textContent.trim() : 'General';
-                commOutput.textContent =
-                    `========================================\nCOMMISSIONING CHECKLIST\n========================================\nProject: ${project}\nTag: ${tag}\nType: ${type}\nDate: ${date}\n----------------------------------------\n✅ Pre-Commissioning\n✅ Installation Verification\n✅ Calibration\n✅ Configuration\n✅ Loop Checking\n✅ Documentation & Handover\n========================================\nStatus: PENDING SIGN-OFF`;
-            });
-
-            document.getElementById('commSyncBtn').addEventListener('click', function() {
-                const text = commOutput.textContent;
-                if (!text || text === 'Checklist will appear here.') { alert('Generate the checklist first.'); return; }
-                window.syncReportToWebhooks({
-                    source: 'InstrumentPro',
-                    type: 'Commissioning',
-                    timestamp: new Date().toISOString(),
-                    project: commProject.value.trim(),
-                    tag: commTag.value.trim(),
-                    checklist: text
-                });
-            });
+            (function(){
+                const checklist=[
+                    ['PRE-COMMISSIONING','Approved drawings / documents available'],['PRE-COMMISSIONING','Equipment identity, tag and nameplate verified'],['PRE-COMMISSIONING','Correct model / rating / materials verified'],['PRE-COMMISSIONING','Required permits and isolation confirmed'],
+                    ['INSTALLATION','Mechanical installation complete and secure'],['INSTALLATION','Process connections / tubing inspected'],['INSTALLATION','Electrical power and polarity verified'],['INSTALLATION','Earthing / shielding / segregation verified'],
+                    ['WIRING & I/O','Field wiring continuity verified'],['WIRING & I/O','Terminal numbers and cable identification verified'],['WIRING & I/O','PLC / DCS / I/O channel assignment verified'],['WIRING & I/O','Engineering units and scaling verified'],
+                    ['CONFIGURATION','Range / LRV / URV verified'],['CONFIGURATION','Alarm / trip / interlock settings verified'],['CONFIGURATION','Communication / address / protocol verified'],['CONFIGURATION','Fail-safe / output action verified'],
+                    ['FUNCTIONAL TEST','Calibration / accuracy verified'],['FUNCTIONAL TEST','Loop response verified'],['FUNCTIONAL TEST','Alarm / trip response verified'],['FUNCTIONAL TEST','Functional operation under normal condition verified'],
+                    ['HANDOVER','Labels, drawings and documentation updated'],['HANDOVER','Punch-list items reviewed'],['HANDOVER','Test records attached / complete'],['HANDOVER','Equipment restored and ready for service']
+                ];
+                const list=document.getElementById('commChecklist');
+                list.innerHTML=checklist.map((x,i)=>`<label class="comm-check"><input type="checkbox" data-comm-check="${i}"><span><b>${x[0]}</b>${x[1]}</span></label>`).join('');
+                const today=new Date(); document.getElementById('commDate').value=today.toISOString().slice(0,10);
+                let punches=[];
+                function update(){
+                    const checks=[...document.querySelectorAll('[data-comm-check]')]; const done=checks.filter(x=>x.checked).length;
+                    const tests=['commPower','commCalibration','commLoop','commFunction','commAlarm','commHandover'].map(id=>document.getElementById(id).value);
+                    const failed=tests.filter(x=>x.includes('FAIL')).length; const passed=tests.filter(x=>x.includes('PASS')).length;
+                    const open=punches.length; const score=Math.round((done/checklist.length)*70+(passed/6)*30);
+                    document.getElementById('commScore').textContent=score+'%'; document.getElementById('commPassed').textContent=passed+done; document.getElementById('commOpen').textContent=open; document.getElementById('commProgress').textContent=done+' / '+checklist.length; document.getElementById('commPunchCount').textContent=open+' open';
+                    const chip=document.getElementById('commStatusChip'); chip.textContent=failed?'FAIL':(score===100&&open===0?'READY':'IN PROGRESS'); chip.className='comm-status '+(failed?'fail':(score===100&&open===0?'pass':''));
+                }
+                document.querySelectorAll('[data-comm-check],#commPower,#commCalibration,#commLoop,#commFunction,#commAlarm,#commHandover').forEach(x=>x.addEventListener('change',update));
+                document.getElementById('commAddPunch').addEventListener('click',function(){const text=document.getElementById('commPunchItem').value.trim();if(!text){alert('Enter a punch item.');return;}punches.push({text,priority:document.getElementById('commPunchPriority').value});document.getElementById('commPunchItem').value='';renderPunches();update();});
+                document.getElementById('commClearPunch').addEventListener('click',function(){punches=[];renderPunches();update();});
+                function renderPunches(){document.getElementById('commPunchList').innerHTML=punches.length?punches.map((p,i)=>`<div class="comm-punch"><span><b>${p.priority}</b> ${escapeHtml(p.text)}</span><button onclick="this.parentElement.remove()" data-punch="${i}">×</button></div>`).join(''):'No punch items.';document.querySelectorAll('[data-punch]').forEach(b=>b.onclick=function(){punches.splice(Number(this.dataset.punch),1);renderPunches();update();});}
+                function build(){
+                    const project=document.getElementById('commProject').value.trim()||'N/A',tag=document.getElementById('commTag').value.trim()||'N/A';
+                    const id='COMM-'+new Date().toISOString().slice(0,10).replace(/-/g,'')+'-'+(tag.replace(/[^a-z0-9]/gi,'').slice(0,10)||'ASSET').toUpperCase(); document.getElementById('commReportId').textContent=id;
+                    const checks=[...document.querySelectorAll('[data-comm-check]')],done=checks.filter(x=>x.checked).length; const tests=['commPower','commCalibration','commLoop','commFunction','commAlarm','commHandover'].map(id=>document.getElementById(id).value); const failed=tests.filter(x=>x.includes('FAIL')).length; const score=Math.round((done/checklist.length)*70+(tests.filter(x=>x.includes('PASS')).length/6)*30); const status=failed?'FAIL':(score===100&&punches.length===0?'READY FOR HANDOVER':'PENDING');
+                    document.getElementById('commStatusChip').textContent=status;
+                    document.getElementById('commOutput').innerHTML=`<div class="cert-head"><div><small>INSTRUMENTPRO · COMMISSIONING CONTROL</small><h2>COMMISSIONING CERTIFICATE</h2><p>${escapeHtml(project)} · ${escapeHtml(tag)}</p></div><div class="cert-result ${failed?'fail':status==='READY FOR HANDOVER'?'pass':''}">${status}</div></div><div class="cert-meta"><div><small>REPORT ID</small><b>${id}</b></div><div><small>TYPE</small><b>${escapeHtml(document.getElementById('commType').value)}</b></div><div><small>DATE</small><b>${document.getElementById('commDate').value||'—'}</b></div><div><small>COMPLETION</small><b>${score}%</b></div></div><div class="cert-block"><h4>Scope & Equipment</h4><p><b>System:</b> ${escapeHtml(document.getElementById('commSystem').value||'N/A')} &nbsp; <b>Location:</b> ${escapeHtml(document.getElementById('commLocation').value||'N/A')}<br><b>Manufacturer:</b> ${escapeHtml(document.getElementById('commManufacturer').value||'N/A')} &nbsp; <b>Model/Serial:</b> ${escapeHtml(document.getElementById('commModel').value||'N/A')}</p></div><div class="cert-block"><h4>Verification Summary</h4><table class="rs-table"><tr><th>Area</th><th>Completed</th><th>Result</th></tr>${['PRE-COMMISSIONING','INSTALLATION','WIRING & I/O','CONFIGURATION','FUNCTIONAL TEST','HANDOVER'].map(g=>{const arr=checklist.map((x,i)=>({g:x[0],ok:checks[i].checked})).filter(x=>x.g===g);return `<tr><td>${g}</td><td>${arr.filter(x=>x.ok).length}/${arr.length}</td><td>${arr.every(x=>x.ok)?'PASS':'PENDING'}</td></tr>`}).join('')}</table></div><div class="cert-block"><h4>Test Records</h4><p>${tests.map(x=>escapeHtml(x)).join(' · ')}</p></div><div class="cert-block"><h4>Punch List</h4>${punches.length?punches.map(p=>`<p>• <b>${p.priority}</b> ${escapeHtml(p.text)}</p>`).join(''):'<p>No open punch items.</p>'}</div><div class="cert-block"><h4>Findings & Handover Notes</h4><p>${escapeHtml(document.getElementById('commFindings').value||'No additional findings recorded.')}</p></div><div class="cert-sign"><div><small>COMMISSIONING TECHNICIAN</small><b>${escapeHtml(document.getElementById('commTechnician').value||'Pending')}</b></div><div><small>WITNESS / CLIENT</small><b>${escapeHtml(document.getElementById('commWitness').value||'Pending')}</b></div><div><small>SUPERVISOR / APPROVER</small><b>${escapeHtml(document.getElementById('commSupervisor').value||'Pending')}</b></div></div>`; update(); return {id,project,tag,status,score,tests,punches};
+                }
+                document.getElementById('commCheckBtn').addEventListener('click',build);
+                document.getElementById('commPrintBtn').addEventListener('click',function(){build();const w=window.open('','_blank');w.document.write('<html><head><title>Commissioning Certificate</title><style>body{font-family:Arial;padding:28px;color:#172033}table{width:100%;border-collapse:collapse}td,th{padding:8px;border:1px solid #ddd;text-align:left}</style></head><body>'+document.getElementById('commOutput').innerHTML+'</body></html>');w.document.close();w.print();});
+                document.getElementById('commExportBtn').addEventListener('click',function(){const r=build();const blob=new Blob([document.getElementById('commOutput').innerText],{type:'text/plain'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=r.id+'.txt';a.click();});
+                document.getElementById('commSyncBtn').addEventListener('click',function(){const r=build();window.syncReportToWebhooks({source:'InstrumentPro',type:'Commissioning',reportId:r.id,project:r.project,tag:r.tag,status:r.status,completion:r.score,tests:r.tests,punchList:r.punches,timestamp:new Date().toISOString()});});
+                update();
+            })();
 
             // =============================================================
             // ADVANCED LOOP CHECK
@@ -6987,137 +7141,69 @@ body.dark .rs-section{background:#111827;border-color:#334155}body.dark .rs-sect
             })();
 
             // =============================================================
-            // FIELD NOTES
+            // FIELD NOTES — ADVANCED
             // =============================================================
             (function() {
-                const catColors = {
-                    General: { bg: '#e2e8f0', fg: '#334155' },
-                    Issue: { bg: '#fee2e2', fg: '#991b1b' },
-                    TODO: { bg: '#fef3c7', fg: '#92400e' },
-                    Handover: { bg: '#ede9fe', fg: '#5b21b6' }
-                };
-
-                function loadNotes() { return getStorage('fieldNotes', []); }
-                function saveNotes(notes) { setStorage('fieldNotes', notes); }
-
-                function formatTimestamp(ts) {
-                    const d = new Date(ts);
-                    return d.toLocaleString();
-                }
-
-                function renderNotes() {
-                    const notes = loadNotes().slice().sort(function(a, b) { return b.ts - a.ts; });
-                    const query = (document.getElementById('noteSearch').value || '').toLowerCase().trim();
-                    const filtered = query ? notes.filter(function(n) {
-                        return n.text.toLowerCase().includes(query) || (n.tag || '').toLowerCase().includes(query) || n.category.toLowerCase().includes(query);
-                    }) : notes;
-
-                    document.getElementById('noteCount').textContent = notes.length;
-                    const listEl = document.getElementById('notesList');
-
-                    if (filtered.length === 0) {
-                        listEl.innerHTML = '<div style="font-size:0.75rem;color:#94a3b8;text-align:center;padding:16px;">' + (notes.length === 0 ? 'No notes yet — add one above.' : 'No notes match your search.') + '</div>';
-                        return;
-                    }
-
-                    listEl.innerHTML = filtered.map(function(n) {
-                        const colors = catColors[n.category] || catColors.General;
-                        const tagHtml = n.tag ? '<span class="chip" style="margin-left:6px;">' + escapeHtml(n.tag) + '</span>' : '';
-                        return '<div style="background:#f8fafc;border-radius:16px;padding:12px 14px;margin-bottom:8px;" data-note-id="' + n.id + '">' +
-                            '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">' +
-                            '<div><span class="badge" style="background:' + colors.bg + ';color:' + colors.fg + ';">' + n.category + '</span>' + tagHtml + '</div>' +
-                            '<i class="fas fa-trash note-delete-btn" data-note-id="' + n.id + '" style="color:#94a3b8;cursor:pointer;font-size:0.8rem;padding:6px 8px;display:inline-block;"></i>' +
-                            '</div>' +
-                            '<div style="font-size:0.8rem;color:#1a2639;white-space:pre-wrap;">' + escapeHtml(n.text) + '</div>' +
-                            '<div style="font-size:0.6rem;color:#94a3b8;margin-top:6px;">' + formatTimestamp(n.ts) + '</div>' +
-                            '</div>';
+                const colors = { Critical:'#fee2e2', High:'#ffedd5', Normal:'#e0f2fe', Low:'#f1f5f9' };
+                const fg = { Critical:'#991b1b', High:'#9a3412', Normal:'#075985', Low:'#475569' };
+                function notes(){ return getStorage('fieldNotes', []); }
+                function save(a){ setStorage('fieldNotes', a); }
+                function esc(v){ const d=document.createElement('div'); d.textContent=v==null?'':v; return d.innerHTML; }
+                function fmt(ts){ return new Date(ts).toLocaleString(); }
+                function today(ts){ const d=new Date(ts), n=new Date(); return d.toDateString()===n.toDateString(); }
+                function render(){
+                    const all=notes().sort((a,b)=>b.ts-a.ts);
+                    const q=(document.getElementById('noteSearch').value||'').toLowerCase().trim();
+                    const st=document.getElementById('fnFilterStatus').value, pr=document.getElementById('fnFilterPriority').value;
+                    const filtered=all.filter(n=>{ const hay=[n.category,n.tag,n.location,n.workOrder,n.text,n.measurement,n.action,n.keywords,n.discipline].join(' ').toLowerCase(); return (!q||hay.includes(q))&&(!st||n.status===st)&&(!pr||n.priority===pr); });
+                    document.getElementById('noteCount').textContent=all.length;
+                    document.getElementById('fnTotal').textContent=all.length;
+                    document.getElementById('fnOpen').textContent=all.filter(n=>n.status==='Open'||n.status==='In Progress').length;
+                    document.getElementById('fnHigh').textContent=all.filter(n=>n.priority==='High'||n.priority==='Critical').length;
+                    document.getElementById('fnToday').textContent=all.filter(n=>today(n.ts)).length;
+                    const el=document.getElementById('notesList');
+                    if(!filtered.length){el.innerHTML='<div style="font-size:.75rem;color:#94a3b8;text-align:center;padding:18px;">No matching field notes.</div>';return;}
+                    el.innerHTML=filtered.map(n=>{
+                        const due=n.dueDate?new Date(n.dueDate+'T00:00:00'):null;
+                        const overdue=due && due<new Date() && n.status!=='Resolved';
+                        return '<div class="fn-note-card">'+
+                          '<div class="fn-note-top">'+
+                          '<div><div class="fn-note-tags"><span class="badge" style="background:'+colors[n.priority]+';color:'+fg[n.priority]+';">'+esc(n.priority)+'</span><span class="badge" style="background:#f1f5f9;color:#334155;">'+esc(n.category)+'</span><span class="badge" style="background:#f1f5f9;color:#334155;">'+esc(n.status)+'</span></div>'+ 
+                          '<div class="fn-note-title">'+esc(n.tag||'Unassigned asset')+(n.location?' · '+esc(n.location):'')+'</div>'+ 
+                          '<div class="fn-note-meta">'+fmt(n.ts)+' · '+esc(n.discipline)+(n.workOrder?' · '+esc(n.workOrder):'')+(n.dueDate?' · Due '+esc(n.dueDate):'')+(overdue?' · <b style="color:#dc2626;">OVERDUE</b>':'')+'</div></div>'+ 
+                          '<div style="display:flex;gap:4px;"><button class="btn-outline btn fn-report" data-id="'+n.id+'" title="Report"><i class="fas fa-file-alt"></i></button><button class="btn-outline btn fn-delete" data-id="'+n.id+'" title="Delete"><i class="fas fa-trash"></i></button></div></div>'+ 
+                          '<div class="fn-note-body">'+esc(n.text)+'</div>'+ 
+                          (n.measurement?'<div class="fn-note-meta"><b>Measurement:</b> '+esc(n.measurement)+'</div>':'')+
+                          (n.action?'<div class="fn-note-meta"><b>Next:</b> '+esc(n.action)+'</div>':'')+
+                          (n.keywords?'<div class="fn-note-tags">'+n.keywords.split(',').map(x=>x.trim()).filter(Boolean).map(x=>'<span class="fn-note-tag">#'+esc(x)+'</span>').join('')+'</div>':'')+
+                          '</div>';
                     }).join('');
-
-                    listEl.querySelectorAll('.note-delete-btn').forEach(function(btn) {
-                        btn.addEventListener('click', function() {
-                            const id = this.dataset.noteId;
-                            const notes = loadNotes().filter(function(n) { return String(n.id) !== String(id); });
-                            saveNotes(notes);
-                            renderNotes();
-                        });
-                    });
+                    el.querySelectorAll('.fn-delete').forEach(b=>b.onclick=()=>{ if(confirm('Delete this field note?')){save(all.filter(n=>String(n.id)!==String(b.dataset.id)));render();}});
+                    el.querySelectorAll('.fn-report').forEach(b=>b.onclick=()=>makeReport(notes().find(n=>String(n.id)===String(b.dataset.id))));
                 }
-
-                function escapeHtml(str) {
-                    const div = document.createElement('div');
-                    div.textContent = str;
-                    return div.innerHTML;
+                function capture(){
+                    const text=document.getElementById('fnText').value.trim(); if(!text){alert('Enter a field observation first.');return;}
+                    const n={id:Date.now(),ts:Date.now(),category:document.getElementById('fnCategory').value,priority:document.getElementById('fnPriority').value,status:document.getElementById('fnStatus').value,discipline:document.getElementById('fnDiscipline').value,tag:document.getElementById('fnTag').value.trim(),location:document.getElementById('fnLocation').value.trim(),workOrder:document.getElementById('fnWO').value.trim(),dueDate:document.getElementById('fnDue').value,measurement:document.getElementById('fnMeasurement').value.trim(),action:document.getElementById('fnAction').value.trim(),keywords:document.getElementById('fnKeywords').value.trim(),text:text};
+                    const a=notes(); a.push(n); save(a);
+                    ['fnTag','fnLocation','fnWO','fnDue','fnMeasurement','fnAction','fnKeywords','fnText'].forEach(id=>document.getElementById(id).value='');
+                    document.getElementById('fnStatus').value='Open'; document.getElementById('fnPriority').value='Normal'; render();
                 }
-
-                document.getElementById('noteAddBtn').addEventListener('click', function() {
-                    const text = document.getElementById('noteText').value.trim();
-                    if (!text) { alert('Write something before adding a note.'); return; }
-                    const category = document.getElementById('noteCategory').value;
-                    const tag = document.getElementById('noteTag').value.trim();
-                    const notes = loadNotes();
-                    notes.push({ id: Date.now(), category: category, tag: tag, text: text, ts: Date.now() });
-                    saveNotes(notes);
-                    document.getElementById('noteText').value = '';
-                    document.getElementById('noteTag').value = '';
-                    renderNotes();
-                });
-
-                document.getElementById('noteSearch').addEventListener('input', renderNotes);
-
-                document.getElementById('noteExportBtn').addEventListener('click', function() {
-                    const notes = loadNotes().slice().sort(function(a, b) { return a.ts - b.ts; });
-                    if (notes.length === 0) { alert('No notes to export yet.'); return; }
-                    let content = '========================================\nINSTRUMENTPRO FIELD NOTES\n========================================\nExported: ' + new Date().toLocaleString() + '\n\n';
-                    notes.forEach(function(n) {
-                        content += '[' + formatTimestamp(n.ts) + '] (' + n.category + (n.tag ? ' — ' + n.tag : '') + ')\n' + n.text + '\n----------------------------------------\n';
-                    });
-                    const blob = new Blob([content], { type: 'text/plain' });
-                    const a = document.createElement('a');
-                    a.href = URL.createObjectURL(blob);
-                    a.download = 'InstrumentPro_FieldNotes_' + new Date().toISOString().slice(0, 10) + '.txt';
-                    a.click();
-                    URL.revokeObjectURL(a.href);
-                });
-
-                function csvEscape(val) {
-                    const s = String(val == null ? '' : val);
-                    return '"' + s.replace(/"/g, '""') + '"';
+                function download(name,data,type){const blob=new Blob([data],{type:type});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500);}
+                function csv(v){return '"'+String(v==null?'':v).replace(/"/g,'""')+'"';}
+                function makeReport(n){
+                    if(!n){alert('Select a note first.');return;}
+                    const report='INSTRUMENTPRO — FIELD OBSERVATION REPORT\n========================================\nReport ID: FN-'+n.id+'\nRecorded: '+fmt(n.ts)+'\nType: '+n.category+'\nPriority: '+n.priority+'\nStatus: '+n.status+'\nDiscipline: '+n.discipline+'\nTag/Asset: '+(n.tag||'—')+'\nLocation: '+(n.location||'—')+'\nWork Order: '+(n.workOrder||'—')+'\nFollow-up: '+(n.dueDate||'—')+'\n\nOBSERVATION\n'+n.text+'\n\nMEASUREMENT / REFERENCE\n'+(n.measurement||'—')+'\n\nACTION / NEXT STEP\n'+(n.action||'—')+'\n\nKEYWORDS\n'+(n.keywords||'—')+'\n';
+                    download('InstrumentPro_Field_Report_FN-'+n.id+'.txt',report,'text/plain');
                 }
-
-                document.getElementById('noteExportCsvBtn').addEventListener('click', function() {
-                    const notes = loadNotes().slice().sort(function(a, b) { return a.ts - b.ts; });
-                    if (notes.length === 0) { alert('No notes to export yet.'); return; }
-                    let csv = ['Timestamp,Category,Tag,Note'].join('\n') + '\n';
-                    notes.forEach(function(n) {
-                        csv += [csvEscape(formatTimestamp(n.ts)), csvEscape(n.category), csvEscape(n.tag), csvEscape(n.text)].join(',') + '\n';
-                    });
-                    const blob = new Blob([csv], { type: 'text/csv' });
-                    const a = document.createElement('a');
-                    a.href = URL.createObjectURL(blob);
-                    a.download = 'InstrumentPro_FieldNotes_' + new Date().toISOString().slice(0, 10) + '.csv';
-                    a.click();
-                    URL.revokeObjectURL(a.href);
-                });
-
-                document.getElementById('noteSyncBtn').addEventListener('click', function() {
-                    const notes = loadNotes();
-                    if (notes.length === 0) { alert('No notes to sync yet.'); return; }
-                    window.syncReportToWebhooks({
-                        source: 'InstrumentPro',
-                        type: 'FieldNotes',
-                        timestamp: new Date().toISOString(),
-                        notes: notes.map(function(n) { return { timestamp: formatTimestamp(n.ts), category: n.category, tag: n.tag, text: n.text }; })
-                    });
-                });
-
-                document.getElementById('noteClearBtn').addEventListener('click', function() {
-                    if (loadNotes().length === 0) return;
-                    if (!confirm('Delete ALL field notes? This cannot be undone.')) return;
-                    saveNotes([]);
-                    renderNotes();
-                });
-
-                renderNotes();
+                document.getElementById('fnAddBtn').onclick=capture;
+                ['noteSearch','fnFilterStatus','fnFilterPriority'].forEach(id=>document.getElementById(id).addEventListener('input',render));
+                document.getElementById('noteExportBtn').onclick=()=>{const a=notes().sort((x,y)=>x.ts-y.ts);if(!a.length){alert('No notes to export.');return;}let t='INSTRUMENTPRO FIELD LOG\nExported: '+new Date().toLocaleString()+'\n\n';a.forEach(n=>t+='['+fmt(n.ts)+'] '+n.priority+' | '+n.category+' | '+(n.tag||'')+' | '+n.status+'\n'+n.text+'\nAction: '+(n.action||'')+'\n\n');download('InstrumentPro_FieldLog_'+new Date().toISOString().slice(0,10)+'.txt',t,'text/plain');};
+                document.getElementById('noteExportCsvBtn').onclick=()=>{const a=notes().sort((x,y)=>x.ts-y.ts);if(!a.length){alert('No notes to export.');return;}let c='Timestamp,Category,Priority,Status,Discipline,Tag,Location,Work Order,Follow-up,Measurement,Action,Keywords,Observation\n';a.forEach(n=>c+=[fmt(n.ts),n.category,n.priority,n.status,n.discipline,n.tag,n.location,n.workOrder,n.dueDate,n.measurement,n.action,n.keywords,n.text].map(csv).join(',')+'\n');download('InstrumentPro_FieldLog_'+new Date().toISOString().slice(0,10)+'.csv',c,'text/csv');};
+                document.getElementById('fnJsonBtn').onclick=()=>download('InstrumentPro_FieldLog_'+new Date().toISOString().slice(0,10)+'.json',JSON.stringify(notes(),null,2),'application/json');
+                document.getElementById('fnReportBtn').onclick=()=>{const a=notes(); if(!a.length){alert('No field notes available.');return;} makeReport(a[0]);};
+                document.getElementById('noteSyncBtn').onclick=()=>{const a=notes();if(!a.length){alert('No notes to sync.');return;}window.syncReportToWebhooks({source:'InstrumentPro',type:'FieldNotesAdvanced',timestamp:new Date().toISOString(),notes:a});};
+                document.getElementById('noteClearBtn').onclick=()=>{if(notes().length&&confirm('Delete ALL field notes? This cannot be undone.')){save([]);render();}};
+                render();
             })();
 
             console.log('✅ InstrumentPro v7.0 loaded!');
