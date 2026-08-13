@@ -2424,7 +2424,7 @@ body.dark .trouble-dialog{background:#111827}.dark .trouble-dialog-title,.dark .
             </div>
             <div class="home-kpi">
                 <div class="home-kpi-value" id="homeRecentCount">0</div>
-                <div class="home-kpi-label">Recent Tools</div>
+                
             </div>
         </div>
     </div>
@@ -2498,7 +2498,7 @@ body.dark .trouble-dialog{background:#111827}.dark .trouble-dialog-title,.dark .
     </div>
 
     <div class="recent-tools">
-        <span class="recent-label"><i class="fas fa-clock"></i> Recent Tools</span>
+        <span class="recent-label"><i class="fas fa-clock">
         <div id="recentList">
             <span class="recent-item" data-page="calibration">Calibration</span>
             <span class="recent-item" data-page="analytical">Analytical</span>
@@ -7821,3 +7821,18 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('troubleModal').c
 </script>
 </body>
 </html>
+<style id="home-favorite-upgrade">
+/* Remove Recent Tools from the Home UI */
+#recentTools,.recent-tools,.recent-tools-card,.recent-tools-section,[data-section="recent-tools"]{display:none!important}
+/* Make Favorites more prominent */
+#favorites,.favorites-card,.favorites-section,[data-section="favorites"]{
+  min-height:150px!important;
+}
+#favorites .card,.favorites-card .card{
+  min-height:150px!important;
+}
+.favorite-item,.favorite-card,.favorite-tool{
+  min-height:76px!important;
+  padding:13px!important;
+}
+</style>
