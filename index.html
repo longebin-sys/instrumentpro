@@ -2316,6 +2316,13 @@ body.dark .trouble-dialog{background:#111827}.dark .trouble-dialog-title,.dark .
 /* Favorites: larger, easier-to-tap cards */
 .favorite-item,.favorite-card,.favorite-tool{min-height:76px!important;padding:13px!important}
 </style>
+
+<style id="instrumentpro-nav-organization">
+/* Navigation organization only. No calculator or application logic is changed. */
+.sidebar .nav-section-label{margin:13px 12px 5px;padding-top:3px;font-size:.56rem;line-height:1.2;font-weight:800;letter-spacing:.09em;color:#94a3b8;}
+body.dark .sidebar .nav-section-label{color:#64748b;}
+.sidebar .nav-section-label:first-child{margin-top:5px;}
+</style>
 </head>
 <body>
 
@@ -2351,20 +2358,31 @@ body.dark .trouble-dialog{background:#111827}.dark .trouble-dialog-title,.dark .
         <button class="close-btn" id="closeSidebar"><i class="fas fa-times"></i></button>
         <h2><i class="fas fa-toolbox"></i> InstrumentPro</h2>
         <hr />
+        <div class="nav-section-label">WORKSPACE</div>
         <a class="nav-item active" data-page="home"><i class="fas fa-home"></i> Home</a>
-        <a class="nav-item" data-page="converter"><i class="fas fa-arrows-alt-h"></i> Converter<i class="fas fa-star fav-star" data-page="converter" title="Pin to Favorites"></i></a>
+
+        <div class="nav-section-label">MEASUREMENT & CALIBRATION</div>
         <a class="nav-item" data-page="calibration"><i class="fas fa-sliders-h"></i> Calibration<i class="fas fa-star fav-star" data-page="calibration" title="Pin to Favorites"></i></a>
-        <a class="nav-item" data-page="dp"><i class="fas fa-tachometer-alt"></i> Level Measurement Tools<i class="fas fa-star fav-star" data-page="dp" title="Pin to Favorites"></i></a>
-        <a class="nav-item" data-page="flow"><i class="fas fa-water"></i> Complex Measurement Tools<i class="fas fa-star fav-star" data-page="flow" title="Pin to Favorites"></i></a>
-        <a class="nav-item" data-page="hart"><i class="fas fa-satellite-dish"></i> HART Communicator<i class="fas fa-star fav-star" data-page="hart" title="Pin to Favorites"></i></a>
-        <a class="nav-item" data-page="notes"><i class="fas fa-clipboard-list"></i> Field Notes<i class="fas fa-star fav-star" data-page="notes" title="Pin to Favorites"></i></a>
-        <a class="nav-item" data-page="analytical"><i class="fas fa-flask"></i> Analytical<i class="fas fa-star fav-star" data-page="analytical" title="Pin to Favorites"></i></a>
-        <a class="nav-item" data-page="electrical"><i class="fas fa-bolt"></i> Electrical<i class="fas fa-star fav-star" data-page="electrical" title="Pin to Favorites"></i></a>
+        <a class="nav-item" data-page="dp"><i class="fas fa-tachometer-alt"></i> Level Measurement<i class="fas fa-star fav-star" data-page="dp" title="Pin to Favorites"></i></a>
+        <a class="nav-item" data-page="flow"><i class="fas fa-water"></i> Flow Measurement<i class="fas fa-star fav-star" data-page="flow" title="Pin to Favorites"></i></a>
+        <a class="nav-item" data-page="analytical"><i class="fas fa-flask"></i> Analytical Instruments<i class="fas fa-star fav-star" data-page="analytical" title="Pin to Favorites"></i></a>
+
+        <div class="nav-section-label">ENGINEERING TOOLS</div>
+        <a class="nav-item" data-page="converter"><i class="fas fa-arrows-alt-h"></i> Units & Conversion<i class="fas fa-star fav-star" data-page="converter" title="Pin to Favorites"></i></a>
+        <a class="nav-item" data-page="electrical"><i class="fas fa-bolt"></i> Electrical & Power<i class="fas fa-star fav-star" data-page="electrical" title="Pin to Favorites"></i></a>
         <a class="nav-item" data-page="bending"><i class="fas fa-pipe-valve"></i> Tube Bending<i class="fas fa-star fav-star" data-page="bending" title="Pin to Favorites"></i></a>
-        <a class="nav-item" data-page="references"><i class="fas fa-book"></i> References<i class="fas fa-star fav-star" data-page="references" title="Pin to Favorites"></i></a>
+
+        <div class="nav-section-label">FIELD & DIAGNOSTICS</div>
+        <a class="nav-item" data-page="hart"><i class="fas fa-satellite-dish"></i> HART Communicator<i class="fas fa-star fav-star" data-page="hart" title="Pin to Favorites"></i></a>
         <a class="nav-item" data-page="trouble"><i class="fas fa-exclamation-triangle"></i> Troubleshooting<i class="fas fa-star fav-star" data-page="trouble" title="Pin to Favorites"></i></a>
-        <a class="nav-item" data-page="ai"><i class="fas fa-robot"></i> AI Chat<i class="fas fa-star fav-star" data-page="ai" title="Pin to Favorites"></i></a>
-        <a class="nav-item" data-page="report"><i class="fas fa-file-alt"></i> Report<i class="fas fa-star fav-star" data-page="report" title="Pin to Favorites"></i></a>
+        <a class="nav-item" data-page="ai"><i class="fas fa-robot"></i> AI Technician<i class="fas fa-star fav-star" data-page="ai" title="Pin to Favorites"></i></a>
+
+        <div class="nav-section-label">DOCUMENTATION</div>
+        <a class="nav-item" data-page="notes"><i class="fas fa-clipboard-list"></i> Field Notes<i class="fas fa-star fav-star" data-page="notes" title="Pin to Favorites"></i></a>
+        <a class="nav-item" data-page="report"><i class="fas fa-file-alt"></i> Reports<i class="fas fa-star fav-star" data-page="report" title="Pin to Favorites"></i></a>
+        <a class="nav-item" data-page="references"><i class="fas fa-book"></i> Reference Library<i class="fas fa-star fav-star" data-page="references" title="Pin to Favorites"></i></a>
+
+        <div class="nav-section-label">SYSTEM</div>
         <a class="nav-item" data-page="settings"><i class="fas fa-cog"></i> Settings<i class="fas fa-star fav-star" data-page="settings" title="Pin to Favorites"></i></a>
         <hr />
         <div style="font-size:0.7rem;color:#94a3b8;padding:10px 12px;">v7.0 · Temp Cal & Analytical Enhanced<br/>© 2026 Valentino Raimbuse</div>
@@ -2394,7 +2412,7 @@ body.dark .trouble-dialog{background:#111827}.dark .trouble-dialog-title,.dark .
         <div class="page active" id="page-home">
     <div class="search-bar">
         <i class="fas fa-search"></i>
-        <input type="text" id="searchInput" placeholder="Search tools..." autocomplete="off" />
+        <input type="text" id="searchInput" placeholder="Search tools, calculators & references..." autocomplete="off" />
     </div>
 
     <!-- Technician Dashboard -->
