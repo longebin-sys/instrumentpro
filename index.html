@@ -1786,7 +1786,29 @@
             }
         }
 
-    </style>
+    
+/* ==========================================================
+   COMPACT ADVANCED REPORT STUDIO
+   ========================================================== */
+.report-selector{display:flex;align-items:center;gap:8px;margin-bottom:10px;padding:8px 10px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px}
+.report-selector label{font-size:.68rem;font-weight:800;color:#475569;white-space:nowrap}.report-selector select{flex:1;min-width:0;font-size:.72rem;font-weight:700;padding:8px 10px;border-radius:9px}
+body.dark .report-selector{background:#0f172a;border-color:#334155}.report-studio{font-size:.72rem;max-width:100%;overflow:hidden}
+.rs-hero{background:linear-gradient(135deg,#0f172a,#1e3a5f);color:#fff;border-radius:14px;padding:11px;margin-bottom:8px;box-shadow:0 6px 18px rgba(15,23,42,.14)}
+.rs-hero h3{margin:0 0 3px;font-size:.9rem}.rs-hero p{margin:0;color:#cbd5e1;font-size:.6rem}
+.rs-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;margin-top:8px}.rs-kpi{min-width:0;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.12);border-radius:9px;padding:6px}.rs-kpi b{display:block;font-size:.72rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rs-kpi span{font-size:.48rem;color:#cbd5e1}
+.rs-stepper{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:3px;margin:7px 0}.rs-step{padding:5px 2px;text-align:center;border-radius:7px;background:#f1f5f9;color:#64748b;font-size:.48rem;font-weight:700;white-space:nowrap;overflow:hidden}.rs-step.active{background:#1e3a5f;color:#fff}
+.rs-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:6px}.rs-section{min-width:0;border:1px solid #e2e8f0;border-radius:11px;padding:8px;background:#fff;overflow:hidden}.rs-section h4{margin:0 0 7px;font-size:.68rem;color:#1e293b}.rs-full{grid-column:1/-1}.rs-status{display:flex;align-items:center;justify-content:space-between;padding:7px 9px;border-radius:9px;background:#f8fafc;margin-bottom:6px}.rs-status strong{font-size:.88rem}.rs-table{width:100%;border-collapse:collapse;font-size:.58rem}.rs-table th,.rs-table td{padding:4px 3px;border-bottom:1px solid #e2e8f0;text-align:right}.rs-table th:first-child,.rs-table td:first-child{text-align:left}.rs-chart{width:100%;height:130px;background:#f8fafc;border-radius:9px;border:1px solid #e2e8f0;display:block}.rs-analysis{background:#f8fafc;border-left:3px solid #1e3a5f;padding:7px;border-radius:7px;line-height:1.4;font-size:.6rem;word-break:break-word}.rs-quality{height:6px;background:#e2e8f0;border-radius:99px;overflow:hidden}.rs-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}.rs-history{max-height:170px;overflow:auto}.rs-history-item{padding:6px;border-bottom:1px solid #e2e8f0;display:flex;justify-content:space-between;gap:6px;font-size:.62rem}.rs-chip{display:inline-flex;padding:2px 6px;border-radius:99px;background:#eef2ff;color:#3730a3;font-size:.5rem;font-weight:700}
+.report-preview{width:100%;max-width:100%!important;box-sizing:border-box;overflow:hidden;word-break:break-word}
+.report-preview>div{max-width:100%!important;box-sizing:border-box}
+body.dark .rs-section{background:#111827;border-color:#334155}body.dark .rs-section h4{color:#e2e8f0}body.dark .rs-step{background:#1e293b;color:#94a3b8}body.dark .rs-status,body.dark .rs-analysis,body.dark .rs-chart{background:#0f172a;border-color:#334155}body.dark .rs-table th,body.dark .rs-table td{border-color:#334155}body.dark .rs-history-item{border-color:#334155}
+@media(max-width:600px){.rs-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.rs-stepper{grid-template-columns:repeat(3,minmax(0,1fr))}.rs-grid{grid-template-columns:1fr}.rs-full{grid-column:auto}.rs-actions{grid-template-columns:repeat(3,minmax(0,1fr))}.rs-section{padding:7px}.rs-hero{padding:10px}.report-selector{align-items:stretch;flex-direction:column;gap:4px}.report-selector select{width:100%}}
+
+/* ==========================================================
+   ADVANCED REPORT STUDIO
+   ========================================================== */
+
+
+</style>
 </head>
 <body>
 
@@ -3824,31 +3846,111 @@
         <div class="page" id="page-report">
             <div class="page-title"><i class="fas fa-file-alt"></i> Report</div>
             <div class="card">
-                <div class="tab-scroll" id="reportMainTabs">
-                    <div class="tab active" data-report="field">Field Report</div>
-                    <div class="tab" data-report="commissioning">Commissioning</div>
-                    <div class="tab" data-report="loopcheck">Loop Check</div>
-                    <div class="tab" data-report="setpoints">Setpoints</div>
+                <div class="report-selector" id="reportMainTabs">
+                    <label for="reportModuleSelect"><i class="fas fa-layer-group"></i> Report Module</label>
+                    <select id="reportModuleSelect" aria-label="Select report module">
+                        <option value="field">📋 Advanced Field Report</option>
+                        <option value="commissioning">⚙️ Commissioning</option>
+                        <option value="loopcheck">🔄 Loop Check</option>
+                        <option value="setpoints">🎚️ Setpoints</option>
+                    </select>
                 </div>
 
                 <div class="report-main-panel" id="reportpanel-field">
-                    <div class="row"><label>Tag</label><input type="text" id="reportTag" placeholder="FT-1001" /></div>
-                    <div class="row"><label>Model</label><input type="text" id="reportModel" placeholder="Rosemount 3051S" /></div>
-                    <div class="row"><label>Type</label><select id="reportType"><option value="calibration">Calibration</option><option value="gc">GC</option><option value="commissioning">Commissioning</option></select></div>
-                    <div class="row"><label>Tolerance</label><input type="number" id="reportTolerance" value="2" step="0.1" style="flex:0.4;" /><span class="chip">% (calibration only)</span></div>
-                    <div style="font-size:0.65rem;color:#64748b;margin:2px 0 4px 0;">For Calibration: enter the <strong>actual</strong> % reading recorded at each nominal test point (defaults show ideal).</div>
-                    <div id="calPointsInput" class="cal-points-grid">
-                        <div class="cal-point"><span>0%</span><input type="number" id="rp0" value="0" step="any" class="cal-actual" /></div>
-                        <div class="cal-point"><span>25%</span><input type="number" id="rp25" value="25" step="any" class="cal-actual" /></div>
-                        <div class="cal-point"><span>50%</span><input type="number" id="rp50" value="50" step="any" class="cal-actual" /></div>
-                        <div class="cal-point"><span>75%</span><input type="number" id="rp75" value="75" step="any" class="cal-actual" /></div>
-                        <div class="cal-point"><span>100%</span><input type="number" id="rp100" value="100" step="any" class="cal-actual" /></div>
+                    <div class="report-studio">
+                        <div class="rs-hero">
+                            <h3><i class="fas fa-file-signature"></i> Report Studio</h3>
+                            <p>Build, analyze, validate, sign and issue professional engineering reports.</p>
+                            <div class="rs-kpis">
+                                <div class="rs-kpi"><b id="rsReportId">DRAFT</b><span>REPORT ID</span></div>
+                                <div class="rs-kpi"><b id="rsResultKpi">PENDING</b><span>RESULT</span></div>
+                                <div class="rs-kpi"><b id="rsMaxErrorKpi">—</b><span>MAX ERROR</span></div>
+                                <div class="rs-kpi"><b id="rsQualityKpi">0%</b><span>QUALITY</span></div>
+                            </div>
+                        </div>
+                        <div class="rs-stepper">
+                            <div class="rs-step active">1 DETAILS</div><div class="rs-step">2 MEASURE</div><div class="rs-step">3 FINDINGS</div><div class="rs-step">4 ANALYSIS</div><div class="rs-step">5 REVIEW</div><div class="rs-step">6 ISSUE</div>
+                        </div>
+                        <div class="rs-grid">
+                            <div class="rs-section">
+                                <h4><i class="fas fa-id-card"></i> Instrument Identity</h4>
+                                <div class="row"><label>Tag</label><input type="text" id="reportTag" placeholder="PT-2045" /></div>
+                                <div class="row"><label>Model</label><input type="text" id="reportModel" placeholder="Rosemount 3051S" /></div>
+                                <div class="row"><label>Manufacturer</label><input type="text" id="rsManufacturer" placeholder="Emerson / Yokogawa / Siemens" /></div>
+                                <div class="row"><label>Serial No.</label><input type="text" id="rsSerial" placeholder="Serial number" /></div>
+                                <div class="row"><label>Location</label><input type="text" id="rsLocation" placeholder="Process Area 2" /></div>
+                                <div class="row"><label>Technician</label><input type="text" id="rsTechnician" placeholder="Technician name" /></div>
+                            </div>
+                            <div class="rs-section">
+                                <h4><i class="fas fa-clipboard-check"></i> Test Configuration</h4>
+                                <div class="row"><label>Report Type</label><select id="reportType"><option value="calibration">Calibration</option><option value="gc">GC</option><option value="commissioning">Commissioning</option><option value="inspection">Inspection</option></select></div>
+                                <div class="row"><label>Range</label><input type="text" id="rsRange" placeholder="0–100 psi" /></div>
+                                <div class="row"><label>Unit</label><input type="text" id="rsUnit" placeholder="psi" /></div>
+                                <div class="row"><label>Tolerance</label><input type="number" id="reportTolerance" value="2" step="0.1" style="flex:.4;" /><span class="chip">% span</span></div>
+                                <div class="row"><label>Reference Std.</label><input type="text" id="rsReference" placeholder="Calibrator / standard ID" /></div>
+                                <div class="row"><label>Work Order</label><input type="text" id="rsWorkOrder" placeholder="WO-2026-001" /></div>
+                            </div>
+                            <div class="rs-section rs-full">
+                                <h4><i class="fas fa-chart-line"></i> Calibration Measurements</h4>
+                                <div style="font-size:.65rem;color:#64748b;margin-bottom:7px;">Enter actual readings. The report automatically calculates error, tolerance status and engineering assessment.</div>
+                                <div id="calPointsInput" class="cal-points-grid">
+                                    <div class="cal-point"><span>0%</span><input type="number" id="rp0" value="0" step="any" class="cal-actual" /></div>
+                                    <div class="cal-point"><span>25%</span><input type="number" id="rp25" value="25" step="any" class="cal-actual" /></div>
+                                    <div class="cal-point"><span>50%</span><input type="number" id="rp50" value="50" step="any" class="cal-actual" /></div>
+                                    <div class="cal-point"><span>75%</span><input type="number" id="rp75" value="75" step="any" class="cal-actual" /></div>
+                                    <div class="cal-point"><span>100%</span><input type="number" id="rp100" value="100" step="any" class="cal-actual" /></div>
+                                </div>
+                            </div>
+                            <div class="rs-section rs-full">
+                                <div class="rs-status"><div><small>CALIBRATION RESULT</small><br><strong id="rsStatusText" class="rs-pending">PENDING</strong></div><span class="rs-chip" id="rsToleranceChip">Tolerance: 2%</span></div>
+                                <canvas id="rsCalibrationChart" class="rs-chart" height="180"></canvas>
+                            </div>
+                            <div class="rs-section">
+                                <h4><i class="fas fa-search"></i> Findings</h4>
+                                <div class="row"><label>Observations</label><textarea id="rsObservations" placeholder="Observed condition, display, wiring, process..." rows="3"></textarea></div>
+                                <div class="row"><label>Root Cause</label><textarea id="rsRootCause" placeholder="Root cause if known..." rows="3"></textarea></div>
+                            </div>
+                            <div class="rs-section">
+                                <h4><i class="fas fa-tools"></i> Action & Verification</h4>
+                                <div class="row"><label>Corrective Action</label><textarea id="rsCorrective" placeholder="Adjustment, repair, cleaning, replacement..." rows="3"></textarea></div>
+                                <div class="row"><label>Verification</label><textarea id="rsVerification" placeholder="Repeat test / functional verification..." rows="3"></textarea></div>
+                            </div>
+                            <div class="rs-section rs-full">
+                                <h4><i class="fas fa-brain"></i> Automatic Engineering Assessment</h4>
+                                <div id="rsAssessment" class="rs-analysis">Enter measurements and report details to generate the engineering assessment.</div>
+                            </div>
+                            <div class="rs-section">
+                                <h4><i class="fas fa-shield-alt"></i> Report Quality</h4>
+                                <div style="display:flex;justify-content:space-between;margin-bottom:5px;"><span>Completeness</span><strong id="rsQualityText">0%</strong></div>
+                                <div class="rs-quality"><i id="rsQualityBar"></i></div>
+                                <div id="rsQualityList" style="margin-top:8px;font-size:.65rem;line-height:1.7;"></div>
+                            </div>
+                            <div class="rs-section">
+                                <h4><i class="fas fa-signature"></i> Issue Control</h4>
+                                <div class="row"><label>Technician Sign</label><input type="text" id="rsTechSign" placeholder="Type name to sign" /></div>
+                                <div class="row"><label>Supervisor</label><input type="text" id="rsSupervisor" placeholder="Supervisor / witness" /></div>
+                                <div class="rs-actions">
+                                    <button class="btn" id="generateReportBtn"><i class="fas fa-sync"></i> Build</button>
+                                    <button class="btn btn-outline" id="rsIssueBtn"><i class="fas fa-stamp"></i> Issue</button>
+                                    <button class="btn btn-outline" id="rsPrintBtn"><i class="fas fa-print"></i> Print</button>
+                                </div>
+                            </div>
+                            <div class="rs-section rs-full">
+                                <h4><i class="fas fa-file-alt"></i> Live Report Preview</h4>
+                                <div id="reportPreview" class="report-preview">Report will appear here.</div>
+                                <div class="rs-actions" style="margin-top:8px;">
+                                    <button class="btn btn-outline" id="exportReportBtn"><i class="fas fa-download"></i> Export HTML</button>
+                                    <button class="btn btn-outline" id="rsJsonBtn"><i class="fas fa-code"></i> JSON</button>
+                                    <button class="btn btn-outline" id="rsCsvBtn"><i class="fas fa-table"></i> CSV</button>
+                                </div>
+                                <button class="btn btn-outline w-full mt-1" id="syncReportBtn"><i class="fas fa-cloud-upload-alt"></i> Sync Report</button>
+                            </div>
+                            <div class="rs-section rs-full">
+                                <h4><i class="fas fa-history"></i> Report History</h4>
+                                <div id="rsHistory" class="rs-history">No reports issued yet.</div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="row"><label>Notes</label><textarea id="reportNotes" placeholder="Notes..."></textarea></div>
-                    <button class="btn" id="generateReportBtn"><i class="fas fa-file-alt"></i> Generate</button>
-                    <div id="reportPreview" class="report-preview mt-1">Report will appear here.</div>
-                    <button class="btn btn-outline mt-1" id="exportReportBtn"><i class="fas fa-download"></i> Export</button>
-                    <button class="btn btn-outline mt-1" id="syncReportBtn"><i class="fas fa-cloud-upload-alt"></i> Sync</button>
                 </div>
 
                 <div class="report-main-panel hidden" id="reportpanel-commissioning">
@@ -3885,27 +3987,22 @@
                 </div>
 
                 <div class="report-main-panel hidden" id="reportpanel-loopcheck">
-                    <div style="font-size:0.65rem;color:#64748b;margin-bottom:8px;">End-to-end loop verification sign-off — confirms a loop works correctly from field device through to the DCS/PLC before startup.</div>
-                    <div class="row"><label>Loop Tag</label><input type="text" id="loopTag" placeholder="PT-101" /></div>
-                    <div class="row"><label>Description</label><input type="text" id="loopDesc" placeholder="Reactor feed pressure" /></div>
-                    <div id="loopCheckItems" class="cal-points-grid" style="display:block;">
-                        <label class="row" style="align-items:center;"><input type="checkbox" id="loopChk1" style="width:auto;flex:none;margin-right:8px;" /> Source signal verified at field device</label>
-                        <label class="row" style="align-items:center;"><input type="checkbox" id="loopChk2" style="width:auto;flex:none;margin-right:8px;" /> Field wiring / termination verified</label>
-                        <label class="row" style="align-items:center;"><input type="checkbox" id="loopChk3" style="width:auto;flex:none;margin-right:8px;" /> Range verified at 0%, 50%, 100%</label>
-                        <label class="row" style="align-items:center;"><input type="checkbox" id="loopChk4" style="width:auto;flex:none;margin-right:8px;" /> Alarm/trip setpoints verified</label>
-                        <label class="row" style="align-items:center;"><input type="checkbox" id="loopChk5" style="width:auto;flex:none;margin-right:8px;" /> HMI/DCS point reads correctly, correct engineering units</label>
-                        <label class="row" style="align-items:center;"><input type="checkbox" id="loopChk6" style="width:auto;flex:none;margin-right:8px;" /> Fail-safe action confirmed (loss of signal/power)</label>
-                    </div>
-                    <div class="row"><label>Technician</label><input type="text" id="loopTech" placeholder="Name" /></div>
-                    <div class="row"><label>Witness</label><input type="text" id="loopWitness" placeholder="Name (optional)" /></div>
-                    <div class="row"><label>Notes</label><textarea id="loopNotes" placeholder="Notes..."></textarea></div>
-                    <button class="btn" id="loopCheckGenBtn"><i class="fas fa-file-alt"></i> Generate</button>
-                    <div id="loopCheckPreview" class="report-preview mt-1">Sign-off sheet will appear here.</div>
-                    <button class="btn btn-outline mt-1" id="loopCheckExportBtn"><i class="fas fa-download"></i> Export</button>
-                    <button class="btn btn-outline mt-1" id="loopCheckSyncBtn"><i class="fas fa-cloud-upload-alt"></i> Sync</button>
-                </div>
-
-                <div class="report-main-panel hidden" id="reportpanel-setpoints">
+<div class="card" style="padding:10px;margin-bottom:8px"><div class="card-header"><i class="fas fa-route"></i><h3>Advanced Loop Check</h3><span id="loopOverallStatusChip">NOT STARTED</span></div>
+<div style="font-size:.62rem;color:#64748b;margin-bottom:8px">End-to-end verification: field device → wiring → I/O → PLC/DCS → HMI, including signal accuracy, alarms and fail-safe.</div>
+<div class="row"><label>Loop Tag</label><input id="loopTag" placeholder="PT-101"></div><div class="row"><label>Service</label><input id="loopDesc" placeholder="Reactor feed pressure"></div>
+<div class="row"><label>System</label><select id="loopSystem"><option>PLC</option><option>DCS</option><option>ESD/SIS</option><option>SCADA</option></select></div>
+<div class="row"><label>Signal</label><select id="loopSignalType"><option value="4-20mA">4-20 mA</option><option value="0-10V">0-10 V</option><option value="digital">Digital / Discrete</option><option value="HART">4-20 mA + HART</option></select></div>
+<div class="row"><label>Range</label><input type="number" id="loopLRV" value="0" step="any"><input type="number" id="loopURV" value="100" step="any"><input id="loopUnits" value="%" placeholder="Units"></div></div>
+<div class="card" style="padding:10px;margin-bottom:8px"><div class="card-header"><i class="fas fa-list-check"></i><h3>Verification Checklist</h3><span id="loopCheckProgress">0 / 10</span></div><div id="loopCheckItems" style="display:grid;gap:5px">
+<label class="loop-check-item"><input type="checkbox" id="loopChk1"> Tag/device identification verified</label><label class="loop-check-item"><input type="checkbox" id="loopChk2"> Power supply and polarity verified</label><label class="loop-check-item"><input type="checkbox" id="loopChk3"> Field wiring and termination verified</label><label class="loop-check-item"><input type="checkbox" id="loopChk4"> Signal reaches PLC/DCS I/O correctly</label><label class="loop-check-item"><input type="checkbox" id="loopChk5"> Engineering range/scaling verified</label><label class="loop-check-item"><input type="checkbox" id="loopChk6"> 0% / 50% / 100% response verified</label><label class="loop-check-item"><input type="checkbox" id="loopChk7"> HMI/DCS indication and units verified</label><label class="loop-check-item"><input type="checkbox" id="loopChk8"> Alarm/trip setpoints and annunciation verified</label><label class="loop-check-item"><input type="checkbox" id="loopChk9"> Fail-safe action verified</label><label class="loop-check-item"><input type="checkbox" id="loopChk10"> Restored to normal condition</label></div></div>
+<div class="card" style="padding:10px;margin-bottom:8px"><div class="card-header"><i class="fas fa-gauge-high"></i><h3>Signal Verification</h3><span>Live</span></div><div class="table-wrap"><table><thead><tr><th>Point</th><th>Expected</th><th>Measured</th><th>Error</th><th>Status</th></tr></thead><tbody id="loopSignalTable"></tbody></table></div><div class="row mt-1"><label>Tolerance %</label><input type="number" id="loopTolerance" value=".50" min="0" step=".01"></div><div class="result-box"><span>Max Error</span><strong id="loopMaxError">—</strong></div><div id="loopSignalStatus" class="badge mt-1">Enter measured values</div></div>
+<div class="card" style="padding:10px;margin-bottom:8px"><div class="card-header"><i class="fas fa-bell"></i><h3>Functional Tests</h3></div>
+<div class="row"><label>Alarm</label><select id="loopAlarmResult"><option>Not Tested</option><option>PASS</option><option>FAIL</option><option>N/A</option></select></div><div class="row"><label>Trip</label><select id="loopTripResult"><option>Not Tested</option><option>PASS</option><option>FAIL</option><option>N/A</option></select></div><div class="row"><label>Fail-Safe</label><select id="loopFailSafeResult"><option>Not Tested</option><option>PASS</option><option>FAIL</option><option>N/A</option></select></div><div class="row"><label>HMI / DCS</label><select id="loopHmiResult"><option>Not Tested</option><option>PASS</option><option>FAIL</option><option>N/A</option></select></div></div>
+<div class="card" style="padding:10px;margin-bottom:8px"><div class="card-header"><i class="fas fa-user-check"></i><h3>Sign-off & Findings</h3></div><div class="row"><label>Technician</label><input id="loopTech" placeholder="Name"></div><div class="row"><label>Witness</label><input id="loopWitness" placeholder="Optional"></div><div class="row"><label>Findings</label><textarea id="loopNotes" placeholder="Observations, deviations, corrective actions..."></textarea></div><div class="row"><label>Final Status</label><select id="loopFinalStatus"><option>Pending Review</option><option>Ready for Startup</option><option>Accepted with Punch List</option><option>Failed - Retest Required</option></select></div></div>
+<button class="btn w-full" id="loopCheckGenBtn"><i class="fas fa-file-circle-check"></i> Build Advanced Loop Report</button><div id="loopCheckPreview" class="report-preview mt-1">Advanced loop report will appear here.</div>
+<div class="row mt-1" style="gap:5px"><button class="btn btn-outline" id="loopCheckExportBtn"><i class="fas fa-download"></i> Export</button><button class="btn btn-outline" id="loopCheckCsvBtn"><i class="fas fa-table"></i> CSV</button><button class="btn btn-outline" id="loopCheckSyncBtn"><i class="fas fa-cloud-upload-alt"></i> Sync</button></div>
+</div>
+<div class="report-main-panel hidden" id="reportpanel-setpoints">
                     <div style="font-size:0.65rem;color:#64748b;margin-bottom:8px;">Document alarm/trip setpoints for a tag — useful for handover packages and change records.</div>
                     <div class="row"><label>Tag</label><input type="text" id="spTag" placeholder="LT-201" /></div>
                     <div class="row"><label>Units</label><input type="text" id="spUnits" placeholder="e.g. %, mH2O, bar" /></div>
@@ -5979,59 +6076,29 @@
             });
 
             // =============================================================
-            // LOOP CHECK SIGN-OFF SHEET
-            // =============================================================
-            document.getElementById('loopCheckGenBtn').addEventListener('click', function() {
-                const tag = document.getElementById('loopTag').value.trim() || 'N/A';
-                const desc = document.getElementById('loopDesc').value.trim() || 'N/A';
-                const tech = document.getElementById('loopTech').value.trim() || 'N/A';
-                const witness = document.getElementById('loopWitness').value.trim() || '—';
-                const notes = document.getElementById('loopNotes').value.trim() || 'None';
-                const date = new Date().toLocaleString();
-                const items = [
-                    ['Source signal verified at field device', 'loopChk1'],
-                    ['Field wiring / termination verified', 'loopChk2'],
-                    ['Range verified at 0%, 50%, 100%', 'loopChk3'],
-                    ['Alarm/trip setpoints verified', 'loopChk4'],
-                    ['HMI/DCS point reads correctly, correct units', 'loopChk5'],
-                    ['Fail-safe action confirmed', 'loopChk6']
-                ];
-                let checklist = '';
-                let allChecked = true;
-                items.forEach(function(item) {
-                    const checked = document.getElementById(item[1]).checked;
-                    if (!checked) allChecked = false;
-                    checklist += (checked ? '[x] ' : '[ ] ') + item[0] + '\n';
+            // ADVANCED LOOP CHECK
+            (function(){
+                const pts=[0,25,50,75,100], table=document.getElementById('loopSignalTable');
+                function exp(p){const t=document.getElementById('loopSignalType').value;if(t==='0-10V')return p/10;if(t==='digital')return p===0?0:1;return 4+p*.16;}
+                function render(){table.innerHTML=pts.map((p,i)=>'<tr><td>'+p+'%</td><td>'+exp(p).toFixed(3)+'</td><td><input type="number" step="any" class="loop-measured" data-i="'+i+'"></td><td id="loopErr'+i+'">—</td><td id="loopSt'+i+'">—</td></tr>').join('');table.querySelectorAll('.loop-measured').forEach(x=>x.addEventListener('input',evaluate));evaluate();}
+                function evaluate(){let max=0,n=0,fail=false,tol=parseFloat(document.getElementById('loopTolerance').value)||.5;table.querySelectorAll('.loop-measured').forEach((x,i)=>{let v=parseFloat(x.value),e= document.getElementById('loopErr'+i),s=document.getElementById('loopSt'+i);if(isNaN(v)){e.textContent='—';s.textContent='—';return;}n++;let er=Math.abs(v-exp(pts[i]))/(Math.abs(exp(100)-exp(0))||1)*100;max=Math.max(max,er);e.textContent=er.toFixed(3)+'%';s.textContent=er<=tol?'PASS':'FAIL';s.style.color=er<=tol?'#15803d':'#b91c1c';if(er>tol)fail=true;});document.getElementById('loopMaxError').textContent=n?max.toFixed(3)+'%':'—';let b=document.getElementById('loopSignalStatus');b.textContent=!n?'Enter measured values':fail?'FAIL — signal outside tolerance':'PASS — entered points within tolerance';b.className='badge mt-1 '+(fail?'badge-fail':'badge-pass');}
+                function progress(){let n=0;for(let i=1;i<=10;i++)if(document.getElementById('loopChk'+i).checked)n++;document.getElementById('loopCheckProgress').textContent=n+' / 10';}
+                render();['loopSignalType','loopTolerance'].forEach(id=>document.getElementById(id).addEventListener('change',render));document.getElementById('loopLRV').addEventListener('input',render);document.getElementById('loopURV').addEventListener('input',render);for(let i=1;i<=10;i++)document.getElementById('loopChk'+i).addEventListener('change',progress);
+                document.getElementById('loopCheckGenBtn').addEventListener('click',function(){
+                    const tag=document.getElementById('loopTag').value.trim()||'N/A',desc=document.getElementById('loopDesc').value.trim()||'N/A',tol=parseFloat(document.getElementById('loopTolerance').value)||.5,max=parseFloat(document.getElementById('loopMaxError').textContent)||0;
+                    const checks=[];for(let i=1;i<=10;i++)checks.push(document.getElementById('loopChk'+i).checked);
+                    const tests=['loopAlarmResult','loopTripResult','loopFailSafeResult','loopHmiResult'].map(id=>document.getElementById(id).value), fail=max>tol||tests.some(x=>x==='FAIL'), complete=checks.every(Boolean)&&document.getElementById('loopMaxError').textContent!=='—'&&tests.every(x=>x==='PASS'||x==='N/A'), result=fail?'FAIL':complete?'PASS':'PENDING';
+                    const labels=[];for(let i=1;i<=10;i++)labels.push((checks[i-1]?'PASS':'OPEN')+' | '+document.getElementById('loopChk'+i).parentElement.textContent.trim());
+                    const content=['INSTRUMENTPRO — ADVANCED LOOP CHECK REPORT','Report ID: IP-LOOP-'+Date.now(),'Date: '+new Date().toLocaleString(),'Status: '+result,'','Tag: '+tag,'Service: '+desc,'System: '+document.getElementById('loopSystem').value,'Signal: '+document.getElementById('loopSignalType').value,'Range: '+document.getElementById('loopLRV').value+' to '+document.getElementById('loopURV').value+' '+document.getElementById('loopUnits').value,'','SIGNAL VERIFICATION','Maximum Error: '+document.getElementById('loopMaxError').textContent,'Tolerance: '+tol+'%','','FUNCTIONAL TESTS','Alarm: '+tests[0],'Trip: '+tests[1],'Fail-Safe: '+tests[2],'HMI/DCS: '+tests[3],'','CHECKLIST'].concat(labels,['','Findings: '+(document.getElementById('loopNotes').value.trim()||'None'),'Technician: '+(document.getElementById('loopTech').value.trim()||'N/A'),'Witness: '+(document.getElementById('loopWitness').value.trim()||'—'),'Final Status: '+document.getElementById('loopFinalStatus').value,'','ENGINEERING ASSESSMENT',result==='PASS'?'All recorded loop checks passed. Complete site acceptance requirements before startup.':result==='FAIL'?'One or more checks failed. Correct the issue and perform a complete retest.':'Testing remains incomplete. Complete all required checks before acceptance.']).join('\n');
+                    document.getElementById('loopCheckPreview').textContent=content;const chip=document.getElementById('loopOverallStatusChip');chip.textContent=result;chip.style.background=result==='PASS'?'#dcfce7':result==='FAIL'?'#fee2e2':'#fef3c7';chip.style.color=result==='PASS'?'#166534':result==='FAIL'?'#991b1b':'#92400e';
                 });
-                const content =
-                    `========================================\nLOOP CHECK SIGN-OFF\n========================================\nTag: ${tag}\nDescription: ${desc}\nDate: ${date}\n----------------------------------------\n${checklist}----------------------------------------\nNotes: ${notes}\nTechnician: ${tech}\nWitness: ${witness}\n========================================\nStatus: ${allChecked ? 'COMPLETE — READY FOR STARTUP' : 'INCOMPLETE — items outstanding'}`;
-                document.getElementById('loopCheckPreview').textContent = content;
-            });
-            document.getElementById('loopCheckExportBtn').addEventListener('click', function() {
-                const content = document.getElementById('loopCheckPreview').textContent;
-                if (content === 'Sign-off sheet will appear here.') { alert('Generate the sign-off sheet first.'); return; }
-                const blob = new Blob([content], { type: 'text/plain' });
-                const a = document.createElement('a');
-                a.href = URL.createObjectURL(blob);
-                a.download = 'LoopCheck_' + (document.getElementById('loopTag').value.trim() || 'tag') + '_' + new Date().toISOString().slice(0, 10) + '.txt';
-                a.click();
-                URL.revokeObjectURL(a.href);
-            });
-            document.getElementById('loopCheckSyncBtn').addEventListener('click', function() {
-                const content = document.getElementById('loopCheckPreview').textContent;
-                if (content === 'Sign-off sheet will appear here.') { alert('Generate the sign-off sheet first.'); return; }
-                window.syncReportToWebhooks({
-                    source: 'InstrumentPro',
-                    type: 'LoopCheck',
-                    timestamp: new Date().toISOString(),
-                    tag: document.getElementById('loopTag').value.trim(),
-                    description: document.getElementById('loopDesc').value.trim(),
-                    signoff: content
-                });
-            });
+                document.getElementById('loopCheckExportBtn').addEventListener('click',function(){const c=document.getElementById('loopCheckPreview').textContent;if(c.startsWith('Advanced loop report'))return alert('Build the loop report first.');const b=new Blob([c],{type:'text/plain'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='LoopCheck_'+(document.getElementById('loopTag').value.trim()||'tag')+'_'+new Date().toISOString().slice(0,10)+'.txt';a.click();URL.revokeObjectURL(a.href);});
+                document.getElementById('loopCheckCsvBtn').addEventListener('click',function(){const rows=[['Point','Expected','Measured','Error','Status']];table.querySelectorAll('tr').forEach(tr=>rows.push(Array.from(tr.querySelectorAll('td')).map(td=>{let x=td.querySelector('input');return x?x.value:td.textContent.trim();})));const csv=rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n'),b=new Blob([csv],{type:'text/csv'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='LoopCheck_measurements.csv';a.click();URL.revokeObjectURL(a.href);});
+                document.getElementById('loopCheckSyncBtn').addEventListener('click',function(){const c=document.getElementById('loopCheckPreview').textContent;if(c.startsWith('Advanced loop report'))return alert('Build the loop report first.');window.syncReportToWebhooks({source:'InstrumentPro',type:'AdvancedLoopCheck',timestamp:new Date().toISOString(),tag:document.getElementById('loopTag').value.trim(),report:c});});
+            })();
 
-            // =============================================================
             // ALARM/TRIP SETPOINT DOCUMENTATION
+
             // =============================================================
             document.getElementById('spGenBtn').addEventListener('click', function() {
                 const tag = document.getElementById('spTag').value.trim() || 'N/A';
@@ -6244,16 +6311,18 @@
             // =============================================================
             // REPORT PAGE MAIN TABS (Field Report / Commissioning)
             // =============================================================
-            document.querySelectorAll('#reportMainTabs .tab').forEach(tab => {
-                tab.addEventListener('click', function() {
-                    document.querySelectorAll('#reportMainTabs .tab').forEach(t => t.classList.remove('active'));
-                    this.classList.add('active');
-                    const rp = this.dataset.report;
+            (function(){
+                const reportModuleSelect = document.getElementById('reportModuleSelect');
+                function showReportModule(rp){
                     document.querySelectorAll('.report-main-panel').forEach(p => p.classList.add('hidden'));
                     const panel = document.getElementById('reportpanel-' + rp);
                     if (panel) panel.classList.remove('hidden');
-                });
-            });
+                }
+                if(reportModuleSelect){
+                    reportModuleSelect.addEventListener('change', function(){ showReportModule(this.value); });
+                    showReportModule(reportModuleSelect.value);
+                }
+            })();
 
             // =============================================================
             // LEVEL MEASUREMENT MAIN TABS (DP / Radar)
@@ -7056,6 +7125,69 @@
     </script>
 
 </div>
+
+
+<script>
+(function(){
+'use strict';
+function rsEsc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function rsId(){return 'IP-'+new Date().getFullYear()+'-'+String(Date.now()).slice(-8);}
+var rsCurrent=null;
+function rsVals(){
+  var ids=['reportTag','reportModel','rsManufacturer','rsSerial','rsLocation','rsTechnician','reportType','rsRange','rsUnit','reportTolerance','rsReference','rsWorkOrder','rsObservations','rsRootCause','rsCorrective','rsVerification','rsTechSign','rsSupervisor'];
+  var o={}; ids.forEach(function(id){var e=document.getElementById(id);o[id]=e?e.value:'';});
+  o.measurements=[0,25,50,75,100].map(function(p){var e=document.getElementById('rp'+p);return {point:p,actual:e?parseFloat(e.value):null};});
+  return o;
+}
+function rsCalc(o){
+  var tol=parseFloat(o.reportTolerance)||2, max=0, entered=0;
+  o.measurements.forEach(function(m){if(Number.isFinite(m.actual)){entered++;m.error=Math.abs(m.actual-m.point);m.errorPct=m.error; if(m.errorPct>max)max=m.errorPct;}});
+  return {tol:tol,max:max,entered:entered,pass:entered===5 && max<=tol};
+}
+function rsQuality(o,c){
+  var checks=[['Tag',o.reportTag],['Model',o.reportModel],['Manufacturer',o.rsManufacturer],['Serial',o.rsSerial],['Location',o.rsLocation],['Technician',o.rsTechnician],['Range',o.rsRange],['Reference standard',o.rsReference],['Work order',o.rsWorkOrder],['Measurements',c.entered===5],['Observations',o.rsObservations],['Corrective action',o.rsCorrective],['Verification',o.rsVerification],['Technician signature',o.rsTechSign]];
+  var done=checks.filter(function(x){return x[1]!=='' && x[1]!==false;}).length; return {pct:Math.round(done/checks.length*100),checks:checks};
+}
+function rsDraw(o,c){
+  var cv=document.getElementById('rsCalibrationChart');if(!cv)return;var ctx=cv.getContext('2d'),w=cv.clientWidth||600,h=180,d=devicePixelRatio||1;cv.width=w*d;cv.height=h*d;ctx.scale(d,d);ctx.clearRect(0,0,w,h);
+  var pad={l:38,r:12,t:14,b:28};ctx.strokeStyle='#cbd5e1';ctx.lineWidth=1;for(var i=0;i<=4;i++){var y=pad.t+(h-pad.t-pad.b)*i/4;ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(w-pad.r,y);ctx.stroke();}
+  ctx.fillStyle='#64748b';ctx.font='10px sans-serif';ctx.fillText('100',4,pad.t+4);ctx.fillText('0',18,h-pad.b+3);ctx.fillText('Actual vs ideal (%)',pad.l,11);
+  function x(p){return pad.l+(w-pad.l-pad.r)*p/100} function y(v){return pad.t+(h-pad.t-pad.b)*(100-v)/100}
+  ctx.setLineDash([5,4]);ctx.strokeStyle='#94a3b8';ctx.beginPath();[0,25,50,75,100].forEach(function(p,i){i?ctx.lineTo(x(p),y(p)):ctx.moveTo(x(p),y(p));});ctx.stroke();ctx.setLineDash([]);
+  ctx.strokeStyle=c.pass?'#16a34a':'#dc2626';ctx.lineWidth=2;ctx.beginPath();o.measurements.forEach(function(m,i){var v=Number.isFinite(m.actual)?m.actual:null;if(v==null)return;i?ctx.lineTo(x(m.point),y(v)):ctx.moveTo(x(m.point),y(v));});ctx.stroke();
+  o.measurements.forEach(function(m){if(!Number.isFinite(m.actual))return;ctx.fillStyle=Math.abs(m.actual-m.point)<=c.tol?'#16a34a':'#dc2626';ctx.beginPath();ctx.arc(x(m.point),y(m.actual),4,0,Math.PI*2);ctx.fill();});
+  ctx.fillStyle='#64748b';[0,25,50,75,100].forEach(function(p){ctx.fillText(p+'%',x(p)-8,h-8);});
+}
+function rsRender(){
+ var o=rsVals(),c=rsCalc(o),q=rsQuality(o,c); if(!rsCurrent){rsCurrent={id:rsId(),rev:1,status:'DRAFT',created:new Date().toISOString()};}
+ rsCurrent=Object.assign(rsCurrent,o,{calculation:c,quality:q,updated:new Date().toISOString()});
+ var set=function(id,v){var e=document.getElementById(id);if(e)e.textContent=v;};
+ set('rsReportId',rsCurrent.id);set('rsResultKpi',c.entered<5?'PENDING':(c.pass?'PASS':'FAIL'));set('rsMaxErrorKpi',c.entered?c.max.toFixed(2)+'%':'—');set('rsQualityKpi',q.pct+'%');set('rsQualityText',q.pct+'%');set('rsToleranceChip','Tolerance: '+c.tol+'%');
+ var st=document.getElementById('rsStatusText');st.textContent=c.entered<5?'PENDING':(c.pass?'PASS':'FAIL');st.className=c.entered<5?'rs-pending':(c.pass?'rs-pass':'rs-fail');
+ document.getElementById('rsQualityBar').style.width=q.pct+'%';
+ document.getElementById('rsQualityList').innerHTML=q.checks.map(function(x){return (x[1]!==''&&x[1]!==false)?'🟢 '+rsEsc(x[0]):'🔴 '+rsEsc(x[0]);}).join('<br>');
+ var a=c.entered<5?'Complete all five calibration points to generate a final assessment.':(c.pass?'Calibration passed. Maximum deviation is '+c.max.toFixed(2)+'%, within the allowable tolerance of '+c.tol+'%. Instrument performance is acceptable based on the recorded points. Recommended action: return to service after normal verification.':'Calibration failed. Maximum deviation is '+c.max.toFixed(2)+'%, exceeding the allowable tolerance of '+c.tol+'%. Recommended action: investigate sensor, configuration, wiring and calibration adjustment, then repeat the test before returning to service.');
+ document.getElementById('rsAssessment').textContent=a; rsDraw(o,c);
+ var preview='<div style="font-family:Arial,sans-serif;color:#172033;background:#fff;padding:18px;border-radius:10px;max-width:820px;margin:auto;">'+
+ '<div style="display:flex;justify-content:space-between;border-bottom:2px solid #1e3a5f;padding-bottom:10px;"><div><div style="font-size:11px;color:#64748b;letter-spacing:1px;">INSTRUMENTPRO</div><h2 style="margin:3px 0;">'+rsEsc((o.reportType||'Calibration').toUpperCase())+' REPORT</h2><div style="font-size:11px;color:#64748b;">'+rsEsc(rsCurrent.id)+' • REV '+rsCurrent.rev+'</div></div><div style="font-size:20px;font-weight:800;color:'+(c.entered<5?'#b45309':c.pass?'#15803d':'#b91c1c')+';">'+(c.entered<5?'PENDING':c.pass?'PASS':'FAIL')+'</div></div>'+
+ '<table style="width:100%;font-size:12px;margin:12px 0;border-collapse:collapse;"><tr><td><b>Tag</b><br>'+rsEsc(o.reportTag||'—')+'</td><td><b>Model</b><br>'+rsEsc(o.reportModel||'—')+'</td><td><b>Manufacturer</b><br>'+rsEsc(o.rsManufacturer||'—')+'</td></tr><tr><td><b>Serial</b><br>'+rsEsc(o.rsSerial||'—')+'</td><td><b>Location</b><br>'+rsEsc(o.rsLocation||'—')+'</td><td><b>Technician</b><br>'+rsEsc(o.rsTechnician||'—')+'</td></tr></table>'+
+ '<h3 style="font-size:14px;border-bottom:1px solid #ddd;padding-bottom:5px;">Calibration Results</h3><table style="width:100%;border-collapse:collapse;font-size:11px;"><tr><th style="text-align:left">Point</th><th>Reference</th><th>Actual</th><th>Error</th><th>Status</th></tr>'+o.measurements.map(function(m){var ok=Number.isFinite(m.actual)&&Math.abs(m.actual-m.point)<=c.tol;return '<tr><td style="padding:5px;border-bottom:1px solid #eee;">'+m.point+'%</td><td style="text-align:center;border-bottom:1px solid #eee;">'+m.point.toFixed(2)+'</td><td style="text-align:center;border-bottom:1px solid #eee;">'+(Number.isFinite(m.actual)?m.actual.toFixed(2):'—')+'</td><td style="text-align:center;border-bottom:1px solid #eee;">'+(Number.isFinite(m.actual)?Math.abs(m.actual-m.point).toFixed(2)+'%':'—')+'</td><td style="text-align:center;border-bottom:1px solid #eee;color:'+(ok?'#15803d':'#b91c1c')+';font-weight:bold;">'+(Number.isFinite(m.actual)?(ok?'PASS':'FAIL'):'—')+'</td></tr>';}).join('')+'</table>'+
+ '<div style="margin-top:12px;padding:10px;background:#f8fafc;border-left:4px solid #1e3a5f;font-size:11px;"><b>Engineering Assessment</b><br>'+rsEsc(a)+'</div>'+
+ '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;font-size:11px;"><div><b>Observations</b><br>'+rsEsc(o.rsObservations||'—')+'<br><br><b>Root Cause</b><br>'+rsEsc(o.rsRootCause||'—')+'</div><div><b>Corrective Action</b><br>'+rsEsc(o.rsCorrective||'—')+'<br><br><b>Verification</b><br>'+rsEsc(o.rsVerification||'—')+'</div></div>'+
+ '<div style="margin-top:16px;border-top:1px solid #ddd;padding-top:10px;font-size:10px;color:#64748b;">Reference standard: '+rsEsc(o.rsReference||'—')+' • Work order: '+rsEsc(o.rsWorkOrder||'—')+' • Issued status: '+rsEsc(rsCurrent.status)+'</div></div>';
+ document.getElementById('reportPreview').innerHTML=preview;
+}
+function rsDownload(name,data,type){var b=new Blob([data],{type:type}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(u);}
+function rsHistory(){var arr=JSON.parse(localStorage.getItem('instrumentpro_reports')||'[]'),el=document.getElementById('rsHistory');if(!arr.length){el.textContent='No reports issued yet.';return;}el.innerHTML=arr.slice().reverse().map(function(r){return '<div class="rs-history-item"><div><b>'+rsEsc(r.id)+'</b><br><small>'+rsEsc(r.tag||'Untagged')+' • '+rsEsc(r.type||'Report')+'</small></div><div style="text-align:right"><b class="'+(r.result==='PASS'?'rs-pass':r.result==='FAIL'?'rs-fail':'rs-pending')+'">'+rsEsc(r.result)+'</b><br><small>'+new Date(r.date).toLocaleString()+'</small></div></div>';}).join('');}
+function rsIssue(){rsRender();if(!rsCurrent.calculation || rsCurrent.calculation.entered<5){alert('Complete all five calibration measurements before issuing the report.');return;}if(!rsCurrent.rsTechSign){alert('Enter the technician signature/name before issuing.');return;}rsCurrent.status='ISSUED';rsCurrent.issued=new Date().toISOString();var arr=JSON.parse(localStorage.getItem('instrumentpro_reports')||'[]');arr.push({id:rsCurrent.id,tag:rsCurrent.reportTag,type:rsCurrent.reportType,result:rsCurrent.calculation.pass?'PASS':'FAIL',date:rsCurrent.issued,revision:rsCurrent.rev});localStorage.setItem('instrumentpro_reports',JSON.stringify(arr.slice(-50)));rsRender();rsHistory();alert('Report '+rsCurrent.id+' issued successfully.');}
+function rsExport(){rsRender();var html='<!doctype html><html><head><meta charset="utf-8"><title>'+rsEsc(rsCurrent.id)+'</title><style>body{font-family:Arial;margin:30px}table{width:100%}td,th{padding:6px;border-bottom:1px solid #ddd}<style>.loop-check-item{display:flex;align-items:center;gap:7px;padding:7px 8px;border:1px solid #e2e8f0;border-radius:9px;background:#f8fafc;font-size:.67rem}.loop-check-item input{width:auto!important;flex:none}#loopSignalTable input{min-width:58px;width:72px;padding:5px;font-size:.65rem}#loopSignalTable td{padding:5px 4px;font-size:.62rem}#loopOverallStatusChip{font-size:.55rem;padding:3px 7px;border-radius:999px;background:#e2e8f0;color:#475569}</style></style></head><body>'+document.getElementById('reportPreview').innerHTML+'</body></html>';rsDownload(rsCurrent.id+'.html',html,'text/html');}
+function rsJson(){rsRender();rsDownload(rsCurrent.id+'.json',JSON.stringify(rsCurrent,null,2),'application/json');}
+function rsCsv(){rsRender();var c=rsCurrent.calculation,rows=['Report ID,Tag,Point,Actual,Error %,Tolerance %,Result'];rsCurrent.measurements.forEach(function(m){rows.push([rsCurrent.id,rsCurrent.reportTag,m.point,m.actual,Number.isFinite(m.actual)?Math.abs(m.actual-m.point).toFixed(3):'',c.tol,Number.isFinite(m.actual)?(Math.abs(m.actual-m.point)<=c.tol?'PASS':'FAIL'):''].map(function(v){return '"'+String(v==null?'':v).replace(/"/g,'""')+'"';}).join(','));});rsDownload(rsCurrent.id+'.csv',rows.join('\n'),'text/csv');}
+function rsSync(){rsRender();if(typeof window.syncReportToWebhooks==='function')window.syncReportToWebhooks({source:'InstrumentPro',type:'AdvancedReport',report:rsCurrent});else alert('Report sync is not configured yet.');}
+function init(){['reportTag','reportModel','rsManufacturer','rsSerial','rsLocation','rsTechnician','reportType','rsRange','rsUnit','reportTolerance','rsReference','rsWorkOrder','rsObservations','rsRootCause','rsCorrective','rsVerification','rsTechSign','rsSupervisor','rp0','rp25','rp50','rp75','rp100'].forEach(function(id){var e=document.getElementById(id);if(e)e.addEventListener('input',rsRender);});document.getElementById('generateReportBtn').addEventListener('click',rsRender);document.getElementById('rsIssueBtn').addEventListener('click',rsIssue);document.getElementById('rsPrintBtn').addEventListener('click',function(){rsRender();var w=window.open('','_blank');if(!w){alert('Allow pop-ups to print the report.');return;}w.document.write('<html><head><title>'+rsCurrent.id+'</title></head><body>'+document.getElementById('reportPreview').innerHTML+'</body></html>');w.document.close();w.focus();w.print();});document.getElementById('exportReportBtn').addEventListener('click',rsExport);document.getElementById('rsJsonBtn').addEventListener('click',rsJson);document.getElementById('rsCsvBtn').addEventListener('click',rsCsv);document.getElementById('syncReportBtn').addEventListener('click',rsSync);rsHistory();rsRender();}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script>
 
 </body>
 </html>
