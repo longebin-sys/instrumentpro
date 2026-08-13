@@ -4836,16 +4836,32 @@ body.dark .trouble-dialog{background:#111827}.dark .trouble-dialog-title,.dark .
                 splashStatus.textContent = splashMessages[splashMsgIndex];
             }, 600);
 
-            const splashMinDelay = new Promise(function(resolve) { setTimeout(resolve, 1100); });
-            const pageFullyLoaded = new Promise(function(resolve) {
-                if (document.readyState === 'complete') resolve();
-                else window.addEventListener('load', resolve);
-            });
-            Promise.all([splashMinDelay, pageFullyLoaded]).then(function() {
+            // Reveal the app after the first paint instead of waiting for every external
+            // resource. Optional features must never block startup.
+            function hideSplash() {
+                if (!splashScreen || splashScreen.classList.contains('fade-out')) return;
                 clearInterval(splashMsgInterval);
                 splashScreen.classList.add('fade-out');
                 setTimeout(function() { splashScreen.style.display = 'none'; }, 550);
-            });
+            }
+            requestAnimationFrame(hideSplash);
+            setTimeout(hideSplash, 1800); // fail-safe
+
+            // OCR is optional; load the large library only when the user scans a tag.
+            let tesseractPromise = null;
+            function loadTesseract() {
+                if (window.Tesseract) return Promise.resolve(window.Tesseract);
+                if (tesseractPromise) return tesseractPromise;
+                tesseractPromise = new Promise(function(resolve, reject) {
+                    const script = document.createElement('script');
+                    script.src = 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';
+                    script.async = true;
+                    script.onload = function() { resolve(window.Tesseract); };
+                    script.onerror = function() { tesseractPromise = null; reject(new Error('OCR library could not be loaded')); };
+                    document.head.appendChild(script);
+                });
+                return tesseractPromise;
+            }
 
             // =============================================================
             // PAGE NAVIGATION
@@ -7210,13 +7226,8 @@ body.dark .trouble-dialog{background:#111827}.dark .trouble-dialog-title,.dark .
                     preview.innerHTML =
                         `<div class="scanner-preview"><img src="${e.target.result}" style="max-width:100%;max-height:120px;border-radius:12px;" /><div class="scan-result">🔍 Reading text (OCR)...</div></div>`;
 
-                    if (typeof Tesseract === 'undefined') {
-                        document.querySelector('.scan-result').textContent = '⚠️ OCR engine unavailable (offline?). Enter tag manually.';
-                        document.querySelector('.scan-result').style.color = '#dc2626';
-                        return;
-                    }
-
-                    Tesseract.recognize(e.target.result, 'eng')
+                    loadTesseract()
+                        .then(function(Tesseract) { return Tesseract.recognize(e.target.result, 'eng'); })
                         .then(function(result) {
                             const rawText = (result.data.text || '').trim();
                             // Look for a typical instrument tag pattern, e.g. FT-1001, PT203, TT-450
@@ -7581,7 +7592,7 @@ body.dark .trouble-dialog{background:#111827}.dark .trouble-dialog-title,.dark .
                           '<div class="fn-note-top">'+
                           '<div><div class="fn-note-tags"><span class="badge" style="background:'+colors[n.priority]+';color:'+fg[n.priority]+';">'+esc(n.priority)+'</span><span class="badge" style="background:#f1f5f9;color:#334155;">'+esc(n.category)+'</span><span class="badge" style="background:#f1f5f9;color:#334155;">'+esc(n.status)+'</span></div>'+ 
                           '<div class="fn-note-title">'+esc(n.tag||'Unassigned asset')+(n.location?' · '+esc(n.location):'')+'</div>'+ 
-                          '<div class="fn-note-meta">'+fmt(n.ts)+' · '+esc(n.discipline)++(n.dueDate?' · Due '+esc(n.dueDate):'')+(overdue?' · <b style="color:#dc2626;">OVERDUE</b>':'')+'</div></div>'+ 
+                          '<div class="fn-note-meta">'+fmt(n.ts)+' · '+esc(n.discipline)+(n.dueDate?' · Due '+esc(n.dueDate):'')+(overdue?' · <b style="color:#dc2626;">OVERDUE</b>':'')+'</div></div>'+ 
                           '<div style="display:flex;gap:4px;"><button class="btn-outline btn fn-report" data-id="'+n.id+'" title="Report"><i class="fas fa-file-alt"></i></button><button class="btn-outline btn fn-delete" data-id="'+n.id+'" title="Delete"><i class="fas fa-trash"></i></button></div></div>'+ 
                           '<div class="fn-note-body">'+esc(n.text)+'</div>'+ 
                           
