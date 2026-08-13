@@ -1915,6 +1915,202 @@ body.dark .comm-section-title small{color:#94a3b8;}
     html,body{overflow-x:hidden;}
 .page,.report-main-panel{min-width:0;}
 </style>
+
+<style id="instrumentpro-mobile-fix">
+/* ===== InstrumentPro mobile/report fixes ===== */
+html, body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden !important;
+}
+body {
+  min-width: 0 !important;
+}
+.app-shell,
+.page-container,
+.page,
+.report-main-panel,
+.report-studio,
+.rs-grid,
+.rs-section,
+.comm-section,
+.comm-preview {
+  min-width: 0 !important;
+  max-width: 100% !important;
+}
+.page-container {
+  overflow-x: hidden !important;
+  -webkit-overflow-scrolling: touch;
+}
+.card,
+.rs-section,
+.comm-section,
+.report-preview,
+.comm-preview {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+.row {
+  min-width: 0 !important;
+}
+.row > label {
+  flex: 0 0 auto;
+  max-width: 100%;
+}
+.row > input,
+.row > select,
+.row > textarea,
+.row > .custom-select-wrap {
+  min-width: 0 !important;
+  max-width: 100% !important;
+  flex: 1 1 180px;
+}
+.rs-actions {
+  min-width: 0;
+}
+.rs-actions .btn,
+.comm-actions .btn {
+  min-width: 0 !important;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.report-preview {
+  overflow-x: auto !important;
+  -webkit-overflow-scrolling: touch;
+}
+.report-preview table,
+.comm-preview table,
+.cert-block table {
+  max-width: 100% !important;
+  overflow-x: auto;
+}
+.report-preview table {
+  display: block;
+  width: 100% !important;
+}
+.report-preview td,
+.report-preview th,
+.comm-preview td,
+.comm-preview th {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+.report-preview [style*="grid-template-columns"] {
+  display: block !important;
+}
+.report-preview [style*="display:flex"] {
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+}
+.report-preview [style*="display:flex"] > * {
+  min-width: 0 !important;
+  max-width: 100% !important;
+}
+#reportpanel-commissioning {
+  overflow-x: hidden !important;
+}
+#reportpanel-commissioning .comm-hero,
+#reportpanel-commissioning .comm-kpis,
+#reportpanel-commissioning .comm-grid,
+#reportpanel-commissioning .comm-check-grid,
+#reportpanel-commissioning .comm-test-grid,
+#reportpanel-commissioning .comm-actions,
+#reportpanel-commissioning .comm-preview {
+  min-width: 0 !important;
+  max-width: 100% !important;
+}
+#reportpanel-commissioning .comm-kpis {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+}
+#reportpanel-commissioning .comm-grid input,
+#reportpanel-commissioning .comm-grid select,
+#reportpanel-commissioning textarea {
+  min-width: 0 !important;
+  max-width: 100% !important;
+}
+#reportpanel-commissioning .comm-preview {
+  overflow-x: auto !important;
+}
+#reportpanel-commissioning .comm-preview table {
+  min-width: 0 !important;
+  width: 100% !important;
+}
+@media (max-width: 420px) {
+  .app-shell { width: 100% !important; }
+  .page-container { padding-left: 0 !important; padding-right: 0 !important; }
+  .card { margin-left: 8px !important; margin-right: 8px !important; }
+  .rs-grid { grid-template-columns: 1fr !important; }
+  .rs-full { grid-column: auto !important; }
+  .rs-actions { grid-template-columns: 1fr !important; }
+  .rs-actions .btn { width: 100% !important; }
+  .rs-stepper { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  .rs-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  .comm-grid,
+  .comm-test-grid,
+  .comm-check-grid {
+    grid-template-columns: 1fr !important;
+  }
+  #reportpanel-commissioning .comm-actions {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+  }
+  #reportpanel-commissioning .comm-actions .btn {
+    width: 100% !important;
+  }
+  .comm-hero h3 {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+}
+@media (max-width: 350px) {
+  .rs-kpis { grid-template-columns: 1fr !important; }
+  .rs-stepper { grid-template-columns: 1fr !important; }
+  .greeting { margin-left: 8px !important; margin-right: 8px !important; }
+}
+</style>
+
+
+<style id="instrumentpro-commissioning-test-fix">
+/* Functional/Test Records: prevent native selects from exceeding their grid cell. */
+#reportpanel-commissioning .comm-test-grid{
+  display:grid !important;
+  grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  width:100% !important;
+  max-width:100% !important;
+  min-width:0 !important;
+  overflow:hidden !important;
+}
+#reportpanel-commissioning .comm-test-grid > select{
+  display:block !important;
+  width:100% !important;
+  max-width:100% !important;
+  min-width:0 !important;
+  box-sizing:border-box !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+  white-space:nowrap !important;
+}
+#reportpanel-commissioning .comm-test-grid > select option{
+  max-width:100%;
+}
+@media(max-width:900px){
+  #reportpanel-commissioning .comm-test-grid{
+    grid-template-columns:1fr !important;
+  }
+}
+@media(max-width:520px){
+  #reportpanel-commissioning .comm-test-grid{
+    grid-template-columns:1fr !important;
+    gap:8px !important;
+  }
+  #reportpanel-commissioning .comm-test-grid > select{
+    min-height:42px !important;
+    font-size:.68rem !important;
+  }
+}
+</style>
 </head>
 <body>
 
@@ -6794,68 +6990,9 @@ body.dark .comm-section-title small{color:#94a3b8;}
 
             // =============================================================
             // REPORT GENERATOR
-            // =============================================================
-            const reportTag = document.getElementById('reportTag');
-            const reportModel = document.getElementById('reportModel');
-            const reportType = document.getElementById('reportType');
-            const reportNotes = document.getElementById('reportNotes');
-            const generateReportBtn = document.getElementById('generateReportBtn');
-            const reportPreview = document.getElementById('reportPreview');
-            const exportReportBtn = document.getElementById('exportReportBtn');
-
-            const reportTolerance = document.getElementById('reportTolerance');
-
-            generateReportBtn.addEventListener('click', function() {
-                const tag = reportTag.value.trim() || 'N/A';
-                const model = reportModel.value.trim() || 'N/A';
-                const type = reportType.value;
-                const notes = reportNotes.value.trim() || 'No additional notes.';
-                const date = new Date().toLocaleString();
-                let calValues = '';
-                let statusLine = 'COMPLETED — see notes';
-                if (type === 'calibration') {
-                    const expected = { rp0: 0, rp25: 25, rp50: 50, rp75: 75, rp100: 100 };
-                    const tol = parseFloat(reportTolerance.value) || 2;
-                    let maxDev = 0;
-                    const lines = Object.keys(expected).map(id => {
-                        const actual = parseFloat(document.getElementById(id).value) || 0;
-                        const dev = Math.abs(actual - expected[id]);
-                        if (dev > maxDev) maxDev = dev;
-                        return `  ${expected[id]}%: ${actual} (deviation ${dev.toFixed(2)}%)`;
-                    });
-                    calValues = `Calibration Points:\n` + lines.join('\n');
-                    statusLine = maxDev <= tol ? `PASS ✓ (max deviation ${maxDev.toFixed(2)}% ≤ ${tol}% tolerance)` : `FAIL ✗ (max deviation ${maxDev.toFixed(2)}% > ${tol}% tolerance)`;
-                }
-                reportPreview.textContent =
-                    `========================================\nINSTRUMENTPRO FIELD REPORT\n========================================\nDate: ${date}\nTag: ${tag}\nModel: ${model}\nType: ${type.toUpperCase()}\n----------------------------------------\n${calValues}\nFINDINGS:\n${notes}\n----------------------------------------\nStatus: ${statusLine}\n========================================`;
-            });
-
-            exportReportBtn.addEventListener('click', function() {
-                const text = reportPreview.textContent;
-                if (!text || text === 'Report will appear here.') { alert('Generate a report first.'); return; }
-                const blob = new Blob([text], { type: 'text/plain' });
-                const a = document.createElement('a');
-                a.href = URL.createObjectURL(blob);
-                a.download = 'InstrumentPro_Report_' + new Date().toISOString().slice(0, 10) + '.txt';
-                a.click();
-                URL.revokeObjectURL(a.href);
-            });
-
-            document.getElementById('syncReportBtn').addEventListener('click', function() {
-                const text = reportPreview.textContent;
-                if (!text || text === 'Report will appear here.') { alert('Generate a report first.'); return; }
-                window.syncReportToWebhooks({
-                    source: 'InstrumentPro',
-                    type: 'FieldReport',
-                    timestamp: new Date().toISOString(),
-                    tag: reportTag.value.trim(),
-                    model: reportModel.value.trim(),
-                    reportType: reportType.value,
-                    report: text
-                });
-            });
-
-            // =============================================================
+            // Advanced Report Studio is initialized by the dedicated
+            // script at the end of this file. The old generator was
+            // removed because it referenced a deleted reportNotes field.
             // SETTINGS
             // =============================================================
             const textSizeRange = document.getElementById('textSizeRange');
@@ -7266,7 +7403,7 @@ function rsRender(){
 function rsDownload(name,data,type){var b=new Blob([data],{type:type}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(u);}
 function rsHistory(){var arr=JSON.parse(localStorage.getItem('instrumentpro_reports')||'[]'),el=document.getElementById('rsHistory');if(!arr.length){el.textContent='No reports issued yet.';return;}el.innerHTML=arr.slice().reverse().map(function(r){return '<div class="rs-history-item"><div><b>'+rsEsc(r.id)+'</b><br><small>'+rsEsc(r.tag||'Untagged')+' • '+rsEsc(r.type||'Report')+'</small></div><div style="text-align:right"><b class="'+(r.result==='PASS'?'rs-pass':r.result==='FAIL'?'rs-fail':'rs-pending')+'">'+rsEsc(r.result)+'</b><br><small>'+new Date(r.date).toLocaleString()+'</small></div></div>';}).join('');}
 function rsIssue(){rsRender();if(!rsCurrent.calculation || rsCurrent.calculation.entered<5){alert('Complete all five calibration measurements before issuing the report.');return;}if(!rsCurrent.rsTechSign){alert('Enter the technician signature/name before issuing.');return;}rsCurrent.status='ISSUED';rsCurrent.issued=new Date().toISOString();var arr=JSON.parse(localStorage.getItem('instrumentpro_reports')||'[]');arr.push({id:rsCurrent.id,tag:rsCurrent.reportTag,type:rsCurrent.reportType,result:rsCurrent.calculation.pass?'PASS':'FAIL',date:rsCurrent.issued,revision:rsCurrent.rev});localStorage.setItem('instrumentpro_reports',JSON.stringify(arr.slice(-50)));rsRender();rsHistory();alert('Report '+rsCurrent.id+' issued successfully.');}
-function rsExport(){rsRender();var html='<!doctype html><html><head><meta charset="utf-8"><title>'+rsEsc(rsCurrent.id)+'</title><style>body{font-family:Arial;margin:30px}table{width:100%}td,th{padding:6px;border-bottom:1px solid #ddd}<style>.loop-check-item{display:flex;align-items:center;gap:7px;padding:7px 8px;border:1px solid #e2e8f0;border-radius:9px;background:#f8fafc;font-size:.67rem}.loop-check-item input{width:auto!important;flex:none}#loopSignalTable input{min-width:58px;width:72px;padding:5px;font-size:.65rem}#loopSignalTable td{padding:5px 4px;font-size:.62rem}#loopOverallStatusChip{font-size:.55rem;padding:3px 7px;border-radius:999px;background:#e2e8f0;color:#475569}</style></style></head><body>'+document.getElementById('reportPreview').innerHTML+'</body></html>';rsDownload(rsCurrent.id+'.html',html,'text/html');}
+function rsExport(){rsRender();var html='<!doctype html><html><head><meta charset="utf-8"><title>'+rsEsc(rsCurrent.id)+'</title><style>body{font-family:Arial;margin:30px}table{width:100%;border-collapse:collapse}td,th{padding:6px;border-bottom:1px solid #ddd}.loop-check-item{display:flex;align-items:center;gap:7px;padding:7px 8px;border:1px solid #e2e8f0;border-radius:9px;background:#f8fafc;font-size:.67rem}.loop-check-item input{width:auto!important;flex:none}#loopSignalTable input{min-width:58px;width:72px;padding:5px;font-size:.65rem}#loopSignalTable td{padding:5px 4px;font-size:.62rem}#loopOverallStatusChip{font-size:.55rem;padding:3px 7px;border-radius:999px;background:#e2e8f0;color:#475569}</style></head><body>'+document.getElementById('reportPreview').innerHTML+'</body></html>';rsDownload(rsCurrent.id+'.html',html,'text/html');}
 function rsJson(){rsRender();rsDownload(rsCurrent.id+'.json',JSON.stringify(rsCurrent,null,2),'application/json');}
 function rsCsv(){rsRender();var c=rsCurrent.calculation,rows=['Report ID,Tag,Point,Actual,Error %,Tolerance %,Result'];rsCurrent.measurements.forEach(function(m){rows.push([rsCurrent.id,rsCurrent.reportTag,m.point,m.actual,Number.isFinite(m.actual)?Math.abs(m.actual-m.point).toFixed(3):'',c.tol,Number.isFinite(m.actual)?(Math.abs(m.actual-m.point)<=c.tol?'PASS':'FAIL'):''].map(function(v){return '"'+String(v==null?'':v).replace(/"/g,'""')+'"';}).join(','));});rsDownload(rsCurrent.id+'.csv',rows.join('\n'),'text/csv');}
 function rsSync(){rsRender();if(typeof window.syncReportToWebhooks==='function')window.syncReportToWebhooks({source:'InstrumentPro',type:'AdvancedReport',report:rsCurrent});else alert('Report sync is not configured yet.');}
