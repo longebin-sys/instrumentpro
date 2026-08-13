@@ -1797,7 +1797,7 @@ body.dark .report-selector{background:#0f172a;border-color:#334155}.report-studi
 .rs-hero h3{margin:0 0 3px;font-size:.9rem}.rs-hero p{margin:0;color:#cbd5e1;font-size:.6rem}
 .rs-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;margin-top:8px}.rs-kpi{min-width:0;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.12);border-radius:9px;padding:6px}.rs-kpi b{display:block;font-size:.72rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rs-kpi span{font-size:.48rem;color:#cbd5e1}
 .rs-stepper{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:3px;margin:7px 0}.rs-step{padding:5px 2px;text-align:center;border-radius:7px;background:#f1f5f9;color:#64748b;font-size:.48rem;font-weight:700;white-space:nowrap;overflow:hidden}.rs-step.active{background:#1e3a5f;color:#fff}
-.rs-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:6px}.rs-section{min-width:0;border:1px solid #e2e8f0;border-radius:11px;padding:8px;background:#fff;overflow:hidden}.rs-section h4{margin:0 0 7px;font-size:.68rem;color:#1e293b}.rs-full{grid-column:1/-1}.rs-status{display:flex;align-items:center;justify-content:space-between;padding:7px 9px;border-radius:9px;background:#f8fafc;margin-bottom:6px}.rs-status strong{font-size:.88rem}.rs-table{width:100%;border-collapse:collapse;font-size:.58rem}.rs-table th,.rs-table td{padding:4px 3px;border-bottom:1px solid #e2e8f0;text-align:right}.rs-table th:first-child,.rs-table td:first-child{text-align:left}.rs-chart{width:100%;height:130px;background:#f8fafc;border-radius:9px;border:1px solid #e2e8f0;display:block}.rs-analysis{background:#f8fafc;border-left:3px solid #1e3a5f;padding:7px;border-radius:7px;line-height:1.4;font-size:.6rem;word-break:break-word}.rs-quality{height:6px;background:#e2e8f0;border-radius:99px;overflow:hidden}.rs-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}.rs-history{max-height:170px;overflow:auto}.rs-history-item{padding:6px;border-bottom:1px solid #e2e8f0;display:flex;justify-content:space-between;gap:6px;font-size:.62rem}.rs-chip{display:inline-flex;padding:2px 6px;border-radius:99px;background:#eef2ff;color:#3730a3;font-size:.5rem;font-weight:700}
+.rs-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:6px}.rs-section{min-width:0;border:1px solid #e2e8f0;border-radius:11px;padding:8px;background:#fff;overflow:hidden}.rs-section h4{margin:0 0 7px;font-size:.68rem;color:#1e293b}.rs-full{grid-column:1/-1}.rs-status{display:flex;align-items:center;justify-content:space-between;padding:7px 9px;border-radius:9px;background:#f8fafc;margin-bottom:6px}.rs-status strong{font-size:.88rem}.rs-table{width:100%;border-collapse:collapse;font-size:.58rem}.rs-table th,.rs-table td{padding:4px 3px;border-bottom:1px solid #e2e8f0;text-align:right}.rs-table th:first-child,.rs-table td:first-child{text-align:left}.rs-chart{width:100%;height:130px;background:#f8fafc;border-radius:9px;border:1px solid #e2e8f0;display:block}.rs-analysis{background:#f8fafc;border-left:3px solid #1e3a5f;padding:7px;border-radius:7px;line-height:1.4;font-size:.6rem;word-break:break-word}.rs-quality{height:6px;background:#e2e8f0;border-radius:99px;overflow:hidden}.rs-quality #rsQualityBar,.rs-quality i{display:block;height:100%;width:0;background:#2563eb;border-radius:99px;transition:width .25s ease}.rs-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}.rs-history{max-height:170px;overflow:auto}.rs-history-item{padding:6px;border-bottom:1px solid #e2e8f0;display:flex;justify-content:space-between;gap:6px;font-size:.62rem}.rs-chip{display:inline-flex;padding:2px 6px;border-radius:99px;background:#eef2ff;color:#3730a3;font-size:.5rem;font-weight:700}
 .report-preview{width:100%;max-width:100%!important;box-sizing:border-box;overflow:hidden;word-break:break-word}
 .report-preview>div{max-width:100%!important;box-sizing:border-box}
 body.dark .rs-section{background:#111827;border-color:#334155}body.dark .rs-section h4{color:#e2e8f0}body.dark .rs-step{background:#1e293b;color:#94a3b8}body.dark .rs-status,body.dark .rs-analysis,body.dark .rs-chart{background:#0f172a;border-color:#334155}body.dark .rs-table th,body.dark .rs-table td{border-color:#334155}body.dark .rs-history-item{border-color:#334155}
@@ -7112,10 +7112,13 @@ body.dark .sidebar .nav-section-label{color:#64748b;}
             const troubleDevice = document.getElementById('troubleDevice');
             const troubleOutput = document.getElementById('troubleOutput');
             function renderTroubleDevice() {
+                if (!troubleDevice || !troubleOutput) return;
                 troubleOutput.innerHTML = troubleDeviceData[troubleDevice.value] || '';
             }
-            troubleDevice.addEventListener('change', renderTroubleDevice);
-            renderTroubleDevice();
+            if (troubleDevice) {
+                troubleDevice.addEventListener('change', renderTroubleDevice);
+                renderTroubleDevice();
+            }
 
             const faultDB = {
                 '4ma': '🔍 Stuck at 4mA:\n1. Check power supply\n2. Verify loop wiring\n3. Inspect sensor\n4. Check configuration\n5. Perform loop test',
@@ -7128,17 +7131,21 @@ body.dark .sidebar .nav-section-label{color:#64748b;}
             };
 
             const faultSelect = document.getElementById('faultSelect');
-            faultSelect.addEventListener('change', function() {
-                const fault = this.value;
-                const msg = faultDB[fault] || 'No diagnosis available.';
-                faultDiagnosis.innerHTML = msg.replace(/\n/g, '<br/>');
-            });
-            faultSelect.dispatchEvent(new Event('change'));
+            if (faultSelect) {
+                faultSelect.addEventListener('change', function() {
+                    const fault = this.value;
+                    const msg = faultDB[fault] || 'No diagnosis available.';
+                    if (faultDiagnosis) faultDiagnosis.innerHTML = msg.replace(/\n/g, '<br/>');
+                });
+                faultSelect.dispatchEvent(new Event('change'));
+            }
 
-            faultFinderBtn.addEventListener('click', function() {
-                const all = Object.keys(faultDB).map(k => faultDB[k]).join('\n\n');
-                faultDiagnosis.innerHTML = all.replace(/\n/g, '<br/>');
-            });
+            if (faultFinderBtn) {
+                faultFinderBtn.addEventListener('click', function() {
+                    const all = Object.keys(faultDB).map(k => faultDB[k]).join('\n\n');
+                    if (faultDiagnosis) faultDiagnosis.innerHTML = all.replace(/\n/g, '<br/>');
+                });
+            }
 
             // =============================================================
             // AI CHAT
@@ -7676,24 +7683,24 @@ function rsQuality(o,c){
 }
 function rsDraw(o,c){
   var cv=document.getElementById('rsCalibrationChart');if(!cv)return;var ctx=cv.getContext('2d'),w=cv.clientWidth||600,h=180,d=devicePixelRatio||1;cv.width=w*d;cv.height=h*d;ctx.scale(d,d);ctx.clearRect(0,0,w,h);
-  var pad={l:38,r:12,t:14,b:28};ctx.strokeStyle='#cbd5e1';ctx.lineWidth=1;for(var i=0;i<=4;i++){var y=pad.t+(h-pad.t-pad.b)*i/4;ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(w-pad.r,y);ctx.stroke();}
+  var pad={l:38,r:12,t:14,b:28};ctx.strokeStyle='#cbd5e1';ctx.lineWidth=1;for(var i=0;i<=4;i++){var gy=pad.t+(h-pad.t-pad.b)*i/4;ctx.beginPath();ctx.moveTo(pad.l,gy);ctx.lineTo(w-pad.r,gy);ctx.stroke();}
   ctx.fillStyle='#64748b';ctx.font='10px sans-serif';ctx.fillText('100',4,pad.t+4);ctx.fillText('0',18,h-pad.b+3);ctx.fillText('Actual vs ideal (%)',pad.l,11);
-  function x(p){return pad.l+(w-pad.l-pad.r)*p/100} function y(v){return pad.t+(h-pad.t-pad.b)*(100-v)/100}
-  ctx.setLineDash([5,4]);ctx.strokeStyle='#94a3b8';ctx.beginPath();[0,25,50,75,100].forEach(function(p,i){i?ctx.lineTo(x(p),y(p)):ctx.moveTo(x(p),y(p));});ctx.stroke();ctx.setLineDash([]);
-  ctx.strokeStyle=c.pass?'#16a34a':'#dc2626';ctx.lineWidth=2;ctx.beginPath();o.measurements.forEach(function(m,i){var v=Number.isFinite(m.actual)?m.actual:null;if(v==null)return;i?ctx.lineTo(x(m.point),y(v)):ctx.moveTo(x(m.point),y(v));});ctx.stroke();
-  o.measurements.forEach(function(m){if(!Number.isFinite(m.actual))return;ctx.fillStyle=Math.abs(m.actual-m.point)<=c.tol?'#16a34a':'#dc2626';ctx.beginPath();ctx.arc(x(m.point),y(m.actual),4,0,Math.PI*2);ctx.fill();});
-  ctx.fillStyle='#64748b';[0,25,50,75,100].forEach(function(p){ctx.fillText(p+'%',x(p)-8,h-8);});
+  function xOf(p){return pad.l+(w-pad.l-pad.r)*p/100;} function yOf(v){return pad.t+(h-pad.t-pad.b)*(100-v)/100;}
+  ctx.setLineDash([5,4]);ctx.strokeStyle='#94a3b8';ctx.beginPath();[0,25,50,75,100].forEach(function(p,i){i?ctx.lineTo(xOf(p),yOf(p)):ctx.moveTo(xOf(p),yOf(p));});ctx.stroke();ctx.setLineDash([]);
+  ctx.strokeStyle=c.pass?'#16a34a':'#dc2626';ctx.lineWidth=2;ctx.beginPath();var started=false;o.measurements.forEach(function(m){var v=Number.isFinite(m.actual)?m.actual:null;if(v==null)return;if(!started){ctx.moveTo(xOf(m.point),yOf(v));started=true;}else{ctx.lineTo(xOf(m.point),yOf(v));}});ctx.stroke();
+  o.measurements.forEach(function(m){if(!Number.isFinite(m.actual))return;ctx.fillStyle=Math.abs(m.actual-m.point)<=c.tol?'#16a34a':'#dc2626';ctx.beginPath();ctx.arc(xOf(m.point),yOf(m.actual),4,0,Math.PI*2);ctx.fill();});
+  ctx.fillStyle='#64748b';[0,25,50,75,100].forEach(function(p){ctx.fillText(p+'%',xOf(p)-8,h-8);});
 }
 function rsRender(){
  var o=rsVals(),c=rsCalc(o),q=rsQuality(o,c); if(!rsCurrent){rsCurrent={id:rsId(),rev:1,status:'DRAFT',created:new Date().toISOString()};}
  rsCurrent=Object.assign(rsCurrent,o,{calculation:c,quality:q,updated:new Date().toISOString()});
  var set=function(id,v){var e=document.getElementById(id);if(e)e.textContent=v;};
  set('rsReportId',rsCurrent.id);set('rsResultKpi',c.entered<5?'PENDING':(c.pass?'PASS':'FAIL'));set('rsMaxErrorKpi',c.entered?c.max.toFixed(2)+'%':'—');set('rsQualityKpi',q.pct+'%');set('rsQualityText',q.pct+'%');set('rsToleranceChip','Tolerance: '+c.tol+'%');
- var st=document.getElementById('rsStatusText');st.textContent=c.entered<5?'PENDING':(c.pass?'PASS':'FAIL');st.className=c.entered<5?'rs-pending':(c.pass?'rs-pass':'rs-fail');
- document.getElementById('rsQualityBar').style.width=q.pct+'%';
- document.getElementById('rsQualityList').innerHTML=q.checks.map(function(x){return (x[1]!==''&&x[1]!==false)?'🟢 '+rsEsc(x[0]):'🔴 '+rsEsc(x[0]);}).join('<br>');
+ var st=document.getElementById('rsStatusText');if(st){st.textContent=c.entered<5?'PENDING':(c.pass?'PASS':'FAIL');st.className=c.entered<5?'rs-pending':(c.pass?'rs-pass':'rs-fail');}
+ var qBar=document.getElementById('rsQualityBar');if(qBar){qBar.style.width=q.pct+'%';qBar.style.display='block';qBar.style.height='100%';qBar.style.background='#2563eb';}
+ var qList=document.getElementById('rsQualityList');if(qList)qList.innerHTML=q.checks.map(function(x){return (x[1]!==''&&x[1]!==false)?'🟢 '+rsEsc(x[0]):'🔴 '+rsEsc(x[0]);}).join('<br>');
  var a=c.entered<5?'Complete all five calibration points to generate a final assessment.':(c.pass?'Calibration passed. Maximum deviation is '+c.max.toFixed(2)+'%, within the allowable tolerance of '+c.tol+'%. Instrument performance is acceptable based on the recorded points. Recommended action: return to service after normal verification.':'Calibration failed. Maximum deviation is '+c.max.toFixed(2)+'%, exceeding the allowable tolerance of '+c.tol+'%. Recommended action: investigate sensor, configuration, wiring and calibration adjustment, then repeat the test before returning to service.');
- document.getElementById('rsAssessment').textContent=a; rsDraw(o,c);
+ var assess=document.getElementById('rsAssessment');if(assess)assess.textContent=a; rsDraw(o,c);
  var preview='<div style="font-family:Arial,sans-serif;color:#172033;background:#fff;padding:18px;border-radius:10px;max-width:820px;margin:auto;">'+
  '<div style="display:flex;justify-content:space-between;border-bottom:2px solid #1e3a5f;padding-bottom:10px;"><div><div style="font-size:11px;color:#64748b;letter-spacing:1px;">INSTRUMENTPRO</div><h2 style="margin:3px 0;">'+rsEsc((o.reportType||'Calibration').toUpperCase())+' REPORT</h2><div style="font-size:11px;color:#64748b;">'+rsEsc(rsCurrent.id)+' • REV '+rsCurrent.rev+'</div></div><div style="font-size:20px;font-weight:800;color:'+(c.entered<5?'#b45309':c.pass?'#15803d':'#b91c1c')+';">'+(c.entered<5?'PENDING':c.pass?'PASS':'FAIL')+'</div></div>'+
  '<table style="width:100%;font-size:12px;margin:12px 0;border-collapse:collapse;"><tr><td><b>Tag</b><br>'+rsEsc(o.reportTag||'—')+'</td><td><b>Model</b><br>'+rsEsc(o.reportModel||'—')+'</td><td><b>Manufacturer</b><br>'+rsEsc(o.rsManufacturer||'—')+'</td></tr><tr><td><b>Serial</b><br>'+rsEsc(o.rsSerial||'—')+'</td><td><b>Location</b><br>'+rsEsc(o.rsLocation||'—')+'</td><td><b>Technician</b><br>'+rsEsc(o.rsTechnician||'—')+'</td></tr></table>'+
@@ -7701,7 +7708,7 @@ function rsRender(){
  '<div style="margin-top:12px;padding:10px;background:#f8fafc;border-left:4px solid #1e3a5f;font-size:11px;"><b>Engineering Assessment</b><br>'+rsEsc(a)+'</div>'+
  '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;font-size:11px;"><div><b>Observations</b><br>'+rsEsc(o.rsObservations||'—')+'<br><br><b>Root Cause</b><br>'+rsEsc(o.rsRootCause||'—')+'</div><div><b>Corrective Action</b><br>'+rsEsc(o.rsCorrective||'—')+'<br><br><b>Verification</b><br>'+rsEsc(o.rsVerification||'—')+'</div></div>'+
  '<div style="margin-top:16px;border-top:1px solid #ddd;padding-top:10px;font-size:10px;color:#64748b;">Reference standard: '+rsEsc(o.rsReference||'—')+' • Work order: '+rsEsc(o.rsWorkOrder||'—')+' • Issued status: '+rsEsc(rsCurrent.status)+'</div></div>';
- document.getElementById('reportPreview').innerHTML=preview;
+ var prev=document.getElementById('reportPreview');if(prev)prev.innerHTML=preview;
 }
 function rsDownload(name,data,type){var b=new Blob([data],{type:type}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(u);}
 function rsHistory(){var arr=JSON.parse(localStorage.getItem('instrumentpro_reports')||'[]'),el=document.getElementById('rsHistory');if(!arr.length){el.textContent='No reports issued yet.';return;}el.innerHTML=arr.slice().reverse().map(function(r){return '<div class="rs-history-item"><div><b>'+rsEsc(r.id)+'</b><br><small>'+rsEsc(r.tag||'Untagged')+' • '+rsEsc(r.type||'Report')+'</small></div><div style="text-align:right"><b class="'+(r.result==='PASS'?'rs-pass':r.result==='FAIL'?'rs-fail':'rs-pending')+'">'+rsEsc(r.result)+'</b><br><small>'+new Date(r.date).toLocaleString()+'</small></div></div>';}).join('');}
@@ -7710,7 +7717,16 @@ function rsExport(){rsRender();var html='<!doctype html><html><head><meta charse
 function rsJson(){rsRender();rsDownload(rsCurrent.id+'.json',JSON.stringify(rsCurrent,null,2),'application/json');}
 function rsCsv(){rsRender();var c=rsCurrent.calculation,rows=['Report ID,Tag,Point,Actual,Error %,Tolerance %,Result'];rsCurrent.measurements.forEach(function(m){rows.push([rsCurrent.id,rsCurrent.reportTag,m.point,m.actual,Number.isFinite(m.actual)?Math.abs(m.actual-m.point).toFixed(3):'',c.tol,Number.isFinite(m.actual)?(Math.abs(m.actual-m.point)<=c.tol?'PASS':'FAIL'):''].map(function(v){return '"'+String(v==null?'':v).replace(/"/g,'""')+'"';}).join(','));});rsDownload(rsCurrent.id+'.csv',rows.join('\n'),'text/csv');}
 function rsSync(){rsRender();if(typeof window.syncReportToWebhooks==='function')window.syncReportToWebhooks({source:'InstrumentPro',type:'AdvancedReport',report:rsCurrent});else alert('Report sync is not configured yet.');}
-function init(){['reportTag','reportModel','rsManufacturer','rsSerial','rsLocation','rsTechnician','reportType','rsRange','rsUnit','reportTolerance','rsReference','rsWorkOrder','rsObservations','rsRootCause','rsCorrective','rsVerification','rsTechSign','rsSupervisor','rp0','rp25','rp50','rp75','rp100'].forEach(function(id){var e=document.getElementById(id);if(e)e.addEventListener('input',rsRender);});document.getElementById('generateReportBtn').addEventListener('click',rsRender);document.getElementById('rsIssueBtn').addEventListener('click',rsIssue);document.getElementById('rsPrintBtn').addEventListener('click',function(){rsRender();var w=window.open('','_blank');if(!w){alert('Allow pop-ups to print the report.');return;}w.document.write('<html><head><title>'+rsCurrent.id+'</title></head><body>'+document.getElementById('reportPreview').innerHTML+'</body></html>');w.document.close();w.focus();w.print();});document.getElementById('exportReportBtn').addEventListener('click',rsExport);document.getElementById('rsJsonBtn').addEventListener('click',rsJson);document.getElementById('rsCsvBtn').addEventListener('click',rsCsv);document.getElementById('syncReportBtn').addEventListener('click',rsSync);rsHistory();rsRender();}
+function init(){['reportTag','reportModel','rsManufacturer','rsSerial','rsLocation','rsTechnician','reportType','rsRange','rsUnit','reportTolerance','rsReference','rsWorkOrder','rsObservations','rsRootCause','rsCorrective','rsVerification','rsTechSign','rsSupervisor','rp0','rp25','rp50','rp75','rp100'].forEach(function(id){var e=document.getElementById(id);if(e)e.addEventListener('input',rsRender);});
+var bind=function(id,fn){var e=document.getElementById(id);if(e)e.addEventListener('click',fn);};
+bind('generateReportBtn',rsRender);
+bind('rsIssueBtn',rsIssue);
+bind('rsPrintBtn',function(){rsRender();var w=window.open('','_blank');if(!w){alert('Allow pop-ups to print the report.');return;}var htmlBody=(document.getElementById('reportPreview')||{}).innerHTML||'';w.document.write('<html><head><title>'+(rsCurrent&&rsCurrent.id?rsCurrent.id:'Report')+'</title></head><body>'+htmlBody+'</body></html>');w.document.close();w.focus();w.print();});
+bind('exportReportBtn',rsExport);
+bind('rsJsonBtn',rsJson);
+bind('rsCsvBtn',rsCsv);
+bind('syncReportBtn',rsSync);
+rsHistory();rsRender();}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
 </script>
