@@ -1914,8 +1914,6 @@ body.dark .comm-section-title small{color:#94a3b8;}
 
     html,body{overflow-x:hidden;}
 .page,.report-main-panel{min-width:0;}
-
-.trouble-safety-banner{margin:10px 0;padding:10px 12px;border:1px solid #f59e0b;border-radius:12px;background:#fff7ed;color:#7c2d12;font-size:.78rem;line-height:1.4}.trouble-safety-banner strong{display:block;margin-bottom:3px}.diag-class{display:inline-flex;align-items:center;padding:4px 8px;border-radius:999px;background:#e2e8f0;font-size:.68rem;font-weight:800;margin-top:7px}.diag-class.process{background:#dcfce7;color:#166534}.diag-class.electrical{background:#dbeafe;color:#1e40af}.diag-class.instrument{background:#ede9fe;color:#6b21a8}.diag-class.safety{background:#fee2e2;color:#991b1b}.diag-stop{margin-top:8px;padding:8px 10px;border-radius:10px;background:#fef2f2;color:#991b1b;font-weight:700;font-size:.72rem}.cal-validation{margin-top:6px;font-size:.68rem;color:#b45309}.cal-validation.ok{color:#166534}
 </style>
 
 <style id="instrumentpro-mobile-fix">
@@ -2325,6 +2323,236 @@ body.dark .trouble-dialog{background:#111827}.dark .trouble-dialog-title,.dark .
 body.dark .sidebar .nav-section-label{color:#64748b;}
 .sidebar .nav-section-label:first-child{margin-top:5px;}
 </style>
+
+<style id="advanced-field-report-glove-ui">
+/* ============================================================
+   ADVANCED FIELD REPORT — GLOVE / FIELD FRIENDLY UI
+   Larger touch targets, clearer spacing, fewer accidental taps.
+   Scoped to the Advanced Field Report only.
+   ============================================================ */
+#reportpanel-field .report-studio,
+#reportpanel-field .report-studio * { box-sizing:border-box; }
+
+/* Bigger primary touch targets */
+#reportpanel-field .row > input,
+#reportpanel-field .row > select,
+#reportpanel-field .row > textarea,
+#reportpanel-field .row > .custom-select-wrap,
+#reportpanel-field #reportModuleSelect,
+#reportpanel-field #rsDeviceType,
+#reportpanel-field #reportType {
+    min-height:44px;
+    font-size:.78rem;
+}
+
+#reportpanel-field .row > input,
+#reportpanel-field .row > select,
+#reportpanel-field .row > textarea {
+    padding:11px 12px !important;
+    border-radius:10px !important;
+}
+
+#reportpanel-field .row > label {
+    font-size:.68rem;
+    font-weight:800;
+    line-height:1.2;
+    padding-right:6px;
+}
+
+/* Make every report button comfortable with gloves */
+#reportpanel-field .btn,
+#reportpanel-field button,
+#reportpanel-field .rs-step {
+    min-height:44px;
+}
+
+#reportpanel-field .btn {
+    padding:10px 12px !important;
+    font-size:.68rem !important;
+    border-radius:10px;
+}
+
+/* Device selector is an important field: make it prominent */
+#reportpanel-field #rsDeviceType {
+    font-size:.84rem !important;
+    font-weight:800;
+    border-width:2px;
+    min-height:50px;
+}
+
+#reportpanel-field #reportType {
+    font-weight:700;
+}
+
+/* Larger, separated functional-test cards */
+#reportpanel-field .rs-check-grid {
+    display:grid !important;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:8px !important;
+    margin-top:7px;
+}
+
+#reportpanel-field .rs-test-item {
+    min-height:52px;
+    display:flex !important;
+    align-items:center;
+    gap:10px;
+    padding:10px 12px !important;
+    border:2px solid #dbe3ee;
+    border-radius:12px;
+    background:#f8fafc;
+    cursor:pointer;
+    user-select:none;
+    -webkit-tap-highlight-color:transparent;
+    font-size:.72rem;
+    font-weight:700;
+    line-height:1.25;
+}
+
+#reportpanel-field .rs-test-item:active { transform:scale(.99); }
+#reportpanel-field .rs-test-item:has(input:checked) {
+    border-color:#2563eb;
+    background:#eff6ff;
+}
+
+#reportpanel-field .rs-test-item input[type="checkbox"] {
+    appearance:none;
+    -webkit-appearance:none;
+    flex:0 0 28px;
+    width:28px;
+    height:28px;
+    min-width:28px;
+    min-height:28px;
+    margin:0;
+    border:2px solid #64748b;
+    border-radius:7px;
+    background:#fff;
+    display:grid;
+    place-content:center;
+    cursor:pointer;
+}
+#reportpanel-field .rs-test-item input[type="checkbox"]::after {
+    content:"";
+    width:10px;
+    height:16px;
+    border:solid #fff;
+    border-width:0 3px 3px 0;
+    transform:rotate(45deg) scale(0);
+    transition:transform .08s ease-in-out;
+    margin-top:-3px;
+}
+#reportpanel-field .rs-test-item input[type="checkbox"]:checked {
+    background:#2563eb;
+    border-color:#2563eb;
+}
+#reportpanel-field .rs-test-item input[type="checkbox"]:checked::after {
+    transform:rotate(45deg) scale(1);
+}
+
+/* Quick check controls */
+#reportpanel-field .rs-check-tools {
+    display:flex;
+    gap:7px;
+    margin:7px 0 2px;
+    flex-wrap:wrap;
+}
+#reportpanel-field .rs-check-tools button {
+    flex:1 1 130px;
+    min-height:44px;
+    padding:9px 12px;
+    border:1px solid #cbd5e1;
+    border-radius:10px;
+    background:#fff;
+    color:#334155;
+    font-size:.68rem;
+    font-weight:800;
+    cursor:pointer;
+}
+#reportpanel-field .rs-check-tools button:active { transform:scale(.98); }
+
+/* Better spacing between field rows */
+#reportpanel-field .rs-section .row { margin-bottom:7px; }
+#reportpanel-field .rs-section .row:last-child { margin-bottom:0; }
+
+/* Make the report module selector and stepper easier to hit */
+#reportpanel-field ~ * { }
+#page-report > .card > .report-selector select,
+#reportpanel-field .report-selector select {
+    min-height:46px;
+    padding:10px 12px;
+}
+#reportpanel-field .rs-stepper {
+    gap:6px;
+    overflow-x:auto;
+    padding-bottom:2px;
+    scrollbar-width:thin;
+}
+#reportpanel-field .rs-step {
+    min-height:42px;
+    padding:10px 8px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:.55rem;
+}
+
+/* Keep actions visible and easy to reach on a phone */
+#reportpanel-field .rs-actions {
+    gap:7px;
+}
+#reportpanel-field .rs-actions .btn {
+    min-height:48px;
+}
+
+/* Stronger focus ring for gloves + sunlight */
+#reportpanel-field input:focus,
+#reportpanel-field select:focus,
+#reportpanel-field textarea:focus,
+#reportpanel-field button:focus-visible {
+    outline:3px solid rgba(37,99,235,.25) !important;
+    outline-offset:2px;
+}
+
+/* Device-specific generated fields get the same treatment */
+#reportpanel-field #rsDeviceConfigBody .row > input,
+#reportpanel-field #rsDeviceConfigBody .row > select,
+#reportpanel-field #rsDeviceConfigBody .row > textarea {
+    min-height:46px;
+}
+#reportpanel-field #rsDeviceConfigBody .cal-point input {
+    min-height:46px;
+    font-size:.76rem;
+    padding:10px !important;
+}
+
+/* Tablets / phones */
+@media(max-width:600px){
+    #reportpanel-field .rs-check-grid { grid-template-columns:1fr !important; }
+    #reportpanel-field .rs-test-item { min-height:56px; font-size:.74rem; }
+    #reportpanel-field .row { gap:5px; }
+    #reportpanel-field .row > label { margin-bottom:1px; }
+    #reportpanel-field .rs-section { padding:10px !important; }
+    #reportpanel-field .rs-section h4 { font-size:.74rem; margin-bottom:9px; }
+    #reportpanel-field .rs-actions { grid-template-columns:1fr !important; }
+    #reportpanel-field .rs-actions .btn { width:100% !important; }
+}
+
+@media(max-width:380px){
+    #reportpanel-field .rs-kpis { grid-template-columns:1fr 1fr !important; }
+    #reportpanel-field .rs-stepper { grid-template-columns:repeat(2,minmax(120px,1fr)) !important; }
+}
+
+/* Dark mode */
+body.dark #reportpanel-field .rs-test-item,
+body.dark #reportpanel-field .rs-check-tools button {
+    background:#172033;
+    border-color:#475569;
+    color:#e2e8f0;
+}
+body.dark #reportpanel-field .rs-test-item:has(input:checked) { background:#172554; border-color:#60a5fa; }
+body.dark #reportpanel-field .rs-test-item input[type="checkbox"] { background:#0f172a; border-color:#64748b; }
+</style>
+
 </head>
 <body>
 
@@ -4409,7 +4637,7 @@ body.dark .sidebar .nav-section-label{color:#64748b;}
         <button class="trouble-close" type="button" data-close-trouble><i class="fas fa-times"></i></button>
       </div>
 
-      <div class="trouble-progress" id="troubleProgress"><span class="active"></span><span></span><span></span><span></span></div>
+      <div class="trouble-progress" id="troubleProgress"><span class="active"></span><span></span><span></span></div>
       <div class="trouble-step" id="troubleStep">Question 1 of 2</div>
       <div class="trouble-question" id="troubleQuestion">What are you troubleshooting?</div>
       <div class="trouble-options" id="troubleOptions"></div>
@@ -4491,27 +4719,50 @@ body.dark .sidebar .nav-section-label{color:#64748b;}
                                 <div class="row"><label>Technician</label><input type="text" id="rsTechnician" placeholder="Technician name" /></div>
                             </div>
                             <div class="rs-section">
-                                <h4><i class="fas fa-clipboard-check"></i> Test Configuration</h4>
-                                <div class="row"><label>Report Type</label><select id="reportType"><option value="calibration">Calibration</option><option value="gc">GC</option><option value="commissioning">Commissioning</option><option value="inspection">Inspection</option></select></div>
-                                <div class="row"><label>Range</label><input type="text" id="rsRange" placeholder="0–100 psi" /></div>
-                                <div class="row"><label>Unit</label><input type="text" id="rsUnit" placeholder="psi" /></div>
-                                <div class="row"><label>Tolerance</label><input type="number" id="reportTolerance" value="2" step="0.1" style="flex:.4;" /><span class="chip">% span</span></div>
-                                <div class="row"><label>Reference Std.</label><input type="text" id="rsReference" placeholder="Calibrator / standard ID" /></div>
+                                <h4><i class="fas fa-microchip"></i> Field Device & Test Configuration</h4>
+                                <div class="row"><label>Field Device</label><select id="rsDeviceType">
+                                    <option value="">Select field device...</option>
+                                    <option>Pressure Transmitter</option>
+                                    <option>Flow Transmitter</option>
+                                    <option>Level Transmitter</option>
+                                    <option>Temperature Transmitter</option>
+                                    <option>Emergency Shut Down Valve</option>
+                                    <option>Emergency Blow Down Valve</option>
+                                    <option>Control Valve</option>
+                                    <option>Shut-off / On-off Valve</option>
+                                    <option>Vibration Probe</option>
+                                    <option>Speed Probe</option>
+                                    <option>Gas Detector</option>
+                                    <option>Open Path Gas Detector</option>
+                                    <option>Flame Detector</option>
+                                    <option>Fire Control Panel</option>
+                                    <option>Smoke Detector</option>
+                                    <option>Heat Detector</option>
+                                    <option>pH Analyser</option>
+                                    <option>ORP Analyser</option>
+                                    <option>Gas Chromatograph Analyser</option>
+                                    <option>Dew Point Analyser</option>
+                                    <option>Deluge Valve</option>
+                                    <option>Proximity Sensor</option>
+                                    <option>Solenoid Valve</option>
+                                    <option>Level Switch</option>
+                                    <option>Other types</option>
+                                </select></div>
+                                <div class="row"><label>Test Type</label><select id="reportType"><option value="calibration">Calibration</option><option value="functional">Functional Test</option><option value="inspection">Inspection</option><option value="commissioning">Commissioning</option><option value="gc">GC Performance Test</option></select></div>
+                                <div class="row"><label>Range / Service</label><input type="text" id="rsRange" placeholder="Device-specific range or service" /></div>
+                                <div class="row"><label>Unit</label><input type="text" id="rsUnit" placeholder="bar, °C, %, ppm, mV..." /></div>
+                                <div class="row"><label>Tolerance / Standard</label><input type="text" id="rsToleranceSpec" placeholder="±0.5%, OEM limit, approved timing..." /></div>
+                                <div class="row"><label>Reference Std.</label><input type="text" id="rsReference" placeholder="Calibrator / reference / OEM document ID" /></div>
                                 <div class="row"><label>Work Order</label><input type="text" id="rsWorkOrder" placeholder="WO-2026-001" /></div>
                             </div>
-                            <div class="rs-section rs-full">
-                                <h4><i class="fas fa-chart-line"></i> Calibration Measurements</h4>
-                                <div style="font-size:.65rem;color:#64748b;margin-bottom:7px;">Enter actual readings. The report automatically calculates error, tolerance status and engineering assessment.</div>
-                                <div id="calPointsInput" class="cal-points-grid">
-                                    <div class="cal-point"><span>0%</span><input type="number" id="rp0" value="0" step="any" class="cal-actual" /></div>
-                                    <div class="cal-point"><span>25%</span><input type="number" id="rp25" value="25" step="any" class="cal-actual" /></div>
-                                    <div class="cal-point"><span>50%</span><input type="number" id="rp50" value="50" step="any" class="cal-actual" /></div>
-                                    <div class="cal-point"><span>75%</span><input type="number" id="rp75" value="75" step="any" class="cal-actual" /></div>
-                                    <div class="cal-point"><span>100%</span><input type="number" id="rp100" value="100" step="any" class="cal-actual" /></div>
+                            <div class="rs-section rs-full" id="rsDeviceConfig">
+                                <h4><i class="fas fa-sliders-h"></i> Device-Specific Test Data</h4>
+                                <div id="rsDeviceConfigBody">
+                                    <div class="rs-analysis">Select a field device above. The report will load the correct configuration, measurements and functional checks for that device.</div>
                                 </div>
                             </div>
                             <div class="rs-section rs-full">
-                                <div class="rs-status"><div><small>CALIBRATION RESULT</small><br><strong id="rsStatusText" class="rs-pending">PENDING</strong></div><span class="rs-chip" id="rsToleranceChip">Tolerance: 2%</span></div>
+                                <div class="rs-status"><div><small id="rsResultLabel">TEST RESULT</small><br><strong id="rsStatusText" class="rs-pending">PENDING</strong></div><span class="rs-chip" id="rsToleranceChip">Device not selected</span></div>
                                 <canvas id="rsCalibrationChart" class="rs-chart" height="180"></canvas>
                             </div>
                             <div class="rs-section">
@@ -5524,7 +5775,6 @@ body.dark .sidebar .nav-section-label{color:#64748b;}
             const calPointsContainer = document.getElementById('calPointsContainer');
             const calErrorDisplay = document.getElementById('calErrorDisplay');
             const calPassFail = document.getElementById('calPassFail');
-            if (calPassFail && !document.getElementById('calValidationMsg')) { const v=document.createElement('div'); v.id='calValidationMsg'; v.className='cal-validation'; calPassFail.parentElement.appendChild(v); }
             const calExportBtn = document.getElementById('calExportBtn');
             const calPts = [0, 25, 50, 75, 100];
 
@@ -5591,9 +5841,7 @@ body.dark .sidebar .nav-section-label{color:#64748b;}
             }
 
             function evaluateCal() {
-                const tol = parseFloat(calTolerance.value);
-                const low = parseFloat(calLow.value); const high = parseFloat(calHigh.value);
-                const span = high - low;
+                const tol = parseFloat(calTolerance.value) || 0.1;
                 let maxErrorPct = 0;
                 let anyEntered = false;
                 calPointsContainer.querySelectorAll('.cal-actual').forEach(inp => {
@@ -5602,27 +5850,19 @@ body.dark .sidebar .nav-section-label{color:#64748b;}
                     const ideal = parseFloat(inp.dataset.ideal);
                     const spanRef = parseFloat(inp.dataset.span);
                     const actual = parseFloat(inp.value);
-                    if (!Number.isFinite(actual) || !Number.isFinite(ideal) || !Number.isFinite(spanRef) || spanRef <= 0) return;
                     const errorPct = Math.abs(actual - ideal) / spanRef * 100;
                     if (errorPct > maxErrorPct) maxErrorPct = errorPct;
                 });
-                if (!Number.isFinite(low) || !Number.isFinite(high) || span <= 0 || !Number.isFinite(tol) || tol <= 0) {
-                    calErrorDisplay.innerHTML = 'Validation required: URV must be greater than LRV and tolerance must be greater than 0.';
-                    calPassFail.className = 'badge badge-fail'; calPassFail.innerHTML = 'Invalid setup'; return;
-                }
-                const allEntered = [...calPointsContainer.querySelectorAll('.cal-actual')].every(inp => inp.value.trim() !== '');
-                if (!anyEntered || !allEntered) {
-                    calErrorDisplay.innerHTML = 'Max error: — (enter all actual readings before PASS/FAIL)';
+                if (!anyEntered) {
+                    calErrorDisplay.innerHTML = 'Max error: — (enter actual readings)';
                     calPassFail.className = 'badge badge-warn';
                     calPassFail.innerHTML = 'Pending';
                     return;
                 }
                 calErrorDisplay.innerHTML = `Max error: ${maxErrorPct.toFixed(3)}%`;
-                const allExportEntered = [...calPointsContainer.querySelectorAll('.cal-actual')].every(inp => inp.value.trim() !== '');
-                const pass = allExportEntered && Number.isFinite(low) && Number.isFinite(high) && high > low && Number.isFinite(tol) && tol > 0 && maxErrorPct <= tol;
+                const pass = maxErrorPct <= tol;
                 calPassFail.className = pass ? 'badge badge-pass' : 'badge badge-fail';
                 calPassFail.innerHTML = pass ? 'Pass' : 'Fail';
-                const v=document.getElementById('calValidationMsg'); if(v) v.textContent=pass?'All test points entered; result is within the configured tolerance.':'All test points entered; one or more points exceed the configured tolerance.'; if(v) v.className='cal-validation '+(pass?'ok':'');
             }
             calType.addEventListener('change', onCalTypeChange);
             calUpdateBtn.addEventListener('click', buildCalPoints);
@@ -7676,70 +7916,307 @@ body.dark .sidebar .nav-section-label{color:#64748b;}
 <script>
 (function(){
 'use strict';
+
 function rsEsc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 function rsId(){return 'IP-'+new Date().getFullYear()+'-'+String(Date.now()).slice(-8);}
 var rsCurrent=null;
+
+var DEVICE_CONFIG={
+ 'Pressure Transmitter':{
+   icon:'fa-gauge-high', mode:'calibration', description:'Pressure measurement calibration and field verification.',
+   fields:[
+    ['Pressure type','select','Gauge,Absolute,Differential'],['LRV','text','e.g. 0'],['URV','text','e.g. 10'],['Pressure unit','text','bar, psi, kPa'],
+    ['Reference pressure source','text','Deadweight tester / pressure calibrator ID'],['As-found condition','select','As-found,As-left']
+   ], points:true
+ },
+ 'Flow Transmitter':{
+   icon:'fa-water', mode:'calibration', description:'Flow transmitter verification. Select the measurement principle before recording points.',
+   fields:[
+    ['Flow principle','select','DP / Orifice,Magnetic,Vortex,Coriolis,Ultrasonic,Turbine,Variable Area,Other'],
+    ['Flow range','text','e.g. 0–100 m³/h'],['Flow unit','text','m³/h, kg/h, L/min'],['Reference method','text','Master meter / prover / simulator / reference ID'],
+    ['Process condition','text','Fluid, temperature, pressure, density if applicable'],['As-found condition','select','As-found,As-left']
+   ], points:true
+ },
+ 'Level Transmitter':{
+   icon:'fa-ruler-vertical', mode:'calibration', description:'Level transmitter verification with technology and vessel/reference details.',
+   fields:[
+    ['Level technology','select','DP,Guided Wave Radar,Radar,Ultrasonic,Displacer,Capacitance,Other'],
+    ['Range / span','text','e.g. 0–5000 mm'],['Level unit','text','mm,m,%,inH2O'],['Reference method','text','Reference gauge / dip / simulator / independent level'],
+    ['Process / vessel condition','text','Tank condition, density, temperature, etc.'],['As-found condition','select','As-found,As-left']
+   ], points:true
+ },
+ 'Temperature Transmitter':{
+   icon:'fa-temperature-half', mode:'calibration', description:'Temperature transmitter calibration including sensor type and reference source.',
+   fields:[
+    ['Sensor type','select','RTD Pt100,RTD Pt1000,Thermocouple J,Thermocouple K,Thermocouple T,Thermocouple E,Thermocouple N,Other'],
+    ['Range','text','e.g. 0–200 °C'],['Unit','text','°C, °F'],['Reference standard','text','Dry block / bath / reference thermometer ID'],
+    ['Input simulation','text','Resistance / mV / simulator details'],['As-found condition','select','As-found,As-left']
+   ], points:true
+ },
+ 'Emergency Shut Down Valve':{
+   icon:'fa-circle-stop', mode:'valve', description:'ESD valve functional test: actuator, solenoid, travel/limits, timing and fail-safe operation.',
+   fields:[
+    ['Fail position','select','Fail Closed,Fail Open,Fail in Place'],['Actuator type','select','Pneumatic,Hydraulic,Other'],['Solenoid valve','text','Solenoid tag / model'],['Supply pressure','text','bar / psi'],['Required stroke time','text','OEM / approved limit'],['Limit switches','select','Open & Closed verified,Not fitted'],['Position feedback','select','Verified,Not fitted']
+   ], tests:['Close stroke time','Open stroke time','Closed limit / proximity','Open limit / proximity','Solenoid energize / de-energize','DCS/ESD feedback','Fail-safe action','Return to service']
+ },
+ 'Emergency Blow Down Valve':{
+   icon:'fa-bolt', mode:'valve', description:'Blowdown valve test focused on rapid actuation, solenoid operation, travel limits and feedback.',
+   fields:[
+    ['Fail position','select','Fail Open,Fail Closed,Fail in Place'],['Actuator type','select','Pneumatic,Hydraulic,Other'],['Solenoid valve','text','Solenoid tag / model'],['Supply pressure','text','bar / psi'],['Required opening time','text','Approved/OEM limit'],['Limit switches','select','Open & Closed verified,Not fitted'],['Position feedback','select','Verified,Not fitted']
+   ], tests:['Opening time','Closing time / reset','Open limit','Closed limit','Solenoid operation','DCS/ESD feedback','Fail-safe / blowdown action','Return to service']
+ },
+ 'Control Valve':{
+   icon:'fa-sliders', mode:'controlvalve', description:'Control valve report centred on the positioner, input signal, stroke, calibration, feedback and actuator action.',
+   fields:[
+    ['Positioner','text','Model / tag'],['Actuator','select','Pneumatic,Electric,Hydraulic,Other'],['Action','select','Direct,Reverse'],['Acting','select','Single Acting,Double Acting'],['Input signal','text','4–20 mA / HART / fieldbus'],['Instrument air','text','bar / psi'],['Stroke','text','mm / %'],['Feedback to DCS','select','Verified,Not fitted'],['Fail action','select','Fail Closed,Fail Open,Fail in Place']
+   ], tests:['Input 0% / 4 mA','Input 25% / 8 mA','Input 50% / 12 mA','Input 75% / 16 mA','Input 100% / 20 mA','Full stroke / travel','Positioner calibration','Feedback to DCS','Air supply / leakage','Return to service']
+ },
+ 'Shut-off / On-off Valve':{
+   icon:'fa-power-off', mode:'onoff', description:'On/off valve verification of air supply, solenoid action, full stroke and matching feedback.',
+   fields:[
+    ['Valve action','select','Normally Closed,Normally Open'],['Actuator','select','Pneumatic,Electric,Hydraulic,Manual'],['Supply pressure','text','bar / psi'],['Solenoid','text','Solenoid tag / model'],['Open/close feedback','select','Open & Closed verified,Not fitted'],['Required stroke time','text','If specified']
+   ], tests:['Supply pressure','Command OPEN','Open position feedback','Command CLOSE','Closed position feedback','Solenoid operation','Stroke time','Return to service']
+ },
+ 'Vibration Probe':{
+   icon:'fa-wave-square', mode:'probe', description:'Vibration probe field test: simulated signal, gap/installation and signal supply/voltage verification.',
+   fields:[
+    ['Probe type','select','Proximity / Eddy Current,Velocity,Accelerometer,Other'],['Measurement','text','mm/s, g, µm, mils'],['Probe gap','text','mm / mils'],['Bias / supply voltage','text','VDC'],['Simulation method','text','Signal simulator / shaker / approved method'],['Reference standard','text','Simulator / meter ID']
+   ], tests:['Probe physical condition','Gap verified','Bias / supply voltage','Simulated signal applied','Indication compared with reference','Alarm/trip response','DCS/PLC indication','Return to service']
+ },
+ 'Speed Probe':{
+   icon:'fa-gauge', mode:'probe', description:'Speed probe verification focused on physical gap, bias/supply, simulated frequency and speed indication.',
+   fields:[
+    ['Probe type','select','Magnetic,Proximity / Eddy Current,Hall Effect,Other'],['Speed range','text','RPM'],['Probe gap','text','mm / mils'],['Bias / supply voltage','text','VDC'],['Simulation frequency','text','Hz / pulses per revolution'],['Reference tachometer','text','Reference ID']
+   ], tests:['Probe condition','Gap verified','Bias / supply voltage','Simulated frequency','Calculated / indicated RPM','Alarm/trip response','DCS/PLC feedback','Return to service']
+ },
+ 'Gas Detector':{
+   icon:'fa-smog', mode:'gas', description:'Gas detector bump test / calibration record for zero reference and alarm levels.',
+   fields:[
+    ['Gas type','text','LEL / toxic gas / oxygen'],['Range','text','e.g. 0–100 %LEL'],['Test gas concentration','text','Certified cylinder concentration'],['Cylinder / standard ID','text','Certificate / cylinder ID'],['Zero reference','text','Zero air / clean air'],['Alarm setpoints','text','HI / HI-HI values']
+   ], tests:['Physical condition','Zero reference / zero trim','Bump gas applied','HI alarm','HI-HI alarm','Local indication','DCS/Fire & Gas alarm','Reset / return to service']
+ },
+ 'Open Path Gas Detector':{
+   icon:'fa-arrows-left-right', mode:'gas', description:'Open-path detector alignment and gas response test with beam/path verification.',
+   fields:[
+    ['Gas type','text','LEL / toxic gas'],['Path length','text','m'],['Detector / receiver','text','Model / tag'],['Test filter / cell','text','Certified test filter or cell'],['Zero / clean path','select','Verified,Not verified'],['Alarm setpoints','text','HI / HI-HI / approved levels']
+   ], tests:['Optics / lens condition','Alignment / beam strength','Zero / clean path','Test filter response','HI alarm','HI-HI alarm','DCS/Fire & Gas feedback','Return to service']
+ },
+ 'Flame Detector':{
+   icon:'fa-fire-flame-curved', mode:'flame', description:'UV/IR flame detector functional test using approved lamp/test source.',
+   fields:[
+    ['Detector technology','select','UV,IR,UV/IR,Multi-spectrum'],['Test method','select','Lamp test,Approved flame simulator,Other'],['Detection distance','text','m'],['Voting / zone','text','Fire zone / logic reference'],['Alarm setpoint / delay','text','Approved value']
+   ], tests:['Lens / detector condition','Lamp/test source applied','Detector fire alarm','Fire panel indication','DCS/Fire & Gas feedback','Reset','Return to service']
+ },
+ 'Fire Control Panel':{
+   icon:'fa-fire-extinguisher', mode:'firepanel', description:'Fire panel health and loop/device integrity report including isolation, faults and standby battery.',
+   fields:[
+    ['Panel / loop architecture','text','Panel model / loop count'],['Battery system','text','Battery rating / installation date'],['Standby requirement','text','Required autonomy'],['Last battery test','text','Date / result'],['Communication','text','F&G / DCS / repeater interface']
+   ], tests:['Panel normal condition','Loop faults checked','Device faults checked','Isolated / disabled devices reviewed','Alarm operation','Fault indication','Battery voltage','Mains failure / standby operation','Communication / repeater','Event log reviewed','Return to service']
+ },
+ 'Smoke Detector':{
+   icon:'fa-smog', mode:'detector', description:'Smoke detector inspection and functional test with cleaning/replacement condition.',
+   fields:[
+    ['Detector type','select','Photoelectric,Ionization,Beam,Aspirating,Other'],['Loop / address','text','Loop and device address'],['Test method','select','Smoke test aerosol,Approved tester,Panel test'],['Last cleaning','text','Date'],['Replacement due / condition','text','Condition / age / recommendation']
+   ], tests:['Physical condition','Contamination / cleaning','Alarm test','Fire panel alarm received','Reset','Loop/address verified','Return to service']
+ },
+ 'Heat Detector':{
+   icon:'fa-temperature-high', mode:'detector', description:'Heat detector inspection and functional test connected to the fire control panel.',
+   fields:[
+    ['Detector type','select','Fixed Temperature,Rate of Rise,Fixed + Rate,Other'],['Loop / address','text','Loop and device address'],['Rated temperature','text','°C / °F'],['Test method','select','Approved heat tester,Panel test'],['Condition','text','Visual condition / contamination']
+   ], tests:['Physical condition','Alarm test','Fire panel alarm received','Correct zone/address','Reset','Return to service']
+ },
+ 'pH Analyser':{
+   icon:'fa-flask', mode:'analytical', description:'pH analyser verification including buffer calibration, slope/offset and process indication.',
+   fields:[
+    ['Probe type','text','Glass / combination / model'],['Buffer standards','text','pH 4 / 7 / 10 or approved buffers'],['Reference standard','text','Buffer certificate / standard ID'],['Temperature compensation','text','ATC / manual / temperature'],['Slope / offset limit','text','OEM / approved limit']
+   ], tests:['Probe condition','Buffer 1 response','Buffer 2 response','Slope','Offset','Process sample comparison','Output / DCS indication','Return to service']
+ },
+ 'ORP Analyser':{
+   icon:'fa-flask-vial', mode:'analytical', description:'ORP analyser verification using approved reference solution and millivolt response.',
+   fields:[
+    ['Probe type','text','ORP electrode / model'],['Reference solution','text','Approved ORP reference solution'],['Expected mV','text','Reference value'],['Reference standard ID','text','Certificate / batch'],['Temperature','text','°C']
+   ], tests:['Probe condition','Reference solution applied','Measured mV','Deviation from reference','Output / DCS indication','Cleaning / conditioning','Return to service']
+ },
+ 'Gas Chromatograph Analyser':{
+   icon:'fa-chart-line', mode:'gc', description:'GC field performance report covering carrier gas, sample system, chromatogram, calibration and analyser output.',
+   fields:[
+    ['GC model / application','text','Model / service'],['Carrier gas','text','Type / pressure / supply'],['Calibration gas','text','Cylinder / certificate ID'],['Sample system','text','Pressure / temperature / flow'],['Method / recipe','text','Method or application ID'],['Detector','text','TCD / FID / other'],['Last calibration','text','Date / reference']
+   ], tests:['Carrier gas supply','Sample flow / pressure','Oven / detector status','Chromatogram / baseline','Calibration gas response','Retention time','Component identification','Concentration result','DCS communication','Alarms / diagnostics','Return to service']
+ },
+ 'Dew Point Analyser':{
+   icon:'fa-droplet', mode:'analytical', description:'Dew point analyser field verification using a suitable reference or test source.',
+   fields:[
+    ['Technology','select','Chilled Mirror,Metal Oxide,Al2O3,Other'],['Range','text','°C dew point'],['Reference method','text','Reference analyser / generator'],['Sample pressure','text','bar / psi'],['Sample flow','text','L/min'],['Reference standard ID','text','ID / certificate']
+   ], tests:['Sample system condition','Pressure / flow verified','Zero/reference check','Reference comparison','Alarm setpoint','Output / DCS indication','Return to service']
+ },
+ 'Deluge Valve':{
+   icon:'fa-water', mode:'deluge', description:'Deluge valve functional inspection including trim, release path, opening/reset and fire system feedback.',
+   fields:[
+    ['Valve size / type','text','Size / model'],['Release method','select','Pneumatic,Hydraulic,Electric,Manual'],['Pilot / solenoid','text','Release device tag'],['Supply pressure','text','Water / pilot pressure'],['Trim condition','text','Trim / drains / gauges'],['Required opening time','text','Approved limit']
+   ], tests:['Trim / valve condition','Pilot pressure','Release device operation','Valve opening','Opening time','Pressure / flow indication','Fire panel / feedback','Reset','Return to service']
+ },
+ 'Proximity Sensor':{
+   icon:'fa-bullseye', mode:'switch', description:'Proximity sensor test covering target gap, switching state, supply and PLC/DCS indication.',
+   fields:[
+    ['Sensor type','select','Inductive,Capacitive,Magnetic,Photoelectric,Other'],['Supply voltage','text','VDC / VAC'],['Output','select','PNP,NPN,NO,NC,Other'],['Target material','text','Steel / specified target'],['Required sensing gap','text','mm'],['PLC/DCS input','text','Channel / tag']
+   ], tests:['Physical condition','Supply voltage','Sensing gap','Target detection','Output state','PLC/DCS indication','Repeatability','Return to service']
+ },
+ 'Solenoid Valve':{
+   icon:'fa-magnet', mode:'solenoid', description:'Solenoid valve field test covering coil supply, actuation, valve travel, exhaust/return and controlled output.',
+   fields:[
+    ['Solenoid type','select','3/2,5/2,Other'],['Coil voltage','text','24 VDC / 110 VAC / 230 VAC'],['Valve function','text','Actuator / service'],['Air / hydraulic supply','text','Pressure'],['Manual override','select','Fitted,Not fitted'],['Fail position','text','Safe state']
+   ], tests:['Coil condition','Coil voltage','Supply pressure','Energize response','De-energize response','Actuator movement','Exhaust / return','Feedback / limit','Return to service']
+ },
+ 'Level Switch':{
+    icon:'fa-arrow-up-wide-short', mode:'switch', description:'Level switch functional test including set/reset points and alarm/trip indication.',
+    fields:[
+     ['Switch technology','select','Float,Displacer,Vibration,Capacitance,Conductivity,Other'],['Set point','text','Level + unit'],['Reset point','text','Level + unit'],['Process / simulation method','text','Actual level / simulator'],['Alarm / trip','select','High,High-High,Low,Low-Low,Other'],['PLC/DCS input','text','Channel / tag']
+    ], tests:['Physical condition','Simulation / level change','Switch set point','Switch reset point','Alarm/trip action','PLC/DCS indication','Return to service']
+ },
+ 'Other types':{
+    icon:'fa-toolbox', mode:'other', description:'Custom field device report. Define the device and the approved test criteria before recording results.',
+    fields:[
+     ['Device subtype','text','Describe device'],['Measured variable / function','text','What the device measures or controls'],['Test method','text','Approved field test method'],['Acceptance criteria','text','OEM / approved procedure'],['Reference standard','text','Instrument / reference ID'],['Special conditions','text','Process or safety conditions']
+    ], tests:['Pre-test condition','Functional test','Measurement / indication','Alarm / trip / output','Control system feedback','Final condition','Return to service']
+ }
+};
+
+function rsDevice(){
+ var e=document.getElementById('rsDeviceType'); return e?e.value:'';
+}
+function makeField(label,type,placeholder,options){
+ var id='dc_'+label.toLowerCase().replace(/[^a-z0-9]+/g,'_');
+ if(type==='select'){
+   return '<div class="row"><label>'+rsEsc(label)+'</label><select data-dc="'+rsEsc(id)+'">'+options.split(',').map(function(x){return '<option>'+rsEsc(x.trim())+'</option>';}).join('')+'</select></div>';
+ }
+ return '<div class="row"><label>'+rsEsc(label)+'</label><input type="text" data-dc="'+rsEsc(id)+'" placeholder="'+rsEsc(placeholder||'')+'"></div>';
+}
+function renderDeviceConfig(){
+ var d=rsDevice(), cfg=DEVICE_CONFIG[d], body=document.getElementById('rsDeviceConfigBody');
+ if(!body)return;
+ if(!cfg){body.innerHTML='<div class="rs-analysis">Select a field device above. The report will load the correct configuration, measurements and functional checks for that device.</div>';return;}
+ var html='<div style="font-size:.62rem;color:#64748b;margin-bottom:7px;">'+rsEsc(cfg.description)+'</div>';
+ html+=cfg.fields.map(function(f){return makeField(f[0],f[1],f[2],f[2]);}).join('');
+ if(cfg.points){
+   html+='<div style="margin-top:7px;font-size:.62rem;font-weight:800;color:#475569;">Calibration points</div><div id="rsDynamicPoints" class="cal-points-grid">';
+   [0,25,50,75,100].forEach(function(p){html+='<div class="cal-point"><span>'+p+'%</span><input type="number" step="any" class="cal-actual rs-dyn-point" data-point="'+p+'" placeholder="Actual '+p+'%"></div>';});
+   html+='</div><div class="row"><label>Calibration result</label><input type="text" data-dc="calibration_result" placeholder="PASS / FAIL / As-left result"></div>';
+ }else{
+   html+='<div style="margin-top:7px;font-size:.62rem;font-weight:800;color:#475569;">Functional checks</div>';
+   html+='<div class="rs-check-tools"><button type="button" data-check-action="all">✓ Check all</button><button type="button" data-check-action="clear">Clear all</button></div>';
+   html+='<div class="rs-check-grid">';
+   (cfg.tests||[]).forEach(function(t,i){html+='<label class="rs-test-item"><input type="checkbox" data-test-index="'+i+'"><span>'+rsEsc(t)+'</span></label>';});
+   html+='</div><div class="rs-test-table"><div class="row"><label>Measured / observed result</label><textarea data-dc="measured_results" rows="3" placeholder="Record timing, pressures, positions, alarm response, reference comparison, etc."></textarea></div></div>';
+ }
+ body.innerHTML=html;
+ body.querySelectorAll('input,select,textarea').forEach(function(e){e.addEventListener('input',rsRender);e.addEventListener('change',rsRender);});
+ body.querySelectorAll('[data-check-action]').forEach(function(btn){btn.addEventListener('click',function(){
+   var checked=this.dataset.checkAction==='all';
+   body.querySelectorAll('[data-test-index]').forEach(function(cb){cb.checked=checked;});
+   rsRender();
+ });});
+ rsRender();
+}
+function collectDeviceData(){
+ var body=document.getElementById('rsDeviceConfigBody'),data={fields:{},tests:[]};
+ if(!body)return data;
+ body.querySelectorAll('[data-dc]').forEach(function(e){data.fields[e.dataset.dc]=e.value;});
+ body.querySelectorAll('[data-test-index]').forEach(function(e){data.tests.push({name:DEVICE_CONFIG[rsDevice()]?.tests?.[Number(e.dataset.testIndex)]||'Test',passed:e.checked});});
+ body.querySelectorAll('.rs-dyn-point').forEach(function(e){data.fields['point_'+e.dataset.point]=e.value;});
+ return data;
+}
 function rsVals(){
-  var ids=['reportTag','reportModel','rsManufacturer','rsSerial','rsLocation','rsTechnician','reportType','rsRange','rsUnit','reportTolerance','rsReference','rsWorkOrder','rsObservations','rsRootCause','rsCorrective','rsVerification','rsTechSign','rsSupervisor'];
-  var o={}; ids.forEach(function(id){var e=document.getElementById(id);o[id]=e?e.value:'';});
-  o.measurements=[0,25,50,75,100].map(function(p){var e=document.getElementById('rp'+p);return {point:p,actual:e?parseFloat(e.value):null};});
-  return o;
+ var ids=['reportTag','reportModel','rsManufacturer','rsSerial','rsLocation','rsTechnician','reportType','rsRange','rsUnit','rsToleranceSpec','rsReference','rsWorkOrder','rsObservations','rsRootCause','rsCorrective','rsVerification','rsTechSign','rsSupervisor'];
+ var o={};ids.forEach(function(id){var e=document.getElementById(id);o[id]=e?e.value:'';});
+ o.deviceType=rsDevice();o.deviceData=collectDeviceData();return o;
+}
+function parseTolerance(v){
+ var m=String(v||'').match(/-?\d+(?:\.\d+)?/);return m?Math.abs(parseFloat(m[0])):null;
 }
 function rsCalc(o){
-  var tol=parseFloat(o.reportTolerance)||2, max=0, entered=0;
-  o.measurements.forEach(function(m){if(Number.isFinite(m.actual)){entered++;m.error=Math.abs(m.actual-m.point);m.errorPct=m.error; if(m.errorPct>max)max=m.errorPct;}});
-  return {tol:tol,max:max,entered:entered,pass:entered===5 && max<=tol};
+ var cfg=DEVICE_CONFIG[o.deviceType],tol=parseTolerance(o.rsToleranceSpec),max=0,entered=0,tests=0;
+ if(cfg&&cfg.points){
+   [0,25,50,75,100].forEach(function(p){var v=parseFloat(o.deviceData.fields['point_'+p]);if(Number.isFinite(v)){entered++;max=Math.max(max,Math.abs(v-p));}});
+   return {kind:'calibration',tol:tol,max:max,entered:entered,tests:0,pass:entered===5 && (tol==null || max<=tol)};
+ }
+ tests=(o.deviceData.tests||[]).filter(function(x){return x.passed;}).length;
+ var total=(o.deviceData.tests||[]).length;
+ return {kind:'functional',tol:tol,max:null,entered:0,tests:tests,total:total,pass:total>0&&tests===total};
 }
 function rsQuality(o,c){
-  var checks=[['Tag',o.reportTag],['Model',o.reportModel],['Manufacturer',o.rsManufacturer],['Serial',o.rsSerial],['Location',o.rsLocation],['Technician',o.rsTechnician],['Range',o.rsRange],['Reference standard',o.rsReference],['Work order',o.rsWorkOrder],['Measurements',c.entered===5],['Observations',o.rsObservations],['Corrective action',o.rsCorrective],['Verification',o.rsVerification],['Technician signature',o.rsTechSign]];
-  var done=checks.filter(function(x){return x[1]!=='' && x[1]!==false;}).length; return {pct:Math.round(done/checks.length*100),checks:checks};
+ var checks=[
+  ['Field device',o.deviceType],['Tag',o.reportTag],['Model',o.reportModel],['Manufacturer',o.rsManufacturer],
+  ['Location',o.rsLocation],['Technician',o.rsTechnician],['Test type',o.reportType],['Device test configuration',Object.keys(o.deviceData.fields||{}).length>0],
+  ['Reference / standard',o.rsReference],['Work order',o.rsWorkOrder],['Required measurements / tests',c.kind==='calibration'?c.entered===5:c.total>0&&c.tests===c.total],
+  ['Observations',o.rsObservations],['Corrective action',o.rsCorrective],['Verification',o.rsVerification],['Technician signature',o.rsTechSign]
+ ];
+ var done=checks.filter(function(x){return x[1]!==''&&x[1]!==false;}).length;return {pct:Math.round(done/checks.length*100),checks:checks};
 }
 function rsDraw(o,c){
-  var cv=document.getElementById('rsCalibrationChart');if(!cv)return;var ctx=cv.getContext('2d'),w=cv.clientWidth||600,h=180,d=devicePixelRatio||1;cv.width=w*d;cv.height=h*d;ctx.scale(d,d);ctx.clearRect(0,0,w,h);
-  var pad={l:38,r:12,t:14,b:28};ctx.strokeStyle='#cbd5e1';ctx.lineWidth=1;for(var i=0;i<=4;i++){var gy=pad.t+(h-pad.t-pad.b)*i/4;ctx.beginPath();ctx.moveTo(pad.l,gy);ctx.lineTo(w-pad.r,gy);ctx.stroke();}
-  ctx.fillStyle='#64748b';ctx.font='10px sans-serif';ctx.fillText('100',4,pad.t+4);ctx.fillText('0',18,h-pad.b+3);ctx.fillText('Actual vs ideal (%)',pad.l,11);
-  function xOf(p){return pad.l+(w-pad.l-pad.r)*p/100;} function yOf(v){return pad.t+(h-pad.t-pad.b)*(100-v)/100;}
-  ctx.setLineDash([5,4]);ctx.strokeStyle='#94a3b8';ctx.beginPath();[0,25,50,75,100].forEach(function(p,i){i?ctx.lineTo(xOf(p),yOf(p)):ctx.moveTo(xOf(p),yOf(p));});ctx.stroke();ctx.setLineDash([]);
-  ctx.strokeStyle=c.pass?'#16a34a':'#dc2626';ctx.lineWidth=2;ctx.beginPath();var started=false;o.measurements.forEach(function(m){var v=Number.isFinite(m.actual)?m.actual:null;if(v==null)return;if(!started){ctx.moveTo(xOf(m.point),yOf(v));started=true;}else{ctx.lineTo(xOf(m.point),yOf(v));}});ctx.stroke();
-  o.measurements.forEach(function(m){if(!Number.isFinite(m.actual))return;ctx.fillStyle=Math.abs(m.actual-m.point)<=c.tol?'#16a34a':'#dc2626';ctx.beginPath();ctx.arc(xOf(m.point),yOf(m.actual),4,0,Math.PI*2);ctx.fill();});
-  ctx.fillStyle='#64748b';[0,25,50,75,100].forEach(function(p){ctx.fillText(p+'%',xOf(p)-8,h-8);});
+ var cv=document.getElementById('rsCalibrationChart');if(!cv)return;
+ var ctx=cv.getContext('2d'),w=cv.clientWidth||600,h=180,d=window.devicePixelRatio||1;cv.width=w*d;cv.height=h*d;ctx.setTransform(d,0,0,d,0,0);ctx.clearRect(0,0,w,h);
+ if(c.kind!=='calibration'){ctx.fillStyle='#64748b';ctx.font='12px sans-serif';ctx.fillText('Functional test device — detailed checks are shown in the report.',18,35);return;}
+ var pad={l:38,r:12,t:14,b:28};ctx.strokeStyle='#cbd5e1';ctx.lineWidth=1;
+ for(var i=0;i<=4;i++){var gy=pad.t+(h-pad.t-pad.b)*i/4;ctx.beginPath();ctx.moveTo(pad.l,gy);ctx.lineTo(w-pad.r,gy);ctx.stroke();}
+ ctx.fillStyle='#64748b';ctx.font='10px sans-serif';ctx.fillText('100',4,pad.t+4);ctx.fillText('0',18,h-pad.b+3);ctx.fillText('Actual vs ideal (%)',pad.l,11);
+ function xOf(p){return pad.l+(w-pad.l-pad.r)*p/100;} function yOf(v){return pad.t+(h-pad.t-pad.b)*(100-v)/100;}
+ ctx.setLineDash([5,4]);ctx.strokeStyle='#94a3b8';ctx.beginPath();[0,25,50,75,100].forEach(function(p,i){i?ctx.lineTo(xOf(p),yOf(p)):ctx.moveTo(xOf(p),yOf(p));});ctx.stroke();ctx.setLineDash([]);
+ ctx.strokeStyle=c.pass?'#16a34a':'#dc2626';ctx.lineWidth=2;ctx.beginPath();var started=false;
+ [0,25,50,75,100].forEach(function(p){var v=parseFloat(o.deviceData.fields['point_'+p]);if(!Number.isFinite(v))return;if(!started){ctx.moveTo(xOf(p),yOf(v));started=true;}else ctx.lineTo(xOf(p),yOf(v));});ctx.stroke();
+ [0,25,50,75,100].forEach(function(p){var v=parseFloat(o.deviceData.fields['point_'+p]);if(!Number.isFinite(v))return;ctx.fillStyle=(c.tol==null||Math.abs(v-p)<=c.tol)?'#16a34a':'#dc2626';ctx.beginPath();ctx.arc(xOf(p),yOf(v),4,0,Math.PI*2);ctx.fill();});
+}
+function deviceResultText(o,c){
+ if(!o.deviceType)return 'Select a field device to begin.';
+ if(c.kind==='calibration')return c.entered<5?'Complete all five calibration points.':(c.pass?'Calibration passed.':'Calibration failed — investigate, adjust and repeat before return to service.');
+ return c.total===0?'Complete the device-specific functional checks.':(c.pass?'All recorded functional checks passed.':'One or more functional checks remain failed/incomplete.');
+}
+function deviceReportSections(o,c){
+ var dd=o.deviceData||{},cfg=DEVICE_CONFIG[o.deviceType]||{};
+ var fields=Object.keys(dd.fields||{}).filter(function(k){return dd.fields[k]!=='';}).map(function(k){return '<tr><td><b>'+rsEsc(k.replace(/_/g,' '))+'</b></td><td>'+rsEsc(dd.fields[k])+'</td></tr>';}).join('');
+ var tests=(dd.tests||[]).map(function(t){return '<tr><td>'+rsEsc(t.name)+'</td><td style="font-weight:700;color:'+(t.passed?'#15803d':'#b91c1c')+'">'+(t.passed?'PASS':'FAIL / NOT COMPLETE')+'</td></tr>';}).join('');
+ var points='';
+ if(c.kind==='calibration')points='<h3 style="font-size:14px;border-bottom:1px solid #ddd;padding-bottom:5px;">Calibration Results</h3><table style="width:100%;border-collapse:collapse;font-size:11px;"><tr><th>Point</th><th>Reference</th><th>Actual</th><th>Error</th><th>Status</th></tr>'+[0,25,50,75,100].map(function(p){var v=parseFloat(dd.fields['point_'+p]);var ok=Number.isFinite(v)&&(c.tol==null||Math.abs(v-p)<=c.tol);return '<tr><td>'+p+'%</td><td>'+p.toFixed(2)+'</td><td>'+(Number.isFinite(v)?v.toFixed(2):'—')+'</td><td>'+(Number.isFinite(v)?Math.abs(v-p).toFixed(2)+'%':'—')+'</td><td style="color:'+(ok?'#15803d':'#b91c1c')+';font-weight:bold">'+(Number.isFinite(v)?(ok?'PASS':'FAIL'):'—')+'</td></tr>';}).join('')+'</table>';
+ else points='<h3 style="font-size:14px;border-bottom:1px solid #ddd;padding-bottom:5px;">Functional Test Results</h3><table style="width:100%;border-collapse:collapse;font-size:11px;"><tr><th>Test</th><th>Result</th></tr>'+tests+'</table><p style="font-size:11px;margin-top:8px;"><b>Measured / observed results:</b><br>'+rsEsc(dd.fields.measured_results||'—')+'</p>';
+ return '<h3 style="font-size:14px;border-bottom:1px solid #ddd;padding-bottom:5px;">Device-Specific Configuration</h3><table style="width:100%;border-collapse:collapse;font-size:11px;">'+fields+'</table>'+points;
 }
 function rsRender(){
- var o=rsVals(),c=rsCalc(o),q=rsQuality(o,c); if(!rsCurrent){rsCurrent={id:rsId(),rev:1,status:'DRAFT',created:new Date().toISOString()};}
+ var o=rsVals(),c=rsCalc(o),q=rsQuality(o,c);
+ if(!rsCurrent)rsCurrent={id:rsId(),rev:1,status:'DRAFT',created:new Date().toISOString()};
  rsCurrent=Object.assign(rsCurrent,o,{calculation:c,quality:q,updated:new Date().toISOString()});
  var set=function(id,v){var e=document.getElementById(id);if(e)e.textContent=v;};
- set('rsReportId',rsCurrent.id);set('rsResultKpi',c.entered<5?'PENDING':(c.pass?'PASS':'FAIL'));set('rsMaxErrorKpi',c.entered?c.max.toFixed(2)+'%':'—');set('rsQualityKpi',q.pct+'%');set('rsQualityText',q.pct+'%');set('rsToleranceChip','Tolerance: '+c.tol+'%');
- var st=document.getElementById('rsStatusText');if(st){st.textContent=c.entered<5?'PENDING':(c.pass?'PASS':'FAIL');st.className=c.entered<5?'rs-pending':(c.pass?'rs-pass':'rs-fail');}
- var qBar=document.getElementById('rsQualityBar');if(qBar){qBar.style.width=q.pct+'%';qBar.style.display='block';qBar.style.height='100%';qBar.style.background='#2563eb';}
+ set('rsReportId',rsCurrent.id);set('rsResultKpi',!o.deviceType?'PENDING':(c.pass?'PASS':'PENDING'));set('rsMaxErrorKpi',c.kind==='calibration'&&c.entered?'Max '+c.max.toFixed(2)+'%':'—');set('rsQualityKpi',q.pct+'%');set('rsQualityText',q.pct+'%');
+ set('rsToleranceChip',o.rsToleranceSpec||'Acceptance criteria not entered');set('rsResultLabel',o.deviceType?(o.deviceType.toUpperCase()+' RESULT'):'TEST RESULT');
+ var st=document.getElementById('rsStatusText');if(st){st.textContent=!o.deviceType?'PENDING':(c.pass?'PASS':(c.kind==='calibration'&&c.entered<5?'PENDING':'FAIL'));st.className=(!o.deviceType||(!c.pass&&c.kind==='calibration'&&c.entered<5))?'rs-pending':(c.pass?'rs-pass':'rs-fail');}
+ var qBar=document.getElementById('rsQualityBar');if(qBar)qBar.style.width=q.pct+'%';
  var qList=document.getElementById('rsQualityList');if(qList)qList.innerHTML=q.checks.map(function(x){return (x[1]!==''&&x[1]!==false)?'🟢 '+rsEsc(x[0]):'🔴 '+rsEsc(x[0]);}).join('<br>');
- var a=c.entered<5?'Complete all five calibration points to generate a final assessment.':(c.pass?'Calibration passed. Maximum deviation is '+c.max.toFixed(2)+'%, within the allowable tolerance of '+c.tol+'%. Instrument performance is acceptable based on the recorded points. Recommended action: return to service after normal verification.':'Calibration failed. Maximum deviation is '+c.max.toFixed(2)+'%, exceeding the allowable tolerance of '+c.tol+'%. Recommended action: investigate sensor, configuration, wiring and calibration adjustment, then repeat the test before returning to service.');
- var assess=document.getElementById('rsAssessment');if(assess)assess.textContent=a; rsDraw(o,c);
+ var assess=document.getElementById('rsAssessment');if(assess)assess.textContent=deviceResultText(o,c);
+ rsDraw(o,c);
  var preview='<div style="font-family:Arial,sans-serif;color:#172033;background:#fff;padding:18px;border-radius:10px;max-width:820px;margin:auto;">'+
- '<div style="display:flex;justify-content:space-between;border-bottom:2px solid #1e3a5f;padding-bottom:10px;"><div><div style="font-size:11px;color:#64748b;letter-spacing:1px;">INSTRUMENTPRO</div><h2 style="margin:3px 0;">'+rsEsc((o.reportType||'Calibration').toUpperCase())+' REPORT</h2><div style="font-size:11px;color:#64748b;">'+rsEsc(rsCurrent.id)+' • REV '+rsCurrent.rev+'</div></div><div style="font-size:20px;font-weight:800;color:'+(c.entered<5?'#b45309':c.pass?'#15803d':'#b91c1c')+';">'+(c.entered<5?'PENDING':c.pass?'PASS':'FAIL')+'</div></div>'+
+ '<div style="display:flex;justify-content:space-between;border-bottom:2px solid #1e3a5f;padding-bottom:10px;"><div><div style="font-size:11px;color:#64748b;letter-spacing:1px;">INSTRUMENTPRO</div><h2 style="margin:3px 0;">ADVANCED FIELD REPORT</h2><div style="font-size:11px;color:#64748b;">'+rsEsc(rsCurrent.id)+' • REV '+rsCurrent.rev+' • '+rsEsc(o.deviceType||'Device not selected')+'</div></div><div style="font-size:20px;font-weight:800;color:'+(c.pass?'#15803d':'#b45309')+';">'+(!o.deviceType?'PENDING':c.pass?'PASS':'PENDING')+'</div></div>'+
  '<table style="width:100%;font-size:12px;margin:12px 0;border-collapse:collapse;"><tr><td><b>Tag</b><br>'+rsEsc(o.reportTag||'—')+'</td><td><b>Model</b><br>'+rsEsc(o.reportModel||'—')+'</td><td><b>Manufacturer</b><br>'+rsEsc(o.rsManufacturer||'—')+'</td></tr><tr><td><b>Serial</b><br>'+rsEsc(o.rsSerial||'—')+'</td><td><b>Location</b><br>'+rsEsc(o.rsLocation||'—')+'</td><td><b>Technician</b><br>'+rsEsc(o.rsTechnician||'—')+'</td></tr></table>'+
- '<h3 style="font-size:14px;border-bottom:1px solid #ddd;padding-bottom:5px;">Calibration Results</h3><table style="width:100%;border-collapse:collapse;font-size:11px;"><tr><th style="text-align:left">Point</th><th>Reference</th><th>Actual</th><th>Error</th><th>Status</th></tr>'+o.measurements.map(function(m){var ok=Number.isFinite(m.actual)&&Math.abs(m.actual-m.point)<=c.tol;return '<tr><td style="padding:5px;border-bottom:1px solid #eee;">'+m.point+'%</td><td style="text-align:center;border-bottom:1px solid #eee;">'+m.point.toFixed(2)+'</td><td style="text-align:center;border-bottom:1px solid #eee;">'+(Number.isFinite(m.actual)?m.actual.toFixed(2):'—')+'</td><td style="text-align:center;border-bottom:1px solid #eee;">'+(Number.isFinite(m.actual)?Math.abs(m.actual-m.point).toFixed(2)+'%':'—')+'</td><td style="text-align:center;border-bottom:1px solid #eee;color:'+(ok?'#15803d':'#b91c1c')+';font-weight:bold;">'+(Number.isFinite(m.actual)?(ok?'PASS':'FAIL'):'—')+'</td></tr>';}).join('')+'</table>'+
- '<div style="margin-top:12px;padding:10px;background:#f8fafc;border-left:4px solid #1e3a5f;font-size:11px;"><b>Engineering Assessment</b><br>'+rsEsc(a)+'</div>'+
+ '<p style="font-size:11px;"><b>Test Type:</b> '+rsEsc(o.reportType||'—')+' &nbsp; <b>Range/Service:</b> '+rsEsc(o.rsRange||'—')+' &nbsp; <b>Unit:</b> '+rsEsc(o.rsUnit||'—')+'<br><b>Acceptance/Tolerance:</b> '+rsEsc(o.rsToleranceSpec||'—')+' &nbsp; <b>Reference:</b> '+rsEsc(o.rsReference||'—')+'</p>'+
+ deviceReportSections(o,c)+
+ '<div style="margin-top:12px;padding:10px;background:#f8fafc;border-left:4px solid #1e3a5f;font-size:11px;"><b>Engineering Assessment</b><br>'+rsEsc(deviceResultText(o,c))+'</div>'+
  '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;font-size:11px;"><div><b>Observations</b><br>'+rsEsc(o.rsObservations||'—')+'<br><br><b>Root Cause</b><br>'+rsEsc(o.rsRootCause||'—')+'</div><div><b>Corrective Action</b><br>'+rsEsc(o.rsCorrective||'—')+'<br><br><b>Verification</b><br>'+rsEsc(o.rsVerification||'—')+'</div></div>'+
- '<div style="margin-top:16px;border-top:1px solid #ddd;padding-top:10px;font-size:10px;color:#64748b;">Reference standard: '+rsEsc(o.rsReference||'—')+' • Work order: '+rsEsc(o.rsWorkOrder||'—')+' • Issued status: '+rsEsc(rsCurrent.status)+'</div></div>';
+ '<div style="margin-top:16px;border-top:1px solid #ddd;padding-top:10px;font-size:10px;color:#64748b;">Work order: '+rsEsc(o.rsWorkOrder||'—')+' • Technician: '+rsEsc(o.rsTechSign||'—')+' • Supervisor/Witness: '+rsEsc(o.rsSupervisor||'—')+' • Status: '+rsEsc(rsCurrent.status)+'</div></div>';
  var prev=document.getElementById('reportPreview');if(prev)prev.innerHTML=preview;
 }
 function rsDownload(name,data,type){var b=new Blob([data],{type:type}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(u);}
-function rsHistory(){var arr=JSON.parse(localStorage.getItem('instrumentpro_reports')||'[]'),el=document.getElementById('rsHistory');if(!arr.length){el.textContent='No reports issued yet.';return;}el.innerHTML=arr.slice().reverse().map(function(r){return '<div class="rs-history-item"><div><b>'+rsEsc(r.id)+'</b><br><small>'+rsEsc(r.tag||'Untagged')+' • '+rsEsc(r.type||'Report')+'</small></div><div style="text-align:right"><b class="'+(r.result==='PASS'?'rs-pass':r.result==='FAIL'?'rs-fail':'rs-pending')+'">'+rsEsc(r.result)+'</b><br><small>'+new Date(r.date).toLocaleString()+'</small></div></div>';}).join('');}
-function rsIssue(){rsRender();if(!rsCurrent.calculation || rsCurrent.calculation.entered<5){alert('Complete all five calibration measurements before issuing the report.');return;}if(!rsCurrent.rsTechSign){alert('Enter the technician signature/name before issuing.');return;}rsCurrent.status='ISSUED';rsCurrent.issued=new Date().toISOString();var arr=JSON.parse(localStorage.getItem('instrumentpro_reports')||'[]');arr.push({id:rsCurrent.id,tag:rsCurrent.reportTag,type:rsCurrent.reportType,result:rsCurrent.calculation.pass?'PASS':'FAIL',date:rsCurrent.issued,revision:rsCurrent.rev});localStorage.setItem('instrumentpro_reports',JSON.stringify(arr.slice(-50)));rsRender();rsHistory();alert('Report '+rsCurrent.id+' issued successfully.');}
-function rsExport(){rsRender();var html='<!doctype html><html><head><meta charset="utf-8"><title>'+rsEsc(rsCurrent.id)+'</title><style>body{font-family:Arial;margin:30px}table{width:100%;border-collapse:collapse}td,th{padding:6px;border-bottom:1px solid #ddd}.loop-check-item{display:flex;align-items:center;gap:7px;padding:7px 8px;border:1px solid #e2e8f0;border-radius:9px;background:#f8fafc;font-size:.67rem}.loop-check-item input{width:auto!important;flex:none}#loopSignalTable input{min-width:58px;width:72px;padding:5px;font-size:.65rem}#loopSignalTable td{padding:5px 4px;font-size:.62rem}#loopOverallStatusChip{font-size:.55rem;padding:3px 7px;border-radius:999px;background:#e2e8f0;color:#475569}</style></head><body>'+document.getElementById('reportPreview').innerHTML+'</body></html>';rsDownload(rsCurrent.id+'.html',html,'text/html');}
+function rsHistory(){var arr=JSON.parse(localStorage.getItem('instrumentpro_reports')||'[]'),el=document.getElementById('rsHistory');if(!arr.length){el.textContent='No reports issued yet.';return;}el.innerHTML=arr.slice().reverse().map(function(r){return '<div class="rs-history-item"><div><b>'+rsEsc(r.id)+'</b><br><small>'+rsEsc(r.tag||'Untagged')+' • '+rsEsc(r.type||'Report')+' • '+rsEsc(r.deviceType||'Device')+'</small></div><div style="text-align:right"><b>'+rsEsc(r.result)+'</b><br><small>'+new Date(r.date).toLocaleString()+'</small></div></div>';}).join('');}
+function rsIssue(){rsRender();var o=rsCurrent;if(!o.deviceType){alert('Select a field device first.');return;}if(!o.calculation.pass){alert('Complete and pass the device-specific tests before issuing the report.');return;}if(!o.rsTechSign){alert('Enter the technician signature/name before issuing.');return;}rsCurrent.status='ISSUED';rsCurrent.issued=new Date().toISOString();var arr=JSON.parse(localStorage.getItem('instrumentpro_reports')||'[]');arr.push({id:rsCurrent.id,tag:rsCurrent.reportTag,type:rsCurrent.reportType,deviceType:rsCurrent.deviceType,result:'PASS',date:rsCurrent.issued,revision:rsCurrent.rev});localStorage.setItem('instrumentpro_reports',JSON.stringify(arr.slice(-50)));rsRender();rsHistory();alert('Report '+rsCurrent.id+' issued successfully.');}
+function rsExport(){rsRender();var html='<!doctype html><html><head><meta charset="utf-8"><title>'+rsEsc(rsCurrent.id)+'</title><style>body{font-family:Arial;margin:30px}table{width:100%;border-collapse:collapse}td,th{padding:6px;border-bottom:1px solid #ddd}</style></head><body>'+document.getElementById('reportPreview').innerHTML+'</body></html>';rsDownload(rsCurrent.id+'.html',html,'text/html');}
 function rsJson(){rsRender();rsDownload(rsCurrent.id+'.json',JSON.stringify(rsCurrent,null,2),'application/json');}
-function rsCsv(){rsRender();var c=rsCurrent.calculation,rows=['Report ID,Tag,Point,Actual,Error %,Tolerance %,Result'];rsCurrent.measurements.forEach(function(m){rows.push([rsCurrent.id,rsCurrent.reportTag,m.point,m.actual,Number.isFinite(m.actual)?Math.abs(m.actual-m.point).toFixed(3):'',c.tol,Number.isFinite(m.actual)?(Math.abs(m.actual-m.point)<=c.tol?'PASS':'FAIL'):''].map(function(v){return '"'+String(v==null?'':v).replace(/"/g,'""')+'"';}).join(','));});rsDownload(rsCurrent.id+'.csv',rows.join('\n'),'text/csv');}
-function rsSync(){rsRender();if(typeof window.syncReportToWebhooks==='function')window.syncReportToWebhooks({source:'InstrumentPro',type:'AdvancedReport',report:rsCurrent});else alert('Report sync is not configured yet.');}
-function init(){['reportTag','reportModel','rsManufacturer','rsSerial','rsLocation','rsTechnician','reportType','rsRange','rsUnit','reportTolerance','rsReference','rsWorkOrder','rsObservations','rsRootCause','rsCorrective','rsVerification','rsTechSign','rsSupervisor','rp0','rp25','rp50','rp75','rp100'].forEach(function(id){var e=document.getElementById(id);if(e)e.addEventListener('input',rsRender);});
-var bind=function(id,fn){var e=document.getElementById(id);if(e)e.addEventListener('click',fn);};
-bind('generateReportBtn',rsRender);
-bind('rsIssueBtn',rsIssue);
-bind('rsPrintBtn',function(){rsRender();var w=window.open('','_blank');if(!w){alert('Allow pop-ups to print the report.');return;}var htmlBody=(document.getElementById('reportPreview')||{}).innerHTML||'';w.document.write('<html><head><title>'+(rsCurrent&&rsCurrent.id?rsCurrent.id:'Report')+'</title></head><body>'+htmlBody+'</body></html>');w.document.close();w.focus();w.print();});
-bind('exportReportBtn',rsExport);
-bind('rsJsonBtn',rsJson);
-bind('rsCsvBtn',rsCsv);
-bind('syncReportBtn',rsSync);
-rsHistory();rsRender();}
+function rsCsv(){rsRender();var o=rsCurrent,c=o.calculation,rows=['Report ID,Device Type,Tag,Test,Result,Details'];(o.deviceData.tests||[]).forEach(function(t){rows.push([o.id,o.deviceType,o.reportTag,t.name,t.passed?'PASS':'FAIL',''].map(function(v){return '"'+String(v==null?'':v).replace(/"/g,'""')+'"';}).join(','));});if(c.kind==='calibration')[0,25,50,75,100].forEach(function(p){var v=o.deviceData.fields['point_'+p];rows.push([o.id,o.deviceType,o.reportTag,p+'% reference',Number.isFinite(parseFloat(v))?'Recorded':'Missing',v].map(function(v){return '"'+String(v==null?'':v).replace(/"/g,'""')+'"';}).join(','));});rsDownload(o.id+'.csv',rows.join('\n'),'text/csv');}
+function rsSync(){rsRender();if(typeof window.syncReportToWebhooks==='function')window.syncReportToWebhooks({source:'InstrumentPro',type:'AdvancedFieldReport',report:rsCurrent});else alert('Report sync is not configured yet.');}
+function init(){
+ var ids=['reportTag','reportModel','rsManufacturer','rsSerial','rsLocation','rsTechnician','reportType','rsRange','rsUnit','rsToleranceSpec','rsReference','rsWorkOrder','rsObservations','rsRootCause','rsCorrective','rsVerification','rsTechSign','rsSupervisor'];
+ ids.forEach(function(id){var e=document.getElementById(id);if(e)e.addEventListener('input',rsRender);e&&e.addEventListener('change',rsRender);});
+ var device=document.getElementById('rsDeviceType');if(device)device.addEventListener('change',function(){rsCurrent=null;renderDeviceConfig();});
+ var bind=function(id,fn){var e=document.getElementById(id);if(e)e.addEventListener('click',fn);};
+ bind('generateReportBtn',rsRender);bind('rsIssueBtn',rsIssue);bind('rsPrintBtn',function(){rsRender();var w=window.open('','_blank');if(!w){alert('Allow pop-ups to print the report.');return;}w.document.write('<html><head><title>'+rsEsc(rsCurrent.id)+'</title></head><body>'+document.getElementById('reportPreview').innerHTML+'</body></html>');w.document.close();w.focus();w.print();});
+ bind('exportReportBtn',rsExport);bind('rsJsonBtn',rsJson);bind('rsCsvBtn',rsCsv);bind('syncReportBtn',rsSync);
+ rsHistory();rsRender();
+}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
 </script>
@@ -7829,208 +8306,62 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 <script id="trouble-qa-js">
 (function(){
 'use strict';
-/* Troubleshooting Assistant v2
-   Flow: Instrument -> Symptom -> Targeted check -> Conditional result.
-   The app gives diagnostic direction, not a replacement for OEM/site procedures.
-*/
 const D={
- level:{n:'Level transmitter',s:{
-  low:{label:'Reading low',q:'Does an independent level indication confirm the level is actually low?',yes:['Process level is genuinely low.','Check process condition, impulse/sensing path and configuration before adjusting the transmitter.','Verify against an independent reference after the process is stable.'],no:['Transmitter indication is low relative to the reference.','Check impulse/sensing path, zero/elevation, configuration and calibration.','Re-test against the independent reference.']},
-  high:{label:'Reading high',q:'Does an independent level indication also show a high level?',yes:['Process level is genuinely high.','Check process condition and sensing path; do not recalibrate simply because the displayed value is high.','Verify the process level independently.'],no:['Transmitter indication is high relative to the reference.','Check sensing path, configuration, zero/elevation and calibration.','Repeat the comparison after correction.']},
-  erratic:{label:'Reading unstable',q:'Does the process level itself visibly fluctuate at the same time?',yes:['The transmitter may be following a real process change.','Check whether turbulence, agitation or process pulsation explains the movement.','Compare with a stable independent reference if available.'],no:['The instability is likely measurement-related.','Check sensing restrictions, wiring, grounding/noise and installation conditions.','Compare the signal with an independent level reference.']},
-  drift:{label:'Reading drifting',q:'Does the independent reference drift in the same direction?',yes:['The process/reference is also changing.','Check process and temperature conditions before changing transmitter trim.','Confirm stable process conditions and compare again.'],no:['The transmitter is drifting relative to the reference.','Check sensing path, temperature effects, zero/elevation and calibration.','Re-test after the physical cause is corrected.']},
-  comm:{label:'No communication',q:'Is the transmitter loop powered and producing a valid loop current?',yes:['Power is present; investigate the communication path.','Check wiring, load/resistance, address and communication hardware/configuration.','Verify communication with an approved communicator/test method.'],no:['Start with the power/loop path.','Check supply, polarity, terminals, barriers/isolators and loop continuity.','Confirm a stable loop current before troubleshooting communication.']},
-  nodisplay:{label:'No display',q:'Is correct supply/loop power present at the transmitter?',yes:['Power is present; investigate the display path.','Check display connection/status and device diagnostics before replacing the display.','Confirm the transmitter remains operational from the loop/communicator.'],no:['The primary fault is the power path.','Check supply, terminals, polarity and barriers/isolators as applicable.','Restore correct power and verify operation.']}
- }},
- pressure:{n:'Pressure transmitter',s:{
-  low:{label:'Reading low',q:'Does a certified/stable pressure reference also read low?',yes:['The process pressure may actually be low.','Check process isolation, impulse line condition and operating conditions.','Verify again at a stable operating point.'],no:['The transmitter is low relative to the reference.','Check impulse-line restriction, zero/span and configuration before trimming.','Repeat the reference comparison after correction.']},
-  high:{label:'Reading high',q:'Does an independent pressure reference also read high?',yes:['The process pressure may actually be high.','Check process condition and impulse path before changing calibration.','Verify independently and follow process safety limits.'],no:['The transmitter is high relative to the reference.','Check impulse path, zero/span and configuration.','Re-test against the certified reference.']},
-  erratic:{label:'Reading unstable',q:'Does the independent pressure reference fluctuate too?',yes:['The process may be unstable.','Check pulsation, vibration and process conditions before changing the transmitter.','Compare both readings under a stable condition.'],no:['The transmitter signal is unstable relative to the reference.','Check impulse lines, fittings, vibration, wiring and electrical noise.','Repeat the test with a stable reference.']},
-  drift:{label:'Reading drifting',q:'Does the reference instrument remain stable while the transmitter drifts?',yes:['The transmitter/sensing system is drifting.','Check temperature effects, impulse condition, zero shift and moisture before re-trimming.','Re-test after stabilization.'],no:['The process/reference may also be changing.','Confirm process stability and compare both instruments over time.','Only adjust calibration after the physical cause is excluded.']},
-  comm:{label:'No communication',q:'Is loop power/current healthy?',yes:['Investigate the HART/communication path.','Check resistance/load, wiring, address and communicator connection.','Verify communication without changing device configuration unnecessarily.'],no:['Troubleshoot the loop power first.','Check supply, polarity, terminals and barriers/isolators.','Confirm stable loop current before HART diagnostics.']},
-  nodisplay:{label:'No display',q:'Is the transmitter powered correctly?',yes:['Power is present.','Check display connection, display status and device diagnostics.','Confirm PV/current using an approved external method.'],no:['Power is missing/incorrect.','Check supply, terminals, polarity and loop components.','Restore power and verify the transmitter.']}
- }},
- flow:{n:'Flow meter',s:{
-  low:{label:'Flow reading low',q:'Does an independent flow indication also show low flow?',yes:['Low flow may be real.','Check process condition, upstream/downstream installation and sensing condition.','Verify at a stable operating point.'],no:['The meter is low relative to the reference.','Check scaling, installation, sensing surfaces and configuration.','Repeat the comparison after correction.']},
-  high:{label:'Flow reading high',q:'Does an independent reference also indicate high flow?',yes:['High flow may be real.','Check process condition and installation before recalibrating.','Verify against the independent reference.'],no:['The meter is high relative to the reference.','Check scaling, installation, sensing condition and configuration.','Repeat the reference comparison.']},
-  erratic:{label:'Flow signal noisy',q:'Does the process/reference flow fluctuate at the same time?',yes:['The meter may be following real process variation.','Check turbulence, pulsation and operating conditions.','Compare under a stable flow condition.'],no:['The signal is unstable relative to the process.','Check grounding, EMI, cable routing, sensing surfaces and installation.','Verify with an independent reference.']},
-  drift:{label:'Flow reading drifting',q:'Does the independent reference remain stable?',yes:['The meter is drifting relative to the reference.','Check fouling, temperature, installation and configuration.','Repeat after the physical cause is corrected.'],no:['The process may be changing.','Confirm stable operating conditions before changing calibration.','Compare both instruments again.']},
-  comm:{label:'No communication',q:'Is the meter powered and showing a valid process signal locally?',yes:['Investigate the communication path.','Check wiring, addressing/load and communication hardware.','Verify communications using the approved method.'],no:['Start with power/instrument status.','Check supply, terminals and device diagnostics.','Restore normal instrument operation before communication testing.']},
-  nodisplay:{label:'No display',q:'Is correct instrument power present?',yes:['Power is present.','Check display connection/status and diagnostics.','Verify the process signal by an approved external method.'],no:['Power is missing/incorrect.','Check supply, terminals, polarity and protection components.','Restore power and verify operation.']}
- }},
- controlvalve:{n:'Control valve',s:{
-  low:{label:'Valve does not reach command',q:'Does the position feedback also show that the valve is not reaching the commanded position?',yes:['The valve is physically failing to reach command.','Check actuator supply, positioner, linkage, friction/stiction and travel limits.','Repeat a controlled stroke test when authorized.'],no:['Feedback may be wrong or misconfigured.','Check feedback linkage/sensor and positioner calibration before changing the valve.','Compare actual stem travel with feedback.']},
-  high:{label:'Valve overtravels',q:'Does physical stem travel confirm the overtravel?',yes:['The valve is physically overtraveling.','Check positioner setup, feedback, travel limits and mechanical stops.','Verify travel against the approved valve/OEM specification.'],no:['Feedback may be incorrect.','Check position feedback and calibration before changing mechanical settings.','Compare physical travel with indicated travel.']},
-  erratic:{label:'Valve hunts / oscillates',q:'Does actual valve travel oscillate with the command?',yes:['The valve is mechanically/control-loop unstable.','Check stiction, positioner tuning, actuator supply and controller tuning.','Stabilize the loop and verify commanded versus actual travel.'],no:['The indication may be unstable rather than the valve itself.','Check feedback signal, wiring and positioner diagnostics.','Compare physical travel with feedback.']},
-  drift:{label:'Position drifts',q:'Does the valve physically move while the command remains steady?',yes:['The valve is losing position.','Check actuator supply, leakage, linkage and positioner.','Verify position at a steady command after correction.'],no:['Feedback may be drifting.','Check feedback sensor/linkage and positioner diagnostics.','Compare indicated and physical position.']},
-  comm:{label:'No communication',q:'Does the positioner have power and a normal local status?',yes:['Investigate the communication path.','Check wiring, address/load and approved communication hardware.','Verify communications without disturbing the valve safety state.'],no:['Start with positioner power/status.','Check supply and wiring before communication diagnostics.','Restore normal positioner operation first.']},
-  nodisplay:{label:'Feedback missing',q:'Is the positioner powered and otherwise healthy?',yes:['Power is present.','Check feedback linkage/sensor, wiring and diagnostics.','Verify actual valve travel independently.'],no:['Power/status is the first issue.','Check actuator/positioner supply and wiring.','Restore power and verify feedback.']}
- }},
- shutdownvalve:{n:'Shutdown / ESD valve',s:{
-  low:{label:'Stroke is slow',q:'Is the measured stroke time outside the approved baseline?',yes:['Stroke performance is degraded.','Check actuator supply, solenoid, speed control, tubing restrictions and friction.','Repeat only under an approved test procedure.'],no:['Stroke time is within baseline.','Investigate feedback indication or test conditions rather than assuming a valve fault.','Compare command, feedback and actual travel.']},
-  high:{label:'Travel is excessive',q:'Does physical travel exceed the approved mechanical limit?',yes:['Physical travel is outside the approved limit.','Check feedback, mechanical stops and positioner/actuator setup under the site procedure.','Do not bypass ESD safeguards to force travel.'],no:['Indicated travel may be incorrect.','Check feedback and diagnostic configuration.','Compare indication with physical travel under an approved test.']},
-  erratic:{label:'Stroke is inconsistent',q:'Does the inconsistency repeat during a controlled, authorized test?',yes:['The valve/actuator response is inconsistent.','Check actuator/solenoid response, supply pressure and mechanical travel.','Compare stroke time with the established baseline.'],no:['The symptom may be test/process related.','Confirm test conditions and feedback before invasive troubleshooting.','Repeat only when authorized.']},
-  drift:{label:'Position does not hold',q:'Does actuator pressure/command remain stable while the valve position changes?',yes:['The valve is not holding position.','Check actuator leakage, solenoid behavior, mechanical condition and feedback.','Verify safe-state behavior per approved procedure.'],no:['Investigate command/supply stability first.','Check controller output, solenoid and actuator supply.','Re-test against the approved baseline.']},
-  comm:{label:'No diagnostics communication',q:'Is the ESD/positioner device powered and showing normal local status?',yes:['Investigate the approved diagnostics communication path.','Check wiring, addressing and interface hardware.','Do not compromise the safety function while testing.'],no:['Start with device/controller status and power.','Check approved power and wiring paths.','Restore normal status before communications testing.']},
-  nodisplay:{label:'Feedback missing',q:'Is the ESD feedback device powered and healthy?',yes:['Power is present.','Check feedback linkage/sensor, wiring and diagnostics.','Verify actual valve position under an approved test.'],no:['Power/status is the first issue.','Check approved feedback power and wiring.','Restore feedback and verify the ESD indication.']}
- }},
- speedprobe:{n:'Speed probe',s:{
-  low:{label:'Speed reading low',q:'Does an independent tachometer/reference confirm the shaft speed is actually low?',yes:['The shaft speed may be genuinely low.','Check the machine/process before adjusting the pickup.','Verify against the independent reference.'],no:['The speed signal is low relative to the reference.','Check pickup air gap, target/gear condition, pulses-per-revolution and wiring.','Verify pulse amplitude/frequency at the approved test point.']},
-  high:{label:'Speed reading high',q:'Does an independent reference confirm the speed is high?',yes:['High speed may be real.','Follow machine protection/operating limits and investigate the process.','Verify independently.'],no:['The pickup signal is indicating too high.','Check pulses-per-revolution, false pulses, electrical noise and configuration.','Verify the pulse train with an approved instrument.']},
-  erratic:{label:'Speed signal erratic',q:'Does the independent speed reference remain stable?',yes:['The machine speed may actually fluctuate.','Check the machine/control system before replacing the probe.','Compare both signals over time.'],no:['The pickup signal is unstable.','Check air gap, target/gear condition, shielding, grounding and cable integrity.','Verify pulse quality at the input.']},
-  drift:{label:'Speed reading drifting',q:'Does the independent speed reference remain stable?',yes:['The pickup/system is drifting relative to the reference.','Check air gap, mounting, target condition, temperature effects and signal conditioning.','Repeat the comparison after correction.'],no:['The machine speed may be changing.','Confirm process stability and compare both measurements.','Do not recalibrate until the reference is stable.']},
-  comm:{label:'No communication',q:'Is the speed input device powered and receiving a pulse signal?',yes:['Investigate the interface/communication path.','Check wiring, input configuration and controller/interface status.','Verify the pulse signal independently.'],no:['Start with the sensor/signal path.','Check power where applicable, coil/wiring condition, air gap and pulse generation.','Restore a valid signal before interface troubleshooting.']},
-  nodisplay:{label:'No speed indication',q:'Can you measure a valid pulse signal from the pickup?',yes:['A pulse exists but the indication is missing.','Check input configuration, scaling, wiring and display/controller path.','Verify pulses-per-revolution settings.'],no:['No valid pulse is present.','Check air gap, target, coil resistance and wiring.','Verify the pickup output against the manufacturer specification.']}
- }},
- vibprobe:{n:'Vibration probe',s:{
-  low:{label:'Vibration reading low',q:'Does an independent vibration measurement confirm low vibration?',yes:['Low vibration may be real.','Check machine operating condition and measurement location.','Verify against the approved reference.'],no:['The measurement is low relative to the reference.','Check probe gap/bias, probe/extension/proximitor compatibility and cable condition.','Verify the signal chain end-to-end.']},
-  high:{label:'Vibration reading high',q:'Does an independent measurement also show high vibration?',yes:['High vibration may be real.','Treat it as a machine-condition issue and follow the plant protection procedure.','Verify with the approved reference.'],no:['The channel may be falsely high.','Check probe gap/bias, grounding, cable condition and signal conditioning.','Compare the signal with an independent measurement.']},
-  erratic:{label:'Vibration signal erratic',q:'Does the independent vibration reference fluctuate in the same way?',yes:['Machine vibration may actually be changing.','Check operating condition and machine behavior.','Compare both measurements over time.'],no:['The signal chain is suspect.','Check probe gap/bias, extension connectors, moisture/corrosion, shielding and proximitor compatibility.','Verify the signal at each stage.']},
-  drift:{label:'Vibration reading drifting',q:'Does the independent reference remain stable?',yes:['The measurement chain is drifting.','Check probe gap, bias voltage, temperature effects, cable and proximitor compatibility.','Repeat the comparison after correction.'],no:['Machine condition may be changing.','Confirm stable speed/load before diagnosing the instrument.','Compare both channels under the same condition.']},
-  comm:{label:'No communication',q:'Is the vibration channel powered and producing a valid signal?',yes:['Investigate the interface path.','Check wiring, channel configuration and controller/interface status.','Verify the signal independently.'],no:['Start with the sensor chain.','Check supply, probe gap/bias, extension cable and proximitor.','Restore a valid signal before interface diagnostics.']},
-  nodisplay:{label:'No vibration indication',q:'Is a valid sensor-chain signal present?',yes:['The sensor chain is producing a signal.','Check channel configuration, scaling and display/controller path.','Verify the channel against the approved configuration.'],no:['No valid sensor signal is present.','Check probe gap/bias, extension cable, proximitor and wiring.','Verify the sensor chain against the OEM specification.']}
- }},
- gasdet:{n:'Gas detector',s:{
-  low:{label:'Gas reading low',q:'Does a certified test gas produce the expected detector response?',yes:['The sensor responds correctly to the test gas.','Investigate actual process/sample conditions and gas selection before recalibrating.','Verify the target gas and correction factor.'],no:['Detector response is inadequate.','Check calibration gas, regulator/flow, sensor condition and calibration status.','Perform calibration only with the approved certified standard/procedure.']},
-  high:{label:'Gas reading high',q:'Does a certified test gas confirm the detector response is correct?',yes:['The detector may be responding correctly.','Investigate actual atmosphere/sample path and cross-sensitivity.','Verify with the approved reference.'],no:['Detector response is suspect.','Check calibration gas, sensor condition, zero/calibration and environmental influences.','Re-test with the certified standard.']},
-  erratic:{label:'Gas signal erratic',q:'Does the detector remain stable when exposed to a controlled, known condition?',yes:['Process/environment may be causing the variation.','Check ventilation, sample path and gas concentration changes.','Verify against a controlled test condition.'],no:['The detector/signal path is unstable.','Check sensor condition, power, wiring, environmental contamination and sample flow.','Use an approved bump/calibration procedure.']},
-  drift:{label:'Gas reading drifting',q:'Does the detector drift when the atmosphere is stable?',yes:['Detector drift is indicated.','Check sensor aging/poisoning, zero stability, temperature/humidity and calibration history.','Calibrate or replace the sensor only per the approved procedure.'],no:['Atmospheric conditions may be changing.','Confirm a stable test environment before recalibration.','Compare against a certified reference.']},
-  comm:{label:'No communication',q:'Is the detector powered and showing a normal local status?',yes:['Investigate the communication path.','Check wiring, addressing, controller channel and interface hardware.','Verify the detector locally before changing settings.'],no:['Start with power/status.','Check supply, terminals, wiring and detector diagnostics.','Restore normal detector operation first.']},
-  nodisplay:{label:'No display',q:'Is the detector powered correctly?',yes:['Power is present.','Check display/status path and device diagnostics.','Verify gas response with the approved external test method.'],no:['Power is missing/incorrect.','Check supply, terminals, polarity and protection components.','Restore power and verify detector operation.']}
- }},
- firepanel:{n:'Fire alarm panel',s:{
-  low:{label:'Alarm/signal appears low or weak',q:'Does the panel event history identify a specific device/zone with the abnormal indication?',yes:['Use the identified address/zone as the starting point.','Inspect that device and its loop/circuit according to the approved fire procedure.','Clear and re-test only when authorized.'],no:['The indication is not localized.','Check panel power, loop/circuit status and event history before replacing devices.','Follow the approved fire-system troubleshooting procedure.']},
-  high:{label:'Alarm appears unexpectedly high/sensitive',q:'Does the event history show repeated alarms from the same device?',yes:['A recurring device/environment issue is possible.','Check the specific detector, contamination and environmental conditions.','Use the approved functional test procedure.'],no:['The event may be transient.','Review event history, loop integrity and environmental conditions.','Do not disable protection simply to suppress nuisance alarms.']},
-  erratic:{label:'Intermittent trouble/alarm',q:'Does the event history repeatedly identify the same address/loop?',yes:['The fault can be localized.','Inspect the identified device/circuit and connections.','Follow the approved fire-system test procedure.'],no:['The fault is not yet localized.','Check power, batteries, ground-fault indications, loop integrity and event history.','Escalate per the site fire-system procedure.']},
-  drift:{label:'Device sensitivity/trouble drifting',q:'Does the panel identify a specific detector/device?',yes:['The device is the primary suspect.','Check contamination/sensitivity status and maintenance history.','Test or replace only under the approved fire procedure.'],no:['The issue may be panel/loop related.','Review diagnostics, loop status and power/battery condition.','Follow the approved manufacturer/site procedure.']},
-  comm:{label:'No communication',q:'Does the panel show a specific loop/device communication fault?',yes:['Use the identified loop/address.','Check loop continuity, device connections and the device status.','Follow the approved fire-system isolation/test procedure.'],no:['The fault is not localized.','Review panel diagnostics, power and loop status.','Do not randomly replace devices.']},
-  nodisplay:{label:'No display',q:'Is panel power and backup power available?',yes:['The display path may be the issue.','Check panel diagnostics/display connections per the OEM procedure.','Maintain fire protection while troubleshooting.'],no:['Power is the first issue.','Check normal and backup supplies and panel indications.','Follow the approved fire-system emergency/maintenance procedure.']}
- }},
- genset:{n:'Generator control panel',s:{
-  low:{label:'Speed/voltage reading low',q:'Does an independent meter confirm the generator parameter is actually low?',yes:['The generator parameter may genuinely be low.','Check engine/governor or AVR-related conditions as applicable.','Verify against the approved generator reference.'],no:['The controller indication is low relative to the reference.','Check sensing wiring, scaling/configuration and controller inputs.','Repeat the comparison after correction.']},
-  high:{label:'Speed/voltage reading high',q:'Does an independent meter confirm the parameter is high?',yes:['The generator parameter may genuinely be high.','Follow generator protection/operating limits and investigate the cause.','Verify independently.'],no:['The controller indication is high relative to the reference.','Check sensing input, scaling/configuration and controller wiring.','Repeat the comparison.']},
-  erratic:{label:'Signal/indication erratic',q:'Does an independent reference fluctuate in the same way?',yes:['The generator/process may be unstable.','Check governor/AVR/load conditions as applicable.','Compare both signals under a stable condition.'],no:['The controller signal chain is suspect.','Check sensors, wiring, grounding and controller input status.','Verify each signal independently.']},
-  drift:{label:'Reading drifting',q:'Does the independent reference remain stable?',yes:['The sensing/controller channel may be drifting.','Check sensor condition, wiring, scaling and controller configuration.','Repeat the comparison after correction.'],no:['Generator operating conditions may be changing.','Confirm stable speed/load before diagnosing the controller.','Compare against an independent reference.']},
-  comm:{label:'No communication',q:'Is the generator controller powered and healthy locally?',yes:['Investigate the controller communication path.','Check network/serial wiring, addressing and interface status.','Verify communications using the approved method.'],no:['Start with controller power/status.','Check supply, connections and controller diagnostics.','Restore normal controller status first.']},
-  nodisplay:{label:'No display',q:'Is controller power and backup supply available?',yes:['Power is present.','Check display/controller diagnostics and connections per OEM procedure.','Verify generator status through an approved alternate indication.'],no:['Power is the first issue.','Check normal/backup supply and controller connections.','Restore power and verify operation.']}
- }}
+level:{n:'Level transmitter',s:{low:['Reading low','Compare with an independent level indication.','Check the impulse/sensing path and process condition.'],high:['Reading high','Verify actual level with a trusted reference.','Check sensing path, configuration and calibration.'],erratic:['Reading unstable','Compare signal with process behavior and a reference.','Check turbulence, restrictions, wiring and noise.'],drift:['Reading drifting','Repeat after the process is stable.','Check temperature, sensing path and zero shift.'],comm:['No communication','Verify loop power first.','Check wiring, load/address and communication hardware.'],nodisplay:['No display','Verify device power and connection.','Check supply, terminals and display status.']}},
+pressure:{n:'Pressure transmitter',s:{low:['Reading low','Compare with a certified pressure reference.','Check impulse line restriction and process isolation.'],high:['Reading high','Verify pressure independently.','Check impulse path, configuration and zero/span.'],erratic:['Reading unstable','Compare with a stable reference.','Check impulse path, vibration and electrical noise.'],drift:['Reading drifting','Repeat against a stable reference.','Check temperature, impulse condition and zero shift.'],comm:['No communication','Verify loop power.','Check wiring, load/address and communication hardware.'],nodisplay:['No display','Verify transmitter supply.','Check power path and display status.']}},
+flow:{n:'Flow meter',s:{low:['Flow reading low','Compare with an independent flow indication.','Check process condition, sensing surfaces and configuration.'],high:['Flow reading high','Verify actual flow independently.','Check scaling, installation and sensing condition.'],erratic:['Flow signal noisy','Compare signal behavior with process changes.','Check grounding, EMI, turbulence and pulsation.'],drift:['Flow reading drifting','Repeat at stable operating conditions.','Check fouling, temperature and configuration.'],comm:['No communication','Verify power and communication path.','Check wiring and device addressing/load.'],nodisplay:['No display','Verify instrument power/status.','Check supply and display connection.']}},
+controlvalve:{n:'Control valve',s:{low:['Valve does not reach command','Compare commanded position with actual travel.','Check actuator supply, positioner and linkage.'],high:['Valve overtravels','Compare command with feedback.','Check positioner feedback and mechanical travel.'],erratic:['Valve hunts / oscillates','Compare command and actual travel over time.','Check stiction and positioner response.'],drift:['Position drifts','Observe travel at a steady command.','Check actuator supply, linkage and positioner.'],comm:['No communication','Verify supply and communication path.','Check wiring, load/address and positioner status.'],nodisplay:['Feedback missing','Verify positioner power/status.','Check feedback linkage/sensor and wiring.']}},
+shutdownvalve:{n:'Shutdown / ESD valve',s:{low:['Stroke is slow','Compare stroke time with the approved baseline.','Check actuator supply, solenoid, speed control and friction.'],high:['Travel is excessive','Verify travel feedback and limits.','Check position feedback and mechanical stops under procedure.'],erratic:['Stroke is inconsistent','Repeat a controlled test if authorized.','Check actuator/solenoid response and mechanical travel.'],drift:['Position does not hold','Verify actuator pressure and feedback.','Check leakage, actuator and solenoid behavior.'],comm:['No diagnostics communication','Check controller/device status.','Verify the approved communication path.'],nodisplay:['Feedback missing','Check ESD feedback indication.','Inspect approved feedback diagnostics.']}}
 };
-const devices=Object.keys(D).map(k=>[k,D[k].n]);
+D.speedprobe=D.pressure;D.speedprobe.n='Speed probe';
+D.vibprobe=D.flow;D.vibprobe.n='Vibration probe';
+D.gasdet=D.flow;D.gasdet.n='Gas detector';
+D.firepanel=D.controlvalve;D.firepanel.n='Fire alarm panel';
+D.genset=D.pressure;D.genset.n='Generator control panel';
+
+const devices=[['level','Level transmitter'],['pressure','Pressure transmitter'],['flow','Flow meter'],['controlvalve','Control valve'],['shutdownvalve','Shutdown / ESD valve'],['speedprobe','Speed probe'],['vibprobe','Vibration probe'],['gasdet','Gas detector'],['firepanel','Fire alarm panel'],['genset','Generator control panel']];
 const state={device:null,symptom:null,quick:null};
+
 function $(x){return document.getElementById(x)}
 function openModal(quick){
  state.device=null;state.symptom=null;state.quick=quick||null;
  $('troubleModal').classList.add('open');$('troubleModal').setAttribute('aria-hidden','false');
  $('troubleResult').classList.remove('show');$('troubleDone').style.display='none';$('troubleNext').style.display='block';$('troubleBack').style.display='block';
- renderDevice(); document.body.style.overflow='hidden';
+ if(quick){renderDevice();$('troubleStep').textContent='Question 1 of 2';$('troubleQuestion').textContent='Which instrument is showing the problem?'}
+ else renderDevice();
+ document.body.style.overflow='hidden';
 }
-function closeModal(){ $('troubleModal').classList.remove('open');$('troubleModal').setAttribute('aria-hidden','true');document.body.style.overflow=''; }
+function closeModal(){ $('troubleModal').classList.remove('open');$('troubleModal').setAttribute('aria-hidden','true');document.body.style.overflow='';}
 function progress(n){$('troubleProgress').querySelectorAll('span').forEach((x,i)=>x.classList.toggle('active',i<n))}
 function options(items){
  const box=$('troubleOptions');box.innerHTML='';
- items.forEach(([id,label])=>{const b=document.createElement('button');b.type='button';b.textContent=label;b.dataset.id=id;b.onclick=()=>{box.querySelectorAll('button').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');$('troubleNext').disabled=false};box.appendChild(b);});
+ items.forEach(([id,label])=>{
+  const b=document.createElement('button');b.type='button';b.textContent=label;b.dataset.id=id;
+  b.onclick=()=>{box.querySelectorAll('button').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');$('troubleNext').disabled=false};
+  box.appendChild(b);
+ });
 }
 function renderDevice(){
- progress(1);$('troubleStep').textContent='Question 1 of 4';$('troubleQuestion').textContent='Which instrument or system is showing the problem?';options(devices);$('troubleNext').disabled=true;
+ progress(1);$('troubleStep').textContent='Question 1 of 2';$('troubleQuestion').textContent='Which instrument is showing the problem?';options(devices);$('troubleNext').disabled=true;
 }
 function renderSymptoms(){
- const d=D[state.device];progress(2);$('troubleStep').textContent='Question 2 of 4';$('troubleQuestion').textContent='What is the main symptom on the '+d.n.toLowerCase()+'?';
- options(Object.entries(d.s).map(([k,v])=>[k,v.label]));$('troubleNext').disabled=true;
+ const d=D[state.device];progress(2);$('troubleStep').textContent='Question 2 of 2';$('troubleQuestion').textContent='What is the main symptom on the '+d.n.toLowerCase()+'?';options(Object.entries(d.s).map(x=>[x[0],x[1][0]]));$('troubleNext').disabled=true;
 }
-function measurementOptions(device,symptom){
- const map={
-  level:[['reference','Independent level/reference agrees with the transmitter'],['low','Independent reference is higher than the transmitter'],['high','Independent reference is lower than the transmitter'],['current','Loop current is outside/at a known abnormal value'],['unknown','Not measured yet']],
-  pressure:[['reference','Certified/independent pressure reference agrees'],['low','Reference pressure is higher than transmitter'],['high','Reference pressure is lower than transmitter'],['current','Measured loop current is abnormal'],['unknown','Not measured yet']],
-  flow:[['reference','Independent flow reference agrees'],['low','Reference flow is higher than meter'],['high','Reference flow is lower than meter'],['signal','Signal/current is unstable or abnormal'],['unknown','Not measured yet']],
-  controlvalve:[['match','Command and actual position agree'],['low','Actual travel is below command'],['high','Actual travel exceeds command'],['feedback','Feedback disagrees with physical travel'],['unknown','Not measured yet']],
-  shutdownvalve:[['baseline','Stroke time/position is within approved baseline'],['slow','Stroke time is slower than baseline'],['fast','Stroke time is faster than baseline'],['feedback','Feedback disagrees with physical position'],['unknown','Not measured yet']],
-  speedprobe:[['rpm','Independent tachometer/RPM agrees'],['low','Independent RPM is higher than indicated'],['high','Independent RPM is lower than indicated'],['pulse','Pulse amplitude/frequency is weak or abnormal'],['unknown','Not measured yet']],
-  vibprobe:[['gap','Probe gap/bias is within OEM range'],['badgap','Probe gap/bias is outside OEM range'],['reference','Independent vibration reference disagrees'],['signal','Signal amplitude is noisy/unstable'],['unknown','Not measured yet']],
-  gasdet:[['bump','Approved bump test response is correct'],['low','Certified gas response is lower than expected'],['high','Certified gas response is higher than expected'],['zero','Zero is unstable/offset'],['unknown','Not measured yet']],
-  firepanel:[['address','Panel event history identifies a device/zone'],['loop','Loop/circuit fault is indicated'],['power','Normal and backup power are abnormal'],['none','No specific fault is localized'],['unknown','Not checked yet']],
-  genset:[['reference','Independent meter/reference agrees'],['low','Independent measurement is higher'],['high','Independent measurement is lower'],['signal','Controller input/signal is abnormal'],['unknown','Not measured yet']]
- };
- return map[device] || map.pressure;
-}
-function renderCheck(){
- const d=D[state.device],r=d.s[state.symptom];progress(3);$('troubleStep').textContent='Question 3 of 4';$('troubleQuestion').textContent=r.q;
- options([['yes','Yes'],['no','No']]);$('troubleNext').disabled=true;
-}
-function renderMeasurement(answer){
- const d=D[state.device];progress(4);$('troubleStep').textContent='Question 4 of 4';
- $('troubleQuestion').textContent='What does your measurement or field check show?';
- options(measurementOptions(state.device,state.symptom));$('troubleNext').disabled=true;
-}
-function diagnosticClass(device,measurement){
- const electrical=['current','signal','pulse','badgap','feedback','power','loop'];
- const process=['reference','low','high','match','baseline','rpm','bump'];
- if(device==='shutdownvalve'||device==='firepanel'||device==='gasdet') return 'safety';
- if(electrical.includes(measurement)) return 'electrical';
- if(process.includes(measurement)) return 'process';
- return 'instrument';
-}
-function safetyNote(device){
- const notes={
-  shutdownvalve:'Do not initiate a stroke/PST or defeat an ESD function unless the approved test procedure, permit/MOC and required control-room coordination are in place.',
-  firepanel:'Do not disable, isolate or reset fire protection devices casually. Follow the approved fire-system impairment/test procedure and restore all affected points after testing.',
-  gasdet:'Do not expose a detector to test gas or enter a hazardous area unless the approved gas-test/calibration procedure and area controls are in place.',
-  controlvalve:'Confirm process impact and required isolation before intrusive valve work. Do not defeat an interlock or trip for convenience.',
-  plcforce:'PLC forcing/overrides require authorization, logging and a defined removal plan. Remove forces immediately after the approved test.',
-  level:'Confirm process isolation and safe access before opening impulse lines or touching process connections.',
-  pressure:'Confirm pressure is isolated/depressurized before opening impulse lines, manifolds or process connections.',
-  flow:'Confirm process isolation before removing sensors, opening impulse paths or disturbing flow elements.',
-  speedprobe:'Keep clear of rotating machinery and follow the approved measurement method; do not approach moving targets unnecessarily.',
-  vibprobe:'Keep clear of rotating equipment and use the OEM probe/gap procedure; do not make adjustments on energized rotating machinery unless explicitly authorized.',
-  gasdet:'Use the approved detector test/calibration procedure and certified gas standard; do not treat a bump test as a full calibration.',
-  genset:'Follow generator isolation and operating procedures before testing sensors, governor/AVR circuits or protections.'
- };
- return notes[device]||'Follow approved isolation, permit, OEM and site procedures before intrusive testing or changing configuration.';
-}
-function showResult(answer,measurement){
- const d=D[state.device],r=d.s[state.symptom],a=r[answer];
- const m={
-  reference:'Independent reference agrees: treat the process condition as a primary possibility and verify operating conditions before changing calibration.',
-  low:'Reference is higher than the indicated value: investigate sensing path, configuration and signal scaling before replacing the instrument.',
-  high:'Reference is lower than the indicated value: investigate scaling, sensing path, configuration and calibration only after the physical condition is verified.',
-  current:'Abnormal loop current: verify power, polarity, barriers/isolators, wiring and transmitter status before relying on the process indication.',
-  signal:'Signal is abnormal: inspect wiring, grounding/EMI, sensor condition and the measurement chain before changing configuration.',
-  unknown:'Measurement not yet taken: take the approved reference measurement before concluding that the instrument has failed.',
-  match:'Command and actual position agree: investigate process/control-loop behavior rather than immediately blaming the valve hardware.',
-  feedback:'Feedback disagrees with physical travel: suspect feedback/linkage/configuration before changing the valve itself.',
-  baseline:'Within approved baseline: investigate the reported symptom, test conditions or indication rather than assuming a valve fault.',
-  slow:'Slower than baseline: check actuator supply, solenoid, speed control, restrictions and friction under the approved procedure.',
-  fast:'Faster than baseline: check speed-control/dashpot behavior and actuator response under the approved procedure.',
-  rpm:'Independent RPM agrees: the speed condition may be genuine; investigate the machine/process first.',
-  pulse:'Pulse signal is weak/abnormal: check probe gap, target condition, coil/sensor health, shielding and wiring.',
-  gap:'Probe gap/bias is within OEM range: continue with signal/reference checks rather than adjusting the gap.',
-  badgap:'Probe gap/bias is outside OEM range: correct only to the OEM specification, then repeat the measurement.',
-  bump:'Approved bump response is correct: investigate actual atmosphere, sample path or cross-sensitivity before recalibration.',
-  zero:'Zero is unstable/offset: investigate sensor condition, contamination, temperature/humidity and calibration history.',
-  address:'A device/zone is identified: troubleshoot that address/circuit first using the approved fire-system procedure.',
-  loop:'A loop/circuit fault is indicated: isolate and troubleshoot the identified circuit according to the approved fire-system procedure.',
-  power:'Power is abnormal: restore normal/backup supply and verify panel operation before deeper diagnostics.',
-  none:'No fault is localized: review event history, power, wiring and system diagnostics before replacing devices.',
-  low:'Reference is higher: investigate sensing/input/scaling rather than assuming the indicated value is correct.',
-  high:'Reference is lower: investigate sensing/input/scaling and configuration.',
-  high:'Reference is lower: investigate sensing/input/scaling and configuration.',
-  signal:'Controller input/signal is abnormal: inspect sensor wiring, grounding, input status and configuration.'
- };
- progress(4);$('troubleStep').textContent='Diagnostic direction';$('troubleQuestion').textContent='Use both the symptom and your field measurement to choose the next check.';
- $('troubleOptions').innerHTML='';$('troubleResult').classList.add('show');$('troubleResultTitle').innerHTML=a[0]+' <span class="diag-class '+diagnosticClass(state.device,measurement)+'">'+diagnosticClass(state.device,measurement).toUpperCase()+' FOCUS</span>';$('troubleCheck').textContent=a[1]+' '+(m[measurement]||'Use the measured evidence to narrow the fault before changing settings.');
- $('troubleCause').textContent='Classification: '+(measurement==='reference'||measurement==='baseline'||measurement==='match'||measurement==='bump'?'Process / operating condition may be involved.':measurement==='current'||measurement==='signal'||measurement==='pulse'||measurement==='badgap'?'Measurement / electrical / sensing path requires investigation.':'Use the evidence to distinguish process, sensing, wiring, configuration and instrument faults.');
- $('troubleVerify').textContent=a[2]+' Record the measured value, reference used and final verification in the job record.';$('troubleCause').insertAdjacentHTML('afterend','<div class="diag-stop">⚠️ '+safetyNote(state.device)+'</div>');
- $('troubleNext').style.display='none';$('troubleBack').style.display='none';$('troubleDone').style.display='block';
+function showResult(){
+ const d=D[state.device],r=d.s[state.symptom];progress(3);
+ $('troubleStep').textContent='Diagnostic direction';$('troubleQuestion').textContent='Start with this check before changing settings or replacing parts.';
+ $('troubleOptions').innerHTML='';$('troubleResult').classList.add('show');
+ $('troubleResultTitle').textContent=r[0];$('troubleCheck').textContent=r[1];$('troubleCause').textContent='The symptom may be caused by the sensing path, process condition, wiring, configuration or the instrument itself. Isolate the physical cause before recalibration.';
+ $('troubleVerify').textContent=r[2];$('troubleNext').style.display='none';$('troubleBack').style.display='none';$('troubleDone').style.display='block';
 }
 $('troubleStartBtn').onclick=()=>openModal();
 document.querySelectorAll('#troubleQuick button').forEach(b=>b.onclick=()=>openModal(b.dataset.quick));
 document.querySelectorAll('[data-close-trouble]').forEach(x=>x.onclick=closeModal);
-$('troubleBack').onclick=()=>{if(state.measurement){state.measurement=null;renderCheck()}else if(state.symptom){state.symptom=null;renderSymptoms()}else if(state.device){state.device=null;renderDevice()}};
+$('troubleBack').onclick=()=>{if(state.device){state.device=null;renderDevice()}};
 $('troubleNext').onclick=()=>{
  const selected=$('troubleOptions').querySelector('.selected');if(!selected)return;
- if(!state.device){state.device=selected.dataset.id; if(state.quick){state.symptom=state.quick;renderCheck()}else renderSymptoms()}
- else if(!state.symptom){state.symptom=selected.dataset.id;renderCheck()}
- else if(!state.measurement && $('troubleStep').textContent==='Question 3 of 4'){state.check=selected.dataset.id;renderMeasurement(state.check)}
- else {state.measurement=selected.dataset.id;showResult(state.check,state.measurement)}
+ if(!state.device){state.device=selected.dataset.id;renderSymptoms()}
+ else{state.symptom=selected.dataset.id;showResult()}
 };
 $('troubleDone').onclick=closeModal;
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('troubleModal').classList.contains('open'))closeModal()});
