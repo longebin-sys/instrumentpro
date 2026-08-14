@@ -2175,96 +2175,80 @@ body.dark .comm-section-title small{color:#94a3b8;}
 .page,.report-main-panel{min-width:0;}
 
 /* ==========================================================
-   WHITE FIELD/COMMISSIONING REPORT SURFACE
+   WHITE FIELD/COMMISSIONING REPORT SURFACE (light mode only)
    Field use: no navy card backgrounds; white, high-contrast surfaces.
    Blue remains an accent for actions/status only.
+   In dark mode, these panels follow the standard dark-mode rules
+   defined elsewhere so every tab stays consistent.
    ========================================================== */
-#reportpanel-field,
-#reportpanel-commissioning{background:#fff!important;color:#172033;}
+body:not(.dark) #reportpanel-field,
+body:not(.dark) #reportpanel-commissioning{background:#fff!important;color:#172033;}
 
-#reportpanel-field .rs-hero,
-#reportpanel-commissioning .comm-hero{
+body:not(.dark) #reportpanel-field .rs-hero,
+body:not(.dark) #reportpanel-commissioning .comm-hero{
   background:#fff!important;
   color:#172033!important;
   border:1px solid #dfe5ec!important;
   box-shadow:0 6px 18px rgba(15,23,42,.06)!important;
 }
-#reportpanel-field .rs-hero p,
-#reportpanel-commissioning .comm-hero p{color:#64748b!important;}
-#reportpanel-commissioning .comm-eyebrow{color:#2563eb!important;}
+body:not(.dark) #reportpanel-field .rs-hero p,
+body:not(.dark) #reportpanel-commissioning .comm-hero p{color:#64748b!important;}
+body:not(.dark) #reportpanel-commissioning .comm-eyebrow{color:#2563eb!important;}
 
-#reportpanel-field .rs-kpi,
-#reportpanel-commissioning .comm-hero-stat{
+body:not(.dark) #reportpanel-field .rs-kpi,
+body:not(.dark) #reportpanel-commissioning .comm-hero-stat{
   background:#fff!important;
   color:#172033!important;
   border:1px solid #e2e8f0!important;
 }
-#reportpanel-field .rs-kpi span,
-#reportpanel-commissioning .comm-hero-stat span{color:#64748b!important;}
+body:not(.dark) #reportpanel-field .rs-kpi span,
+body:not(.dark) #reportpanel-commissioning .comm-hero-stat span{color:#64748b!important;}
 
-#reportpanel-field .rs-step.active{
+body:not(.dark) #reportpanel-field .rs-step.active{
   background:#fff!important;
   color:#2563eb!important;
   border:1px solid #93c5fd!important;
 }
 
-#reportpanel-field .rs-analysis{background:#fff!important;border-left-color:#2563eb!important;border:1px solid #e2e8f0!important;}
-#reportpanel-field .rs-section,
-#reportpanel-commissioning .comm-section{background:#fff!important;}
+body:not(.dark) #reportpanel-field .rs-analysis{background:#fff!important;border-left-color:#2563eb!important;border:1px solid #e2e8f0!important;}
+body:not(.dark) #reportpanel-field .rs-section,
+body:not(.dark) #reportpanel-commissioning .comm-section{background:#fff!important;}
 
-/* Commissioning checklist: white cards in every state. */
-#reportpanel-commissioning .comm-check,
-#reportpanel-commissioning .comm-check-item{
+/* Commissioning checklist: white cards in every state (light mode only). */
+body:not(.dark) #reportpanel-commissioning .comm-check,
+body:not(.dark) #reportpanel-commissioning .comm-check-item{
   background:#fff!important;
   color:#334155!important;
   border-color:#dfe5ec!important;
 }
-#reportpanel-commissioning .comm-check .comm-item-text,
-#reportpanel-commissioning .comm-check-item .comm-item-text{color:#334155!important;}
-#reportpanel-commissioning .comm-check:has(input:checked),
-#reportpanel-commissioning .comm-check-item:has(input:checked){
+body:not(.dark) #reportpanel-commissioning .comm-check .comm-item-text,
+body:not(.dark) #reportpanel-commissioning .comm-check-item .comm-item-text{color:#334155!important;}
+body:not(.dark) #reportpanel-commissioning .comm-check:has(input:checked),
+body:not(.dark) #reportpanel-commissioning .comm-check-item:has(input:checked){
   background:#fff!important;
   border-color:#60a5fa!important;
   box-shadow:0 0 0 2px rgba(37,99,235,.08)!important;
 }
-#reportpanel-commissioning .comm-check:has(input:checked) .comm-item-text,
-#reportpanel-commissioning .comm-check-item:has(input:checked) .comm-item-text{color:#1d4ed8!important;}
+body:not(.dark) #reportpanel-commissioning .comm-check:has(input:checked) .comm-item-text,
+body:not(.dark) #reportpanel-commissioning .comm-check-item:has(input:checked) .comm-item-text{color:#1d4ed8!important;}
 
-/* Field functional checks: white cards, blue selection state. */
-#reportpanel-field .rs-test-item,
-#reportpanel-field .rs-check-tools button{
+/* Field functional checks: white cards, blue selection state (light mode only). */
+body:not(.dark) #reportpanel-field .rs-test-item,
+body:not(.dark) #reportpanel-field .rs-check-tools button{
   background:#fff!important;
   color:#334155!important;
   border-color:#dfe5ec!important;
 }
-#reportpanel-field .rs-test-item:has(input:checked){
+body:not(.dark) #reportpanel-field .rs-test-item:has(input:checked){
   background:#fff!important;
   color:#1d4ed8!important;
   border-color:#60a5fa!important;
   box-shadow:0 0 0 2px rgba(37,99,235,.08)!important;
 }
-#reportpanel-field .rs-test-item input[type="checkbox"]{
+body:not(.dark) #reportpanel-field .rs-test-item input[type="checkbox"]{
   background:#fff!important;
   border-color:#94a3b8!important;
 }
-
-/* Prevent dark-mode rules from reintroducing navy surfaces in these reports. */
-body.dark #reportpanel-field,
-body.dark #reportpanel-commissioning{background:#fff!important;color:#172033!important;}
-body.dark #reportpanel-field .rs-hero,
-body.dark #reportpanel-commissioning .comm-hero,
-body.dark #reportpanel-field .rs-section,
-body.dark #reportpanel-commissioning .comm-section,
-body.dark #reportpanel-field .rs-test-item,
-body.dark #reportpanel-commissioning .comm-check,
-body.dark #reportpanel-commissioning .comm-check-item,
-body.dark #reportpanel-field .rs-kpi,
-body.dark #reportpanel-commissioning .comm-hero-stat{background:#fff!important;color:#172033!important;border-color:#dfe5ec!important;}
-body.dark #reportpanel-field .rs-test-item:has(input:checked),
-body.dark #reportpanel-commissioning .comm-check:has(input:checked){background:#fff!important;border-color:#60a5fa!important;}
-body.dark #reportpanel-field .rs-test-item input[type="checkbox"]{background:#fff!important;border-color:#94a3b8!important;}
-body.dark #reportpanel-commissioning .comm-check .comm-item-text,
-body.dark #reportpanel-commissioning .comm-check-item .comm-item-text{color:#334155!important;}
 
 </style>
 
