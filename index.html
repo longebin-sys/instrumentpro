@@ -5752,6 +5752,7 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
                                     <option>Gas Chromatograph Analyser</option>
                                     <option>Dew Point Analyser</option>
                                     <option>Deluge Valve</option>
+                                    <option>Fusible Loop</option>
                                     <option>Proximity Sensor</option>
                                     <option>Solenoid Valve</option>
                                     <option>Level Switch</option>
@@ -9409,6 +9410,12 @@ var DEVICE_CONFIG={
    fields:[
     ['Valve size / type','text','Size / model'],['Release method','select','Pneumatic,Hydraulic,Electric,Manual'],['Pilot / solenoid','text','Release device tag'],['Supply pressure','text','Water / pilot pressure'],['Trim condition','text','Trim / drains / gauges'],['Required opening time','text','Approved limit']
    ], tests:['Trim / valve condition','Pilot pressure','Release device operation','Valve opening','Opening time','Pressure / flow indication','Fire panel / feedback','Reset','Return to service']
+ },
+ 'Fusible Loop':{
+   icon:'fa-link', mode:'fuseloop', description:'Fusible loop / linear heat detection functional test covering loop condition, pressure or continuity, simulated fuse/trip and suppression release response.',
+   fields:[
+    ['Loop type','select','Pneumatic Fusible Tubing,Fusible Link Cable,Linear Heat Detection Cable,Other'],['Fusing temperature','text','e.g. 68°C, 79°C, 105°C or approved rating'],['Loop length / route','text','m / area covered'],['Loop pressure (if pneumatic)','text','bar / psi'],['Pilot / release device','text','Pilot head, pressure switch or release valve tag'],['As-found condition','select','As-found,As-left']
+   ], tests:['Loop physical condition / route','Loop pressure or continuity verified','Simulated fuse / trip test','Pilot / release device response','Suppression valve release confirmed','Fire panel / F&G indication','Reset / recharge loop','Return to service']
  },
  'Proximity Sensor':{
    icon:'fa-bullseye', mode:'switch', description:'Proximity sensor test covering target gap, switching state, supply and PLC/DCS indication.',
