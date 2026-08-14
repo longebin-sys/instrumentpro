@@ -1416,6 +1416,160 @@
         /* ============================================================
                    RESPONSIVE
                    ============================================================ */
+
+        /* ===== LOOP CHECK / ADVANCED REPORT FIXES ===== */
+        .loop-check-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .loop-check-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 16px;
+            border: 1px solid #d7dde6;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.92);
+            min-height: 64px;
+            transition: all 0.15s ease;
+            cursor: pointer;
+        }
+
+        .loop-check-item.checked {
+            border-color: #2563eb;
+            background: #eff6ff;
+            box-shadow: 0 0 0 2px rgba(37,99,235,0.10);
+        }
+
+        .loop-check-item input[type="checkbox"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 28px;
+            height: 28px;
+            border: 2px solid #94a3b8;
+            border-radius: 8px;
+            background: #ffffff;
+            display: grid;
+            place-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            margin: 0;
+        }
+
+        .loop-check-item input[type="checkbox"]:checked {
+            background-color: #2563eb;
+            border-color: #2563eb;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill='white' d='M7.5 13.3 4.7 10.5 3.3 11.9 7.5 16.1 16.7 6.9 15.3 5.5z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 16px 16px;
+        }
+
+        .loop-check-item span {
+            font-weight: 600;
+            font-size: 0.92rem;
+            color: #334155;
+        }
+
+        body.dark .loop-check-item {
+            background: rgba(30,41,59,0.92);
+            border-color: #334155;
+        }
+
+        body.dark .loop-check-item.checked {
+            background: rgba(37,99,235,0.18);
+            border-color: #60a5fa;
+        }
+
+        body.dark .loop-check-item span {
+            color: #e2e8f0;
+        }
+
+        body.dark .loop-check-item input[type="checkbox"] {
+            background: #0f172a;
+            border-color: #64748b;
+        }
+
+        #loopObservedResult,
+        textarea[id*="Observed"],
+        textarea[id*="observed"],
+        textarea[id*="Result"],
+        textarea[id*="result"] {
+            min-height: 88px;
+            max-height: 120px;
+            width: 100%;
+            border-radius: 16px;
+            font-size: 0.82rem;
+            line-height: 1.35;
+        }
+
+        .row.compact {
+            align-items: flex-end;
+        }
+
+        .row.compact label {
+            min-width: 84px;
+        }
+
+        .row.compact input[type="number"],
+        .row.compact input[type="text"],
+        .row.compact select,
+        .row.compact .custom-select-wrap {
+            flex: 0 1 140px;
+            max-width: 140px;
+            min-width: 92px;
+        }
+
+        .row.compact .grow {
+            flex: 1 1 180px;
+            min-width: 140px;
+            max-width: none;
+        }
+
+        .row.compact .unit-field {
+            flex-basis: 110px;
+            max-width: 110px;
+        }
+
+        .row.compact .tol-field {
+            flex-basis: 88px;
+            max-width: 88px;
+        }
+
+        @media (max-width: 420px) {
+            .row.compact {
+                flex-direction: row;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .row.compact label {
+                flex: 1 0 100%;
+                margin-bottom: 2px;
+            }
+
+            .row.compact input[type="number"],
+            .row.compact input[type="text"],
+            .row.compact select,
+            .row.compact .custom-select-wrap {
+                flex: 1 1 120px;
+                max-width: none;
+                min-width: 110px;
+            }
+
+            .row.compact .unit-field {
+                flex: 0 0 92px;
+            }
+
+            .row.compact .tol-field {
+                flex: 0 0 78px;
+            }
+        }
+
         @media (max-width: 420px) {
             .quick-grid {
                 grid-template-columns: repeat(3, 1fr);
@@ -2689,6 +2843,10 @@ body.dark .sidebar .nav-section-label{color:#64748b;}
 
 /* Better spacing between field rows */
 #reportpanel-field .rs-section .row { margin-bottom:7px; }
+/* Give the measured/observed result field a little more breathing room. */
+#reportpanel-field .rs-test-table .row { align-items:flex-start; }
+#reportpanel-field .rs-test-table .row > label { margin-top:8px !important; }
+#reportpanel-field .rs-test-table .row > textarea { margin-top:8px !important; }
 #reportpanel-field .rs-section .row:last-child { margin-bottom:0; }
 
 /* Make the report module selector and stepper easier to hit */
@@ -2849,6 +3007,84 @@ body.dark .bottom-tabs .tab-item.active{background:color-mix(in srgb,var(--ui-ac
   .row input,.row select,.row textarea,input,select,textarea,.custom-select-trigger{min-height:48px;font-size:.84rem;}
   .theme-option{min-height:88px;}
   .sub-tab{min-height:46px;}
+}
+</style>
+
+
+<style id="advanced-report-checkbox-final-fix">
+/* FINAL CHECKBOX VISIBILITY FIX
+   The Advanced Report has later theme/readability rules using !important
+   which were overriding the checked-state background. These rules are
+   intentionally placed last and use !important for both states. */
+#reportpanel-field .rs-test-item input[type="checkbox"],
+#reportpanel-commissioning .comm-check input[type="checkbox"],
+#reportpanel-commissioning .comm-check-item input[type="checkbox"]{
+    appearance:none !important;
+    -webkit-appearance:none !important;
+    position:relative !important;
+    width:28px !important;
+    height:28px !important;
+    min-width:28px !important;
+    min-height:28px !important;
+    flex:0 0 28px !important;
+    margin:0 !important;
+    padding:0 !important;
+    border:2px solid #94a3b8 !important;
+    border-radius:7px !important;
+    background:#ffffff !important;
+    display:grid !important;
+    place-content:center !important;
+    cursor:pointer !important;
+    box-shadow:none !important;
+}
+
+#reportpanel-field .rs-test-item input[type="checkbox"]::after,
+#reportpanel-commissioning .comm-check input[type="checkbox"]::after,
+#reportpanel-commissioning .comm-check-item input[type="checkbox"]::after{
+    content:"" !important;
+    display:block !important;
+    width:8px !important;
+    height:15px !important;
+    border:solid #ffffff !important;
+    border-width:0 3px 3px 0 !important;
+    transform:rotate(45deg) scale(0) !important;
+    transform-origin:center !important;
+    transition:transform .08s ease-in-out !important;
+    margin-top:-3px !important;
+}
+
+#reportpanel-field .rs-test-item input[type="checkbox"]:checked,
+#reportpanel-commissioning .comm-check input[type="checkbox"]:checked,
+#reportpanel-commissioning .comm-check-item input[type="checkbox"]:checked{
+    background:#2563eb !important;
+    background-color:#2563eb !important;
+    border-color:#2563eb !important;
+}
+
+#reportpanel-field .rs-test-item input[type="checkbox"]:checked::after,
+#reportpanel-commissioning .comm-check input[type="checkbox"]:checked::after,
+#reportpanel-commissioning .comm-check-item input[type="checkbox"]:checked::after{
+    transform:rotate(45deg) scale(1) !important;
+}
+
+#reportpanel-field .rs-test-item:has(input[type="checkbox"]:checked),
+#reportpanel-commissioning .comm-check:has(input[type="checkbox"]:checked),
+#reportpanel-commissioning .comm-check-item:has(input[type="checkbox"]:checked){
+    border-color:#60a5fa !important;
+}
+
+body.dark #reportpanel-field .rs-test-item input[type="checkbox"],
+body.dark #reportpanel-commissioning .comm-check input[type="checkbox"],
+body.dark #reportpanel-commissioning .comm-check-item input[type="checkbox"]{
+    background:#ffffff !important;
+    border-color:#64748b !important;
+}
+body.dark #reportpanel-field .rs-test-item input[type="checkbox"]:checked,
+body.dark #reportpanel-commissioning .comm-check input[type="checkbox"]:checked,
+body.dark #reportpanel-commissioning .comm-check-item input[type="checkbox"]:checked{
+    background:#2563eb !important;
+    background-color:#2563eb !important;
+    border-color:#2563eb !important;
 }
 </style>
 
@@ -8477,7 +8713,7 @@ function deviceResultText(o,c){
 }
 function deviceReportSections(o,c){
  var dd=o.deviceData||{},cfg=DEVICE_CONFIG[o.deviceType]||{};
- var fields=Object.keys(dd.fields||{}).filter(function(k){return dd.fields[k]!=='';}).map(function(k){return '<tr><td><b>'+rsEsc(k.replace(/_/g,' '))+'</b></td><td>'+rsEsc(dd.fields[k])+'</td></tr>';}).join('');
+ var fields=Object.keys(dd.fields||{}).filter(function(k){return dd.fields[k]!=='';}).map(function(k){return '<tr><td><b>'+rsEsc(k.replace(/^dc_/,'').replace(/_/g,' '))+'</b></td><td>'+rsEsc(dd.fields[k])+'</td></tr>';}).join('');
  var tests=(dd.tests||[]).map(function(t){return '<tr><td>'+rsEsc(t.name)+'</td><td style="font-weight:700;color:'+(t.passed?'#15803d':'#b91c1c')+'">'+(t.passed?'PASS':'FAIL / NOT COMPLETE')+'</td></tr>';}).join('');
  var points='';
  if(c.kind==='calibration')points='<h3 style="font-size:14px;border-bottom:1px solid #ddd;padding-bottom:5px;">Calibration Results</h3><table style="width:100%;border-collapse:collapse;font-size:11px;"><tr><th>Point</th><th>Reference</th><th>Actual</th><th>Error</th><th>Status</th></tr>'+[0,25,50,75,100].map(function(p){var v=parseFloat(dd.fields['point_'+p]);var ok=Number.isFinite(v)&&(c.tol==null||Math.abs(v-p)<=c.tol);return '<tr><td>'+p+'%</td><td>'+p.toFixed(2)+'</td><td>'+(Number.isFinite(v)?v.toFixed(2):'—')+'</td><td>'+(Number.isFinite(v)?Math.abs(v-p).toFixed(2)+'%':'—')+'</td><td style="color:'+(ok?'#15803d':'#b91c1c')+';font-weight:bold">'+(Number.isFinite(v)?(ok?'PASS':'FAIL'):'—')+'</td></tr>';}).join('')+'</table>';
