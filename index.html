@@ -1884,7 +1884,7 @@ body.dark .comm-section{background:#1e293b;border-color:#334155;box-shadow:none;
 body.dark .comm-section-title{color:#e2e8f0;}
 body.dark .comm-section-title i{background:#172554;color:#60a5fa;}
 body.dark .comm-grid input,body.dark .comm-grid select,body.dark #reportpanel-commissioning textarea{background:#0f172a;border-color:#334155;color:#e2e8f0;}
-body.dark .comm-check,.comm-check,.comm-check-item{background:#172033!important;border-color:#334155;color:#cbd5e1!important;}
+body.dark .comm-check,body.dark .comm-check-item{background:#172033!important;border-color:#334155;color:#cbd5e1!important;}
 body.dark .comm-punch-item,body.dark .comm-preview{background:#172033;border-color:#334155;}
 body.dark .comm-section-title small{color:#94a3b8;}
 
@@ -1914,6 +1914,99 @@ body.dark .comm-section-title small{color:#94a3b8;}
 
     html,body{overflow-x:hidden;}
 .page,.report-main-panel{min-width:0;}
+
+/* ==========================================================
+   WHITE FIELD/COMMISSIONING REPORT SURFACE
+   Field use: no navy card backgrounds; white, high-contrast surfaces.
+   Blue remains an accent for actions/status only.
+   ========================================================== */
+#reportpanel-field,
+#reportpanel-commissioning{background:#fff!important;color:#172033;}
+
+#reportpanel-field .rs-hero,
+#reportpanel-commissioning .comm-hero{
+  background:#fff!important;
+  color:#172033!important;
+  border:1px solid #dfe5ec!important;
+  box-shadow:0 6px 18px rgba(15,23,42,.06)!important;
+}
+#reportpanel-field .rs-hero p,
+#reportpanel-commissioning .comm-hero p{color:#64748b!important;}
+#reportpanel-commissioning .comm-eyebrow{color:#2563eb!important;}
+
+#reportpanel-field .rs-kpi,
+#reportpanel-commissioning .comm-hero-stat{
+  background:#fff!important;
+  color:#172033!important;
+  border:1px solid #e2e8f0!important;
+}
+#reportpanel-field .rs-kpi span,
+#reportpanel-commissioning .comm-hero-stat span{color:#64748b!important;}
+
+#reportpanel-field .rs-step.active{
+  background:#fff!important;
+  color:#2563eb!important;
+  border:1px solid #93c5fd!important;
+}
+
+#reportpanel-field .rs-analysis{background:#fff!important;border-left-color:#2563eb!important;border:1px solid #e2e8f0!important;}
+#reportpanel-field .rs-section,
+#reportpanel-commissioning .comm-section{background:#fff!important;}
+
+/* Commissioning checklist: white cards in every state. */
+#reportpanel-commissioning .comm-check,
+#reportpanel-commissioning .comm-check-item{
+  background:#fff!important;
+  color:#334155!important;
+  border-color:#dfe5ec!important;
+}
+#reportpanel-commissioning .comm-check .comm-item-text,
+#reportpanel-commissioning .comm-check-item .comm-item-text{color:#334155!important;}
+#reportpanel-commissioning .comm-check:has(input:checked),
+#reportpanel-commissioning .comm-check-item:has(input:checked){
+  background:#fff!important;
+  border-color:#60a5fa!important;
+  box-shadow:0 0 0 2px rgba(37,99,235,.08)!important;
+}
+#reportpanel-commissioning .comm-check:has(input:checked) .comm-item-text,
+#reportpanel-commissioning .comm-check-item:has(input:checked) .comm-item-text{color:#1d4ed8!important;}
+
+/* Field functional checks: white cards, blue selection state. */
+#reportpanel-field .rs-test-item,
+#reportpanel-field .rs-check-tools button{
+  background:#fff!important;
+  color:#334155!important;
+  border-color:#dfe5ec!important;
+}
+#reportpanel-field .rs-test-item:has(input:checked){
+  background:#fff!important;
+  color:#1d4ed8!important;
+  border-color:#60a5fa!important;
+  box-shadow:0 0 0 2px rgba(37,99,235,.08)!important;
+}
+#reportpanel-field .rs-test-item input[type="checkbox"]{
+  background:#fff!important;
+  border-color:#94a3b8!important;
+}
+
+/* Prevent dark-mode rules from reintroducing navy surfaces in these reports. */
+body.dark #reportpanel-field,
+body.dark #reportpanel-commissioning{background:#fff!important;color:#172033!important;}
+body.dark #reportpanel-field .rs-hero,
+body.dark #reportpanel-commissioning .comm-hero,
+body.dark #reportpanel-field .rs-section,
+body.dark #reportpanel-commissioning .comm-section,
+body.dark #reportpanel-field .rs-test-item,
+body.dark #reportpanel-commissioning .comm-check,
+body.dark #reportpanel-commissioning .comm-check-item,
+body.dark #reportpanel-field .rs-kpi,
+body.dark #reportpanel-commissioning .comm-hero-stat{background:#fff!important;color:#172033!important;border-color:#dfe5ec!important;}
+body.dark #reportpanel-field .rs-test-item:has(input:checked),
+body.dark #reportpanel-commissioning .comm-check:has(input:checked){background:#fff!important;border-color:#60a5fa!important;}
+body.dark #reportpanel-field .rs-test-item input[type="checkbox"]{background:#fff!important;border-color:#94a3b8!important;}
+body.dark #reportpanel-commissioning .comm-check .comm-item-text,
+body.dark #reportpanel-commissioning .comm-check-item .comm-item-text{color:#334155!important;}
+
 </style>
 
 <style id="instrumentpro-mobile-fix">
@@ -1996,17 +2089,6 @@ body {
 .comm-preview th {
   overflow-wrap: anywhere;
   word-break: break-word;
-}
-.report-preview [style*="grid-template-columns"] {
-  display: block !important;
-}
-.report-preview [style*="display:flex"] {
-  flex-wrap: wrap !important;
-  gap: 8px !important;
-}
-.report-preview [style*="display:flex"] > * {
-  min-width: 0 !important;
-  max-width: 100% !important;
 }
 #reportpanel-commissioning {
   overflow-x: hidden !important;
@@ -2109,6 +2191,141 @@ body {
     min-height:42px !important;
     font-size:.68rem !important;
   }
+}
+</style>
+
+<style id="instrumentpro-commissioning-ui-fix">
+/* ==========================================================
+   COMMISSIONING UI FIX — mobile clarity + glove-friendly use
+   Fixes KPI text collisions, status chip, checklist hierarchy,
+   touch targets and spacing on narrow screens.
+   ========================================================== */
+#reportpanel-commissioning .comm-kpis{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:7px;
+  margin-top:9px;
+  min-width:0;
+}
+#reportpanel-commissioning .comm-kpis > div{
+  min-width:0;
+  background:#fff;
+  border:1px solid #e2e8f0;
+  border-radius:14px;
+  padding:9px 7px;
+  text-align:center;
+  box-shadow:0 4px 12px rgba(15,23,42,.04);
+}
+#reportpanel-commissioning .comm-kpis b{
+  display:block!important;
+  font-size:.9rem;
+  line-height:1.1;
+  color:#172033;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+#reportpanel-commissioning .comm-kpis span{
+  display:block!important;
+  margin-top:4px;
+  font-size:.46rem;
+  line-height:1.15;
+  font-weight:800;
+  color:#64748b;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+  white-space:normal;
+}
+#reportpanel-commissioning .comm-status{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:32px;
+  padding:7px 11px;
+  border-radius:999px;
+  background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.18);
+  color:#e2e8f0;
+  font-size:.56rem;
+  font-weight:900;
+  letter-spacing:.06em;
+  white-space:nowrap;
+  position:relative;
+  z-index:2;
+  align-self:flex-start;
+}
+#reportpanel-commissioning .comm-status.pass{background:#dcfce7;color:#166534;border-color:#86efac;}
+#reportpanel-commissioning .comm-status.fail{background:#fee2e2;color:#991b1b;border-color:#fecaca;}
+#reportpanel-commissioning .comm-check-grid{gap:8px;}
+#reportpanel-commissioning .comm-check{
+  grid-template-columns:26px minmax(0,1fr)!important;
+  gap:9px!important;
+  min-height:58px!important;
+  padding:10px!important;
+  cursor:pointer;
+  touch-action:manipulation;
+}
+#reportpanel-commissioning .comm-check input{
+  width:24px!important;
+  height:24px!important;
+  margin:1px 0 0!important;
+  accent-color:#2563eb;
+}
+#reportpanel-commissioning .comm-check > span{display:block;min-width:0;}
+#reportpanel-commissioning .comm-check .comm-category{
+  display:block!important;
+  margin:0 0 4px!important;
+  font-size:.47rem!important;
+  line-height:1.15!important;
+}
+#reportpanel-commissioning .comm-check .comm-item-text{
+  display:block;
+  font-size:.62rem;
+  line-height:1.3;
+  font-weight:600;
+  color:#334155;
+}
+#reportpanel-commissioning .comm-check:has(input:checked){
+  background:#eff6ff!important;
+  border-color:#93c5fd!important;
+  box-shadow:0 0 0 2px rgba(37,99,235,.08);
+}
+#reportpanel-commissioning .comm-check:has(input:checked) .comm-item-text{color:#1e3a5f;}
+#reportpanel-commissioning .comm-grid input,
+#reportpanel-commissioning .comm-grid select{
+  min-height:42px;
+  font-size:.68rem;
+}
+#reportpanel-commissioning .comm-grid select{padding-right:28px;}
+#reportpanel-commissioning .comm-test-grid > select{
+  min-height:46px!important;
+  padding:10px 30px 10px 11px!important;
+  border-radius:12px!important;
+  font-size:.66rem!important;
+  cursor:pointer;
+  touch-action:manipulation;
+}
+#reportpanel-commissioning .comm-section-title{min-height:30px;}
+#reportpanel-commissioning .comm-section-title i{width:30px;height:30px;font-size:.72rem;}
+body.dark #reportpanel-commissioning .comm-kpis > div{background:#1e293b;border-color:#334155;}
+body.dark #reportpanel-commissioning .comm-kpis b{color:#e2e8f0;}
+body.dark #reportpanel-commissioning .comm-kpis span{color:#94a3b8;}
+body.dark #reportpanel-commissioning .comm-check .comm-item-text{color:#cbd5e1;}
+body.dark #reportpanel-commissioning .comm-check:has(input:checked){background:#172554!important;border-color:#3b82f6!important;}
+body.dark #reportpanel-commissioning .comm-check:has(input:checked) .comm-item-text{color:#dbeafe;}
+@media(max-width:520px){
+  #reportpanel-commissioning .comm-kpis{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:7px;}
+  #reportpanel-commissioning .comm-kpis > div{padding:10px 8px;min-height:55px;display:flex;flex-direction:column;justify-content:center;}
+  #reportpanel-commissioning .comm-kpis b{font-size:.92rem;}
+  #reportpanel-commissioning .comm-kpis span{font-size:.47rem;}
+  #reportpanel-commissioning .comm-check-grid{grid-template-columns:1fr!important;}
+  #reportpanel-commissioning .comm-check{min-height:62px!important;}
+  #reportpanel-commissioning .comm-hero{padding:15px;}
+  #reportpanel-commissioning .comm-hero > div:first-child{padding-right:0;}
+  #reportpanel-commissioning .comm-status{margin-top:10px;align-self:flex-start;}
+}
+@media(max-width:350px){
+  #reportpanel-commissioning .comm-kpis{grid-template-columns:1fr 1fr!important;}
 }
 </style>
 
@@ -2551,6 +2768,88 @@ body.dark #reportpanel-field .rs-check-tools button {
 }
 body.dark #reportpanel-field .rs-test-item:has(input:checked) { background:#172554; border-color:#60a5fa; }
 body.dark #reportpanel-field .rs-test-item input[type="checkbox"] { background:#0f172a; border-color:#64748b; }
+/* ==========================================================
+   GLOBAL UI READABILITY PASS — THEME AWARE
+   Clean white surfaces and field readability without taking
+   control away from the existing Theme Color system.
+   ========================================================== */
+:root{
+  --ui-bg:#f5f7fa;
+  --ui-border:#dfe5ec;
+  --ui-border-strong:#cbd5e1;
+  --ui-text:#263244;
+  --ui-muted:#64748b;
+  --ui-accent:#2563eb;
+  --ui-accent-soft:#eff6ff;
+}
+html,body{background:var(--ui-bg);color:var(--ui-text);}
+.page-container{background:var(--ui-bg);}
+.card,.search-bar,.quick-item,.recent-item,.analytical-card,.gc-panel,.fault-panel,
+.sub-panel,.table-wrap,.result-box,.dp-diagram,.upload-zone,.settings-accordion,
+.settings-accordion-body .card,.scanner-preview,.report-preview,.sidebar{
+  background:#fff;
+  border-color:var(--ui-border);
+}
+.card{border:1px solid var(--ui-border);box-shadow:0 2px 10px rgba(15,23,42,.035);}
+.card-header{border-bottom:1px solid #edf1f5;}
+.card-header h3,.page-title{color:var(--ui-text);}
+.card-header i{background:var(--ui-accent-soft);color:var(--ui-accent);}
+.card-header span{color:var(--ui-muted);background:#f1f5f9;}
+.row label{color:#475569;}
+.row input,.row select,.row textarea,input,select,textarea,.custom-select-trigger{
+  background:#fff;color:var(--ui-text);border:1px solid var(--ui-border-strong);
+}
+.row input::placeholder,input::placeholder,textarea::placeholder{color:#94a3b8;opacity:1;}
+.row input:focus,.row select:focus,.row textarea:focus,.custom-select-trigger:focus-within,
+input:focus,select:focus,textarea:focus{
+  border-color:var(--ui-accent);
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--ui-accent) 12%, transparent);
+  outline:none;
+}
+.btn:not(.btn-outline):not(.btn-danger):not(.btn-success){
+  background:linear-gradient(135deg,var(--btn-c1,var(--ui-accent)),var(--btn-c2,var(--ui-accent)));
+  color:#fff;
+  border-color:var(--btn-c1,var(--ui-accent));
+}
+.btn-outline{background:#fff;color:var(--ui-accent);border-color:color-mix(in srgb,var(--ui-accent) 45%, #cbd5e1);}
+.btn-danger{background:#fff;color:#b91c1c;border-color:#fca5a5;}
+.btn-success{background:#fff;color:#047857;border-color:#6ee7b7;}
+.sub-tab{background:#f8fafc;color:#475569;border-color:var(--ui-border);}
+.sub-tab.active,.tab-scroll .tab.active{background:linear-gradient(135deg,var(--ui-accent),color-mix(in srgb,var(--ui-accent) 78%, #000));color:#fff;border-color:var(--ui-accent);}
+.theme-option{background:#fff;border-color:var(--ui-border);}
+.theme-option.active{border-color:var(--ui-accent);box-shadow:0 0 0 3px var(--ui-accent-soft);background:#fff;}
+.bottom-tabs{background:rgba(255,255,255,.96);border-color:var(--ui-border);}
+.bottom-tabs .tab-item{color:#64748b;}
+.bottom-tabs .tab-item.active{background:var(--ui-accent-soft);color:var(--ui-accent);}
+.table-wrap{border:1px solid var(--ui-border);}
+table th{background:#f8fafc;color:#475569;}
+table td,table th{border-color:#e5eaf0;}
+.result-box{border:1px solid var(--ui-border);color:var(--ui-text);}
+body.theme-light .greeting h1 i{color:var(--ui-accent);}
+body.theme-light .greeting .dark-toggle,body.theme-light .greeting .menu-toggle{color:#0f2b44;}
+body.dark{background:#111827;color:#e5e7eb;}
+body.dark .page-container{background:#111827;}
+body.dark .card,body.dark .search-bar,body.dark .quick-item,body.dark .recent-item,
+body.dark .analytical-card,body.dark .gc-panel,body.dark .fault-panel,body.dark .sub-panel,
+body.dark .table-wrap,body.dark .result-box,body.dark .settings-accordion,
+body.dark .settings-accordion-body .card,body.dark .theme-option,body.dark .scanner-preview,
+body.dark .report-preview{background:#1f2937;color:#e5e7eb;border-color:#374151;}
+body.dark .card-header{border-bottom-color:#374151;}
+body.dark .card-header h3,body.dark .page-title,body.dark .settings-accordion summary{color:#f1f5f9;}
+body.dark .row label{color:#cbd5e1;}
+body.dark input,body.dark select,body.dark textarea,body.dark .custom-select-trigger{background:#111827;color:#f1f5f9;border-color:#4b5563;}
+body.dark input::placeholder,body.dark textarea::placeholder{color:#94a3b8;}
+body.dark .sub-tab{background:#1f2937;color:#cbd5e1;border-color:#374151;}
+body.dark .sub-tab.active,body.dark .tab-scroll .tab.active{background:var(--ui-accent);color:#fff;border-color:var(--ui-accent);}
+body.dark .bottom-tabs{background:rgba(17,24,39,.96);border-color:#374151;}
+body.dark .bottom-tabs .tab-item{color:#9ca3af;}
+body.dark .bottom-tabs .tab-item.active{background:color-mix(in srgb,var(--ui-accent) 25%, #111827);color:#dbeafe;}
+@media(max-width:520px){
+  .card{margin-left:10px;margin-right:10px;padding:14px;border-radius:17px;}
+  .row input,.row select,.row textarea,input,select,textarea,.custom-select-trigger{min-height:48px;font-size:.84rem;}
+  .theme-option{min-height:88px;}
+  .sub-tab{min-height:46px;}
+}
 </style>
 
 </head>
@@ -5265,10 +5564,16 @@ body.dark #reportpanel-field .rs-test-item input[type="checkbox"] { background:#
                     btn.style.setProperty('--btn-c2', isWhite ? '#f1f5f9' : adjustColor(color, -25));
                 });
                 document.querySelectorAll('.card-header i, .quick-item i, .analytical-card .value').forEach(el => {
-                    const iconColor = isWhite ? '#1e3a5f' : color;
+                    const iconColor = isWhite ? '#2563eb' : color;
                     if (el.tagName === 'I') el.style.color = iconColor;
                     if (el.classList.contains('value')) el.style.color = iconColor;
                 });
+                // Keep the global accent in sync with the selected theme color.
+                document.documentElement.style.setProperty('--ui-accent', isWhite ? '#2563eb' : color);
+                document.documentElement.style.setProperty('--ui-accent-soft', isWhite ? '#eff6ff' : (color + '18'));
+                document.documentElement.style.setProperty('--primary', isWhite ? '#2563eb' : color);
+                document.documentElement.style.setProperty('--primary-2', isWhite ? '#1d4ed8' : adjustColor(color, -25));
+                document.documentElement.style.setProperty('--accent', isWhite ? '#7c3aed' : adjustColor(color, 35));
                 setStorage('themeColor', color);
             }
 
@@ -6957,7 +7262,7 @@ body.dark #reportpanel-field .rs-test-item input[type="checkbox"] { background:#
                     ['HANDOVER','Labels, drawings and documentation updated'],['HANDOVER','Punch-list items reviewed'],['HANDOVER','Test records attached / complete'],['HANDOVER','Equipment restored and ready for service']
                 ];
                 const list=document.getElementById('commChecklist');
-                list.innerHTML=checklist.map((x,i)=>`<label class="comm-check"><input type="checkbox" data-comm-check="${i}"><span><b>${x[0]}</b>${x[1]}</span></label>`).join('');
+                list.innerHTML=checklist.map((x,i)=>`<label class="comm-check"><input type="checkbox" data-comm-check="${i}"><span><b class="comm-category">${x[0]}</b><span class="comm-item-text">${x[1]}</span></span></label>`).join('');
                 const today=new Date(); document.getElementById('commDate').value=today.toISOString().slice(0,10);
                 let punches=[];
                 function update(){
