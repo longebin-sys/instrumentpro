@@ -7816,96 +7816,92 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 <script id="trouble-qa-js">
 (function(){
 'use strict';
-
-/*
- * Troubleshooting Q&A
- * Each device has its own symptom guidance.  Do not reuse another
- * instrument's answer set: the old version incorrectly aliased several
- * devices to pressure/flow/control-valve data.
- */
+/* Troubleshooting Assistant v2
+   Flow: Instrument -> Symptom -> Targeted check -> Conditional result.
+   The app gives diagnostic direction, not a replacement for OEM/site procedures.
+*/
 const D={
  level:{n:'Level transmitter',s:{
-  low:['Reading low','Compare the indicated level with an independent level reference or sight glass.','Check impulse lines for plugging/leaks, verify process conditions and confirm the configured density/SG for DP level.'],
-  high:['Reading high','Verify the actual level independently before changing calibration.','Check impulse/sensing lines, density/SG, zero elevation and configuration; for radar, check for false echoes.'],
-  erratic:['Reading unstable','Compare the signal with actual process movement and a trusted reference.','Check turbulence, foam, impulse-line condition, electrical noise and grounding; for radar check echo quality.'],
-  drift:['Reading drifting','Repeat the comparison after the process is stable.','Check temperature effects, impulse-line condition, zero shift and probe/antenna buildup before re-trimming.'],
-  comm:['No communication','Verify device power/loop current before testing communications.','Check wiring polarity, load, address and the approved HART/fieldbus communication path.'],
-  nodisplay:['No display','Verify supply and loop connections at the instrument.','Check terminals, display connection and device status; follow the OEM procedure before opening the enclosure.']
+  low:{label:'Reading low',q:'Does an independent level indication confirm the level is actually low?',yes:['Process level is genuinely low.','Check process condition, impulse/sensing path and configuration before adjusting the transmitter.','Verify against an independent reference after the process is stable.'],no:['Transmitter indication is low relative to the reference.','Check impulse/sensing path, zero/elevation, configuration and calibration.','Re-test against the independent reference.']},
+  high:{label:'Reading high',q:'Does an independent level indication also show a high level?',yes:['Process level is genuinely high.','Check process condition and sensing path; do not recalibrate simply because the displayed value is high.','Verify the process level independently.'],no:['Transmitter indication is high relative to the reference.','Check sensing path, configuration, zero/elevation and calibration.','Repeat the comparison after correction.']},
+  erratic:{label:'Reading unstable',q:'Does the process level itself visibly fluctuate at the same time?',yes:['The transmitter may be following a real process change.','Check whether turbulence, agitation or process pulsation explains the movement.','Compare with a stable independent reference if available.'],no:['The instability is likely measurement-related.','Check sensing restrictions, wiring, grounding/noise and installation conditions.','Compare the signal with an independent level reference.']},
+  drift:{label:'Reading drifting',q:'Does the independent reference drift in the same direction?',yes:['The process/reference is also changing.','Check process and temperature conditions before changing transmitter trim.','Confirm stable process conditions and compare again.'],no:['The transmitter is drifting relative to the reference.','Check sensing path, temperature effects, zero/elevation and calibration.','Re-test after the physical cause is corrected.']},
+  comm:{label:'No communication',q:'Is the transmitter loop powered and producing a valid loop current?',yes:['Power is present; investigate the communication path.','Check wiring, load/resistance, address and communication hardware/configuration.','Verify communication with an approved communicator/test method.'],no:['Start with the power/loop path.','Check supply, polarity, terminals, barriers/isolators and loop continuity.','Confirm a stable loop current before troubleshooting communication.']},
+  nodisplay:{label:'No display',q:'Is correct supply/loop power present at the transmitter?',yes:['Power is present; investigate the display path.','Check display connection/status and device diagnostics before replacing the display.','Confirm the transmitter remains operational from the loop/communicator.'],no:['The primary fault is the power path.','Check supply, terminals, polarity and barriers/isolators as applicable.','Restore correct power and verify operation.']}
  }},
  pressure:{n:'Pressure transmitter',s:{
-  low:['Reading low','Compare with a certified pressure reference at the same test point.','Check impulse-line restriction/leaks, process isolation, zero/span and transmitter configuration.'],
-  high:['Reading high','Verify pressure with a certified reference before adjusting anything.','Check impulse path, zero elevation, process isolation and configured range.'],
-  erratic:['Reading unstable','Compare the transmitter with a stable pressure reference.','Check impulse-line vibration/restriction, pulsation, wiring, grounding and electrical noise.'],
-  drift:['Reading drifting','Repeat the test at stable process conditions and compare with a reference.','Check temperature effects, impulse-line condition, diaphragm/seal condition and zero shift.'],
-  comm:['No communication','Verify loop power/current first.','Check wiring, load, address and the approved HART/fieldbus connection.'],
-  nodisplay:['No display','Verify transmitter supply and terminal voltage.','Check power path, display connection and device status before replacing the display.']
+  low:{label:'Reading low',q:'Does a certified/stable pressure reference also read low?',yes:['The process pressure may actually be low.','Check process isolation, impulse line condition and operating conditions.','Verify again at a stable operating point.'],no:['The transmitter is low relative to the reference.','Check impulse-line restriction, zero/span and configuration before trimming.','Repeat the reference comparison after correction.']},
+  high:{label:'Reading high',q:'Does an independent pressure reference also read high?',yes:['The process pressure may actually be high.','Check process condition and impulse path before changing calibration.','Verify independently and follow process safety limits.'],no:['The transmitter is high relative to the reference.','Check impulse path, zero/span and configuration.','Re-test against the certified reference.']},
+  erratic:{label:'Reading unstable',q:'Does the independent pressure reference fluctuate too?',yes:['The process may be unstable.','Check pulsation, vibration and process conditions before changing the transmitter.','Compare both readings under a stable condition.'],no:['The transmitter signal is unstable relative to the reference.','Check impulse lines, fittings, vibration, wiring and electrical noise.','Repeat the test with a stable reference.']},
+  drift:{label:'Reading drifting',q:'Does the reference instrument remain stable while the transmitter drifts?',yes:['The transmitter/sensing system is drifting.','Check temperature effects, impulse condition, zero shift and moisture before re-trimming.','Re-test after stabilization.'],no:['The process/reference may also be changing.','Confirm process stability and compare both instruments over time.','Only adjust calibration after the physical cause is excluded.']},
+  comm:{label:'No communication',q:'Is loop power/current healthy?',yes:['Investigate the HART/communication path.','Check resistance/load, wiring, address and communicator connection.','Verify communication without changing device configuration unnecessarily.'],no:['Troubleshoot the loop power first.','Check supply, polarity, terminals and barriers/isolators.','Confirm stable loop current before HART diagnostics.']},
+  nodisplay:{label:'No display',q:'Is the transmitter powered correctly?',yes:['Power is present.','Check display connection, display status and device diagnostics.','Confirm PV/current using an approved external method.'],no:['Power is missing/incorrect.','Check supply, terminals, polarity and loop components.','Restore power and verify the transmitter.']}
  }},
  flow:{n:'Flow meter',s:{
-  low:['Flow reading low','Compare with an independent flow indication or known process condition.','Check process flow, installation, scaling and sensing condition; for DP flow check impulse lines/orifice condition.'],
-  high:['Flow reading high','Verify actual flow independently before changing calibration.','Check scaling/configuration, installation and sensing condition; for magmeters check grounding and empty-pipe status.'],
-  erratic:['Flow signal noisy','Compare signal changes with real process changes.','Check grounding/EMI, turbulence, pulsation, electrode/sensor condition and cable connections.'],
-  drift:['Flow reading drifting','Repeat at stable operating conditions and compare with a reference.','Check fouling/coating, process temperature, sensor condition and configuration.'],
-  comm:['No communication','Verify instrument power and output/loop current.','Check communication wiring, address/load and the approved protocol connection.'],
-  nodisplay:['No display','Verify instrument power at the terminals.','Check supply, display connection and device diagnostics/status.']
+  low:{label:'Flow reading low',q:'Does an independent flow indication also show low flow?',yes:['Low flow may be real.','Check process condition, upstream/downstream installation and sensing condition.','Verify at a stable operating point.'],no:['The meter is low relative to the reference.','Check scaling, installation, sensing surfaces and configuration.','Repeat the comparison after correction.']},
+  high:{label:'Flow reading high',q:'Does an independent reference also indicate high flow?',yes:['High flow may be real.','Check process condition and installation before recalibrating.','Verify against the independent reference.'],no:['The meter is high relative to the reference.','Check scaling, installation, sensing condition and configuration.','Repeat the reference comparison.']},
+  erratic:{label:'Flow signal noisy',q:'Does the process/reference flow fluctuate at the same time?',yes:['The meter may be following real process variation.','Check turbulence, pulsation and operating conditions.','Compare under a stable flow condition.'],no:['The signal is unstable relative to the process.','Check grounding, EMI, cable routing, sensing surfaces and installation.','Verify with an independent reference.']},
+  drift:{label:'Flow reading drifting',q:'Does the independent reference remain stable?',yes:['The meter is drifting relative to the reference.','Check fouling, temperature, installation and configuration.','Repeat after the physical cause is corrected.'],no:['The process may be changing.','Confirm stable operating conditions before changing calibration.','Compare both instruments again.']},
+  comm:{label:'No communication',q:'Is the meter powered and showing a valid process signal locally?',yes:['Investigate the communication path.','Check wiring, addressing/load and communication hardware.','Verify communications using the approved method.'],no:['Start with power/instrument status.','Check supply, terminals and device diagnostics.','Restore normal instrument operation before communication testing.']},
+  nodisplay:{label:'No display',q:'Is correct instrument power present?',yes:['Power is present.','Check display connection/status and diagnostics.','Verify the process signal by an approved external method.'],no:['Power is missing/incorrect.','Check supply, terminals, polarity and protection components.','Restore power and verify operation.']}
  }},
  controlvalve:{n:'Control valve',s:{
-  low:['Valve does not reach command','Compare commanded position with actual stem/shaft travel.','Check actuator air/hydraulic supply, positioner output, linkage, stiction and mechanical restriction.'],
-  high:['Valve overtravels','Compare command, feedback and actual travel.','Check positioner calibration/feedback, travel limits and mechanical stops; do not alter limits without authorization.'],
-  erratic:['Valve hunts / oscillates','Trend command versus actual position before changing tuning.','Check stiction, positioner response, instrument-air quality and control-loop tuning.'],
-  drift:['Position drifts','Hold a steady command and observe whether travel changes.','Check actuator supply leakage, packing friction, linkage and positioner feedback.'],
-  comm:['No communication','Verify positioner power/supply and local status.','Check communication wiring/load/address and positioner diagnostics.'],
-  nodisplay:['Feedback missing','Verify positioner/feedback device power and status.','Check feedback linkage/sensor, wiring and positioner diagnostics.']
+  low:{label:'Valve does not reach command',q:'Does the position feedback also show that the valve is not reaching the commanded position?',yes:['The valve is physically failing to reach command.','Check actuator supply, positioner, linkage, friction/stiction and travel limits.','Repeat a controlled stroke test when authorized.'],no:['Feedback may be wrong or misconfigured.','Check feedback linkage/sensor and positioner calibration before changing the valve.','Compare actual stem travel with feedback.']},
+  high:{label:'Valve overtravels',q:'Does physical stem travel confirm the overtravel?',yes:['The valve is physically overtraveling.','Check positioner setup, feedback, travel limits and mechanical stops.','Verify travel against the approved valve/OEM specification.'],no:['Feedback may be incorrect.','Check position feedback and calibration before changing mechanical settings.','Compare physical travel with indicated travel.']},
+  erratic:{label:'Valve hunts / oscillates',q:'Does actual valve travel oscillate with the command?',yes:['The valve is mechanically/control-loop unstable.','Check stiction, positioner tuning, actuator supply and controller tuning.','Stabilize the loop and verify commanded versus actual travel.'],no:['The indication may be unstable rather than the valve itself.','Check feedback signal, wiring and positioner diagnostics.','Compare physical travel with feedback.']},
+  drift:{label:'Position drifts',q:'Does the valve physically move while the command remains steady?',yes:['The valve is losing position.','Check actuator supply, leakage, linkage and positioner.','Verify position at a steady command after correction.'],no:['Feedback may be drifting.','Check feedback sensor/linkage and positioner diagnostics.','Compare indicated and physical position.']},
+  comm:{label:'No communication',q:'Does the positioner have power and a normal local status?',yes:['Investigate the communication path.','Check wiring, address/load and approved communication hardware.','Verify communications without disturbing the valve safety state.'],no:['Start with positioner power/status.','Check supply and wiring before communication diagnostics.','Restore normal positioner operation first.']},
+  nodisplay:{label:'Feedback missing',q:'Is the positioner powered and otherwise healthy?',yes:['Power is present.','Check feedback linkage/sensor, wiring and diagnostics.','Verify actual valve travel independently.'],no:['Power/status is the first issue.','Check actuator/positioner supply and wiring.','Restore power and verify feedback.']}
  }},
  shutdownvalve:{n:'Shutdown / ESD valve',s:{
-  low:['Stroke is slow','Compare measured stroke time with the approved baseline.','Check actuator supply, solenoid, speed-control devices, tubing restrictions and mechanical friction.'],
-  high:['Travel is excessive','Verify commanded and feedback travel against approved limits.','Check position feedback, mechanical stops and configured travel limits under the approved procedure.'],
-  erratic:['Stroke is inconsistent','Repeat a controlled test only when authorized and safe.','Check actuator/solenoid response, air supply, valve friction and feedback consistency.'],
-  drift:['Position does not hold','Verify actuator pressure and feedback while the valve is in a safe test state.','Check actuator leakage, solenoid behavior, seat/packing condition and feedback.'],
-  comm:['No diagnostics communication','Check controller/device status and approved communications path.','Verify wiring, power, address/load and positioner/ESD diagnostics.'],
-  nodisplay:['Feedback missing','Verify ESD feedback indication at the approved monitoring point.','Check limit switches/proximity sensors, wiring and controller input diagnostics.']
+  low:{label:'Stroke is slow',q:'Is the measured stroke time outside the approved baseline?',yes:['Stroke performance is degraded.','Check actuator supply, solenoid, speed control, tubing restrictions and friction.','Repeat only under an approved test procedure.'],no:['Stroke time is within baseline.','Investigate feedback indication or test conditions rather than assuming a valve fault.','Compare command, feedback and actual travel.']},
+  high:{label:'Travel is excessive',q:'Does physical travel exceed the approved mechanical limit?',yes:['Physical travel is outside the approved limit.','Check feedback, mechanical stops and positioner/actuator setup under the site procedure.','Do not bypass ESD safeguards to force travel.'],no:['Indicated travel may be incorrect.','Check feedback and diagnostic configuration.','Compare indication with physical travel under an approved test.']},
+  erratic:{label:'Stroke is inconsistent',q:'Does the inconsistency repeat during a controlled, authorized test?',yes:['The valve/actuator response is inconsistent.','Check actuator/solenoid response, supply pressure and mechanical travel.','Compare stroke time with the established baseline.'],no:['The symptom may be test/process related.','Confirm test conditions and feedback before invasive troubleshooting.','Repeat only when authorized.']},
+  drift:{label:'Position does not hold',q:'Does actuator pressure/command remain stable while the valve position changes?',yes:['The valve is not holding position.','Check actuator leakage, solenoid behavior, mechanical condition and feedback.','Verify safe-state behavior per approved procedure.'],no:['Investigate command/supply stability first.','Check controller output, solenoid and actuator supply.','Re-test against the approved baseline.']},
+  comm:{label:'No diagnostics communication',q:'Is the ESD/positioner device powered and showing normal local status?',yes:['Investigate the approved diagnostics communication path.','Check wiring, addressing and interface hardware.','Do not compromise the safety function while testing.'],no:['Start with device/controller status and power.','Check approved power and wiring paths.','Restore normal status before communications testing.']},
+  nodisplay:{label:'Feedback missing',q:'Is the ESD feedback device powered and healthy?',yes:['Power is present.','Check feedback linkage/sensor, wiring and diagnostics.','Verify actual valve position under an approved test.'],no:['Power/status is the first issue.','Check approved feedback power and wiring.','Restore feedback and verify the ESD indication.']}
  }},
  speedprobe:{n:'Speed probe',s:{
-  low:['Speed reading low','Compare indicated speed with an independent tachometer/reference.','Check probe air gap, target condition, signal amplitude and configured pulses-per-revolution.'],
-  high:['Speed reading high','Verify speed independently before changing scaling.','Check false pulses/noise, target geometry, shielding and pulses-per-revolution configuration.'],
-  erratic:['Speed signal unstable','Compare the signal with actual shaft speed.','Check probe gap, cable/connectors, shielding/grounding and nearby VFD/EMI sources.'],
-  drift:['Speed reading drifting','Repeat against a stable reference at constant speed.','Check probe mounting/gap, target condition, wiring and input scaling.'],
-  comm:['No communication','Verify the speed device/input module is powered and healthy.','Check wiring, input channel/configuration and the approved communication path.'],
-  nodisplay:['No display','Verify the transmitter/input module and sensor supply.','Check probe wiring, input channel status and display/controller connection.']
+  low:{label:'Speed reading low',q:'Does an independent tachometer/reference confirm the shaft speed is actually low?',yes:['The shaft speed may be genuinely low.','Check the machine/process before adjusting the pickup.','Verify against the independent reference.'],no:['The speed signal is low relative to the reference.','Check pickup air gap, target/gear condition, pulses-per-revolution and wiring.','Verify pulse amplitude/frequency at the approved test point.']},
+  high:{label:'Speed reading high',q:'Does an independent reference confirm the speed is high?',yes:['High speed may be real.','Follow machine protection/operating limits and investigate the process.','Verify independently.'],no:['The pickup signal is indicating too high.','Check pulses-per-revolution, false pulses, electrical noise and configuration.','Verify the pulse train with an approved instrument.']},
+  erratic:{label:'Speed signal erratic',q:'Does the independent speed reference remain stable?',yes:['The machine speed may actually fluctuate.','Check the machine/control system before replacing the probe.','Compare both signals over time.'],no:['The pickup signal is unstable.','Check air gap, target/gear condition, shielding, grounding and cable integrity.','Verify pulse quality at the input.']},
+  drift:{label:'Speed reading drifting',q:'Does the independent speed reference remain stable?',yes:['The pickup/system is drifting relative to the reference.','Check air gap, mounting, target condition, temperature effects and signal conditioning.','Repeat the comparison after correction.'],no:['The machine speed may be changing.','Confirm process stability and compare both measurements.','Do not recalibrate until the reference is stable.']},
+  comm:{label:'No communication',q:'Is the speed input device powered and receiving a pulse signal?',yes:['Investigate the interface/communication path.','Check wiring, input configuration and controller/interface status.','Verify the pulse signal independently.'],no:['Start with the sensor/signal path.','Check power where applicable, coil/wiring condition, air gap and pulse generation.','Restore a valid signal before interface troubleshooting.']},
+  nodisplay:{label:'No speed indication',q:'Can you measure a valid pulse signal from the pickup?',yes:['A pulse exists but the indication is missing.','Check input configuration, scaling, wiring and display/controller path.','Verify pulses-per-revolution settings.'],no:['No valid pulse is present.','Check air gap, target, coil resistance and wiring.','Verify the pickup output against the manufacturer specification.']}
  }},
  vibprobe:{n:'Vibration probe',s:{
-  low:['Vibration reading low','Compare with the expected machine condition and an approved reference measurement.','Check probe gap/bias voltage, probe-extension cable-proximitor matching and mounting.'],
-  high:['Vibration reading high','Confirm the reading with an approved vibration measurement method.','Check probe gap, mounting tightness, cable condition and whether the measured vibration is actually present.'],
-  erratic:['Vibration signal unstable','Compare raw signal behavior with machine speed/load.','Check probe gap/bias, extension cable/connectors, moisture/corrosion, shielding and grounding.'],
-  drift:['Vibration reading drifting','Repeat the measurement at the same machine operating condition.','Check probe gap, mounting, temperature effects, cable condition and proximitor health.'],
-  comm:['No communication','Verify the monitoring/proximitor channel is powered and healthy.','Check wiring, channel configuration and the approved monitoring-system communication path.'],
-  nodisplay:['Feedback missing','Verify the proximitor/monitor channel supply and status.','Check probe/extension cable, terminal connections and monitor input diagnostics.']
+  low:{label:'Vibration reading low',q:'Does an independent vibration measurement confirm low vibration?',yes:['Low vibration may be real.','Check machine operating condition and measurement location.','Verify against the approved reference.'],no:['The measurement is low relative to the reference.','Check probe gap/bias, probe/extension/proximitor compatibility and cable condition.','Verify the signal chain end-to-end.']},
+  high:{label:'Vibration reading high',q:'Does an independent measurement also show high vibration?',yes:['High vibration may be real.','Treat it as a machine-condition issue and follow the plant protection procedure.','Verify with the approved reference.'],no:['The channel may be falsely high.','Check probe gap/bias, grounding, cable condition and signal conditioning.','Compare the signal with an independent measurement.']},
+  erratic:{label:'Vibration signal erratic',q:'Does the independent vibration reference fluctuate in the same way?',yes:['Machine vibration may actually be changing.','Check operating condition and machine behavior.','Compare both measurements over time.'],no:['The signal chain is suspect.','Check probe gap/bias, extension connectors, moisture/corrosion, shielding and proximitor compatibility.','Verify the signal at each stage.']},
+  drift:{label:'Vibration reading drifting',q:'Does the independent reference remain stable?',yes:['The measurement chain is drifting.','Check probe gap, bias voltage, temperature effects, cable and proximitor compatibility.','Repeat the comparison after correction.'],no:['Machine condition may be changing.','Confirm stable speed/load before diagnosing the instrument.','Compare both channels under the same condition.']},
+  comm:{label:'No communication',q:'Is the vibration channel powered and producing a valid signal?',yes:['Investigate the interface path.','Check wiring, channel configuration and controller/interface status.','Verify the signal independently.'],no:['Start with the sensor chain.','Check supply, probe gap/bias, extension cable and proximitor.','Restore a valid signal before interface diagnostics.']},
+  nodisplay:{label:'No vibration indication',q:'Is a valid sensor-chain signal present?',yes:['The sensor chain is producing a signal.','Check channel configuration, scaling and display/controller path.','Verify the channel against the approved configuration.'],no:['No valid sensor signal is present.','Check probe gap/bias, extension cable, proximitor and wiring.','Verify the sensor chain against the OEM specification.']}
  }},
  gasdet:{n:'Gas detector',s:{
-  low:['Gas reading low','Use the approved bump-test/calibration gas procedure to verify sensor response.','Check sensor age/condition, correct target gas, calibration/correction factor and possible sensor poisoning.'],
-  high:['Gas reading high','Treat a credible gas alarm as real until the area is proven safe by the approved procedure.','Check actual atmosphere with an approved reference instrument and inspect calibration, sensor condition and environmental effects.'],
-  erratic:['Gas signal unstable','Compare behavior with the approved test gas and environmental conditions.','Check sensor contamination/poisoning, cable/power integrity, grounding and cross-sensitivity.'],
-  drift:['Gas reading drifting','Repeat with certified test gas under the approved calibration procedure.','Check sensor age, environmental effects, zero stability and calibration history.'],
-  comm:['No communication','Verify detector power and loop/communication status.','Check wiring, address/settings and the approved controller communication path.'],
-  nodisplay:['No display','Verify detector supply and local status indicators.','Check terminals, display/module connection and fault diagnostics; follow the OEM hazardous-area procedure.']
+  low:{label:'Gas reading low',q:'Does a certified test gas produce the expected detector response?',yes:['The sensor responds correctly to the test gas.','Investigate actual process/sample conditions and gas selection before recalibrating.','Verify the target gas and correction factor.'],no:['Detector response is inadequate.','Check calibration gas, regulator/flow, sensor condition and calibration status.','Perform calibration only with the approved certified standard/procedure.']},
+  high:{label:'Gas reading high',q:'Does a certified test gas confirm the detector response is correct?',yes:['The detector may be responding correctly.','Investigate actual atmosphere/sample path and cross-sensitivity.','Verify with the approved reference.'],no:['Detector response is suspect.','Check calibration gas, sensor condition, zero/calibration and environmental influences.','Re-test with the certified standard.']},
+  erratic:{label:'Gas signal erratic',q:'Does the detector remain stable when exposed to a controlled, known condition?',yes:['Process/environment may be causing the variation.','Check ventilation, sample path and gas concentration changes.','Verify against a controlled test condition.'],no:['The detector/signal path is unstable.','Check sensor condition, power, wiring, environmental contamination and sample flow.','Use an approved bump/calibration procedure.']},
+  drift:{label:'Gas reading drifting',q:'Does the detector drift when the atmosphere is stable?',yes:['Detector drift is indicated.','Check sensor aging/poisoning, zero stability, temperature/humidity and calibration history.','Calibrate or replace the sensor only per the approved procedure.'],no:['Atmospheric conditions may be changing.','Confirm a stable test environment before recalibration.','Compare against a certified reference.']},
+  comm:{label:'No communication',q:'Is the detector powered and showing a normal local status?',yes:['Investigate the communication path.','Check wiring, addressing, controller channel and interface hardware.','Verify the detector locally before changing settings.'],no:['Start with power/status.','Check supply, terminals, wiring and detector diagnostics.','Restore normal detector operation first.']},
+  nodisplay:{label:'No display',q:'Is the detector powered correctly?',yes:['Power is present.','Check display/status path and device diagnostics.','Verify gas response with the approved external test method.'],no:['Power is missing/incorrect.','Check supply, terminals, polarity and protection components.','Restore power and verify detector operation.']}
  }},
  firepanel:{n:'Fire alarm panel',s:{
-  low:['Indication / reading low','Confirm the reported condition at the panel and the affected zone/device address.','Check device status, loop integrity and whether the point is isolated/disabled; follow the approved fire-system procedure.'],
-  high:['Alarm / indication high','Treat a fire alarm as genuine until the authorized response procedure establishes otherwise.','Verify the affected address/zone and investigate the area using the site fire procedure; do not simply reset and ignore a recurring alarm.'],
-  erratic:['Intermittent / nuisance alarm','Review the event history and exact device address before replacing anything.','Check detector contamination, environmental conditions, loop wiring and grounding; use the panel-specific test procedure.'],
-  drift:['Sensitivity / status drifting','Review the panel maintenance/diagnostic history.','Check detector sensitivity/dirty status and maintenance condition using the panel/OEM procedure.'],
-  comm:['Loop / device communication fault','Identify the exact device/loop address reported by the panel.','Check loop wiring, isolators, power and device status; isolate sections only under the approved fire-system procedure.'],
-  nodisplay:['Panel display missing','Check the panel power and battery indications first.','Verify mains supply, battery condition under load, display connections and panel fault history.']
+  low:{label:'Alarm/signal appears low or weak',q:'Does the panel event history identify a specific device/zone with the abnormal indication?',yes:['Use the identified address/zone as the starting point.','Inspect that device and its loop/circuit according to the approved fire procedure.','Clear and re-test only when authorized.'],no:['The indication is not localized.','Check panel power, loop/circuit status and event history before replacing devices.','Follow the approved fire-system troubleshooting procedure.']},
+  high:{label:'Alarm appears unexpectedly high/sensitive',q:'Does the event history show repeated alarms from the same device?',yes:['A recurring device/environment issue is possible.','Check the specific detector, contamination and environmental conditions.','Use the approved functional test procedure.'],no:['The event may be transient.','Review event history, loop integrity and environmental conditions.','Do not disable protection simply to suppress nuisance alarms.']},
+  erratic:{label:'Intermittent trouble/alarm',q:'Does the event history repeatedly identify the same address/loop?',yes:['The fault can be localized.','Inspect the identified device/circuit and connections.','Follow the approved fire-system test procedure.'],no:['The fault is not yet localized.','Check power, batteries, ground-fault indications, loop integrity and event history.','Escalate per the site fire-system procedure.']},
+  drift:{label:'Device sensitivity/trouble drifting',q:'Does the panel identify a specific detector/device?',yes:['The device is the primary suspect.','Check contamination/sensitivity status and maintenance history.','Test or replace only under the approved fire procedure.'],no:['The issue may be panel/loop related.','Review diagnostics, loop status and power/battery condition.','Follow the approved manufacturer/site procedure.']},
+  comm:{label:'No communication',q:'Does the panel show a specific loop/device communication fault?',yes:['Use the identified loop/address.','Check loop continuity, device connections and the device status.','Follow the approved fire-system isolation/test procedure.'],no:['The fault is not localized.','Review panel diagnostics, power and loop status.','Do not randomly replace devices.']},
+  nodisplay:{label:'No display',q:'Is panel power and backup power available?',yes:['The display path may be the issue.','Check panel diagnostics/display connections per the OEM procedure.','Maintain fire protection while troubleshooting.'],no:['Power is the first issue.','Check normal and backup supplies and panel indications.','Follow the approved fire-system emergency/maintenance procedure.']}
  }},
  genset:{n:'Generator control panel',s:{
-  low:['Reading low','Compare the indicated value with an independent approved measurement.','Check the relevant sensor, wiring, scaling and controller configuration before adjusting limits.'],
-  high:['Reading high','Verify the value independently before changing protection settings.','Check sensor input, wiring, scaling and controller configuration; investigate genuine overspeed/temperature/pressure conditions immediately.'],
-  erratic:['Reading unstable','Compare the controller value with an approved reference while observing operating conditions.','Check sensor wiring/connectors, grounding, EMI and the relevant engine/alternator condition.'],
-  drift:['Reading drifting','Repeat the measurement at steady load/speed.','Check sensor condition, wiring, supply voltage, temperature effects and controller scaling.'],
-  comm:['No communication','Verify controller power and local status first.','Check network/serial wiring, address/settings and the approved generator monitoring path.'],
-  nodisplay:['Controller display missing','Verify control-panel supply and battery/DC control power.','Check fuses/breakers, display/controller connections and active fault history before power cycling.']
+  low:{label:'Speed/voltage reading low',q:'Does an independent meter confirm the generator parameter is actually low?',yes:['The generator parameter may genuinely be low.','Check engine/governor or AVR-related conditions as applicable.','Verify against the approved generator reference.'],no:['The controller indication is low relative to the reference.','Check sensing wiring, scaling/configuration and controller inputs.','Repeat the comparison after correction.']},
+  high:{label:'Speed/voltage reading high',q:'Does an independent meter confirm the parameter is high?',yes:['The generator parameter may genuinely be high.','Follow generator protection/operating limits and investigate the cause.','Verify independently.'],no:['The controller indication is high relative to the reference.','Check sensing input, scaling/configuration and controller wiring.','Repeat the comparison.']},
+  erratic:{label:'Signal/indication erratic',q:'Does an independent reference fluctuate in the same way?',yes:['The generator/process may be unstable.','Check governor/AVR/load conditions as applicable.','Compare both signals under a stable condition.'],no:['The controller signal chain is suspect.','Check sensors, wiring, grounding and controller input status.','Verify each signal independently.']},
+  drift:{label:'Reading drifting',q:'Does the independent reference remain stable?',yes:['The sensing/controller channel may be drifting.','Check sensor condition, wiring, scaling and controller configuration.','Repeat the comparison after correction.'],no:['Generator operating conditions may be changing.','Confirm stable speed/load before diagnosing the controller.','Compare against an independent reference.']},
+  comm:{label:'No communication',q:'Is the generator controller powered and healthy locally?',yes:['Investigate the controller communication path.','Check network/serial wiring, addressing and interface status.','Verify communications using the approved method.'],no:['Start with controller power/status.','Check supply, connections and controller diagnostics.','Restore normal controller status first.']},
+  nodisplay:{label:'No display',q:'Is controller power and backup supply available?',yes:['Power is present.','Check display/controller diagnostics and connections per OEM procedure.','Verify generator status through an approved alternate indication.'],no:['Power is the first issue.','Check normal/backup supply and controller connections.','Restore power and verify operation.']}
  }}
 };
-
 const devices=Object.keys(D).map(k=>[k,D[k].n]);
 const state={device:null,symptom:null,quick:null};
 function $(x){return document.getElementById(x)}
@@ -7913,51 +7909,41 @@ function openModal(quick){
  state.device=null;state.symptom=null;state.quick=quick||null;
  $('troubleModal').classList.add('open');$('troubleModal').setAttribute('aria-hidden','false');
  $('troubleResult').classList.remove('show');$('troubleDone').style.display='none';$('troubleNext').style.display='block';$('troubleBack').style.display='block';
- renderDevice();
- document.body.style.overflow='hidden';
+ renderDevice(); document.body.style.overflow='hidden';
 }
-function closeModal(){ $('troubleModal').classList.remove('open');$('troubleModal').setAttribute('aria-hidden','true');document.body.style.overflow='';}
+function closeModal(){ $('troubleModal').classList.remove('open');$('troubleModal').setAttribute('aria-hidden','true');document.body.style.overflow=''; }
 function progress(n){$('troubleProgress').querySelectorAll('span').forEach((x,i)=>x.classList.toggle('active',i<n))}
 function options(items){
  const box=$('troubleOptions');box.innerHTML='';
- items.forEach(([id,label])=>{
-  const b=document.createElement('button');b.type='button';b.textContent=label;b.dataset.id=id;
-  b.onclick=()=>{box.querySelectorAll('button').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');$('troubleNext').disabled=false};
-  box.appendChild(b);
- });
+ items.forEach(([id,label])=>{const b=document.createElement('button');b.type='button';b.textContent=label;b.dataset.id=id;b.onclick=()=>{box.querySelectorAll('button').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');$('troubleNext').disabled=false};box.appendChild(b);});
 }
 function renderDevice(){
- progress(1);
- $('troubleStep').textContent=state.quick?'Question 1 of 1':'Question 1 of 2';
- $('troubleQuestion').textContent='Which instrument is showing the problem?';
- options(devices);$('troubleNext').disabled=true;
+ progress(1);$('troubleStep').textContent='Question 1 of 3';$('troubleQuestion').textContent='Which instrument or system is showing the problem?';options(devices);$('troubleNext').disabled=true;
 }
 function renderSymptoms(){
- const d=D[state.device];progress(2);
- $('troubleStep').textContent='Question 2 of 2';
- $('troubleQuestion').textContent='What is the main symptom on the '+d.n.toLowerCase()+'?';
- options(Object.entries(d.s).map(x=>[x[0],x[1][0]]));$('troubleNext').disabled=true;
+ const d=D[state.device];progress(2);$('troubleStep').textContent='Question 2 of 3';$('troubleQuestion').textContent='What is the main symptom on the '+d.n.toLowerCase()+'?';
+ options(Object.entries(d.s).map(([k,v])=>[k,v.label]));$('troubleNext').disabled=true;
 }
-function showResult(){
- const d=D[state.device],r=d.s[state.symptom];progress(3);
- $('troubleStep').textContent='Diagnostic direction';
- $('troubleQuestion').textContent='Start with this check before changing settings or replacing parts.';
- $('troubleOptions').innerHTML='';$('troubleResult').classList.add('show');
- $('troubleResultTitle').textContent=r[0];$('troubleCheck').textContent=r[1];
- $('troubleCause').textContent='Possible causes include process conditions, sensing/measurement path, wiring, configuration or the instrument itself. Isolate the physical cause before recalibration or replacement.';
- $('troubleVerify').textContent=r[2];$('troubleNext').style.display='none';$('troubleBack').style.display='none';$('troubleDone').style.display='block';
+function renderCheck(){
+ const d=D[state.device],r=d.s[state.symptom];progress(3);$('troubleStep').textContent='Question 3 of 3';$('troubleQuestion').textContent=r.q;
+ options([['yes','Yes'],['no','No']]);$('troubleNext').disabled=true;
+}
+function showResult(answer){
+ const d=D[state.device],r=d.s[state.symptom],a=r[answer];
+ progress(3);$('troubleStep').textContent='Diagnostic direction';$('troubleQuestion').textContent='Use this result as the next diagnostic direction.';
+ $('troubleOptions').innerHTML='';$('troubleResult').classList.add('show');$('troubleResultTitle').textContent=a[0];$('troubleCheck').textContent=a[1];
+ $('troubleCause').textContent='Do not assume a failed instrument until the process condition, sensing path, wiring, configuration and reference measurement have been checked.';
+ $('troubleVerify').textContent=a[2];$('troubleNext').style.display='none';$('troubleBack').style.display='none';$('troubleDone').style.display='block';
 }
 $('troubleStartBtn').onclick=()=>openModal();
 document.querySelectorAll('#troubleQuick button').forEach(b=>b.onclick=()=>openModal(b.dataset.quick));
 document.querySelectorAll('[data-close-trouble]').forEach(x=>x.onclick=closeModal);
-$('troubleBack').onclick=()=>{ if(state.device){state.device=null;renderDevice();} };
+$('troubleBack').onclick=()=>{if(state.symptom){state.symptom=null;renderSymptoms()}else if(state.device){state.device=null;renderDevice()}};
 $('troubleNext').onclick=()=>{
  const selected=$('troubleOptions').querySelector('.selected');if(!selected)return;
- if(!state.device){
-   state.device=selected.dataset.id;
-   if(state.quick){ state.symptom=state.quick; showResult(); }
-   else renderSymptoms();
- } else { state.symptom=selected.dataset.id;showResult(); }
+ if(!state.device){state.device=selected.dataset.id; if(state.quick){state.symptom=state.quick;renderCheck()}else renderSymptoms();}
+ else if(!state.symptom){state.symptom=selected.dataset.id;renderCheck()}
+ else showResult(selected.dataset.id);
 };
 $('troubleDone').onclick=closeModal;
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('troubleModal').classList.contains('open'))closeModal()});
