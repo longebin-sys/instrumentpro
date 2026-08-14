@@ -14,7 +14,8 @@
     <link rel="apple-touch-icon" href="icon-180.png" />
     <title>InstrumentPro · Temperature & Analytical</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+    <!-- Tesseract (OCR) is loaded lazily by loadTesseract() only when the
+         user scans a tag, instead of blocking here on every page load. -->
     <style>
         /* ===== RESET & BASE ===== */
         * {
@@ -2253,13 +2254,18 @@ body:not(.dark) #reportpanel-field .rs-test-item input[type="checkbox"]{
 </style>
 
 <style id="instrumentpro-mobile-fix">
-/* ===== InstrumentPro mobile/report fixes ===== */
-html, body {
-  width: 100%;
-  max-width: 100%;
+/* ===== InstrumentPro mobile/report fixes =====
+   Note: intentionally NOT setting max-width:100% on body here — the base
+   stylesheet caps body at 480px (the centered "card" layout). Overriding
+   it to 100% here used to stretch the app edge-to-edge on tablet/desktop
+   widths. overflow-x is still killed so inner content can't cause
+   horizontal scroll on narrow phones. */
+html {
   overflow-x: hidden !important;
 }
 body {
+  width: 100%;
+  overflow-x: hidden !important;
   min-width: 0 !important;
 }
 .app-shell,
@@ -3755,7 +3761,7 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
     </div>
 
     <div class="recent-tools">
-        <span class="recent-label"><i class="fas fa-clock"></i>
+        <span class="recent-label"><i class="fas fa-clock"></i> Recent</span>
         <div id="recentList">
             <span class="recent-item" data-page="calibration">Calibration</span>
             <span class="recent-item" data-page="analytical">Analytical</span>
@@ -8306,98 +8312,9 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
                 });
             });
 
-            // =============================================================
-            // TROUBLESHOOTING
-            // =============================================================
-            const faultDiagnosis = document.getElementById('faultDiagnosis');
-            const faultFinderBtn = document.getElementById('faultFinderBtn');
-
-            const troubleDeviceData = {
-                level: `<div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>DP level (wet/dry leg):</strong> check for plugged impulse lines first; verify the SG entered at setup still matches the actual process fluid; purge/blow down lines before assuming the transmitter itself is at fault.</div>
-                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Radar (guided/non-contact):</strong> foam or turbulent surface causes false/weak echoes; check antenna for product coating/buildup; nearby agitators or nozzles can create a false echo the unit "locks" onto.</div>
-                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;"><strong>Capacitance probe:</strong> coating buildup changes the dielectric reading over time — verify against a manual dip/strap reading before re-trimming; check grounding/bonding.</div>`,
-                pressure: `<div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Zero/span shift:</strong> verify with a certified calibrator before adjusting — a "drifting" reading is often actually a process condition (temperature effect, line freezing) not the transmitter.</div>
-                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Impulse line blockage:</strong> the classic cause of a "stuck" reading that doesn't track a known process change — blow down and re-check before replacing anything.</div>
-                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;"><strong>Diaphragm seal systems:</strong> a slow/laggy response can mean fill-fluid loss — compare response time to a fresh unit if you suspect this.</div>`,
-                flow: `<div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>DP/orifice flow:</strong> same wet/dry leg checks as level; also check the orifice plate itself for erosion, damage, or a beta ratio that no longer matches the as-built calc.</div>
-                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Magmeter:</strong> coated electrodes or grounding rings cause noisy/incorrect readings; confirm empty-pipe detection isn't falsely triggering.</div>
-                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;"><strong>Vortex meter:</strong> low/erratic readings can mean cavitation — check that operating conditions keep you above the meter's minimum Reynolds number.</div>`,
-                controlvalve: `<div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Stroke test:</strong> run 0→100→0% and compare actual vs. commanded travel; a gap between increasing and decreasing stroke (hysteresis) points to stiction in the packing or actuator.</div>
-                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Positioner feedback:</strong> check the feedback linkage/potentiometer isn't slipping — a valve that "looks" wrong at the positioner but is fine at the stem usually means this.</div>
-                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;"><strong>Air supply:</strong> verify actual supply pressure at the actuator, not just at the header — a restriction/leak in the tubing run gives slow or incomplete stroke.</div>`,
-                shutdownvalve: `<div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Partial stroke test (PST):</strong> compare current stroke time/torque signature against the established baseline, not just "did it move."</div>
-                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Fail-safe check:</strong> confirm the valve actually fails to its safe position on loss of air/power/signal — don't assume, test it (per your MOC/permit).</div>
-                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;"><strong>Stroke time out of spec:</strong> too slow often means a solenoid or actuator issue; unusually fast can mean a dashpot/speed control device has failed.</div>`,
-                speedprobe: `<div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Magnetic pickup:</strong> check air gap to the gear/wheel matches the manufacturer spec — too large a gap gives weak/dropout pulses.</div>
-                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Coil resistance:</strong> an open or shorted pickup coil reads as no signal or a flatlined speed — check resistance against the nameplate value.</div>
-                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;"><strong>False pulses:</strong> nearby VFD/electrical noise can be miscounted as speed pulses — check shielding and grounding before assuming a mechanical fault.</div>`,
-                vibprobe: `<div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Gap voltage:</strong> confirm it's within the linear range for your probe/proximitor pair (commonly around -1 to -18V DC for an 8mm probe at ~200mV/mil) — see the Speed converter tab's gap↔mV tool.</div>
-                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Mismatched components:</strong> probe, extension cable, and proximitor are a calibrated set — swapping just one piece without matching the system spec throws off the whole reading.</div>
-                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;"><strong>Erratic signal:</strong> check extension cable connectors for moisture/corrosion before condemning the probe itself.</div>`,
-                gasdet: `<div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Bump test vs. calibration:</strong> a bump test only confirms the sensor responds and alarms — it isn't a substitute for a full calibration against a certified gas standard.</div>
-                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Sensor poisoning:</strong> catalytic bead (flammable gas) sensors can be poisoned by silicones/sulfur compounds — a sensor that reads low despite a good bump-test gas can mean this.</div>
-                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;"><strong>Wrong gas calibration:</strong> confirm the unit is actually calibrated for the target gas — a detector calibrated on a surrogate gas needs the correct correction factor applied.</div>`,
-                smokedet: `<div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Addressable trouble:</strong> the panel reports the specific device address — go to that exact device, don't guess.</div>
-                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Dirty sensor drift:</strong> many addressable panels report sensor sensitivity drift before it becomes an outright trouble — check the maintenance menu, not just active alarms.</div>
-                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;"><strong>Testing:</strong> always follow the panel's specific functional test procedure (e.g. NFPA 72 guidance) rather than just a visual check.</div>`,
-                firepanel: `<div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Ground faults:</strong> a very common source of intermittent troubles on a fire alarm loop — isolate circuit by circuit rather than replacing devices at random.</div>
-                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Battery backup:</strong> test under load, not just standby voltage — a battery can read fine at rest and still fail under an alarm current draw.</div>
-                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;"><strong>Disabled/silenced points:</strong> check for zones or devices left disabled from prior maintenance before troubleshooting a "no alarm" complaint.</div>`,
-                genset: `<div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Failure to start:</strong> check start sequence sensors (crank, fuel pressure, cooling water) and battery/charging system condition first — most no-starts trace back to one of these.</div>
-                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Common trip causes:</strong> overspeed, low oil pressure, high coolant temperature, and overcrank are the usual suspects — the panel's event log will show which one tripped first.</div>
-                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;"><strong>Governor/AVR faults:</strong> unstable speed or voltage often traces to the governor or automatic voltage regulator rather than the engine/alternator itself.</div>`,
-                blowdown: `<div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Won't hold / seat leakage:</strong> the most common blowdown valve complaint — check seat condition before assuming an actuator problem.</div>
-                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Actuator/solenoid:</strong> verify air supply and solenoid function directly at the valve, not just at the control system output.</div>
-                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;"><strong>Scaling/plugging:</strong> quick-opening blowdown valves used on level vessels are prone to scale buildup — check travel/position feedback matches the commanded position.</div>`,
-                plcforce: `<div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>General:</strong> forcing overrides a live I/O or logic value for testing — always requires authorization/MOC, should be logged, and must be removed as soon as the test is done. Never leave a force in place "temporarily" without a clear removal plan.</div>
-                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Allen-Bradley (Studio 5000/RSLogix):</strong> force via the tag's right-click menu or the force table; forced tags are highlighted in the editor. Note that "Enable All Forces" is a separate controller-wide switch — individual forces won't take effect until that's on, and turning it off removes every active force at once.</div>
-                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>GE (PACSystems/Proficy):</strong> forces are set via the programming software's data/variable monitor and are flagged in the status display similarly to Allen-Bradley.</div>
-                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;"><strong>Honeywell (Experion/ControlEdge):</strong> overrides are usually done through the control builder or a dedicated manual-override function block, and often require a higher engineering access level given the safety implications.</div>`,
-                fm200: `<div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Cylinder pressure:</strong> check the gauge against the manufacturer's chart (commonly in the 360-600 psi range, but confirm your specific system's spec) — a low reading suggests a slow leak.</div>
-                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Weigh the cylinder, don't just trust pressure:</strong> these systems are nitrogen-superpressurized on top of the liquefied agent, so pressure alone can look normal even if agent has been lost — weight is the real check.</div>
-                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Hissing at the vent valve during recharge:</strong> indicates the piston/seal isn't sealing properly — treat as a real fault, not background noise.</div>
-                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;"><strong>After any maintenance:</strong> confirm the detection zone isn't left in a disabled/bypass state, and that manual release/abort stations test correctly.</div>`,
-                turbinefg: `<div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>General layout:</strong> gas turbine enclosures typically combine heat/rate-of-rise detectors, UV/IR flame detectors, and combustible gas detectors at ventilation outlets, often with CO₂ or clean-agent total-flood suppression rather than water.</div>
-                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;margin-bottom:6px;"><strong>Control system specifics:</strong> GE packages are commonly integrated with a Mark VI/Mark VIe turbine control system, while Solar Turbines packages typically use their own PLC-based F&G panel — fault codes and menu structure are specific to that platform.</div>
-                    <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px;"><strong>Always default to the OEM manual:</strong> this is one area where package-specific documentation matters more than general practice — treat this section as orientation, not a substitute for it.</div>`
-            };
-            const troubleDevice = document.getElementById('troubleDevice');
-            const troubleOutput = document.getElementById('troubleOutput');
-            function renderTroubleDevice() {
-                if (!troubleDevice || !troubleOutput) return;
-                troubleOutput.innerHTML = troubleDeviceData[troubleDevice.value] || '';
-            }
-            if (troubleDevice) {
-                troubleDevice.addEventListener('change', renderTroubleDevice);
-                renderTroubleDevice();
-            }
-
-            const faultDB = {
-                '4ma': '🔍 Stuck at 4mA:\n1. Check power supply\n2. Verify loop wiring\n3. Inspect sensor\n4. Check configuration\n5. Perform loop test',
-                '22ma': '🔍 22mA Alarm:\n1. Check overpressure\n2. Verify sensor integrity\n3. Inspect for moisture\n4. Perform sensor trim\n5. Check configuration',
-                'hart': '🔍 No HART Comms:\n1. Verify 250Ω resistor\n2. Check modem connection\n3. Confirm device address\n4. Check loop current\n5. Verify wiring polarity',
-                'drift': '🔍 Reading Drifts Over Time:\n1. Check for temperature effects on electronics\n2. Inspect impulse lines for plugging/leaks\n3. Verify zero/span hasn\'t shifted (re-trim)\n4. Check power supply stability\n5. Inspect for moisture ingress',
-                'erratic': '🔍 Erratic / Noisy Signal:\n1. Check for ground loops (measure shield-to-ground)\n2. Inspect wiring for loose terminals\n3. Look for nearby VFD/motor EMI sources\n4. Verify shield is grounded at one end only\n5. Check process for turbulence/pulsation',
-                'nodisplay': '🔍 Blank Local Display:\n1. Verify loop power at terminals\n2. Check display ribbon/connector seating\n3. Confirm firmware hasn\'t crashed (power cycle)\n4. Inspect for water ingress in housing\n5. Check fuse if unit is externally powered',
-                'groundloop': '🔍 Ground Loop / Noise:\n1. Ground cable shield at ONE end only\n2. Check for multiple earth grounds on same loop\n3. Use isolated barrier/isolator if unavoidable\n4. Verify power supply common isn\'t shared incorrectly\n5. Route signal cable away from power cables'
-            };
-
-            const faultSelect = document.getElementById('faultSelect');
-            if (faultSelect) {
-                faultSelect.addEventListener('change', function() {
-                    const fault = this.value;
-                    const msg = faultDB[fault] || 'No diagnosis available.';
-                    if (faultDiagnosis) faultDiagnosis.innerHTML = msg.replace(/\n/g, '<br/>');
-                });
-                faultSelect.dispatchEvent(new Event('change'));
-            }
-
-            if (faultFinderBtn) {
-                faultFinderBtn.addEventListener('click', function() {
-                    const all = Object.keys(faultDB).map(k => faultDB[k]).join('\n\n');
-                    if (faultDiagnosis) faultDiagnosis.innerHTML = all.replace(/\n/g, '<br/>');
-                });
-            }
+            // Troubleshooting now runs entirely through the device/failure-mode
+            // modal wizard (see troubleModal / troubleStartBtn at the bottom of
+            // this file) — the old select/button based flow was removed.
 
             // =============================================================
             // AI CHAT
