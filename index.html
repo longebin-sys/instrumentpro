@@ -3045,6 +3045,8 @@ body.dark #reportpanel-field .rs-test-item input[type="checkbox"] { background:#
                     <div class="sub-tab" data-tab="conv-speed">Speed</div>
                     <div class="sub-tab" data-tab="conv-vibration">Vibration</div>
                     <div class="sub-tab" data-tab="conv-ma">4-20mA</div>
+                    <div class="sub-tab" data-tab="conv-rtd">RTD</div>
+                    <div class="sub-tab" data-tab="conv-tc">Thermocouple</div>
                 </div>
                 <div class="sub-panel active" id="conv-pressure">
                     <div class="row">
@@ -3138,53 +3140,7 @@ body.dark #reportpanel-field .rs-test-item input[type="checkbox"] { background:#
                     <div class="result-box"><span>PV</span><span id="mA_Result">50.00</span></div>
                     <div class="result-box"><span>Status</span><span id="mA_LoopStatus" style="color:#059669;">✓ Normal</span></div>
                 </div>
-            </div>
-        </div>
-
-        <!-- ==========================================================
-        PAGE: CALIBRATION (short)
-        ========================================================== -->
-        <div class="page" id="page-calibration">
-            <div class="page-title"><i class="fas fa-sliders-h"></i> Calibration</div>
-            <div class="card">
-                <div class="tab-scroll" id="calMainTabs">
-                    <div class="tab active" data-cal="5point">5-Point (mA)</div>
-                    <div class="tab" data-cal="rtd">RTD</div>
-                    <div class="tab" data-cal="tc">Thermocouple</div>
-                </div>
-                <div class="cal-main-panel" id="cal-5point">
-                    <div class="row"><label>Type</label>
-                        <select id="calType" style="flex:1;">
-                            <option value="pressure" selected>Pressure Transmitter</option>
-                            <option value="temperature">Temperature Transmitter</option>
-                            <option value="valve">Control Valve (Stroke)</option>
-                        </select>
-                    </div>
-                    <div class="row"><label>Tag</label><input type="text" id="calTag" placeholder="PT-101" /></div>
-                    <div class="row">
-                        <label>Range</label>
-                        <input type="number" id="calLow" value="0" step="any" style="flex:0.5;" />
-                        <span>to</span>
-                        <input type="number" id="calHigh" value="100" step="any" style="flex:0.5;" />
-                        <select id="calUnit" style="flex:0.6;"></select>
-                        <button class="btn btn-sm" id="calUpdateBtn"><i class="fas fa-sync"></i></button>
-                    </div>
-                    <div class="row"><label>Tolerance</label><input type="number" id="calTolerance" value="0.1" step="0.01" style="flex:0.4;" /><span class="chip" id="calToleranceUnit">% of span</span></div>
-                    <div style="font-size:0.65rem;color:#64748b;margin-bottom:6px;" id="calInstructions">Enter the <strong>actual</strong> mA reading measured at each test point — error is calculated from ideal vs. actual.</div>
-                    <div id="calLiveBar" class="row hidden" style="background:#f0fdf4;border-radius:16px;padding:8px 12px;">
-                        <i class="fas fa-satellite-dish" style="color:#059669;"></i>
-                        <span style="font-size:0.75rem;flex:1;">Live: <strong id="calLiveValue">—</strong></span>
-                        <span style="font-size:0.6rem;color:#64748b;">Tap a point's 📥 to fill it</span>
-                    </div>
-                    <div id="calPointsContainer" class="cal-points-grid"></div>
-                    <div class="flex mt-1">
-                        <span class="badge badge-pass" id="calPassFail"><i class="fas fa-check"></i> Pass</span>
-                        <span class="chip" id="calErrorDisplay"><i class="fas fa-percent"></i> Max error: 0.00%</span>
-                    </div>
-                    <button class="btn w-full mt-1" id="calExportBtn" style="justify-content:center;"><i class="fas fa-download"></i> Export as .txt</button>
-                </div>
-
-                <div class="cal-main-panel hidden" id="cal-rtd">
+                <div class="sub-panel hidden" id="conv-rtd">
                     <div class="card-header"><i class="fas fa-microchip"></i><h3>RTD Calculator</h3><span id="rtdTypeBadge">Pt100</span></div>
                     <div class="row">
                         <label>RTD Type</label>
@@ -3224,7 +3180,7 @@ body.dark #reportpanel-field .rs-test-item input[type="checkbox"] { background:#
                     <button class="btn w-full mt-1" id="tempCalExportBtn" style="justify-content:center;"><i class="fas fa-download"></i> Export as .txt</button>
                 </div>
 
-                <div class="cal-main-panel hidden" id="cal-tc">
+                <div class="sub-panel hidden" id="conv-tc">
                     <div class="card-header"><i class="fas fa-fire"></i><h3>Thermocouple Calculator</h3><span>IEC 60584</span></div>
                     <div class="row">
                         <label>TC Type</label>
@@ -3284,6 +3240,50 @@ body.dark #reportpanel-field .rs-test-item input[type="checkbox"] { background:#
                     </div>
                     <button class="btn w-full mt-1" id="tcExportBtn" style="justify-content:center;"><i class="fas fa-download"></i> Export as .txt</button>
                 </div>
+            </div>
+        </div>
+
+        <!-- ==========================================================
+        PAGE: CALIBRATION (short)
+        ========================================================== -->
+        <div class="page" id="page-calibration">
+            <div class="page-title"><i class="fas fa-sliders-h"></i> Calibration</div>
+            <div class="card">
+                <div class="tab-scroll" id="calMainTabs">
+                    <div class="tab active" data-cal="5point">5-Point (mA)</div>
+                </div>
+                <div class="cal-main-panel" id="cal-5point">
+                    <div class="row"><label>Type</label>
+                        <select id="calType" style="flex:1;">
+                            <option value="pressure" selected>Pressure Transmitter</option>
+                            <option value="temperature">Temperature Transmitter</option>
+                            <option value="valve">Control Valve (Stroke)</option>
+                        </select>
+                    </div>
+                    <div class="row"><label>Tag</label><input type="text" id="calTag" placeholder="PT-101" /></div>
+                    <div class="row">
+                        <label>Range</label>
+                        <input type="number" id="calLow" value="0" step="any" style="flex:0.5;" />
+                        <span>to</span>
+                        <input type="number" id="calHigh" value="100" step="any" style="flex:0.5;" />
+                        <select id="calUnit" style="flex:0.6;"></select>
+                        <button class="btn btn-sm" id="calUpdateBtn"><i class="fas fa-sync"></i></button>
+                    </div>
+                    <div class="row"><label>Tolerance</label><input type="number" id="calTolerance" value="0.1" step="0.01" style="flex:0.4;" /><span class="chip" id="calToleranceUnit">% of span</span></div>
+                    <div style="font-size:0.65rem;color:#64748b;margin-bottom:6px;" id="calInstructions">Enter the <strong>actual</strong> mA reading measured at each test point — error is calculated from ideal vs. actual.</div>
+                    <div id="calLiveBar" class="row hidden" style="background:#f0fdf4;border-radius:16px;padding:8px 12px;">
+                        <i class="fas fa-satellite-dish" style="color:#059669;"></i>
+                        <span style="font-size:0.75rem;flex:1;">Live: <strong id="calLiveValue">—</strong></span>
+                        <span style="font-size:0.6rem;color:#64748b;">Tap a point's 📥 to fill it</span>
+                    </div>
+                    <div id="calPointsContainer" class="cal-points-grid"></div>
+                    <div class="flex mt-1">
+                        <span class="badge badge-pass" id="calPassFail"><i class="fas fa-check"></i> Pass</span>
+                        <span class="chip" id="calErrorDisplay"><i class="fas fa-percent"></i> Max error: 0.00%</span>
+                    </div>
+                    <button class="btn w-full mt-1" id="calExportBtn" style="justify-content:center;"><i class="fas fa-download"></i> Export as .txt</button>
+                </div>
+
             </div>
         </div>
 
@@ -7280,7 +7280,7 @@ body.dark #reportpanel-field .rs-test-item input[type="checkbox"] { background:#
             calcRadar();
 
             // =============================================================
-            // CALIBRATION MAIN TABS (5-Point / RTD / Thermocouple)
+            // CALIBRATION MAIN TABS (5-Point)
             // =============================================================
             document.querySelectorAll('#calMainTabs .tab').forEach(tab => {
                 tab.addEventListener('click', function() {
