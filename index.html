@@ -3667,11 +3667,6 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
         PAGE: HOME
         ========================================================== -->
         <div class="page active" id="page-home">
-    <div class="search-bar">
-        <i class="fas fa-search"></i>
-        <input type="text" id="searchInput" placeholder="Search tools, calculators & references..." autocomplete="off" />
-    </div>
-
     <!-- Technician Dashboard -->
     <div class="home-hero">
         <div class="home-hero-main">
@@ -6403,16 +6398,6 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 
             updateFavStars();
             renderFavorites();
-
-            // =============================================================
-            // SEARCH
-            // =============================================================
-            document.getElementById('searchInput').addEventListener('input', function() {
-                const q = this.value.toLowerCase().trim();
-                document.querySelectorAll('#page-home .quick-item, #page-home .recent-item').forEach(el => {
-                    el.style.display = (q === '' || el.textContent.toLowerCase().includes(q)) ? '' : 'none';
-                });
-            });
 
             document.getElementById('tempCalExportBtn').addEventListener('click', function() {
                 const date = new Date().toLocaleString();
@@ -9758,22 +9743,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 </script>
 
 
-<script id="instrumentpro-home-search-js">
-(function(){
-  function init(){
-    const input=document.getElementById('searchInput');
-    if(!input)return;
-    input.addEventListener('input',function(){
-      const q=this.value.toLowerCase().trim();
-      document.querySelectorAll('#page-home .home-quick-action, #page-home .home-mini-card').forEach(el=>{
-        const text=(el.innerText||'').toLowerCase();
-        el.style.display=(!q||text.includes(q))?'':'none';
-      });
-    });
-  }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
-})();
-</script>
+
 
 <script id="trouble-qa-js">
 (function(){
