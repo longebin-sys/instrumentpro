@@ -446,7 +446,7 @@
             flex: 1;
             overflow-y: auto;
             overflow-x: hidden;
-            padding: 12px 0 calc(60px + env(safe-area-inset-bottom)) 0;
+            padding: 12px 0 calc(120px + env(safe-area-inset-bottom)) 0;
             scroll-behavior: smooth;
         }
         .page-container::-webkit-scrollbar {
@@ -1904,6 +1904,111 @@
             border-radius: 22px;
         }
 
+        /* ============================================================
+           CALIBRATION MOBILE / BOTTOM-NAV FIX
+           Keep the last 5-point row and result controls clear of the
+           floating bottom navigation on phones.
+           ============================================================ */
+        #page-calibration {
+            padding-bottom: 24px;
+            overflow-x: hidden;
+        }
+        #page-calibration .cal-main-panel {
+            min-width: 0;
+        }
+        #page-calibration .row {
+            min-width: 0;
+        }
+        #page-calibration .row > input,
+        #page-calibration .row > select,
+        #page-calibration .row > textarea {
+            min-width: 0;
+            max-width: 100%;
+        }
+        #page-calibration .cal-point {
+            min-width: 0;
+        }
+        #page-calibration .cal-point > span {
+            min-width: 0;
+            overflow-wrap: anywhere;
+        }
+        #page-calibration .cal-point input.cal-actual {
+            width: 82px !important;
+            min-width: 0;
+            min-height: 48px;
+            flex: 0 0 82px;
+        }
+        #page-calibration .cal-point .fill-live-btn {
+            width: 34px;
+            min-width: 34px;
+            height: 38px;
+            padding: 0;
+            display: inline-grid;
+            place-items: center;
+            line-height: 1;
+        }
+        @media (max-width: 520px) {
+            #page-calibration .card {
+                margin-bottom: 0;
+            }
+            #page-calibration .row {
+                gap: 8px;
+            }
+            #page-calibration .row > label {
+                flex: 0 0 auto;
+            }
+            #page-calibration .cal-point {
+                padding: 8px 12px;
+                gap: 6px;
+            }
+
+            /* Range controls: give the unit selector room, then put the
+               green refresh button on its own row so it never covers the unit. */
+            #page-calibration .row:has(#calLow) {
+                display: grid;
+                grid-template-columns: 50px minmax(64px, 1fr) auto minmax(64px, 1fr) 82px;
+                align-items: center;
+                column-gap: 8px;
+                row-gap: 8px;
+            }
+            #page-calibration .row:has(#calLow) > label {
+                grid-column: 1;
+                grid-row: 1;
+            }
+            #page-calibration .row:has(#calLow) > #calLow {
+                grid-column: 2;
+                grid-row: 1;
+                width: 100%;
+            }
+            #page-calibration .row:has(#calLow) > span:not(.chip) {
+                grid-column: 3;
+                grid-row: 1;
+                justify-self: center;
+                white-space: nowrap;
+            }
+            #page-calibration .row:has(#calLow) > #calHigh {
+                grid-column: 4;
+                grid-row: 1;
+                width: 100%;
+            }
+            #page-calibration .row:has(#calLow) > #calUnit {
+                grid-column: 5;
+                grid-row: 1;
+                width: 82px;
+                min-width: 82px;
+            }
+            #page-calibration .row:has(#calLow) > #calUpdateBtn {
+                grid-column: 5;
+                grid-row: 2;
+                justify-self: end;
+                width: 52px;
+                min-width: 52px;
+                height: 48px;
+                margin-top: 4px;
+                padding: 0;
+            }
+        }
+
         .page-title {
             display: flex;
             align-items: center;
@@ -3088,6 +3193,393 @@ body.dark #reportpanel-commissioning .comm-check-item input[type="checkbox"]:che
 }
 </style>
 
+<style id="instrumentpro-report-layout-fix">
+/* Final Report layout hardening: keep nested report modules inside the Report card. */
+#page-report > .card,#page-report .report-main-panel,#reportpanel-field,#reportpanel-commissioning,#reportpanel-loopcheck,#reportpanel-setpoints{min-width:0!important;max-width:100%!important;box-sizing:border-box!important}
+#reportpanel-loopcheck > .card{width:100%!important;max-width:100%!important;margin-left:0!important;margin-right:0!important;box-sizing:border-box!important;overflow:hidden!important}
+#reportpanel-loopcheck .row{min-width:0!important;width:100%!important}
+#reportpanel-loopcheck .row>label{flex:0 0 auto!important;max-width:100%!important}
+#reportpanel-loopcheck .row>input,#reportpanel-loopcheck .row>select,#reportpanel-loopcheck .row>textarea{min-width:0!important;max-width:100%!important;box-sizing:border-box!important}
+#reportpanel-loopcheck .table-wrap{width:100%!important;max-width:100%!important;overflow-x:auto!important;-webkit-overflow-scrolling:touch}
+#reportpanel-loopcheck .table-wrap table{width:100%!important;min-width:460px!important;table-layout:fixed}
+#reportpanel-loopcheck .table-wrap th,#reportpanel-loopcheck .table-wrap td{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#reportpanel-loopcheck .loop-measured{width:100%!important;min-width:0!important;max-width:100%!important;box-sizing:border-box!important;padding:6px 7px!important}
+#reportpanel-loopcheck #loopCheckPreview{width:100%!important;max-width:100%!important;min-width:0!important;box-sizing:border-box!important;overflow-x:auto!important;white-space:pre-wrap!important;overflow-wrap:anywhere!important;word-break:break-word!important}
+#reportpanel-loopcheck>.row:last-child{width:100%!important;display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;align-items:stretch!important}
+#reportpanel-loopcheck>.row:last-child .btn{width:100%!important;min-width:0!important;max-width:100%!important;padding-left:7px!important;padding-right:7px!important}
+#reportpanel-commissioning .comm-grid{min-width:0!important;width:100%!important}
+#reportpanel-commissioning .comm-grid>input,#reportpanel-commissioning .comm-grid>select{min-width:0!important;max-width:100%!important}
+#reportpanel-commissioning #commFindings{width:100%!important;max-width:100%!important;box-sizing:border-box!important;margin-top:8px!important}
+#reportpanel-commissioning .comm-actions{min-width:0!important;max-width:100%!important}
+#reportpanel-commissioning .comm-actions .btn{min-width:0!important;max-width:100%!important}
+#page-report .report-selector{min-width:0!important}
+#page-report .report-selector label{flex:0 0 auto;max-width:100%}
+#page-report .report-selector select{min-width:0!important;max-width:100%!important;box-sizing:border-box!important}
+@media(max-width:520px){
+  #reportpanel-loopcheck>.card{padding:10px!important}
+  #reportpanel-loopcheck .row{flex-direction:column!important;align-items:stretch!important;gap:6px!important}
+  #reportpanel-loopcheck .row>label{width:100%!important}
+  #reportpanel-loopcheck .row>input,#reportpanel-loopcheck .row>select,#reportpanel-loopcheck .row>textarea{width:100%!important;flex:0 0 auto!important}
+  #reportpanel-loopcheck .row:has(#loopLRV){display:grid!important;grid-template-columns:1fr 1fr 1fr!important;align-items:center!important;gap:6px!important}
+  #reportpanel-loopcheck .row:has(#loopLRV)>label{grid-column:1/-1}
+  #reportpanel-loopcheck .card-header h3{min-width:0;overflow-wrap:anywhere}
+  #reportpanel-commissioning .comm-grid{grid-template-columns:1fr!important}
+}
+@media(max-width:350px){#reportpanel-loopcheck>.row:last-child{grid-template-columns:1fr!important}}
+</style>
+
+<style id="gc-calibration-mobile-polish">
+/* ==========================================================
+   GC CALIBRATION — MODERN MOBILE TABLE POLISH
+   Keeps the existing data/calculation logic unchanged.
+   ========================================================== */
+#gcCalTable {
+    margin-top: 10px;
+    border: 1px solid rgba(148,163,184,.20);
+    border-radius: 18px;
+    overflow: hidden;
+    background: #f8fafc;
+    box-shadow: 0 8px 22px rgba(15,23,42,.06);
+}
+
+#gcCalTable table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    table-layout: fixed;
+    font-size: .68rem;
+}
+
+#gcCalTable thead th {
+    background: linear-gradient(180deg,#f8fafc,#eef2f7);
+    color: #475569;
+    font-size: .58rem;
+    font-weight: 800;
+    letter-spacing: .035em;
+    text-transform: uppercase;
+    padding: 11px 7px;
+    border-bottom: 1px solid #dbe3ec;
+    white-space: nowrap;
+}
+
+#gcCalTable thead th:first-child { width: 34%; text-align:left; padding-left:14px; }
+#gcCalTable thead th:nth-child(2) { width: 21%; }
+#gcCalTable thead th:nth-child(3) { width: 25%; }
+#gcCalTable thead th:nth-child(4) { width: 20%; }
+
+#gcCalTable tbody tr {
+    background: rgba(255,255,255,.92);
+    transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+}
+
+#gcCalTable tbody tr:nth-child(even) {
+    background: #f4f7fb;
+}
+
+#gcCalTable tbody tr:focus-within {
+    background: #eef8f5;
+    box-shadow: inset 3px 0 0 #18a77a;
+}
+
+#gcCalTable tbody td {
+    padding: 9px 6px;
+    height: 58px;
+    border-bottom: 1px solid #e7edf3;
+    vertical-align: middle;
+    text-align: center;
+}
+
+#gcCalTable tbody tr:last-child td { border-bottom: 0; }
+
+#gcCalTable tbody td:first-child {
+    text-align: left;
+    padding-left: 14px;
+    padding-right: 5px;
+    color: #334155;
+    font-weight: 700;
+    line-height: 1.15;
+    overflow-wrap: anywhere;
+}
+
+/* Turn the old square inputs into compact, touch-friendly fields. */
+#gcCalTable input.gc-cert,
+#gcCalTable input.gc-measured {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    max-width: 78px !important;
+    height: 42px;
+    margin: 0 auto;
+    display: block;
+    border: 1px solid #d7e0e9 !important;
+    border-radius: 13px !important;
+    background: #ffffff !important;
+    color: #1e293b !important;
+    text-align: center;
+    font-size: .72rem;
+    font-weight: 700;
+    padding: 0 8px !important;
+    box-shadow: inset 0 1px 2px rgba(15,23,42,.04), 0 2px 6px rgba(15,23,42,.04);
+    transition: border-color .16s ease, box-shadow .16s ease, transform .16s ease;
+}
+
+#gcCalTable input.gc-measured {
+    border-color: rgba(16,185,129,.28) !important;
+    background: linear-gradient(180deg,#ffffff,#f4fbf8) !important;
+}
+
+#gcCalTable input.gc-cert:focus,
+#gcCalTable input.gc-measured:focus {
+    outline: none;
+    border-color: #18a77a !important;
+    box-shadow: 0 0 0 3px rgba(24,167,122,.13), 0 4px 10px rgba(15,23,42,.06);
+    transform: translateY(-1px);
+}
+
+#gcCalTable input::placeholder {
+    color: #94a3b8;
+    opacity: 1;
+}
+
+#gcCalTable .gc-dev {
+    font-weight: 800;
+    color: #64748b;
+    white-space: nowrap;
+}
+
+#gcCalCheckBtn,
+#gcExportBtn {
+    min-height: 46px;
+    border-radius: 15px;
+}
+
+/* Make the tolerance control look like part of the same design system. */
+#gcTolerance {
+    height: 42px;
+    border-radius: 13px !important;
+    min-width: 82px;
+}
+
+#gcCalTable + #gcCalCheckBtn { margin-top: 10px !important; }
+
+@media (max-width: 520px) {
+    #gcCalTable {
+        border-radius: 16px;
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    #gcCalTable table {
+        font-size: .64rem;
+    }
+
+    #gcCalTable thead th {
+        padding: 10px 4px;
+        font-size: .52rem;
+    }
+
+    #gcCalTable thead th:first-child {
+        padding-left: 12px;
+    }
+
+    #gcCalTable tbody td {
+        height: 56px;
+        padding: 7px 4px;
+    }
+
+    #gcCalTable tbody td:first-child {
+        padding-left: 12px;
+        font-size: .62rem;
+    }
+
+    #gcCalTable input.gc-cert,
+    #gcCalTable input.gc-measured {
+        max-width: 68px !important;
+        height: 40px;
+        border-radius: 12px !important;
+        font-size: .68rem;
+    }
+}
+
+body.dark #gcCalTable {
+    background: #172033;
+    border-color: #334155;
+    box-shadow: 0 8px 22px rgba(2,6,23,.25);
+}
+
+body.dark #gcCalTable thead th {
+    background: #1e293b;
+    color: #cbd5e1;
+    border-bottom-color: #334155;
+}
+
+body.dark #gcCalTable tbody tr,
+body.dark #gcCalTable tbody tr:nth-child(even) {
+    background: #172033;
+}
+
+body.dark #gcCalTable tbody td {
+    border-bottom-color: #293548;
+}
+
+body.dark #gcCalTable tbody td:first-child {
+    color: #e2e8f0;
+}
+
+body.dark #gcCalTable input.gc-cert,
+body.dark #gcCalTable input.gc-measured {
+    background: #0f172a !important;
+    border-color: #3b4a60 !important;
+    color: #e2e8f0 !important;
+}
+</style>
+
+<style id="loopcheck-spacing-fix">
+/* Loop Check — compact mobile spacing */
+#reportpanel-loopcheck .card {
+  margin-bottom: 8px !important;
+}
+
+#reportpanel-loopcheck .card-header {
+  margin-bottom: 10px !important;
+}
+
+#reportpanel-loopcheck .card .row {
+  margin-bottom: 8px !important;
+  gap: 7px 10px !important;
+}
+
+/* Functional Tests: keep each test compact instead of allowing
+   the mobile column layout to create large vertical gaps. */
+#reportpanel-loopcheck .fa-bell + h3 {
+  margin: 0;
+}
+
+#reportpanel-loopcheck .fa-bell ~ h3 {
+  margin: 0;
+}
+
+#reportpanel-loopcheck .card:has(#loopAlarmResult) .row {
+  display: grid !important;
+  grid-template-columns: minmax(76px, 90px) minmax(0, 1fr) !important;
+  align-items: center !important;
+  min-height: 44px !important;
+  margin-bottom: 7px !important;
+  gap: 6px 10px !important;
+}
+
+#reportpanel-loopcheck .card:has(#loopAlarmResult) .row:last-child {
+  margin-bottom: 0 !important;
+}
+
+#reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
+  min-width: 0 !important;
+  margin: 0 !important;
+  font-size: .78rem !important;
+  line-height: 1.2 !important;
+}
+
+#reportpanel-loopcheck .card:has(#loopAlarmResult) .row > select {
+  width: 100% !important;
+  min-width: 0 !important;
+  min-height: 44px !important;
+  height: 44px !important;
+  flex: none !important;
+  margin: 0 !important;
+  padding: 7px 13px !important;
+}
+
+@media (max-width: 420px) {
+  #reportpanel-loopcheck .card:has(#loopAlarmResult) .row {
+    grid-template-columns: 72px minmax(0, 1fr) !important;
+    min-height: 42px !important;
+    margin-bottom: 6px !important;
+  }
+
+  #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > select {
+    min-height: 42px !important;
+    height: 42px !important;
+    font-size: .78rem !important;
+  }
+}
+
+body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
+  color: #cbd5e1 !important;
+}
+</style>
+
+<style id="loopcheck-identification-tight-v3">
+/* LOOP CHECK V3 — remove unintended vertical gaps in the identification card */
+#reportpanel-loopcheck > .card:first-child .row {
+  display: grid !important;
+  grid-template-columns: 68px minmax(0, 1fr) !important;
+  align-items: center !important;
+  column-gap: 10px !important;
+  row-gap: 0 !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  height: auto !important;
+  margin: 0 0 8px !important;
+  padding: 0 !important;
+  flex: none !important;
+}
+
+#reportpanel-loopcheck > .card:first-child .row > label {
+  grid-column: 1 !important;
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 1.2 !important;
+  white-space: nowrap !important;
+}
+
+#reportpanel-loopcheck > .card:first-child .row > input,
+#reportpanel-loopcheck > .card:first-child .row > select {
+  grid-column: 2 !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  height: 48px !important;
+  min-height: 48px !important;
+  max-height: 48px !important;
+  margin: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  flex: none !important;
+  box-sizing: border-box !important;
+}
+
+/* Range is intentionally one compact line of three controls, with its label above. */
+#reportpanel-loopcheck > .card:first-child .row:has(#loopLRV) {
+  display: grid !important;
+  grid-template-columns: minmax(0,1fr) minmax(0,1fr) minmax(0,.9fr) !important;
+  column-gap: 7px !important;
+  row-gap: 5px !important;
+  margin-top: 2px !important;
+  margin-bottom: 0 !important;
+}
+
+#reportpanel-loopcheck > .card:first-child .row:has(#loopLRV) > label {
+  grid-column: 1 / -1 !important;
+}
+
+#reportpanel-loopcheck > .card:first-child .row:has(#loopLRV) > input {
+  grid-column: auto !important;
+  width: 100% !important;
+  height: 48px !important;
+  min-height: 48px !important;
+  max-height: 48px !important;
+}
+
+@media (max-width: 520px) {
+  #reportpanel-loopcheck > .card:first-child .row {
+    grid-template-columns: 68px minmax(0,1fr) !important;
+    margin-bottom: 7px !important;
+  }
+}
+</style>
 </head>
 <body>
 
@@ -8745,7 +9237,383 @@ function rsRender(){
 function rsDownload(name,data,type){var b=new Blob([data],{type:type}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(u);}
 function rsHistory(){var arr=JSON.parse(localStorage.getItem('instrumentpro_reports')||'[]'),el=document.getElementById('rsHistory');if(!arr.length){el.textContent='No reports issued yet.';return;}el.innerHTML=arr.slice().reverse().map(function(r){return '<div class="rs-history-item"><div><b>'+rsEsc(r.id)+'</b><br><small>'+rsEsc(r.tag||'Untagged')+' • '+rsEsc(r.type||'Report')+' • '+rsEsc(r.deviceType||'Device')+'</small></div><div style="text-align:right"><b>'+rsEsc(r.result)+'</b><br><small>'+new Date(r.date).toLocaleString()+'</small></div></div>';}).join('');}
 function rsIssue(){rsRender();var o=rsCurrent;if(!o.deviceType){alert('Select a field device first.');return;}if(!o.calculation.pass){alert('Complete and pass the device-specific tests before issuing the report.');return;}if(!o.rsTechSign){alert('Enter the technician signature/name before issuing.');return;}rsCurrent.status='ISSUED';rsCurrent.issued=new Date().toISOString();var arr=JSON.parse(localStorage.getItem('instrumentpro_reports')||'[]');arr.push({id:rsCurrent.id,tag:rsCurrent.reportTag,type:rsCurrent.reportType,deviceType:rsCurrent.deviceType,result:'PASS',date:rsCurrent.issued,revision:rsCurrent.rev});localStorage.setItem('instrumentpro_reports',JSON.stringify(arr.slice(-50)));rsRender();rsHistory();alert('Report '+rsCurrent.id+' issued successfully.');}
-function rsExport(){rsRender();var html='<!doctype html><html><head><meta charset="utf-8"><title>'+rsEsc(rsCurrent.id)+'</title><style>body{font-family:Arial;margin:30px}table{width:100%;border-collapse:collapse}td,th{padding:6px;border-bottom:1px solid #ddd}</style></head><body>'+document.getElementById('reportPreview').innerHTML+'</body></html>';rsDownload(rsCurrent.id+'.html',html,'text/html');}
+function rsExport(){rsRender();var html='<!doctype html><html><head><meta charset="utf-8"><title>'+rsEsc(rsCurrent.id)+'</title><style>body{font-family:Arial;margin:30px}table{width:100%;border-collapse:collapse}td,th{padding:6px;border-bottom:1px solid #ddd}
+/* ============================================================
+   LOOP CHECK — POLISHED MOBILE UI
+   ============================================================ */
+#reportpanel-loopcheck {
+    --loop-accent: #0f9f78;
+    --loop-accent-dark: #08785b;
+    --loop-soft: #eefaf6;
+    --loop-border: #dce7e4;
+    --loop-text: #243247;
+}
+
+#reportpanel-loopcheck > .card {
+    border: 1px solid rgba(15,159,120,.12) !important;
+    box-shadow: 0 8px 24px rgba(25,55,75,.07) !important;
+    border-radius: 22px !important;
+    overflow: hidden !important;
+    background: linear-gradient(180deg,#ffffff 0%,#fbfefd 100%) !important;
+    padding: 14px !important;
+}
+
+#reportpanel-loopcheck > .card:first-child {
+    border-top: 4px solid var(--loop-accent) !important;
+}
+
+#reportpanel-loopcheck .card-header {
+    min-height: 42px;
+    gap: 9px;
+}
+
+#reportpanel-loopcheck .card-header h3 {
+    color: var(--loop-text);
+    letter-spacing: -.02em;
+}
+
+#reportpanel-loopcheck .card-header > span {
+    margin-left: auto;
+    flex-shrink: 0;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: #edf3f5;
+    color: #64748b;
+    font-size: .66rem;
+    font-weight: 800;
+    letter-spacing: .04em;
+}
+
+#reportpanel-loopcheck > .card:first-child .card-header > span {
+    background: #fff7df;
+    color: #8a5b00;
+}
+
+#reportpanel-loopcheck .row {
+    gap: 8px !important;
+    margin-bottom: 8px;
+}
+
+#reportpanel-loopcheck .row > label {
+    color: #59677a;
+    font-weight: 700;
+    font-size: .78rem;
+}
+
+#reportpanel-loopcheck input,
+#reportpanel-loopcheck select,
+#reportpanel-loopcheck textarea {
+    border: 1px solid #d8e1e7 !important;
+    background: #fbfcfd !important;
+    box-shadow: inset 0 1px 2px rgba(15,23,42,.025), 0 1px 2px rgba(15,23,42,.025) !important;
+    transition: border-color .18s ease, box-shadow .18s ease, background .18s ease, transform .18s ease !important;
+}
+
+#reportpanel-loopcheck input:focus,
+#reportpanel-loopcheck select:focus,
+#reportpanel-loopcheck textarea:focus {
+    border-color: rgba(15,159,120,.65) !important;
+    background: #fff !important;
+    box-shadow: 0 0 0 4px rgba(15,159,120,.10), 0 3px 10px rgba(15,159,120,.07) !important;
+    outline: none !important;
+}
+
+/* Checklist: turn each item into a friendly touch card */
+#reportpanel-loopcheck #loopCheckItems {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px !important;
+    counter-reset: loopcheck;
+}
+
+#reportpanel-loopcheck .loop-check-item {
+    position: relative;
+    min-height: 56px;
+    padding: 10px 11px !important;
+    gap: 9px !important;
+    border: 1px solid #e1e9e7 !important;
+    border-radius: 16px !important;
+    background: #fbfdfc !important;
+    color: #334155 !important;
+    font-size: .73rem;
+    font-weight: 650;
+    line-height: 1.25;
+    box-shadow: 0 2px 7px rgba(15,23,42,.035);
+    transition: .18s ease;
+}
+
+#reportpanel-loopcheck .loop-check-item::before {
+    counter-increment: loopcheck;
+    content: counter(loopcheck, decimal-leading-zero);
+    width: 25px;
+    height: 25px;
+    display: grid;
+    place-items: center;
+    flex: 0 0 25px;
+    border-radius: 9px;
+    background: #edf3f2;
+    color: #71808c;
+    font-size: .58rem;
+    font-weight: 900;
+}
+
+#reportpanel-loopcheck .loop-check-item:hover {
+    transform: translateY(-1px);
+    border-color: #c8ddd7 !important;
+    box-shadow: 0 5px 14px rgba(15,23,42,.06);
+}
+
+#reportpanel-loopcheck .loop-check-item.checked {
+    border-color: rgba(15,159,120,.42) !important;
+    background: linear-gradient(135deg,#f0fbf7,#f8fdfb) !important;
+    box-shadow: 0 4px 14px rgba(15,159,120,.09) !important;
+    color: #16634f !important;
+}
+
+#reportpanel-loopcheck .loop-check-item.checked::before {
+    background: var(--loop-accent);
+    color: #fff;
+}
+
+#reportpanel-loopcheck .loop-check-item input[type="checkbox"] {
+    width: 24px !important;
+    height: 24px !important;
+    border: 2px solid #b8c8c5 !important;
+    border-radius: 8px !important;
+    flex: 0 0 24px;
+    background: #fff !important;
+}
+
+#reportpanel-loopcheck .loop-check-item input[type="checkbox"]:checked {
+    background-color: var(--loop-accent) !important;
+    border-color: var(--loop-accent) !important;
+}
+
+/* Signal verification table */
+#reportpanel-loopcheck .table-wrap {
+    border: 1px solid #e1e9e7 !important;
+    border-radius: 18px !important;
+    background: #fff !important;
+    box-shadow: 0 4px 14px rgba(15,23,42,.045) !important;
+    padding: 0 !important;
+    overflow-x: auto !important;
+}
+
+#reportpanel-loopcheck .table-wrap table {
+    border-collapse: separate !important;
+    border-spacing: 0 5px !important;
+    min-width: 430px !important;
+    background: #fff;
+    padding: 5px !important;
+}
+
+#reportpanel-loopcheck .table-wrap thead th {
+    border: 0 !important;
+    background: transparent !important;
+    color: #718096 !important;
+    font-size: .61rem !important;
+    font-weight: 850 !important;
+    text-transform: uppercase;
+    letter-spacing: .045em;
+    padding: 6px 7px !important;
+}
+
+#reportpanel-loopcheck .table-wrap tbody td {
+    border-top: 1px solid #edf1f2 !important;
+    border-bottom: 1px solid #edf1f2 !important;
+    background: #f8fafb !important;
+    padding: 8px 7px !important;
+    font-size: .72rem;
+    font-weight: 650;
+    color: #425166;
+    white-space: nowrap !important;
+}
+
+#reportpanel-loopcheck .table-wrap tbody td:first-child {
+    border-left: 1px solid #edf1f2 !important;
+    border-radius: 12px 0 0 12px;
+    color: #243247;
+    font-weight: 850;
+}
+
+#reportpanel-loopcheck .table-wrap tbody td:last-child {
+    border-right: 1px solid #edf1f2 !important;
+    border-radius: 0 12px 12px 0;
+}
+
+#reportpanel-loopcheck .table-wrap tbody tr:hover td {
+    background: #f2faf7 !important;
+}
+
+#reportpanel-loopcheck .loop-measured {
+    height: 38px !important;
+    min-height: 38px !important;
+    width: 78px !important;
+    padding: 5px 9px !important;
+    border-radius: 11px !important;
+    background: #fff !important;
+    border: 1px solid #cfded9 !important;
+    font-weight: 750 !important;
+    text-align: center;
+}
+
+#reportpanel-loopcheck .loop-measured:not(:placeholder-shown) {
+    border-color: rgba(15,159,120,.45) !important;
+    background: #f4fcf9 !important;
+}
+
+#reportpanel-loopcheck #loopSignalTable td:nth-child(4),
+#reportpanel-loopcheck #loopSignalTable td:nth-child(5) {
+    text-align: center;
+}
+
+#reportpanel-loopcheck #loopSignalTable td:nth-child(5) {
+    font-size: .62rem;
+    font-weight: 900;
+}
+
+/* Tolerance + max error */
+#reportpanel-loopcheck #loopTolerance {
+    max-width: 120px !important;
+    text-align: center;
+    font-weight: 750;
+}
+
+#reportpanel-loopcheck #loopMaxError {
+    color: var(--loop-accent-dark);
+    font-weight: 900;
+}
+
+#reportpanel-loopcheck #loopSignalStatus {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 32px;
+    padding: 7px 11px;
+    border-radius: 999px;
+    font-size: .68rem;
+    font-weight: 850;
+}
+
+/* Functional test cards */
+#reportpanel-loopcheck .card:nth-of-type(4) .row {
+    display: grid !important;
+    grid-template-columns: 105px minmax(0,1fr) !important;
+    align-items: center;
+    padding: 6px 8px;
+    margin-bottom: 5px !important;
+    border: 1px solid #edf1f2;
+    border-radius: 13px;
+    background: #fafcfc;
+}
+
+#reportpanel-loopcheck .card:nth-of-type(4) .row > label {
+    margin: 0;
+}
+
+#reportpanel-loopcheck .card:nth-of-type(4) select {
+    width: 100% !important;
+    min-height: 40px;
+}
+
+/* Sign-off */
+#reportpanel-loopcheck #loopNotes {
+    min-height: 96px !important;
+    resize: vertical;
+    line-height: 1.4;
+}
+
+#reportpanel-loopcheck #loopCheckGenBtn {
+    min-height: 48px;
+    border-radius: 15px;
+    font-weight: 850;
+    letter-spacing: .01em;
+    box-shadow: 0 7px 16px rgba(15,159,120,.16);
+}
+
+#reportpanel-loopcheck #loopCheckPreview {
+    border-radius: 16px !important;
+    border: 1px solid #dfe8e6 !important;
+    background: #f8fbfa !important;
+    padding: 13px !important;
+    line-height: 1.45;
+}
+
+#reportpanel-loopcheck > .card > .row:last-child {
+    gap: 7px !important;
+}
+
+#reportpanel-loopcheck > .card > .row:last-child .btn {
+    border-radius: 12px;
+    min-height: 42px;
+    font-weight: 750;
+}
+
+@media (max-width: 520px) {
+    #reportpanel-loopcheck #loopCheckItems {
+        grid-template-columns: 1fr;
+    }
+
+    #reportpanel-loopcheck > .card {
+        border-radius: 20px !important;
+        padding: 12px !important;
+    }
+
+    #reportpanel-loopcheck .card-header h3 {
+        font-size: .92rem;
+    }
+
+    #reportpanel-loopcheck .card-header > span {
+        font-size: .59rem;
+        padding: 5px 8px;
+    }
+
+    #reportpanel-loopcheck .table-wrap table {
+        min-width: 415px !important;
+    }
+
+    #reportpanel-loopcheck .loop-check-item {
+        min-height: 52px;
+    }
+}
+
+@media (max-width: 350px) {
+    #reportpanel-loopcheck .card:nth-of-type(4) .row {
+        grid-template-columns: 90px minmax(0,1fr) !important;
+    }
+}
+
+body.dark #reportpanel-loopcheck > .card {
+    background: linear-gradient(180deg,#182331 0%,#15202b 100%) !important;
+    border-color: #2e4650 !important;
+}
+body.dark #reportpanel-loopcheck input,
+body.dark #reportpanel-loopcheck select,
+body.dark #reportpanel-loopcheck textarea {
+    background: #111c27 !important;
+    border-color: #344b57 !important;
+    color: #e2e8f0 !important;
+}
+body.dark #reportpanel-loopcheck .loop-check-item {
+    background: #17232d !important;
+    border-color: #304650 !important;
+    color: #d9e5e9 !important;
+}
+body.dark #reportpanel-loopcheck .loop-check-item.checked {
+    background: rgba(15,159,120,.14) !important;
+    border-color: rgba(52,211,153,.4) !important;
+}
+body.dark #reportpanel-loopcheck .table-wrap,
+body.dark #reportpanel-loopcheck .table-wrap table {
+    background: #17232d !important;
+}
+body.dark #reportpanel-loopcheck .table-wrap tbody td {
+    background: #1a2833 !important;
+    border-color: #2d414b !important;
+    color: #d8e3e8;
+}
+
+</style></head><body>'+document.getElementById('reportPreview').innerHTML+'</body></html>';rsDownload(rsCurrent.id+'.html',html,'text/html');}
 function rsJson(){rsRender();rsDownload(rsCurrent.id+'.json',JSON.stringify(rsCurrent,null,2),'application/json');}
 function rsCsv(){rsRender();var o=rsCurrent,c=o.calculation,rows=['Report ID,Device Type,Tag,Test,Result,Details'];(o.deviceData.tests||[]).forEach(function(t){rows.push([o.id,o.deviceType,o.reportTag,t.name,t.passed?'PASS':'FAIL',''].map(function(v){return '"'+String(v==null?'':v).replace(/"/g,'""')+'"';}).join(','));});if(c.kind==='calibration')[0,25,50,75,100].forEach(function(p){var v=o.deviceData.fields['point_'+p];rows.push([o.id,o.deviceType,o.reportTag,p+'% reference',Number.isFinite(parseFloat(v))?'Recorded':'Missing',v].map(function(v){return '"'+String(v==null?'':v).replace(/"/g,'""')+'"';}).join(','));});rsDownload(o.id+'.csv',rows.join('\n'),'text/csv');}
 function rsSync(){rsRender();if(typeof window.syncReportToWebhooks==='function')window.syncReportToWebhooks({source:'InstrumentPro',type:'AdvancedFieldReport',report:rsCurrent});else alert('Report sync is not configured yet.');}
@@ -8754,7 +9622,70 @@ function init(){
  ids.forEach(function(id){var e=document.getElementById(id);if(e)e.addEventListener('input',rsRender);e&&e.addEventListener('change',rsRender);});
  var device=document.getElementById('rsDeviceType');if(device)device.addEventListener('change',function(){rsCurrent=null;renderDeviceConfig();});
  var bind=function(id,fn){var e=document.getElementById(id);if(e)e.addEventListener('click',fn);};
- bind('generateReportBtn',rsRender);bind('rsIssueBtn',rsIssue);bind('rsPrintBtn',function(){rsRender();var w=window.open('','_blank');if(!w){alert('Allow pop-ups to print the report.');return;}w.document.write('<html><head><title>'+rsEsc(rsCurrent.id)+'</title></head><body>'+document.getElementById('reportPreview').innerHTML+'</body></html>');w.document.close();w.focus();w.print();});
+ bind('generateReportBtn',rsRender);bind('rsIssueBtn',rsIssue);bind('rsPrintBtn',function(){rsRender();var w=window.open('','_blank');if(!w){alert('Allow pop-ups to print the report.');return;}w.document.write('<html><head><title>'+rsEsc(rsCurrent.id)+'</title>
+<style id="loopcheck-top-form-compact">
+/* Loop Check — compact the identification / signal section on phones. */
+@media (max-width: 520px) {
+  #reportpanel-loopcheck > .card:first-child .row {
+    display: grid !important;
+    grid-template-columns: 70px minmax(0, 1fr) !important;
+    align-items: center !important;
+    column-gap: 10px !important;
+    row-gap: 5px !important;
+    margin-bottom: 8px !important;
+    min-height: 0 !important;
+  }
+
+  #reportpanel-loopcheck > .card:first-child .row > label {
+    width: auto !important;
+    margin: 0 !important;
+    font-size: .78rem !important;
+    line-height: 1.2 !important;
+    white-space: nowrap !important;
+  }
+
+  #reportpanel-loopcheck > .card:first-child .row > input,
+  #reportpanel-loopcheck > .card:first-child .row > select {
+    width: 100% !important;
+    min-width: 0 !important;
+    height: 48px !important;
+    min-height: 48px !important;
+    margin: 0 !important;
+    flex: none !important;
+  }
+
+  /* Keep Range as a compact 3-field row. */
+  #reportpanel-loopcheck > .card:first-child .row:has(#loopLRV) {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    align-items: center !important;
+    gap: 6px !important;
+    margin-top: 2px !important;
+  }
+
+  #reportpanel-loopcheck > .card:first-child .row:has(#loopLRV) > label {
+    grid-column: 1 / -1 !important;
+    width: auto !important;
+    margin-bottom: 0 !important;
+  }
+
+  #reportpanel-loopcheck > .card:first-child .row:has(#loopLRV) > input {
+    width: 100% !important;
+    height: 48px !important;
+    min-height: 48px !important;
+  }
+
+  #reportpanel-loopcheck > .card:first-child .row:last-child {
+    margin-bottom: 2px !important;
+  }
+
+  #reportpanel-loopcheck > .card:first-child {
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+  }
+}
+</style>
+</head><body>'+document.getElementById('reportPreview').innerHTML+'</body></html>');w.document.close();w.focus();w.print();});
  bind('exportReportBtn',rsExport);bind('rsJsonBtn',rsJson);bind('rsCsvBtn',rsCsv);bind('syncReportBtn',rsSync);
  rsHistory();rsRender();
 }
