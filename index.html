@@ -1914,6 +1914,8 @@ body.dark .comm-section-title small{color:#94a3b8;}
 
     html,body{overflow-x:hidden;}
 .page,.report-main-panel{min-width:0;}
+
+.trouble-safety-banner{margin:10px 0;padding:10px 12px;border:1px solid #f59e0b;border-radius:12px;background:#fff7ed;color:#7c2d12;font-size:.78rem;line-height:1.4}.trouble-safety-banner strong{display:block;margin-bottom:3px}.diag-class{display:inline-flex;align-items:center;padding:4px 8px;border-radius:999px;background:#e2e8f0;font-size:.68rem;font-weight:800;margin-top:7px}.diag-class.process{background:#dcfce7;color:#166534}.diag-class.electrical{background:#dbeafe;color:#1e40af}.diag-class.instrument{background:#ede9fe;color:#6b21a8}.diag-class.safety{background:#fee2e2;color:#991b1b}.diag-stop{margin-top:8px;padding:8px 10px;border-radius:10px;background:#fef2f2;color:#991b1b;font-weight:700;font-size:.72rem}.cal-validation{margin-top:6px;font-size:.68rem;color:#b45309}.cal-validation.ok{color:#166534}
 </style>
 
 <style id="instrumentpro-mobile-fix">
@@ -4407,7 +4409,7 @@ body.dark .sidebar .nav-section-label{color:#64748b;}
         <button class="trouble-close" type="button" data-close-trouble><i class="fas fa-times"></i></button>
       </div>
 
-      <div class="trouble-progress" id="troubleProgress"><span class="active"></span><span></span><span></span></div>
+      <div class="trouble-progress" id="troubleProgress"><span class="active"></span><span></span><span></span><span></span></div>
       <div class="trouble-step" id="troubleStep">Question 1 of 2</div>
       <div class="trouble-question" id="troubleQuestion">What are you troubleshooting?</div>
       <div class="trouble-options" id="troubleOptions"></div>
@@ -5522,6 +5524,7 @@ body.dark .sidebar .nav-section-label{color:#64748b;}
             const calPointsContainer = document.getElementById('calPointsContainer');
             const calErrorDisplay = document.getElementById('calErrorDisplay');
             const calPassFail = document.getElementById('calPassFail');
+            if (calPassFail && !document.getElementById('calValidationMsg')) { const v=document.createElement('div'); v.id='calValidationMsg'; v.className='cal-validation'; calPassFail.parentElement.appendChild(v); }
             const calExportBtn = document.getElementById('calExportBtn');
             const calPts = [0, 25, 50, 75, 100];
 
@@ -5588,7 +5591,9 @@ body.dark .sidebar .nav-section-label{color:#64748b;}
             }
 
             function evaluateCal() {
-                const tol = parseFloat(calTolerance.value) || 0.1;
+                const tol = parseFloat(calTolerance.value);
+                const low = parseFloat(calLow.value); const high = parseFloat(calHigh.value);
+                const span = high - low;
                 let maxErrorPct = 0;
                 let anyEntered = false;
                 calPointsContainer.querySelectorAll('.cal-actual').forEach(inp => {
@@ -5597,19 +5602,27 @@ body.dark .sidebar .nav-section-label{color:#64748b;}
                     const ideal = parseFloat(inp.dataset.ideal);
                     const spanRef = parseFloat(inp.dataset.span);
                     const actual = parseFloat(inp.value);
+                    if (!Number.isFinite(actual) || !Number.isFinite(ideal) || !Number.isFinite(spanRef) || spanRef <= 0) return;
                     const errorPct = Math.abs(actual - ideal) / spanRef * 100;
                     if (errorPct > maxErrorPct) maxErrorPct = errorPct;
                 });
-                if (!anyEntered) {
-                    calErrorDisplay.innerHTML = 'Max error: — (enter actual readings)';
+                if (!Number.isFinite(low) || !Number.isFinite(high) || span <= 0 || !Number.isFinite(tol) || tol <= 0) {
+                    calErrorDisplay.innerHTML = 'Validation required: URV must be greater than LRV and tolerance must be greater than 0.';
+                    calPassFail.className = 'badge badge-fail'; calPassFail.innerHTML = 'Invalid setup'; return;
+                }
+                const allEntered = [...calPointsContainer.querySelectorAll('.cal-actual')].every(inp => inp.value.trim() !== '');
+                if (!anyEntered || !allEntered) {
+                    calErrorDisplay.innerHTML = 'Max error: — (enter all actual readings before PASS/FAIL)';
                     calPassFail.className = 'badge badge-warn';
                     calPassFail.innerHTML = 'Pending';
                     return;
                 }
                 calErrorDisplay.innerHTML = `Max error: ${maxErrorPct.toFixed(3)}%`;
-                const pass = maxErrorPct <= tol;
+                const allExportEntered = [...calPointsContainer.querySelectorAll('.cal-actual')].every(inp => inp.value.trim() !== '');
+                const pass = allExportEntered && Number.isFinite(low) && Number.isFinite(high) && high > low && Number.isFinite(tol) && tol > 0 && maxErrorPct <= tol;
                 calPassFail.className = pass ? 'badge badge-pass' : 'badge badge-fail';
                 calPassFail.innerHTML = pass ? 'Pass' : 'Fail';
+                const v=document.getElementById('calValidationMsg'); if(v) v.textContent=pass?'All test points entered; result is within the configured tolerance.':'All test points entered; one or more points exceed the configured tolerance.'; if(v) v.className='cal-validation '+(pass?'ok':'');
             }
             calType.addEventListener('change', onCalTypeChange);
             calUpdateBtn.addEventListener('click', buildCalPoints);
@@ -7918,32 +7931,106 @@ function options(items){
  items.forEach(([id,label])=>{const b=document.createElement('button');b.type='button';b.textContent=label;b.dataset.id=id;b.onclick=()=>{box.querySelectorAll('button').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');$('troubleNext').disabled=false};box.appendChild(b);});
 }
 function renderDevice(){
- progress(1);$('troubleStep').textContent='Question 1 of 3';$('troubleQuestion').textContent='Which instrument or system is showing the problem?';options(devices);$('troubleNext').disabled=true;
+ progress(1);$('troubleStep').textContent='Question 1 of 4';$('troubleQuestion').textContent='Which instrument or system is showing the problem?';options(devices);$('troubleNext').disabled=true;
 }
 function renderSymptoms(){
- const d=D[state.device];progress(2);$('troubleStep').textContent='Question 2 of 3';$('troubleQuestion').textContent='What is the main symptom on the '+d.n.toLowerCase()+'?';
+ const d=D[state.device];progress(2);$('troubleStep').textContent='Question 2 of 4';$('troubleQuestion').textContent='What is the main symptom on the '+d.n.toLowerCase()+'?';
  options(Object.entries(d.s).map(([k,v])=>[k,v.label]));$('troubleNext').disabled=true;
 }
+function measurementOptions(device,symptom){
+ const map={
+  level:[['reference','Independent level/reference agrees with the transmitter'],['low','Independent reference is higher than the transmitter'],['high','Independent reference is lower than the transmitter'],['current','Loop current is outside/at a known abnormal value'],['unknown','Not measured yet']],
+  pressure:[['reference','Certified/independent pressure reference agrees'],['low','Reference pressure is higher than transmitter'],['high','Reference pressure is lower than transmitter'],['current','Measured loop current is abnormal'],['unknown','Not measured yet']],
+  flow:[['reference','Independent flow reference agrees'],['low','Reference flow is higher than meter'],['high','Reference flow is lower than meter'],['signal','Signal/current is unstable or abnormal'],['unknown','Not measured yet']],
+  controlvalve:[['match','Command and actual position agree'],['low','Actual travel is below command'],['high','Actual travel exceeds command'],['feedback','Feedback disagrees with physical travel'],['unknown','Not measured yet']],
+  shutdownvalve:[['baseline','Stroke time/position is within approved baseline'],['slow','Stroke time is slower than baseline'],['fast','Stroke time is faster than baseline'],['feedback','Feedback disagrees with physical position'],['unknown','Not measured yet']],
+  speedprobe:[['rpm','Independent tachometer/RPM agrees'],['low','Independent RPM is higher than indicated'],['high','Independent RPM is lower than indicated'],['pulse','Pulse amplitude/frequency is weak or abnormal'],['unknown','Not measured yet']],
+  vibprobe:[['gap','Probe gap/bias is within OEM range'],['badgap','Probe gap/bias is outside OEM range'],['reference','Independent vibration reference disagrees'],['signal','Signal amplitude is noisy/unstable'],['unknown','Not measured yet']],
+  gasdet:[['bump','Approved bump test response is correct'],['low','Certified gas response is lower than expected'],['high','Certified gas response is higher than expected'],['zero','Zero is unstable/offset'],['unknown','Not measured yet']],
+  firepanel:[['address','Panel event history identifies a device/zone'],['loop','Loop/circuit fault is indicated'],['power','Normal and backup power are abnormal'],['none','No specific fault is localized'],['unknown','Not checked yet']],
+  genset:[['reference','Independent meter/reference agrees'],['low','Independent measurement is higher'],['high','Independent measurement is lower'],['signal','Controller input/signal is abnormal'],['unknown','Not measured yet']]
+ };
+ return map[device] || map.pressure;
+}
 function renderCheck(){
- const d=D[state.device],r=d.s[state.symptom];progress(3);$('troubleStep').textContent='Question 3 of 3';$('troubleQuestion').textContent=r.q;
+ const d=D[state.device],r=d.s[state.symptom];progress(3);$('troubleStep').textContent='Question 3 of 4';$('troubleQuestion').textContent=r.q;
  options([['yes','Yes'],['no','No']]);$('troubleNext').disabled=true;
 }
-function showResult(answer){
+function renderMeasurement(answer){
+ const d=D[state.device];progress(4);$('troubleStep').textContent='Question 4 of 4';
+ $('troubleQuestion').textContent='What does your measurement or field check show?';
+ options(measurementOptions(state.device,state.symptom));$('troubleNext').disabled=true;
+}
+function diagnosticClass(device,measurement){
+ const electrical=['current','signal','pulse','badgap','feedback','power','loop'];
+ const process=['reference','low','high','match','baseline','rpm','bump'];
+ if(device==='shutdownvalve'||device==='firepanel'||device==='gasdet') return 'safety';
+ if(electrical.includes(measurement)) return 'electrical';
+ if(process.includes(measurement)) return 'process';
+ return 'instrument';
+}
+function safetyNote(device){
+ const notes={
+  shutdownvalve:'Do not initiate a stroke/PST or defeat an ESD function unless the approved test procedure, permit/MOC and required control-room coordination are in place.',
+  firepanel:'Do not disable, isolate or reset fire protection devices casually. Follow the approved fire-system impairment/test procedure and restore all affected points after testing.',
+  gasdet:'Do not expose a detector to test gas or enter a hazardous area unless the approved gas-test/calibration procedure and area controls are in place.',
+  controlvalve:'Confirm process impact and required isolation before intrusive valve work. Do not defeat an interlock or trip for convenience.',
+  plcforce:'PLC forcing/overrides require authorization, logging and a defined removal plan. Remove forces immediately after the approved test.',
+  level:'Confirm process isolation and safe access before opening impulse lines or touching process connections.',
+  pressure:'Confirm pressure is isolated/depressurized before opening impulse lines, manifolds or process connections.',
+  flow:'Confirm process isolation before removing sensors, opening impulse paths or disturbing flow elements.',
+  speedprobe:'Keep clear of rotating machinery and follow the approved measurement method; do not approach moving targets unnecessarily.',
+  vibprobe:'Keep clear of rotating equipment and use the OEM probe/gap procedure; do not make adjustments on energized rotating machinery unless explicitly authorized.',
+  gasdet:'Use the approved detector test/calibration procedure and certified gas standard; do not treat a bump test as a full calibration.',
+  genset:'Follow generator isolation and operating procedures before testing sensors, governor/AVR circuits or protections.'
+ };
+ return notes[device]||'Follow approved isolation, permit, OEM and site procedures before intrusive testing or changing configuration.';
+}
+function showResult(answer,measurement){
  const d=D[state.device],r=d.s[state.symptom],a=r[answer];
- progress(3);$('troubleStep').textContent='Diagnostic direction';$('troubleQuestion').textContent='Use this result as the next diagnostic direction.';
- $('troubleOptions').innerHTML='';$('troubleResult').classList.add('show');$('troubleResultTitle').textContent=a[0];$('troubleCheck').textContent=a[1];
- $('troubleCause').textContent='Do not assume a failed instrument until the process condition, sensing path, wiring, configuration and reference measurement have been checked.';
- $('troubleVerify').textContent=a[2];$('troubleNext').style.display='none';$('troubleBack').style.display='none';$('troubleDone').style.display='block';
+ const m={
+  reference:'Independent reference agrees: treat the process condition as a primary possibility and verify operating conditions before changing calibration.',
+  low:'Reference is higher than the indicated value: investigate sensing path, configuration and signal scaling before replacing the instrument.',
+  high:'Reference is lower than the indicated value: investigate scaling, sensing path, configuration and calibration only after the physical condition is verified.',
+  current:'Abnormal loop current: verify power, polarity, barriers/isolators, wiring and transmitter status before relying on the process indication.',
+  signal:'Signal is abnormal: inspect wiring, grounding/EMI, sensor condition and the measurement chain before changing configuration.',
+  unknown:'Measurement not yet taken: take the approved reference measurement before concluding that the instrument has failed.',
+  match:'Command and actual position agree: investigate process/control-loop behavior rather than immediately blaming the valve hardware.',
+  feedback:'Feedback disagrees with physical travel: suspect feedback/linkage/configuration before changing the valve itself.',
+  baseline:'Within approved baseline: investigate the reported symptom, test conditions or indication rather than assuming a valve fault.',
+  slow:'Slower than baseline: check actuator supply, solenoid, speed control, restrictions and friction under the approved procedure.',
+  fast:'Faster than baseline: check speed-control/dashpot behavior and actuator response under the approved procedure.',
+  rpm:'Independent RPM agrees: the speed condition may be genuine; investigate the machine/process first.',
+  pulse:'Pulse signal is weak/abnormal: check probe gap, target condition, coil/sensor health, shielding and wiring.',
+  gap:'Probe gap/bias is within OEM range: continue with signal/reference checks rather than adjusting the gap.',
+  badgap:'Probe gap/bias is outside OEM range: correct only to the OEM specification, then repeat the measurement.',
+  bump:'Approved bump response is correct: investigate actual atmosphere, sample path or cross-sensitivity before recalibration.',
+  zero:'Zero is unstable/offset: investigate sensor condition, contamination, temperature/humidity and calibration history.',
+  address:'A device/zone is identified: troubleshoot that address/circuit first using the approved fire-system procedure.',
+  loop:'A loop/circuit fault is indicated: isolate and troubleshoot the identified circuit according to the approved fire-system procedure.',
+  power:'Power is abnormal: restore normal/backup supply and verify panel operation before deeper diagnostics.',
+  none:'No fault is localized: review event history, power, wiring and system diagnostics before replacing devices.',
+  low:'Reference is higher: investigate sensing/input/scaling rather than assuming the indicated value is correct.',
+  high:'Reference is lower: investigate sensing/input/scaling and configuration.',
+  high:'Reference is lower: investigate sensing/input/scaling and configuration.',
+  signal:'Controller input/signal is abnormal: inspect sensor wiring, grounding, input status and configuration.'
+ };
+ progress(4);$('troubleStep').textContent='Diagnostic direction';$('troubleQuestion').textContent='Use both the symptom and your field measurement to choose the next check.';
+ $('troubleOptions').innerHTML='';$('troubleResult').classList.add('show');$('troubleResultTitle').innerHTML=a[0]+' <span class="diag-class '+diagnosticClass(state.device,measurement)+'">'+diagnosticClass(state.device,measurement).toUpperCase()+' FOCUS</span>';$('troubleCheck').textContent=a[1]+' '+(m[measurement]||'Use the measured evidence to narrow the fault before changing settings.');
+ $('troubleCause').textContent='Classification: '+(measurement==='reference'||measurement==='baseline'||measurement==='match'||measurement==='bump'?'Process / operating condition may be involved.':measurement==='current'||measurement==='signal'||measurement==='pulse'||measurement==='badgap'?'Measurement / electrical / sensing path requires investigation.':'Use the evidence to distinguish process, sensing, wiring, configuration and instrument faults.');
+ $('troubleVerify').textContent=a[2]+' Record the measured value, reference used and final verification in the job record.';$('troubleCause').insertAdjacentHTML('afterend','<div class="diag-stop">⚠️ '+safetyNote(state.device)+'</div>');
+ $('troubleNext').style.display='none';$('troubleBack').style.display='none';$('troubleDone').style.display='block';
 }
 $('troubleStartBtn').onclick=()=>openModal();
 document.querySelectorAll('#troubleQuick button').forEach(b=>b.onclick=()=>openModal(b.dataset.quick));
 document.querySelectorAll('[data-close-trouble]').forEach(x=>x.onclick=closeModal);
-$('troubleBack').onclick=()=>{if(state.symptom){state.symptom=null;renderSymptoms()}else if(state.device){state.device=null;renderDevice()}};
+$('troubleBack').onclick=()=>{if(state.measurement){state.measurement=null;renderCheck()}else if(state.symptom){state.symptom=null;renderSymptoms()}else if(state.device){state.device=null;renderDevice()}};
 $('troubleNext').onclick=()=>{
  const selected=$('troubleOptions').querySelector('.selected');if(!selected)return;
- if(!state.device){state.device=selected.dataset.id; if(state.quick){state.symptom=state.quick;renderCheck()}else renderSymptoms();}
+ if(!state.device){state.device=selected.dataset.id; if(state.quick){state.symptom=state.quick;renderCheck()}else renderSymptoms()}
  else if(!state.symptom){state.symptom=selected.dataset.id;renderCheck()}
- else showResult(selected.dataset.id);
+ else if(!state.measurement && $('troubleStep').textContent==='Question 3 of 4'){state.check=selected.dataset.id;renderMeasurement(state.check)}
+ else {state.measurement=selected.dataset.id;showResult(state.check,state.measurement)}
 };
 $('troubleDone').onclick=closeModal;
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('troubleModal').classList.contains('open'))closeModal()});
