@@ -2768,11 +2768,10 @@ body.dark #page-home .home-mini-title{color:#e2e8f0}
 .trouble-sub{font-size:.66rem;opacity:.86;margin-top:5px;line-height:1.4}
 .trouble-top-icon{width:46px;height:46px;flex:0 0 46px;border-radius:15px;background:rgba(255,255,255,.12);display:grid;place-items:center}
 .trouble-start{width:100%;margin-top:9px;border:0;border-radius:16px;padding:13px 14px;background:#fff;color:#1d4ed8;box-shadow:0 7px 18px rgba(15,23,42,.08);display:flex;align-items:center;justify-content:space-between;font-weight:850;font-size:.67rem}
-.trouble-label-row{display:flex;justify-content:space-between;align-items:center;margin:15px 2px 7px;font-size:.64rem}
-.trouble-label-row strong{font-size:.74rem}.trouble-label-row span{color:#94a3b8}
-.trouble-quick{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
-.trouble-quick button{min-width:0;min-height:70px;border:1px solid #e2e8f0;background:#fff;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font-size:.57rem;font-weight:800;color:#334155;box-shadow:0 5px 14px rgba(15,23,42,.045)}
-.trouble-quick button i{font-size:.9rem;color:#2563eb}.trouble-quick button:active{transform:scale(.97)}
+.trouble-workflow-note{display:flex;align-items:center;gap:10px;margin-top:10px;padding:11px 13px;border:1px solid #dbeafe;background:#f8fbff;border-radius:16px;color:#334155}
+.trouble-workflow-note>i{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:#eff6ff;color:#2563eb;font-size:.8rem;flex:0 0 30px}
+.trouble-workflow-note strong{display:block;font-size:.66rem;font-weight:900;color:#1e3a5f}
+.trouble-workflow-note span{display:block;margin-top:2px;font-size:.57rem;color:#64748b}
 .trouble-modal{display:none;position:fixed;inset:0;z-index:10000;align-items:flex-end;justify-content:center}
 .trouble-modal.open{display:flex}
 .trouble-backdrop{position:absolute;inset:0;background:rgba(2,8,23,.62);backdrop-filter:blur(4px)}
@@ -2785,7 +2784,7 @@ body.dark #page-home .home-mini-title{color:#e2e8f0}
 .trouble-options{display:grid;grid-template-columns:1fr 1fr;gap:7px}.trouble-options button{text-align:left;min-width:0;border:1px solid #e2e8f0;background:#f8fafc;border-radius:14px;padding:11px;font-size:.62rem;font-weight:750;color:#334155;overflow-wrap:anywhere}.trouble-options button.selected{border-color:#2563eb;background:#eff6ff;color:#1d4ed8;box-shadow:inset 0 0 0 1px #2563eb}
 .trouble-result{display:none;margin-top:10px}.trouble-result.show{display:block}.trouble-result-tag{font-size:.55rem;font-weight:900;color:#2563eb;letter-spacing:.06em}.trouble-result-title{font-size:.86rem;font-weight:900;color:#1e3a8a;margin:5px 0 8px}.trouble-result-grid{display:grid;grid-template-columns:1fr;gap:7px}.trouble-result-grid>div{padding:9px;border:1px solid #e2e8f0;border-radius:13px;background:#f8fafc}.trouble-result-grid b{font-size:.58rem;color:#334155}.trouble-result-grid p{font-size:.57rem;line-height:1.45;color:#64748b;margin:4px 0 0}.trouble-safety{display:flex;gap:7px;margin-top:8px;padding:9px;border-radius:12px;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;font-size:.55rem;line-height:1.4}.trouble-footer{display:grid;grid-template-columns:auto 1fr;gap:7px;margin-top:11px}.trouble-footer .trouble-next{width:100%;justify-content:center}.trouble-footer .btn-outline{min-height:40px}.trouble-footer .btn{min-height:40px}
 body.dark .trouble-dialog{background:#111827}.dark .trouble-dialog-title,.dark .trouble-question{color:#f8fafc}.dark .trouble-options button{background:#1e293b;border-color:#334155;color:#cbd5e1}.dark .trouble-result-grid>div{background:#1e293b;border-color:#334155}.dark .trouble-result-grid b{color:#e2e8f0}
-@media(max-width:390px){.trouble-quick{grid-template-columns:repeat(2,minmax(0,1fr))}.trouble-options{grid-template-columns:1fr}.trouble-dialog{padding:13px;border-radius:22px 22px 0 0}.trouble-top{padding:14px}.trouble-top-icon{display:none}}
+@media(max-width:390px){.trouble-options{grid-template-columns:1fr}.trouble-dialog{padding:13px;border-radius:22px 22px 0 0}.trouble-top{padding:14px}.trouble-top-icon{display:none}}
 </style>
 
 <style id="favorites-size-fix">
@@ -5627,25 +5626,23 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
   <div class="trouble-top">
     <div>
       <div class="trouble-kicker">FIELD DIAGNOSTIC</div>
-      <div class="trouble-title">Troubleshooting Assistant</div>
-      <div class="trouble-sub">Answer a few quick questions. Get the next check.</div>
+      <div class="trouble-title">Device Troubleshooting</div>
+      <div class="trouble-sub">Select the field device, then choose the actual failure mode. The checks stay specific to that device.</div>
     </div>
     <div class="trouble-top-icon"><i class="fas fa-stethoscope"></i></div>
   </div>
 
   <button class="trouble-start" id="troubleStartBtn" type="button">
-    <span><i class="fas fa-play"></i> Start Troubleshooting</span>
+    <span><i class="fas fa-magnifying-glass"></i> Begin Diagnostic</span>
     <i class="fas fa-chevron-right"></i>
   </button>
 
-  <div class="trouble-label-row"><strong>Quick problems</strong><span>Tap to start</span></div>
-  <div class="trouble-quick" id="troubleQuick">
-    <button type="button" data-quick="low"><i class="fas fa-arrow-down"></i><span>Reading low</span></button>
-    <button type="button" data-quick="high"><i class="fas fa-arrow-up"></i><span>Reading high</span></button>
-    <button type="button" data-quick="erratic"><i class="fas fa-wave-square"></i><span>Erratic signal</span></button>
-    <button type="button" data-quick="drift"><i class="fas fa-chart-line"></i><span>Reading drifting</span></button>
-    <button type="button" data-quick="comm"><i class="fas fa-link"></i><span>No communication</span></button>
-    <button type="button" data-quick="nodisplay"><i class="fas fa-desktop"></i><span>No display</span></button>
+  <div class="trouble-workflow-note">
+    <i class="fas fa-route"></i>
+    <div>
+      <strong>Device-specific workflow</strong>
+      <span>Device → failure mode → first field check</span>
+    </div>
   </div>
 
   <div class="trouble-modal" id="troubleModal" aria-hidden="true">
@@ -5654,7 +5651,7 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
       <div class="trouble-dialog-head">
         <div>
           <div class="trouble-kicker">FIELD ASSISTANT</div>
-          <div class="trouble-dialog-title" id="troubleModalTitle">Let's diagnose it</div>
+          <div class="trouble-dialog-title" id="troubleModalTitle">Field Diagnostic</div>
         </div>
         <button class="trouble-close" type="button" data-close-trouble><i class="fas fa-times"></i></button>
       </div>
@@ -5672,7 +5669,7 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
           <div><b><i class="fas fa-microscope"></i> Possible cause</b><p id="troubleCause"></p></div>
           <div><b><i class="fas fa-vial"></i> Verify</b><p id="troubleVerify"></p></div>
         </div>
-        <div class="trouble-safety"><i class="fas fa-shield-alt"></i><span>Follow approved isolation, permit and OEM procedures before intrusive testing.</span></div>
+        <div class="trouble-safety"><i class="fas fa-shield-alt"></i><span>Use the approved isolation, permit, ESD/FGS and OEM procedures before intrusive testing. Never bypass a safety function to prove a fault.</span></div>
       </div>
 
       <div class="trouble-footer">
@@ -9752,9 +9749,9 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 /*
  * Troubleshooting QA
  * ------------------
- * The device is selected first. Every symptom list and every answer below
- * belongs to that device only. Quick-problem buttons are treated as a
- * symptom shortcut, never as a generic diagnosis.
+ * Device-specific troubleshooting.
+ * The device is selected first, followed by a failure mode that is valid
+ * for that device. No generic quick-problem shortcuts are used.
  */
 const D = {
   level: {
@@ -9850,27 +9847,27 @@ const D = {
   controlvalve: {
     n:'Control valve',
     s:{
-      low:['Valve does not reach commanded position',
+      travel:['Valve does not reach commanded position',
         'Command a controlled travel point and compare commanded position with actual stem/shaft travel and positioner feedback.',
         'Low or restricted actuator air, stiction, linkage problems, positioner setup or insufficient actuator force can prevent full travel.',
         'Verify actuator supply at the valve, inspect linkage and positioner feedback, then repeat a controlled stroke test.'],
-      high:['Valve travels beyond the commanded position',
+      overtravel:['Valve travels beyond the commanded position',
         'Compare the command, positioner feedback and actual valve travel at the same instant.',
         'Incorrect feedback linkage, positioner calibration or mechanical travel limits can cause overtravel or a misleading position indication.',
         'Confirm actual stem/shaft travel independently and correct the feedback/positioner issue before changing controller tuning.'],
-      erratic:['Valve hunts or oscillates',
+      hunting:['Valve hunts or oscillates',
         'Trend command versus actual travel and determine whether the valve is moving around a steady command.',
         'Packing/actuator stiction, unstable positioner response, poor air supply or control-loop tuning can produce hunting.',
         'Separate mechanical stiction from control-loop behaviour with an authorized stroke/step test before changing PID settings.'],
-      drift:['Valve position drifts at a steady command',
+      positiondrift:['Valve position drifts at a steady command',
         'Hold a steady command and watch actual travel and positioner feedback.',
         'Air leakage, actuator supply variation, linkage slip, positioner feedback problems or mechanical friction can allow position to drift.',
         'Verify actuator supply at the valve and compare feedback with actual travel before adjusting the positioner.'],
-      comm:['Positioner has no communication',
+      diagnostics:['Positioner has no communication',
         'Verify positioner power/air and the communication wiring or bus connection.',
         'Loss of power, incorrect address/configuration, wiring/load problems or a failed positioner communication interface can remove diagnostics.',
         'Confirm local positioner operation first, then verify the communication path and device address.'],
-      nodisplay:['Position feedback is missing',
+      feedback:['Position feedback is missing',
         'Check positioner power/status and compare the displayed position with physical valve travel.',
         'A failed/slipping feedback linkage, sensor or wiring connection can remove position indication without proving the valve itself is mechanically failed.',
         'Confirm actual travel and inspect the feedback mechanism before replacing the positioner.']
@@ -9880,30 +9877,60 @@ const D = {
   shutdownvalve: {
     n:'Shutdown / ESD valve',
     s:{
-      low:['ESD valve stroke is slow',
+      slowstroke:['ESD valve stroke is slow',
         'Compare the measured stroke time with the approved baseline using an authorized test procedure.',
         'Low actuator pressure, restricted tubing, solenoid problems, speed-control/dashpot settings or mechanical friction can slow the stroke.',
         'Measure actuator supply at the valve and check solenoid response and travel time before changing controller settings.'],
-      high:['ESD valve travel is excessive or incorrect',
+      safeposition:['ESD valve travel is excessive or the safe position is incorrect',
         'Verify actual travel and the configured safe-position/travel limits.',
         'Incorrect position feedback, mechanical stops or limit-switch/feedback configuration can report or allow unexpected travel.',
         'Confirm the mechanical safe position and feedback independently under the approved ESD test procedure.'],
-      erratic:['ESD valve stroke is inconsistent',
+      inconsistentstroke:['ESD valve stroke is inconsistent',
         'Repeat a controlled stroke test only when authorized and compare time/feedback with the established baseline.',
         'Solenoid response, actuator condition, unstable supply or mechanical friction can cause inconsistent stroke behaviour.',
         'Check actuator/solenoid supply and mechanical travel against the approved baseline before returning the valve to service.'],
-      drift:['ESD valve does not hold position',
+      holdposition:['ESD valve does not hold position',
         'Verify actuator pressure and position feedback while the valve is supposed to remain in position.',
         'Actuator leakage, solenoid leakage, mechanical problems or a faulty feedback signal can allow position to change.',
         'Confirm actual valve position independently and inspect the actuator/solenoid path before changing ESD logic.'],
-      comm:['No ESD valve diagnostics communication',
+      diagnostics:['No ESD valve diagnostics communication',
         'Check controller/device status and the approved communication path without bypassing the safety function.',
         'Loss of power, communication wiring/addressing or a device-interface fault can remove diagnostics while the mechanical valve may still operate.',
         'Verify local device status and the approved communication path, then document any safety-system fault before further testing.'],
-      nodisplay:['ESD valve feedback is missing',
+      feedback:['ESD valve feedback is missing',
         'Check the ESD feedback indication and the physical limit/position feedback device.',
         'A feedback sensor, switch, linkage or wiring fault can remove indication even if the valve has physically moved.',
         'Compare feedback with actual valve position using the approved test procedure before replacing components.']
+    }
+  },
+
+  onoff: {
+    n:'Shut-off / On-off valve',
+    s:{
+      command:['Valve does not respond to OPEN/CLOSE command',
+        'Verify the command at the source, then check actuator/solenoid supply and the valve feedback state.',
+        'Loss of instrument air/power, failed solenoid, wiring fault, actuator problem or a mechanical obstruction can prevent movement.',
+        'Prove the command path, supply and solenoid operation first, then perform the approved functional stroke test.'],
+      feedback:['Valve moves but position feedback is incorrect or missing',
+        'Compare the physical valve position with the OPEN/CLOSED feedback at the same time.',
+        'Limit switch/proximity adjustment, feedback wiring, switch failure or linkage problems can give an incorrect status.',
+        'Verify the physical end position and inspect the feedback device and wiring before replacing the actuator.'],
+      stroke:['Valve stroke is slow or incomplete',
+        'Measure the opening/closing time and compare it with the approved baseline.',
+        'Restricted air, low supply pressure, solenoid restriction, actuator friction or mechanical resistance can slow or limit travel.',
+        'Check supply pressure, solenoid response and mechanical travel under the approved procedure.'],
+      intermittent:['Valve operation is intermittent',
+        'Repeat the command test under controlled conditions and identify whether the fault follows the command, solenoid or valve mechanism.',
+        'Loose wiring, intermittent solenoid operation, unstable supply, actuator friction or mechanical binding can cause intermittent movement.',
+        'Trend command and feedback together and inspect the supply/solenoid path before changing components.'],
+      manual:['Valve cannot be manually operated as expected',
+        'Confirm the valve is in the correct operating mode and follow the approved manual-operation procedure.',
+        'A locked/isolated actuator, mechanical obstruction, damaged linkage or incorrect local/remote configuration can prevent manual operation.',
+        'Verify isolation and mechanical condition before applying force or removing components.'],
+      nofeedback:['No OPEN/CLOSED indication',
+        'Check the limit switches/proximity devices and the input channel receiving their status.',
+        'A failed switch, misadjustment, broken linkage or wiring/input fault can remove position indication.',
+        'Prove the physical valve position independently, then test each feedback channel.']
     }
   },
 
@@ -10064,6 +10091,7 @@ const devices = [
   ['flow','Flow meter'],
   ['controlvalve','Control valve'],
   ['shutdownvalve','Shutdown / ESD valve'],
+  ['onoff','Shut-off / On-off valve'],
   ['speedprobe','Speed probe'],
   ['vibprobe','Vibration probe'],
   ['gasdet','Gas detector'],
@@ -10071,14 +10099,14 @@ const devices = [
   ['genset','Generator control panel']
 ];
 
-const state = {device:null, symptom:null, quick:null};
+const state = {device:null, symptom:null, step:1};
 
 function $(x){ return document.getElementById(x); }
 
-function openModal(quick){
+function openModal(){
   state.device = null;
   state.symptom = null;
-  state.quick = quick || null;
+  state.step = 1;
 
   $('troubleModal').classList.add('open');
   $('troubleModal').setAttribute('aria-hidden','false');
@@ -10120,30 +10148,33 @@ function options(items){
 }
 
 function renderDevice(){
+  state.step = 1;
   progress(1);
-  $('troubleStep').textContent='Question 1 of 2';
-  $('troubleQuestion').textContent='Which device is showing the problem?';
+  $('troubleStep').textContent='Step 1 of 2 · Device';
+  $('troubleQuestion').textContent='Which field device is showing the problem?';
   options(devices);
   $('troubleNext').disabled=true;
 }
 
 function renderSymptoms(){
   const d=D[state.device];
+  state.step = 2;
   progress(2);
-  $('troubleStep').textContent='Question 2 of 2';
-  $('troubleQuestion').textContent='Which symptom matches the '+d.n.toLowerCase()+'?';
+  $('troubleStep').textContent='Step 2 of 2 · Failure mode';
+  $('troubleQuestion').textContent='What is the actual failure mode of the '+d.n.toLowerCase()+'?';
   options(Object.entries(d.s).map(x=>[x[0],x[1][0]]));
   $('troubleNext').disabled=true;
 }
 
 function showResult(){
   const d=D[state.device];
-  const r=d.s[state.symptom];
+  const r=d && d.s ? d.s[state.symptom] : null;
   if(!d || !r) return;
 
+  state.step = 3;
   progress(3);
   $('troubleStep').textContent='Diagnostic direction';
-  $('troubleQuestion').textContent='Start with the device-specific check below before changing settings or replacing parts.';
+  $('troubleQuestion').textContent='Start with the device-specific check below. Do not assume the fault is in the instrument until the signal path has been proved.';
   $('troubleOptions').innerHTML='';
   $('troubleResult').classList.add('show');
 
@@ -10153,22 +10184,27 @@ function showResult(){
   $('troubleVerify').textContent=r[3];
 
   $('troubleNext').style.display='none';
-  $('troubleBack').style.display='none';
+  $('troubleBack').style.display='inline-flex';
   $('troubleDone').style.display='block';
 }
 
 $('troubleStartBtn').onclick=()=>openModal();
-
-document.querySelectorAll('#troubleQuick button').forEach(b=>{
-  b.onclick=()=>openModal(b.dataset.quick);
-});
 
 document.querySelectorAll('[data-close-trouble]').forEach(x=>{
   x.onclick=closeModal;
 });
 
 $('troubleBack').onclick=()=>{
-  if(state.device){
+  if(state.step===3){
+    $('troubleResult').classList.remove('show');
+    $('troubleDone').style.display='none';
+    $('troubleNext').style.display='block';
+    $('troubleBack').style.display='block';
+    renderSymptoms();
+    return;
+  }
+
+  if(state.step===2){
     state.device=null;
     state.symptom=null;
     renderDevice();
@@ -10179,23 +10215,10 @@ $('troubleNext').onclick=()=>{
   const selected=$('troubleOptions').querySelector('.selected');
   if(!selected) return;
 
-  if(!state.device){
+  if(state.step===1){
     state.device=selected.dataset.id;
-
-    /*
-     * A quick problem already supplies the symptom. If that symptom is valid
-     * for the selected device, do not ask the user the same question twice.
-     * If it is not valid for that device, show only that device's real
-     * symptom list instead.
-     */
-    if(state.quick && D[state.device].s[state.quick]){
-      state.symptom=state.quick;
-      showResult();
-    } else {
-      state.quick=null;
-      renderSymptoms();
-    }
-  } else {
+    renderSymptoms();
+  } else if(state.step===2){
     state.symptom=selected.dataset.id;
     showResult();
   }
