@@ -2792,6 +2792,25 @@ body.dark .fn-shift-bar .fn-shift-text{color:#bfdbfe;}
 .fn-report-cta span{display:block;font-size:.58rem;opacity:.85;margin-top:1px;}
 .fn-report-cta button{background:#fff;color:#1d4ed8;border:0;border-radius:12px;padding:9px 12px;font-size:.62rem;font-weight:800;white-space:nowrap;}
 
+.fn-digest-head{font-size:.62rem;font-weight:850;color:#2563eb;text-transform:uppercase;letter-spacing:.04em;display:flex;align-items:center;gap:6px;margin-bottom:6px;}
+.fn-digest-text{font-size:.68rem;line-height:1.55;color:#334155;}
+.fn-digest-text b{color:#1e293b;}
+body.dark .fn-digest-text{color:#cbd5e1;}
+body.dark .fn-digest-text b{color:#f1f5f9;}
+
+.fn-ds-group{margin-bottom:12px;}
+.fn-ds-group:last-child{margin-bottom:0;}
+.fn-ds-group-title{font-size:.6rem;font-weight:850;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px;display:flex;align-items:center;gap:6px;}
+.fn-ds-group-title.attn{color:#dc2626;}
+.fn-ds-group-title.done{color:#059669;}
+.fn-ds-group-title.other{color:#64748b;}
+.fn-ds-item{display:flex;gap:7px;padding:7px 9px;border-radius:11px;background:#f8fafc;margin-bottom:5px;font-size:.64rem;color:#334155;}
+.fn-ds-item b{color:#1e293b;}
+.fn-ds-item span.fn-ds-meta{display:block;font-size:.56rem;color:#94a3b8;margin-top:1px;}
+body.dark .fn-ds-item{background:#1e293b;color:#cbd5e1;}
+body.dark .fn-ds-item b{color:#f1f5f9;}
+.fn-ds-empty{font-size:.64rem;color:#94a3b8;padding:2px 2px 4px;}
+
 .fn-note-select{display:flex;align-items:center;gap:6px;}
 .fn-note-select input[type=checkbox]{width:16px;height:16px;accent-color:#2563eb;}
 
@@ -3911,6 +3930,11 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
                 </div>
             </div>
 
+            <div class="card" id="fnDigestCard" style="padding:12px;display:none;">
+                <div class="fn-digest-head"><i class="fas fa-clipboard-check"></i> Today so far</div>
+                <div class="fn-digest-text" id="fnDigestText"></div>
+            </div>
+
             <div class="card">
                 <div class="fn-capture-head">
                     <div><div class="fn-capture-title"><span class="fn-capture-icon"><i class="fas fa-bolt"></i></span>Quick Field Capture</div><div class="fn-section-note">Capture a useful field record in under a minute.</div></div>
@@ -3945,6 +3969,11 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
                     </div>
                 </div>
                 <div id="notesList" style="margin-top:10px;"><div style="font-size:0.75rem;color:#94a3b8;text-align:center;padding:16px;">No field notes yet.</div></div>
+            </div>
+
+            <div class="card" id="fnDailySummaryCard" style="display:none;">
+                <div class="card-header"><i class="fas fa-calendar-day"></i><h3>Daily Summary</h3><span id="fnDailySummaryDate"></span></div>
+                <div id="fnDailySummaryBody"></div>
             </div>
 
             <div class="card">
@@ -8908,6 +8937,56 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
                 function esc(v){ const d=document.createElement('div'); d.textContent=v==null?'':v; return d.innerHTML; }
                 function fmt(ts){ return new Date(ts).toLocaleString(); }
                 function today(ts){ const d=new Date(ts), n=new Date(); return d.toDateString()===n.toDateString(); }
+                function truncate(s,n){ s=s||''; return s.length>n ? s.slice(0,n-1)+'…' : s; }
+                function isOverdueNote(n){ if(!n.dueDate||n.status==='Resolved') return false; return new Date(n.dueDate+'T00:00:00')<new Date(); }
+                function renderDailyDigest(){
+                    const todays=notes().filter(n=>today(n.ts)).sort((a,b)=>a.ts-b.ts);
+                    const digestCard=document.getElementById('fnDigestCard');
+                    const digestText=document.getElementById('fnDigestText');
+                    const summaryCard=document.getElementById('fnDailySummaryCard');
+                    const summaryBody=document.getElementById('fnDailySummaryBody');
+                    const summaryDate=document.getElementById('fnDailySummaryDate');
+                    if(!todays.length){ digestCard.style.display='none'; summaryCard.style.display='none'; return; }
+
+                    const open=todays.filter(n=>n.status==='Open'||n.status==='In Progress');
+                    const high=todays.filter(n=>n.priority==='High'||n.priority==='Critical');
+                    const overdue=todays.filter(isOverdueNote);
+                    const resolvedToday=todays.filter(n=>n.status==='Resolved');
+                    const attentionIds=new Set();
+                    todays.forEach(n=>{ if(isOverdueNote(n) || ((n.priority==='High'||n.priority==='Critical') && n.status!=='Resolved')) attentionIds.add(n.id); });
+                    const attention=todays.filter(n=>attentionIds.has(n.id));
+                    const everythingElse=todays.filter(n=>!attentionIds.has(n.id) && n.status!=='Resolved');
+
+                    // ---- Top digest card ----
+                    let text='<b>'+todays.length+'</b> note'+(todays.length===1?'':'s')+' logged today — <b>'+open.length+'</b> still open';
+                    if(high.length) text+=', <b>'+high.length+'</b> high priority';
+                    if(overdue.length) text+=', <b>'+overdue.length+'</b> overdue';
+                    text+='.';
+                    if(attention.length){
+                        const t=attention[0];
+                        text+=' Top item: <b>'+esc(t.tag||'Unassigned')+'</b> — '+esc(truncate(t.text,60))+(t.dueDate?' (due '+esc(t.dueDate)+')':'')+'.';
+                    } else if(resolvedToday.length===todays.length){
+                        text+=' All caught up — everything logged today has been resolved.';
+                    }
+                    digestText.innerHTML=text;
+                    digestCard.style.display='block';
+
+                    // ---- Daily Summary card ----
+                    summaryDate.textContent=new Date().toLocaleDateString();
+                    function itemHtml(n){
+                        return '<div class="fn-ds-item"><span>•</span><div><b>'+esc(n.tag||'Unassigned')+'</b> — '+esc(truncate(n.text,90))+
+                            '<span class="fn-ds-meta">'+esc(n.priority)+' · '+esc(n.status)+(n.location?' · '+esc(n.location):'')+(n.dueDate?' · due '+esc(n.dueDate):'')+'</span></div></div>';
+                    }
+                    function group(title,cls,arr,emptyMsg){
+                        return '<div class="fn-ds-group"><div class="fn-ds-group-title '+cls+'">'+title+'</div>'+
+                            (arr.length ? arr.map(itemHtml).join('') : '<div class="fn-ds-empty">'+emptyMsg+'</div>')+'</div>';
+                    }
+                    summaryBody.innerHTML=
+                        group('⚠️ Needs attention','attn',attention,'Nothing needs attention right now.')+
+                        group('✅ Resolved today','done',resolvedToday,'Nothing resolved yet today.')+
+                        group('🗒 Everything else','other',everythingElse,'Nothing else logged.');
+                    summaryCard.style.display='block';
+                }
                 function render(){
                     const all=notes().sort((a,b)=>b.ts-a.ts);
                     const q=(document.getElementById('noteSearch').value||'').toLowerCase().trim();
@@ -8921,7 +9000,7 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
                     const validIds=new Set(all.map(n=>String(n.id)));
                     Array.from(selected).forEach(id=>{ if(!validIds.has(id)) selected.delete(id); });
                     const el=document.getElementById('notesList');
-                    if(!filtered.length){el.innerHTML='<div style="font-size:.75rem;color:#94a3b8;text-align:center;padding:18px;">No matching field notes.</div>';updateSelectedCount();return;}
+                    if(!filtered.length){el.innerHTML='<div style="font-size:.75rem;color:#94a3b8;text-align:center;padding:18px;">No matching field notes.</div>';updateSelectedCount();renderDailyDigest();return;}
                     el.innerHTML=filtered.map(n=>{
                         const due=n.dueDate?new Date(n.dueDate+'T00:00:00'):null;
                         const overdue=due && due<new Date() && n.status!=='Resolved';
@@ -8943,6 +9022,7 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
                     el.querySelectorAll('.fn-report').forEach(b=>b.onclick=()=>makeReport(notes().find(n=>String(n.id)===String(b.dataset.id))));
                     el.querySelectorAll('.fn-select').forEach(cb=>cb.onchange=()=>{ const id=String(cb.dataset.id); if(cb.checked) selected.add(id); else selected.delete(id); updateSelectedCount(); });
                     updateSelectedCount();
+                    renderDailyDigest();
                 }
                 function updateSelectedCount(){
                     const c=document.getElementById('fnSelectedCount');
