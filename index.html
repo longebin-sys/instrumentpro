@@ -4458,7 +4458,7 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <div class="page" id="page-converter">
 <div class="page-title"><i class="fas fa-arrows-alt-h"></i> Unit Converter</div>
 <div class="card">
-<div class="sub-tabs" id="converterTabs"><div class="sub-tab" data-tab="conv-signal-group">4-20mA</div><div class="sub-tab active" data-tab="conv-pressure-group">Pressure</div><div class="sub-tab" data-tab="conv-temperature-group">Temperature</div><div class="sub-tab" data-tab="conv-speed-group">Speed</div><div class="sub-tab" data-tab="conv-vibration-group">Vibration</div><div class="sub-tab" data-tab="conv-flow-group">Flow</div><div class="sub-tab" data-tab="conv-density-group">Density / SG</div><div class="sub-tab" data-tab="conv-volume-group">Volume</div><div class="sub-tab" data-tab="conv-level-group">Level / Head</div><div class="sub-tab" data-tab="conv-concentration-group">Concentration</div></div>
+<div class="sub-tabs" id="converterTabs"><div class="sub-tab active" data-tab="conv-signal-group">4-20mA</div><div class="sub-tab" data-tab="conv-pressure-group">Pressure</div><div class="sub-tab" data-tab="conv-temperature-group">Temperature</div><div class="sub-tab" data-tab="conv-speed-group">Speed</div><div class="sub-tab" data-tab="conv-vibration-group">Vibration</div><div class="sub-tab" data-tab="conv-flow-group">Flow</div><div class="sub-tab" data-tab="conv-density-group">Density / SG</div><div class="sub-tab" data-tab="conv-volume-group">Volume</div><div class="sub-tab" data-tab="conv-level-group">Level / Head</div><div class="sub-tab" data-tab="conv-concentration-group">Concentration</div></div>
 
 
 
@@ -4467,7 +4467,7 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 
 
 
-<div class="sub-panel active" id="conv-pressure-group"><div class="sub-tabs converter-nested-tabs"><div class="sub-tab active" data-tab="conv-pressure">Pressure</div></div><div class="sub-panel active" id="conv-pressure">
+<div class="sub-panel hidden" id="conv-pressure-group"><div class="sub-tabs converter-nested-tabs"><div class="sub-tab active" data-tab="conv-pressure">Pressure</div></div><div class="sub-panel active" id="conv-pressure">
 <div class="row">
 <label>From</label>
 <select id="fromUnit"><option value="psi">PSI</option><option selected="" value="bar">bar</option><option value="kpa">kPa</option><option value="mpa">MPa</option><option value="atm">atm</option><option value="inh2o">inH₂O</option><option value="inhg">inHg</option><option value="mmhg">mmHg</option><option value="mmh2o">mmH₂O</option><option value="torr">Torr</option><option value="ksi">ksi</option></select>
@@ -4643,7 +4643,7 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <div class="row"><label>To</label><select id="vibUnitTo"><option value="ms2">m/s²</option><option value="g">g</option><option selected="" value="mms">mm/s</option><option value="ips">in/s</option></select><button class="btn" id="vibUnitBtn">Convert</button></div>
 <div class="result-box"><span>Result</span><span id="vibUnitResult">—</span></div>
 <div style="font-size:0.65rem;color:#64748b;margin-top:4px;">Acceleration and velocity are different quantities; converting between them requires frequency.</div>
-</div></div><div class="sub-panel hidden" id="conv-signal-group"><div class="sub-tabs converter-nested-tabs"><div class="sub-tab active" data-tab="conv-ma">4-20mA</div></div><div class="sub-panel active" id="conv-ma">
+</div></div><div class="sub-panel active" id="conv-signal-group"><div class="sub-tabs converter-nested-tabs"><div class="sub-tab active" data-tab="conv-ma">4-20mA</div></div><div class="sub-panel active" id="conv-ma">
 <div class="card-header"><i class="fas fa-bolt"></i><h3>Signal Scaling / Test Points</h3><span>Input → Output</span></div>
 <div style="font-size:0.65rem;color:#64748b;margin-bottom:8px;">Set the process/input range first, then select the output signal or engineering unit you need. The 5-point table calculates the corresponding output automatically.</div>
 <div class="card-header" style="margin-top:4px;"><i class="fas fa-arrow-right-to-bracket"></i><h3 style="font-size:.8rem;">Input / Process Range</h3><span>LRV / URV</span></div>
