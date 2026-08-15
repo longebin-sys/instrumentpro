@@ -2824,6 +2824,15 @@ body.dark .rpt-summary strong{color:#f8fafc;}
 .rpt-entry b{color:#1e293b;}
 body.dark .rpt-entry{border-color:#334155;color:#cbd5e1;}
 body.dark .rpt-entry b{color:#f1f5f9;}
+.rpt-chip{display:inline-block;padding:1px 7px;border-radius:8px;font-size:.55rem;font-weight:800;letter-spacing:.02em;}
+.rpt-table-wrap{overflow-x:auto;border:1px solid #e2e8f0;border-radius:12px;margin-bottom:4px;}
+body.dark .rpt-table-wrap{border-color:#334155;}
+table.rpt-table{width:100%;border-collapse:collapse;font-size:.58rem;}
+table.rpt-table th{background:#f1f5f9;color:#475569;text-align:left;padding:6px 8px;font-weight:800;text-transform:uppercase;font-size:.52rem;letter-spacing:.03em;white-space:nowrap;}
+table.rpt-table td{padding:6px 8px;border-top:1px solid #e2e8f0;vertical-align:top;}
+table.rpt-table td.rpt-td-obs{max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#64748b;}
+body.dark table.rpt-table th{background:#1e293b;color:#94a3b8;}
+body.dark table.rpt-table td{border-color:#334155;color:#cbd5e1;}
 .rpt-empty{font-size:.65rem;color:#94a3b8;text-align:center;padding:14px;}
 .rpt-footer{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:14px;}
 .rpt-footer button{min-height:42px;justify-content:center;}
@@ -9042,6 +9051,17 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
                 function entryLine(n){
                     return '['+fmt(n.ts)+'] '+n.priority.toUpperCase()+' · '+n.category+' · '+(n.tag||'Unassigned')+(n.location?' ('+n.location+')':'')+' — '+n.status+'\n  '+n.text+(n.dueDate?'\n  Follow-up due: '+n.dueDate:'')+'\n';
                 }
+                function pad(s,n){ s=String(s==null?'':s); return s.length>=n ? s.slice(0,n-1)+'…' : s+' '.repeat(n-s.length); }
+                function buildTextTable(arr){
+                    const cols=[['Time',8],['Tag',12],['Priority',9],['Status',12],['Location',14],['Observation',30]];
+                    let t=cols.map(c=>pad(c[0],c[1])).join(' | ')+'\n';
+                    t+=cols.map(c=>'-'.repeat(c[1])).join('-+-')+'\n';
+                    arr.forEach(n=>{
+                        const row=[new Date(n.ts).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}), n.tag||'—', n.priority, n.status, n.location||'—', n.text||''];
+                        t+=row.map((v,i)=>pad(v,cols[i][1])).join(' | ')+'\n';
+                    });
+                    return t;
+                }
                 function buildReportText(d){
                     let t='INSTRUMENTPRO — SHIFT / HANDOVER REPORT\n=========================================\n';
                     t+='Generated: '+new Date().toLocaleString()+'\n';
@@ -9049,13 +9069,14 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
                     if(d.reportedBy) t+='Reported by: '+d.reportedBy+'\n';
                     if(d.handoverTo) t+='Handed over to: '+d.handoverTo+'\n';
                     t+='\nSUMMARY\n-------\nTotal notes: '+d.items.length+'  |  Open: '+d.openItems.length+'  |  High/Critical: '+d.highItems.length+'  |  Overdue: '+d.overdueItems.length+'  |  Resolved: '+d.resolvedItems.length+'\n';
-                    if(d.overdueItems.length){ t+='\nOVERDUE FOLLOW-UPS\n-------------------\n'; d.overdueItems.forEach(n=>t+=entryLine(n)+'\n'); }
-                    if(d.highItems.length){ t+='\nHIGH / CRITICAL PRIORITY\n------------------------\n'; d.highItems.forEach(n=>t+=entryLine(n)+'\n'); }
-                    t+='\nOUTSTANDING (OPEN / IN PROGRESS)\n---------------------------------\n';
+                    t+='\nSUMMARY TABLE\n-------------\n'+buildTextTable(d.items);
+                    if(d.overdueItems.length){ t+='\nOVERDUE FOLLOW-UPS (DETAIL)\n---------------------------\n'; d.overdueItems.forEach(n=>t+=entryLine(n)+'\n'); }
+                    if(d.highItems.length){ t+='\nHIGH / CRITICAL PRIORITY (DETAIL)\n----------------------------------\n'; d.highItems.forEach(n=>t+=entryLine(n)+'\n'); }
+                    t+='\nOUTSTANDING (OPEN / IN PROGRESS) — DETAIL\n-------------------------------------------\n';
                     t+= d.openItems.length ? d.openItems.map(entryLine).join('\n') : 'None — all clear.\n';
-                    t+='\nCOMPLETED TODAY / THIS RANGE\n-----------------------------\n';
+                    t+='\nCOMPLETED — DETAIL\n-------------------\n';
                     t+= d.resolvedItems.length ? d.resolvedItems.map(entryLine).join('\n') : 'None recorded.\n';
-                    t+='\nFULL LOG\n--------\n';
+                    t+='\nFULL LOG — DETAIL\n------------------\n';
                     t+= d.items.length ? d.items.map(entryLine).join('\n') : 'No notes in this range.\n';
                     return t;
                 }
@@ -9068,19 +9089,31 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
                         '<div><strong>'+d.resolvedItems.length+'</strong><span>Resolved</span></div>';
                     const prev=document.getElementById('rptPreview');
                     if(!d.items.length){ prev.innerHTML='<div class="rpt-empty">No field notes in this range yet.</div>'; return; }
+                    function chip(p){ return '<span class="rpt-chip" style="background:'+colors[p]+';color:'+fg[p]+';">'+esc(p)+'</span>'; }
+                    function tableHtml(arr){
+                        return '<div class="rpt-table-wrap"><table class="rpt-table"><thead><tr>'+
+                            '<th>Time</th><th>Tag</th><th>Priority</th><th>Status</th><th>Location</th><th>Observation</th>'+
+                            '</tr></thead><tbody>'+
+                            arr.map(n=>'<tr><td>'+new Date(n.ts).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})+'</td>'+
+                                '<td>'+esc(n.tag||'—')+'</td><td>'+chip(n.priority)+'</td><td>'+esc(n.status)+'</td>'+
+                                '<td>'+esc(n.location||'—')+'</td><td class="rpt-td-obs" title="'+esc(n.text)+'">'+esc(n.text)+'</td></tr>'
+                            ).join('')+
+                            '</tbody></table></div>';
+                    }
                     function section(title, arr){
                         if(!arr.length) return '';
                         return '<div class="rpt-section-title">'+title+'</div>'+arr.map(n=>
-                            '<div class="rpt-entry"><b>'+esc(n.tag||'Unassigned')+'</b> · '+esc(n.priority)+' · '+esc(n.status)+
+                            '<div class="rpt-entry"><b>'+esc(n.tag||'Unassigned')+'</b> '+chip(n.priority)+' · '+esc(n.status)+
                             (n.location?' · '+esc(n.location):'')+'<br>'+esc(n.text)+'</div>'
                         ).join('');
                     }
                     prev.innerHTML=
+                        '<div class="rpt-section-title">Summary Table</div>'+tableHtml(d.items)+
                         section('Overdue follow-ups', d.overdueItems)+
                         section('High / Critical', d.highItems)+
                         section('Outstanding', d.openItems)+
                         section('Resolved', d.resolvedItems)+
-                        section('Full log ('+d.items.length+')', d.items);
+                        section('Full log detail ('+d.items.length+')', d.items);
                 }
                 document.getElementById('rptRangeRow').querySelectorAll('.rpt-range-chip').forEach(chip=>{
                     chip.onclick=()=>{
@@ -9138,6 +9171,64 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
                         doc.setFont('helvetica','normal'); doc.setFontSize(9.5);
                         doc.text('Total: '+d.items.length+'   Open: '+d.openItems.length+'   High/Critical: '+d.highItems.length+'   Overdue: '+d.overdueItems.length+'   Resolved: '+d.resolvedItems.length, marginX, y);
                         y+=22;
+                        // ---- Summary table ----
+                        const priorityRgb = {
+                            Critical:{bg:[254,226,226], fg:[153,27,27]},
+                            High:{bg:[255,237,213], fg:[154,52,18]},
+                            Normal:{bg:[224,242,254], fg:[7,89,133]},
+                            Low:{bg:[241,245,249], fg:[71,85,105]}
+                        };
+                        const tableCols=[
+                            {key:'time', label:'Time', w:48},
+                            {key:'tag', label:'Tag', w:70},
+                            {key:'priority', label:'Priority', w:56},
+                            {key:'status', label:'Status', w:62},
+                            {key:'location', label:'Location', w:75},
+                            {key:'obs', label:'Observation', w:0} // fills remaining
+                        ];
+                        tableCols[tableCols.length-1].w = maxW - tableCols.slice(0,-1).reduce((s,c)=>s+c.w,0);
+                        function drawTableHeader(){
+                            ensureSpace(2);
+                            doc.setFont('helvetica','bold'); doc.setFontSize(11); doc.setTextColor(37,99,235);
+                            doc.text('Summary Table', marginX, y); y+=14;
+                            let x=marginX;
+                            doc.setFillColor(241,245,249);
+                            doc.rect(marginX, y-9, maxW, 16, 'F');
+                            doc.setFont('helvetica','bold'); doc.setFontSize(7.5); doc.setTextColor(71,85,105);
+                            tableCols.forEach(c=>{ doc.text(c.label.toUpperCase(), x+4, y+1); x+=c.w; });
+                            y+=10;
+                            doc.setDrawColor(226,232,240); doc.line(marginX, y, marginX+maxW, y); y+=10;
+                            doc.setTextColor(20);
+                        }
+                        drawTableHeader();
+                        doc.setFont('helvetica','normal'); doc.setFontSize(7.8);
+                        d.items.forEach(n=>{
+                            const obsLines=doc.splitTextToSize(n.text||'', tableCols[5].w-8);
+                            const rowLines=Math.max(1, obsLines.length);
+                            if(y+rowLines*10+4>pageH-40){ doc.addPage(); y=50; drawTableHeader(); doc.setFont('helvetica','normal'); doc.setFontSize(7.8); }
+                            let x=marginX;
+                            const rowVals=[
+                                new Date(n.ts).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}),
+                                n.tag||'—', null, n.status, n.location||'—', null
+                            ];
+                            doc.setTextColor(40);
+                            doc.text(rowVals[0], x+4, y+7); x+=tableCols[0].w;
+                            doc.text(doc.splitTextToSize(rowVals[1], tableCols[1].w-8)[0]||'', x+4, y+7); x+=tableCols[1].w;
+                            const pc=priorityRgb[n.priority]||priorityRgb.Normal;
+                            doc.setFillColor(pc.bg[0],pc.bg[1],pc.bg[2]);
+                            doc.roundedRect(x+2, y-1, tableCols[2].w-6, 11, 2, 2, 'F');
+                            doc.setTextColor(pc.fg[0],pc.fg[1],pc.fg[2]); doc.setFont('helvetica','bold'); doc.setFontSize(7);
+                            doc.text(n.priority, x+5, y+7); doc.setFont('helvetica','normal'); doc.setFontSize(7.8); doc.setTextColor(40);
+                            x+=tableCols[2].w;
+                            doc.text(rowVals[3], x+4, y+7); x+=tableCols[3].w;
+                            doc.text(doc.splitTextToSize(rowVals[4], tableCols[4].w-8)[0]||'', x+4, y+7); x+=tableCols[4].w;
+                            doc.setTextColor(90);
+                            obsLines.forEach((line,i)=>doc.text(line, x+4, y+7+i*10));
+                            doc.setTextColor(20);
+                            y+=rowLines*10+4;
+                            doc.setDrawColor(240); doc.line(marginX, y-2, marginX+maxW, y-2);
+                        });
+                        y+=16;
                         function writeSection(title, arr){
                             if(!arr.length) return;
                             ensureSpace(2);
@@ -9157,11 +9248,11 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
                             });
                             y+=4;
                         }
-                        writeSection('Overdue Follow-ups', d.overdueItems);
-                        writeSection('High / Critical Priority', d.highItems);
-                        writeSection('Outstanding (Open / In Progress)', d.openItems);
-                        writeSection('Resolved', d.resolvedItems);
-                        writeSection('Full Log', d.items);
+                        writeSection('Overdue Follow-ups — Detail', d.overdueItems);
+                        writeSection('High / Critical Priority — Detail', d.highItems);
+                        writeSection('Outstanding (Open / In Progress) — Detail', d.openItems);
+                        writeSection('Resolved — Detail', d.resolvedItems);
+                        writeSection('Full Log — Detail', d.items);
                         return doc.output('blob');
                     });
                 }
