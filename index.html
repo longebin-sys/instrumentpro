@@ -4305,7 +4305,10 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
                     <div style="font-size:0.65rem;color:#64748b;margin-top:4px;">Typical usable linear range is roughly 10-90 mils (mid-scale bias around -10 Vdc on a -24V Proximitor supply) — readings pinned near 0V or near supply rail indicate the probe is out of its linear range or miswired.</div>
                 </div>
                 <div class="sub-panel hidden" id="conv-ma">
-                    <div class="card-header"><i class="fas fa-bolt"></i><h3>4-20mA Test Points</h3><span>Linear</span></div>
+                    <div class="card-header"><i class="fas fa-bolt"></i><h3>Signal Scaling / Test Points</h3><span>Input → Output</span></div>
+                    <div style="font-size:0.65rem;color:#64748b;margin-bottom:8px;">Set the process/input range first, then select the output signal or engineering unit you need. The 5-point table calculates the corresponding output automatically.</div>
+
+                    <div class="card-header" style="margin-top:4px;"><i class="fas fa-arrow-right-to-bracket"></i><h3 style="font-size:.8rem;">Input / Process Range</h3><span>LRV / URV</span></div>
                     <div class="row">
                         <label>LRV / URV</label>
                         <input type="number" id="maLRV" value="0" step="any" style="flex:0.4;" />
@@ -4313,35 +4316,49 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
                         <input type="number" id="maURV" value="100" step="any" style="flex:0.4;" />
                     </div>
                     <div class="row">
-                        <label>Unit</label>
+                        <label>Input Unit</label>
                         <select id="maUnit" style="flex:0.7;">
                             <optgroup label="Pressure">
-                                <option value="kPa" selected>kPa</option>
-                                <option value="MPa">MPa</option>
-                                <option value="bar">bar</option>
-                                <option value="mbar">mbar</option>
-                                <option value="psi">psi</option>
-                                <option value="inH2O">inH2O</option>
-                                <option value="mmHg">mmHg</option>
-                                <option value="atm">atm</option>
+                                <option value="kPa" selected>kPa</option><option value="MPa">MPa</option><option value="bar">bar</option><option value="mbar">mbar</option><option value="psi">psi</option><option value="inH2O">inH₂O</option><option value="mmHg">mmHg</option><option value="atm">atm</option>
                             </optgroup>
                             <optgroup label="Temperature">
-                                <option value="°C">°C</option>
-                                <option value="°F">°F</option>
-                                <option value="K">K</option>
+                                <option value="°C">°C</option><option value="°F">°F</option><option value="K">K</option>
+                            </optgroup>
+                            <optgroup label="Flow">
+                                <option value="m³/h">m³/h</option><option value="L/min">L/min</option><option value="L/s">L/s</option><option value="GPM">GPM</option><option value="kg/h">kg/h</option>
+                            </optgroup>
+                            <optgroup label="Level / Position">
+                                <option value="mm">mm</option><option value="m">m</option><option value="%">%</option><option value="in">in</option><option value="ft">ft</option>
+                            </optgroup>
+                            <optgroup label="Mass">
+                                <option value="kg">kg</option><option value="t">t</option><option value="lb">lb</option>
                             </optgroup>
                             <optgroup label="Electrical">
-                                <option value="mA">mA</option>
-                                <option value="mV">mV</option>
-                                <option value="Ω">Ω (resistance)</option>
-                                <option value="%">% (percentage)</option>
+                                <option value="mA">mA</option><option value="mV">mV</option><option value="V">V</option><option value="Ω">Ω</option>
                             </optgroup>
-                            <optgroup label="Level / Flow">
-                                <option value="mm">mm</option>
-                                <option value="m">m</option>
-                                <option value="m³/h">m³/h</option>
-                                <option value="L/min">L/min</option>
-                                <option value="GPM">GPM</option>
+                        </select>
+                    </div>
+
+                    <div class="row">
+                        <label>Output Unit</label>
+                        <select id="maOutUnit" style="flex:0.7;">
+                            <optgroup label="Electrical Signals">
+                                <option value="mA" selected>mA</option><option value="mV">mV</option><option value="V">V</option>
+                            </optgroup>
+                            <optgroup label="Pressure">
+                                <option value="kPa">kPa</option><option value="MPa">MPa</option><option value="bar">bar</option><option value="psi">psi</option><option value="inH2O">inH₂O</option><option value="mmHg">mmHg</option>
+                            </optgroup>
+                            <optgroup label="Temperature">
+                                <option value="°C">°C</option><option value="°F">°F</option><option value="K">K</option>
+                            </optgroup>
+                            <optgroup label="Flow">
+                                <option value="m³/h">m³/h</option><option value="L/min">L/min</option><option value="L/s">L/s</option><option value="GPM">GPM</option><option value="kg/h">kg/h</option>
+                            </optgroup>
+                            <optgroup label="Level / Position">
+                                <option value="mm">mm</option><option value="m">m</option><option value="%">%</option><option value="in">in</option><option value="ft">ft</option>
+                            </optgroup>
+                            <optgroup label="Mass">
+                                <option value="kg">kg</option><option value="t">t</option><option value="lb">lb</option>
                             </optgroup>
                         </select>
                     </div>
@@ -4350,17 +4367,18 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
                     <div id="maCalPointsContainer" class="cal-points-grid"></div>
 
                     <div class="card-header mt-1" style="border-top:1px solid rgba(148,163,184,.25);padding-top:8px;"><i class="fas fa-arrow-right-arrow-left"></i><h3 style="font-size:.8rem;">Reverse Lookup</h3></div>
-                    <div style="font-size:0.65rem;color:#64748b;margin-bottom:6px;">Enter a measured mA reading to find the % and engineering value it corresponds to.</div>
+                    <div style="font-size:0.65rem;color:#64748b;margin-bottom:6px;">Enter a measured output value to find the % of range and corresponding input/process value.</div>
                     <div class="row">
-                        <label>mA reading</label>
+                        <label>Measured Output</label>
                         <input type="number" id="maReverseInput" value="16" step="any" style="flex:0.6;" />
+                        <span class="chip" id="maReverseUnitChip">mA</span>
                     </div>
                     <div class="result-box"><span>% of Range</span><span id="maReversePct">75.00 %</span></div>
-                    <div class="result-box"><span id="maReverseLabel">Value</span><span id="maReverseResult">75.00</span></div>
+                    <div class="result-box"><span id="maReverseLabel">Input Value</span><span id="maReverseResult">75.00 kPa</span></div>
 
                     <button class="btn w-full mt-1" id="maExportToReportBtn" style="justify-content:center;"><i class="fas fa-file-export"></i> Export to Report</button>
                 </div>
-                <div class="sub-panel hidden" id="conv-rtd">
+<div class="sub-panel hidden" id="conv-rtd">
                     <div class="card-header"><i class="fas fa-microchip"></i><h3>RTD Calculator</h3><span id="rtdTypeBadge">Pt100</span></div>
                     <div class="row">
                         <label>RTD Type</label>
@@ -6962,49 +6980,76 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
             convertTemp();
 
             // =============================================================
-            // 4-20mA TEST POINTS (LRV/URV -> 5-point table + reverse lookup)
+            // SIGNAL SCALING / TEST POINTS (Input range -> selectable output)
             // =============================================================
             const maLRV = document.getElementById('maLRV');
             const maURV = document.getElementById('maURV');
             const maUnit = document.getElementById('maUnit');
+            const maOutUnit = document.getElementById('maOutUnit');
             const maCalPointsContainer = document.getElementById('maCalPointsContainer');
             const maExportToReportBtn = document.getElementById('maExportToReportBtn');
             const maReverseInput = document.getElementById('maReverseInput');
             const maReversePct = document.getElementById('maReversePct');
             const maReverseLabel = document.getElementById('maReverseLabel');
             const maReverseResult = document.getElementById('maReverseResult');
+            const maReverseUnitChip = document.getElementById('maReverseUnitChip');
             const maCalPts = [0, 25, 50, 75, 100];
             const MA_HANDOFF_KEY = 'instrumentpro_ma_handoff';
 
-            // ---- Forward: LRV/URV -> the 5 standard test points ----
+            function num(el, fallback) {
+                const n = parseFloat(el.value);
+                return Number.isFinite(n) ? n : fallback;
+            }
+
+            // Output ranges are now selected automatically from the chosen output type.
+            // No separate Output LRV / URV inputs are shown on the page.
+            function getMaOutputRange() {
+                const u = maOutUnit.value;
+                if (u === 'mA') return { lrv: 4, urv: 20 };
+                if (u === 'mV') return { lrv: 0, urv: 1000 };
+                if (u === 'V') return { lrv: 0, urv: 10 };
+
+                // For an engineering-unit output, use the same numeric process span
+                // and change only the displayed engineering unit.
+                return { lrv: num(maLRV, 0), urv: num(maURV, 100) };
+            }
+
             function buildMaCalPoints() {
-                const lrv = parseFloat(maLRV.value) || 0;
-                const urv = parseFloat(maURV.value) || 100;
-                const span = urv - lrv;
-                const unit = (maUnit.value || '').trim();
-                let html = '';
+                const inLrv = num(maLRV, 0);
+                const inUrv = num(maURV, 100);
+                const out = getMaOutputRange();
+                const inSpan = inUrv - inLrv;
+                const outSpan = out.urv - out.lrv;
+                const inUnit = (maUnit.value || '').trim();
+                const outUnit = (maOutUnit.value || '').trim();
+
+                let html = `<div class="cal-point" style="font-weight:700;"><span>Point</span><span>Input / Process</span><span>Output</span></div>`;
                 maCalPts.forEach(p => {
-                    const idealMa = 4 + (16 * p / 100);
-                    const idealPv = lrv + (span * p / 100);
-                    html += `<div class="cal-point"><span>${p}%</span><span>${idealPv.toFixed(2)}${unit ? ' ' + unit : ''}</span><span>${idealMa.toFixed(2)} mA</span></div>`;
+                    const inputValue = inLrv + (inSpan * p / 100);
+                    const outputValue = out.lrv + (outSpan * p / 100);
+                    html += `<div class="cal-point"><span>${p}%</span><span>${inputValue.toFixed(2)}${inUnit ? ' ' + inUnit : ''}</span><span>${outputValue.toFixed(2)}${outUnit ? ' ' + outUnit : ''}</span></div>`;
                 });
                 maCalPointsContainer.innerHTML = html;
             }
 
-            // ---- Reverse: measured mA -> % and engineering value ----
             function updateMaReverse() {
-                const lrv = parseFloat(maLRV.value) || 0;
-                const urv = parseFloat(maURV.value) || 100;
-                const unit = (maUnit.value || '').trim();
-                const ma = parseFloat(maReverseInput.value) || 0;
-                const pct = (ma - 4) / 16 * 100;
-                const pv = lrv + ((urv - lrv) * pct / 100);
+                const inLrv = num(maLRV, 0);
+                const inUrv = num(maURV, 100);
+                const out = getMaOutputRange();
+                const outSpan = out.urv - out.lrv;
+                const measured = num(maReverseInput, out.lrv);
+                const pct = outSpan === 0 ? 0 : ((measured - out.lrv) / outSpan * 100);
+                const inputValue = inLrv + ((inUrv - inLrv) * pct / 100);
+                const inUnit = (maUnit.value || '').trim();
+                const outUnit = (maOutUnit.value || '').trim();
+
                 maReversePct.textContent = pct.toFixed(2) + ' %';
-                maReverseLabel.textContent = unit ? 'Value (' + unit + ')' : 'Value';
-                maReverseResult.textContent = pv.toFixed(2) + (unit ? ' ' + unit : '');
+                maReverseLabel.textContent = 'Input Value';
+                maReverseResult.textContent = inputValue.toFixed(2) + (inUnit ? ' ' + inUnit : '');
+                maReverseUnitChip.textContent = outUnit || 'Output';
             }
 
-            [maLRV, maURV, maUnit].forEach(el => {
+            [maLRV, maURV, maUnit, maOutUnit].forEach(el => {
                 el.addEventListener('input', () => { buildMaCalPoints(); updateMaReverse(); });
                 el.addEventListener('change', () => { buildMaCalPoints(); updateMaReverse(); });
             });
@@ -7012,26 +7057,27 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
             buildMaCalPoints();
             updateMaReverse();
 
-            // ---- Export to Report: send the middle (engineering value) column to the
-            // Field Report's calibration points, then jump straight to the Report page. ----
+            // ---- Export to Report: preserve the input/process calibration values and output type. ----
             maExportToReportBtn.addEventListener('click', function() {
-                const lrv = parseFloat(maLRV.value) || 0;
-                const urv = parseFloat(maURV.value) || 100;
+                const lrv = num(maLRV, 0);
+                const urv = num(maURV, 100);
                 const span = urv - lrv;
                 const unit = (maUnit.value || '').trim();
+                const outputRange = getMaOutputRange();
+                const outputUnit = (maOutUnit.value || '').trim();
                 const points = {};
-                maCalPts.forEach(p => {
-                    points[p] = lrv + (span * p / 100);
-                });
-                const handoff = { lrv, urv, unit, points, savedAt: new Date().toISOString() };
-                try {
-                    localStorage.setItem(MA_HANDOFF_KEY, JSON.stringify(handoff));
-                } catch (e) { /* storage unavailable, still navigate */ }
+                maCalPts.forEach(p => { points[p] = lrv + (span * p / 100); });
+                const handoff = {
+                    lrv, urv, unit,
+                    outputLrv: outputRange.lrv,
+                    outputUrv: outputRange.urv,
+                    outputUnit,
+                    points,
+                    savedAt: new Date().toISOString()
+                };
+                try { localStorage.setItem(MA_HANDOFF_KEY, JSON.stringify(handoff)); } catch (e) {}
                 const moduleSelect = document.getElementById('reportModuleSelect');
-                if (moduleSelect) {
-                    moduleSelect.value = 'field';
-                    moduleSelect.dispatchEvent(new Event('change'));
-                }
+                if (moduleSelect) { moduleSelect.value = 'field'; moduleSelect.dispatchEvent(new Event('change')); }
                 navigateTo('report');
             });
 
