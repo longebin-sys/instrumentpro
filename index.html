@@ -4251,6 +4251,7 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <div class="sub-tab" data-tab="ana-cond">Conductivity</div>
 <div class="sub-tab" data-tab="ana-do">Dissolved O₂</div>
 <div class="sub-tab" data-tab="ana-gas">Gas Detection</div>
+<div class="sub-tab" data-tab="ana-rvp">RVP</div>
 <div class="sub-tab" data-tab="ana-gc">GC</div>
 </div>
 <!-- pH -->
@@ -4343,6 +4344,29 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <div class="result-box"><span>Status</span><span id="gasStatus" style="color:#059669;">✓ Safe</span></div>
 <div class="result-box"><span>Alarm Level</span><span id="gasAlarm">10% LEL</span></div>
 <div style="font-size:0.65rem;color:#64748b;">Alarm levels: LEL 10%, O₂ 19.5%/23.5%, H₂S 10ppm, CO 35ppm</div>
+</div>
+<!-- Reid Vapour Pressure -->
+<div class="sub-panel hidden" id="ana-rvp">
+<div style="font-size:0.65rem;color:#64748b;margin-bottom:8px;">Reid Vapour Pressure (RVP) is the absolute vapour pressure of a petroleum product measured at 37.8°C (100°F) under a fixed vapour/liquid ratio (ASTM D323). Automated field/lab analysers commonly use the mini-method (ASTM D5191) or crude oil method (ASTM D6377) instead, reporting a Dry Vapour Pressure Equivalent (DVPE) that correlates back to classic RVP.</div>
+<div class="row">
+<label>Pressure</label>
+<input id="rvpInput" step="any" style="flex:0.6;" type="number" value="9.0"/>
+<select id="rvpInputUnit" style="flex:0.5;"><option selected="" value="psi">psi</option><option value="kpa">kPa</option><option value="bar">bar</option><option value="kgcm2">kg/cm²</option></select>
+</div>
+<button class="btn btn-sm" id="rvpConvertBtn"><i class="fas fa-exchange-alt"></i> Convert</button>
+<div class="result-box"><span>psi</span><span id="rvpResultPsi">9.00 psi</span></div>
+<div class="result-box"><span>kPa</span><span id="rvpResultKpa">62.05 kPa</span></div>
+<div class="result-box"><span>bar</span><span id="rvpResultBar">0.62 bar</span></div>
+<div class="result-box"><span>kg/cm²</span><span id="rvpResultKgcm2">0.63 kg/cm²</span></div>
+<div style="font-size:0.6rem;color:#94a3b8;">1 psi = 6.89476 kPa = 0.0689476 bar = 0.070307 kg/cm²</div>
+<hr/>
+<div class="card-header" style="margin-bottom:8px;"><i class="fas fa-vial-circle-check"></i><h3 style="font-size:0.85rem;">DVPE (D5191) → RVP (D323) Correlation</h3></div>
+<div style="font-size:0.65rem;color:#64748b;margin-bottom:8px;">Automated mini-method analysers report DVPE, which is converted to a classic-RVP-equivalent value via a linear correlation. The default coefficients are a typical published approximation — confirm the exact correlation against your applicable regulatory body or method (e.g. EPA, EN 13016-1) before using for compliance reporting.</div>
+<div class="row"><label>DVPE</label><input id="rvpDvpe" step="any" type="number" value="9.5"/><span class="chip">psi</span></div>
+<div class="row"><label>Slope (a)</label><input id="rvpSlope" step="any" style="flex:0.5;" type="number" value="0.965"/><label>Intercept (b)</label><input id="rvpIntercept" step="any" style="flex:0.5;" type="number" value="0"/></div>
+<button class="btn btn-sm" id="rvpCorrelateBtn"><i class="fas fa-calculator"></i> Calculate</button>
+<div class="result-box"><span>RVP (D323 equiv.)</span><span id="rvpEquivResult">9.17 psi</span></div>
+<div style="font-size:0.6rem;color:#94a3b8;margin-top:4px;">RVP ≈ a × DVPE + b</div>
 </div>
 <div class="sub-panel hidden" id="ana-gc">
 <div class="tab-scroll" id="gcTabs">
@@ -4835,6 +4859,7 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <div class="tab-scroll" id="levelMainTabs">
 <div class="tab active" data-level="dp">DP Level</div>
 <div class="tab" data-level="radar">Radar Level</div>
+<div class="tab" data-level="strap">Tank Strapping</div>
 </div>
 <div class="level-main-panel" id="level-dp">
 <div class="segmented" id="dpModeSeg">
@@ -4874,6 +4899,34 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <div class="chip">LPG/light hydrocarbons: DC ≈ 1.9-2.0 (marginal — consider GWR)</div>
 <div style="font-size:0.6rem;color:#94a3b8;margin-top:6px;">DC below ~1.9 is generally too low for reliable non-contact radar reflection — a guided-wave or other technology may be needed.</div>
 </div>
+<div class="level-main-panel hidden" id="level-strap">
+<div style="font-size:0.65rem;color:#64748b;margin-bottom:8px;">Converts tank level to volume (or volume to level) for three common tank geometries. Volume→Level uses numeric search so it works for the non-linear shapes too.</div>
+<div class="row">
+<label>Tank Shape</label>
+<select id="strapShape">
+<option value="vertical">Vertical Cylindrical</option>
+<option selected="" value="horizontal">Horizontal Cylindrical</option>
+<option value="spherical">Spherical</option>
+</select>
+</div>
+<div class="row"><label>Diameter</label><input id="strapDiameter" step="any" style="flex:0.6;" type="number" value="96"/><select id="strapDiameterUnit" style="flex:0.5;"><option selected="" value="in">in</option><option value="ft">ft</option><option value="mm">mm</option><option value="cm">cm</option><option value="m">m</option></select></div>
+<div class="row" id="strapLengthRow"><label id="strapLengthLabel">Length</label><input id="strapLength" step="any" type="number" value="240"/></div>
+<div style="font-size:0.6rem;color:#94a3b8;margin:-4px 0 8px 0;" id="strapLengthNote">same unit as diameter</div>
+<div class="segmented" id="strapModeSeg">
+<button data-mode="l2v">Level → Volume</button>
+<button class="active" data-mode="v2l">Volume → Level</button>
+</div>
+<div class="row" id="strapLevelRow"><label>Level</label><input id="strapLevel" step="any" type="number" value="0"/><span class="chip">same unit as diameter</span></div>
+<div class="row" id="strapVolumeRow">
+<label>Volume</label>
+<input id="strapVolume" step="any" style="flex:0.6;" type="number" value="0"/>
+<select id="strapVolumeUnit" style="flex:0.5;"><option selected="" value="usgal">US gal</option><option value="l">L</option><option value="m3">m³</option><option value="bbl">bbl</option><option value="ft3">ft³</option></select>
+</div>
+<button class="btn" id="strapCalcBtn"><i class="fas fa-calculator"></i> Calculate</button>
+<div class="result-box"><span>Level</span><span id="strapLevelResult">0.00 in</span></div>
+<div class="result-box"><span>Volume</span><span id="strapVolumeResult">0.00 US gal</span></div>
+<div class="result-box"><span>Fill %</span><span id="strapPercentResult">0.0 %</span></div>
+</div>
 </div>
 </div>
 <!-- ==========================================================
@@ -4888,6 +4941,7 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <div class="tab" data-flow="coriolis">Coriolis</div>
 <div class="tab" data-flow="mag">Magnetic</div>
 <div class="tab" data-flow="nuclear">Radiometric</div>
+<div class="tab" data-flow="scfm">SCFM/ACFM</div>
 </div>
 <div class="flow-main-panel" id="flow-dp">
 <div style="font-size:0.65rem;color:#64748b;margin-bottom:8px;">For orifice/venturi/DP-type flow elements: Flow is proportional to the <strong>square root</strong> of differential pressure. Set your calibrated DP range and max flow (Qmax) once below.</div>
@@ -4962,6 +5016,34 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <button class="btn" id="nuclearCalcBtn"><i class="fas fa-calculator"></i> Calculate</button>
 <div class="result-box"><span>Density</span><span id="nuclearDensity">0.57 g/cc</span></div>
 <div style="font-size:0.6rem;color:#94a3b8;margin-top:4px;">ρ = −ln(I/I₀) ÷ (μ×x). Isotope choice: Cs-137 (0.662 MeV, 30.17yr half-life) is more common than Co-60 (higher energy, 5.27yr half-life) for routine process gauging.</div>
+</div>
+<div class="flow-main-panel hidden" id="flow-scfm">
+<div style="font-size:0.65rem;color:#64748b;margin-bottom:8px;">Converts gas flow between standard conditions (SCFM — a fixed reference point used for mass-equivalent comparison) and actual conditions (ACFM — the real volumetric flow at line pressure/temperature). Ideal gas law based: ACFM = SCFM × (P<sub>std</sub>÷P<sub>actual</sub>) × (T<sub>actual</sub>÷T<sub>std</sub>).</div>
+<div class="row">
+<label>Standard</label>
+<select id="scfmStandardSelect">
+<option value="14.696,60">14.696 psia / 60°F (US customary)</option>
+<option value="14.696,68">14.696 psia / 68°F (SCFM alt.)</option>
+<option selected="" value="14.5038,32">14.5038 psia / 0°C (32°F, NIST/ISO-ish)</option>
+<option value="custom">Custom...</option>
+</select>
+</div>
+<div class="row"><label>Std P / T</label><input id="scfmStdP" step="any" style="flex:0.6;" type="number" value="14.5038"/><span class="chip">psia</span><input id="scfmStdT" step="any" style="flex:0.6;" type="number" value="32"/><span class="chip">°F</span></div>
+<div class="row"><label>Actual P</label><input id="scfmActualP" step="any" type="number" value="50"/><span class="chip">psig</span></div>
+<div class="row"><label>Actual T</label><input id="scfmActualT" step="any" type="number" value="100"/><span class="chip">°F</span></div>
+<div class="segmented" id="scfmModeSeg">
+<button class="active" data-mode="s2a">SCFM → ACFM</button>
+<button data-mode="a2s">ACFM → SCFM</button>
+</div>
+<div class="row" id="scfmInputRow">
+<label id="scfmInputLabel">SCFM</label>
+<input id="scfmInputVal" step="any" type="number" value="1000"/>
+</div>
+<button class="btn" id="scfmCalcBtn"><i class="fas fa-calculator"></i> Calculate</button>
+<div class="result-box"><span>ACFM</span><span id="scfmAcfmResult">0.00 ACFM</span></div>
+<div class="result-box"><span>SCFM</span><span id="scfmScfmResult">0.00 SCFM</span></div>
+<div class="result-box"><span>Conversion Factor</span><span id="scfmFactorResult">1.0000</span></div>
+<div style="font-size:0.6rem;color:#94a3b8;margin-top:4px;">Actual P is entered as gauge (psig) and converted to absolute using 14.696 psia atmospheric. Absolute temperature uses °R = °F + 459.67.</div>
 </div>
 </div>
 </div>
@@ -6442,6 +6524,7 @@ body.dark #page-references .chip {
 <option>Moisture Analyser</option>
 <option>Gas Chromatograph Analyser</option>
 <option>Dew Point Analyser</option>
+<option>Reid Vapour Analyser</option>
 <option>Deluge Valve</option>
 <option>Fusible Loop</option>
 <option>Foam System Valve / Proportioner</option>
@@ -8169,6 +8252,44 @@ body.dark #page-references .chip {
                 gasAlarm.textContent = alarm;
             });
 
+            // Reid Vapour Pressure (RVP)
+            const rvpInput = document.getElementById('rvpInput');
+            const rvpInputUnit = document.getElementById('rvpInputUnit');
+            const rvpResultPsi = document.getElementById('rvpResultPsi');
+            const rvpResultKpa = document.getElementById('rvpResultKpa');
+            const rvpResultBar = document.getElementById('rvpResultBar');
+            const rvpResultKgcm2 = document.getElementById('rvpResultKgcm2');
+            const RVP_TO_PSI = { psi: 1, kpa: 1 / 6.894757, bar: 1 / 0.0689476, kgcm2: 1 / 0.0703070 };
+
+            function calcRvpConvert() {
+                const val = parseFloat(rvpInput.value) || 0;
+                const psi = val * RVP_TO_PSI[rvpInputUnit.value];
+                rvpResultPsi.textContent = psi.toFixed(2) + ' psi';
+                rvpResultKpa.textContent = (psi * 6.894757).toFixed(2) + ' kPa';
+                rvpResultBar.textContent = (psi * 0.0689476).toFixed(3) + ' bar';
+                rvpResultKgcm2.textContent = (psi * 0.0703070).toFixed(3) + ' kg/cm²';
+            }
+            document.getElementById('rvpConvertBtn').addEventListener('click', calcRvpConvert);
+            rvpInput.addEventListener('input', calcRvpConvert);
+            rvpInputUnit.addEventListener('change', calcRvpConvert);
+            calcRvpConvert();
+
+            const rvpDvpe = document.getElementById('rvpDvpe');
+            const rvpSlope = document.getElementById('rvpSlope');
+            const rvpIntercept = document.getElementById('rvpIntercept');
+            const rvpEquivResult = document.getElementById('rvpEquivResult');
+
+            function calcRvpCorrelate() {
+                const dvpe = parseFloat(rvpDvpe.value) || 0;
+                const a = parseFloat(rvpSlope.value) || 0;
+                const b = parseFloat(rvpIntercept.value) || 0;
+                const rvp = a * dvpe + b;
+                rvpEquivResult.textContent = rvp.toFixed(2) + ' psi';
+            }
+            document.getElementById('rvpCorrelateBtn').addEventListener('click', calcRvpCorrelate);
+            [rvpDvpe, rvpSlope, rvpIntercept].forEach(el => el.addEventListener('input', calcRvpCorrelate));
+            calcRvpCorrelate();
+
             document.getElementById('anaExportBtn').addEventListener('click', function() {
                 const activeTab = document.querySelector('#analyticalTabs .sub-tab.active').dataset.tab;
                 const date = new Date().toLocaleString();
@@ -8183,6 +8304,8 @@ body.dark #page-references .chip {
                     body = `Test: Dissolved Oxygen\nTemperature: ${document.getElementById('doTemp').value} °C\nSalinity: ${document.getElementById('doSalinity').value}\nSaturation: ${doSaturation.textContent}\nConcentration: ${doConcentration.textContent}`;
                 } else if (activeTab === 'ana-gas') {
                     body = `Test: Gas Detection Check\nGas Type: ${gasType.value}\nReading: ${gasInput.value}\nStatus: ${gasStatus.textContent}\nAlarm Level: ${gasAlarm.textContent}`;
+                } else if (activeTab === 'ana-rvp') {
+                    body = `Test: Reid Vapour Pressure (RVP)\nInput: ${rvpInput.value} ${rvpInputUnit.options[rvpInputUnit.selectedIndex].text}\nConverted: ${rvpResultPsi.textContent} / ${rvpResultKpa.textContent} / ${rvpResultBar.textContent} / ${rvpResultKgcm2.textContent}\n----------------------------------------\nDVPE (D5191): ${rvpDvpe.value} psi\nCorrelation: RVP = ${rvpSlope.value} x DVPE + ${rvpIntercept.value}\nRVP (D323 equiv.): ${rvpEquivResult.textContent}`;
                 }
                 const content =
                     `========================================\n` +
@@ -9453,6 +9576,63 @@ body.dark #page-references .chip {
             document.getElementById('nuclearCalcBtn').addEventListener('click', calcNuclear);
             calcNuclear();
 
+            // SCFM/ACFM: ideal-gas correction between standard and actual conditions
+            const scfmStandardSelect = document.getElementById('scfmStandardSelect');
+            const scfmStdP = document.getElementById('scfmStdP');
+            const scfmStdT = document.getElementById('scfmStdT');
+            const scfmActualP = document.getElementById('scfmActualP');
+            const scfmActualT = document.getElementById('scfmActualT');
+            const scfmInputLabel = document.getElementById('scfmInputLabel');
+            const scfmInputVal = document.getElementById('scfmInputVal');
+            const scfmAcfmResult = document.getElementById('scfmAcfmResult');
+            const scfmScfmResult = document.getElementById('scfmScfmResult');
+            const scfmFactorResult = document.getElementById('scfmFactorResult');
+            const ATM_PSIA = 14.696;
+            let scfmMode = 's2a';
+
+            scfmStandardSelect.addEventListener('change', function() {
+                if (this.value === 'custom') return;
+                const [p, t] = this.value.split(',').map(Number);
+                scfmStdP.value = p;
+                scfmStdT.value = t;
+                calcScfm();
+            });
+
+            document.querySelectorAll('#scfmModeSeg button').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('#scfmModeSeg button').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    scfmMode = this.dataset.mode;
+                    scfmInputLabel.textContent = scfmMode === 's2a' ? 'SCFM' : 'ACFM';
+                    calcScfm();
+                });
+            });
+
+            function calcScfm() {
+                const stdPabs = parseFloat(scfmStdP.value) || 0;
+                const stdTabs = (parseFloat(scfmStdT.value) || 0) + 459.67; // °F -> °R
+                const actualPabs = (parseFloat(scfmActualP.value) || 0) + ATM_PSIA; // psig -> psia
+                const actualTabs = (parseFloat(scfmActualT.value) || 0) + 459.67; // °F -> °R
+                const val = parseFloat(scfmInputVal.value) || 0;
+                const factor = (stdPabs && actualTabs) ? (stdPabs / actualPabs) * (actualTabs / stdTabs) : 0;
+
+                let scfm, acfm;
+                if (scfmMode === 's2a') {
+                    scfm = val;
+                    acfm = scfm * factor;
+                } else {
+                    acfm = val;
+                    scfm = factor ? acfm / factor : 0;
+                }
+
+                scfmAcfmResult.textContent = acfm.toFixed(2) + ' ACFM';
+                scfmScfmResult.textContent = scfm.toFixed(2) + ' SCFM';
+                scfmFactorResult.textContent = factor.toFixed(4);
+            }
+            document.getElementById('scfmCalcBtn').addEventListener('click', calcScfm);
+            [scfmStdP, scfmStdT, scfmActualP, scfmActualT, scfmInputVal].forEach(el => el.addEventListener('input', calcScfm));
+            calcScfm();
+
             // =============================================================
             // =============================================================
             // REPORT PAGE MAIN TABS (Field Report / Commissioning)
@@ -9594,6 +9774,139 @@ body.dark #page-references .chip {
             radarBlocking.addEventListener('input', calcRadar);
             radarDistance.addEventListener('input', calcRadar);
             calcRadar();
+
+            // =============================================================
+            // TANK STRAPPING (Level <-> Volume, 3 geometries)
+            // =============================================================
+            const strapShape = document.getElementById('strapShape');
+            const strapDiameter = document.getElementById('strapDiameter');
+            const strapDiameterUnit = document.getElementById('strapDiameterUnit');
+            const strapLengthRow = document.getElementById('strapLengthRow');
+            const strapLengthLabel = document.getElementById('strapLengthLabel');
+            const strapLengthNote = document.getElementById('strapLengthNote');
+            const strapLength = document.getElementById('strapLength');
+            const strapLevelRow = document.getElementById('strapLevelRow');
+            const strapVolumeRow = document.getElementById('strapVolumeRow');
+            const strapLevel = document.getElementById('strapLevel');
+            const strapVolume = document.getElementById('strapVolume');
+            const strapVolumeUnit = document.getElementById('strapVolumeUnit');
+            const strapLevelResult = document.getElementById('strapLevelResult');
+            const strapVolumeResult = document.getElementById('strapVolumeResult');
+            const strapPercentResult = document.getElementById('strapPercentResult');
+            let strapMode = 'v2l';
+
+            const STRAP_LEN_TO_M = { in: 0.0254, ft: 0.3048, mm: 0.001, cm: 0.01, m: 1 };
+            const STRAP_M3_TO_VOL = { usgal: 264.172, l: 1000, m3: 1, bbl: 6.28981, ft3: 35.3147 };
+
+            function strapUpdateShapeFields() {
+                const shape = strapShape.value;
+                if (shape === 'vertical') {
+                    strapLengthRow.classList.remove('hidden');
+                    strapLengthNote.classList.remove('hidden');
+                    strapLengthLabel.textContent = 'Height';
+                } else if (shape === 'horizontal') {
+                    strapLengthRow.classList.remove('hidden');
+                    strapLengthNote.classList.remove('hidden');
+                    strapLengthLabel.textContent = 'Length';
+                } else {
+                    strapLengthRow.classList.add('hidden');
+                    strapLengthNote.classList.add('hidden');
+                }
+            }
+
+            // Forward: volume (m3) at a given level (m) for the selected shape.
+            // D, L are in meters; level is in meters, clamped to [0, max fill height].
+            function strapVolumeAtLevel(shape, level, D, L) {
+                const r = D / 2;
+                if (shape === 'vertical') {
+                    const h = Math.max(0, Math.min(level, L));
+                    return Math.PI / 4 * D * D * h;
+                }
+                if (shape === 'horizontal') {
+                    const h = Math.max(0, Math.min(level, D));
+                    if (h <= 0) return 0;
+                    if (h >= D) return Math.PI * r * r * L;
+                    const theta = 2 * Math.acos((r - h) / r);
+                    const area = r * r * (theta - Math.sin(theta)) / 2;
+                    return area * L;
+                }
+                // spherical cap
+                const h = Math.max(0, Math.min(level, D));
+                if (h <= 0) return 0;
+                if (h >= D) return Math.PI * D * D * D / 6;
+                return Math.PI * h * h * (3 * r - h) / 3;
+            }
+
+            function strapMaxLevel(shape, D, L) {
+                if (shape === 'vertical') return L;
+                return D; // horizontal cylinder and sphere both fill to the diameter
+            }
+
+            // Inverse: numeric search (bisection) for level given a target volume.
+            function strapLevelAtVolume(shape, targetVol, D, L) {
+                const maxLevel = strapMaxLevel(shape, D, L);
+                const maxVol = strapVolumeAtLevel(shape, maxLevel, D, L);
+                if (targetVol <= 0) return 0;
+                if (targetVol >= maxVol) return maxLevel;
+                let lo = 0, hi = maxLevel;
+                for (let i = 0; i < 60; i++) {
+                    const mid = (lo + hi) / 2;
+                    const v = strapVolumeAtLevel(shape, mid, D, L);
+                    if (v < targetVol) lo = mid; else hi = mid;
+                }
+                return (lo + hi) / 2;
+            }
+
+            document.querySelectorAll('#strapModeSeg button').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('#strapModeSeg button').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    strapMode = this.dataset.mode;
+                    strapLevelRow.classList.toggle('hidden', strapMode !== 'l2v');
+                    strapVolumeRow.classList.toggle('hidden', strapMode !== 'v2l');
+                    calcStrap();
+                });
+            });
+            strapLevelRow.classList.toggle('hidden', strapMode !== 'l2v');
+            strapVolumeRow.classList.toggle('hidden', strapMode !== 'v2l');
+
+            strapShape.addEventListener('change', function() { strapUpdateShapeFields(); calcStrap(); });
+            strapUpdateShapeFields();
+
+            function calcStrap() {
+                const shape = strapShape.value;
+                const lenUnit = strapDiameterUnit.value; // length row shares diameter's unit
+                const D = (parseFloat(strapDiameter.value) || 0) * STRAP_LEN_TO_M[lenUnit];
+                const L = (parseFloat(strapLength.value) || 0) * STRAP_LEN_TO_M[lenUnit];
+                const volFactor = STRAP_M3_TO_VOL[strapVolumeUnit.value];
+                const maxLevel = strapMaxLevel(shape, D, L);
+                const maxVolM3 = strapVolumeAtLevel(shape, maxLevel, D, L);
+
+                let levelM, volM3;
+                if (strapMode === 'l2v') {
+                    levelM = (parseFloat(strapLevel.value) || 0) * STRAP_LEN_TO_M[lenUnit];
+                    levelM = Math.max(0, Math.min(levelM, maxLevel));
+                    volM3 = strapVolumeAtLevel(shape, levelM, D, L);
+                } else {
+                    const targetVolM3 = (parseFloat(strapVolume.value) || 0) / volFactor;
+                    volM3 = Math.max(0, targetVolM3);
+                    levelM = strapLevelAtVolume(shape, volM3, D, L);
+                }
+
+                const levelOut = levelM / STRAP_LEN_TO_M[lenUnit];
+                const volOut = volM3 * volFactor;
+                const percent = maxLevel ? (levelM / maxLevel) * 100 : 0;
+
+                strapLevelResult.textContent = levelOut.toFixed(2) + ' ' + lenUnit;
+                strapVolumeResult.textContent = volOut.toFixed(2) + ' ' + strapVolumeUnit.options[strapVolumeUnit.selectedIndex].text;
+                strapPercentResult.textContent = percent.toFixed(1) + ' %';
+            }
+            document.getElementById('strapCalcBtn').addEventListener('click', calcStrap);
+            [strapDiameter, strapDiameterUnit, strapLength, strapLevel, strapVolume, strapVolumeUnit].forEach(el => {
+                el.addEventListener('input', calcStrap);
+                el.addEventListener('change', calcStrap);
+            });
+            calcStrap();
 
             // =============================================================
             // CALIBRATION MAIN TABS (5-Point)
@@ -11566,6 +11879,18 @@ var DEVICE_CONFIG={
    fields:[
     ['Technology','select','Chilled Mirror,Metal Oxide,Al2O3,Other'],['Range','text','°C dew point'],['Reference method','text','Reference analyser / generator'],['Sample pressure','text','bar / psi'],['Sample flow','text','L/min'],['Reference standard ID','text','ID / certificate']
    ], tests:['Sample system condition','Pressure / flow verified','Zero/reference check','Reference comparison','Alarm setpoint','Output / DCS indication','Return to service']
+ },
+ 'Reid Vapour Analyser':{
+   icon:'fa-gas-pump', mode:'analytical', description:'Reid Vapour Pressure (RVP) analyser field verification using a certified reference sample, covering classic Reid (ASTM D323), automated mini-method (ASTM D5191) or crude oil (ASTM D6377) technologies.',
+   units:'psi,kPa,bar', range:'e.g. 0-15 psi RVP', tolerance:'±0.1-0.2 psi of certified reference sample (typical) - confirm OEM/method spec',
+   fields:[
+    ['Technology / method','select','ASTM D323 (Classic Reid),ASTM D5191 (Mini Method / DVPE),ASTM D6377 (Crude Oil VPCR4),Other'],
+    ['Sample type','text','Gasoline / crude oil / NGL / other'],
+    ['Test temperature','text','37.8°C (100°F) or approved method temperature'],
+    ['Vapour/liquid ratio','text','e.g. 4:1 (D323) or as per method'],
+    ['Bath / chamber temperature control','text','°C / °F, verified stability'],
+    ['Reference sample / standard ID','text','Certified reference sample / certificate ID']
+   ], tests:['Sample conditioning / chilling','Sample injection / chamber loading','Test temperature stabilised','Reference sample response','Result vs certified value','Repeatability check','Output / DCS indication','Return to service']
  },
  'Conductivity Analyser':{
    icon:'fa-bolt-lightning', mode:'analytical', description:'Conductivity analyser verification using certified conductivity standards and cell constant check.',
