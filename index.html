@@ -4372,7 +4372,7 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 
 
 
-<div class="sub-panel active" id="conv-pressure-group"><div class="sub-tabs converter-nested-tabs"><div class="sub-tab active" data-tab="conv-pressure">Pressure</div><div class="sub-tab" data-tab="conv-vacuum">Vacuum</div></div><div class="sub-panel active" id="conv-pressure">
+<div class="sub-panel active" id="conv-pressure-group"><div class="sub-tabs converter-nested-tabs"><div class="sub-tab active" data-tab="conv-pressure">Pressure</div></div><div class="sub-panel active" id="conv-pressure">
 <div class="row">
 <label>From</label>
 <select id="fromUnit"><option value="psi">PSI</option><option selected="" value="bar">bar</option><option value="kpa">kPa</option><option value="mpa">MPa</option><option value="atm">atm</option><option value="inh2o">inH₂O</option><option value="inhg">inHg</option><option value="mmhg">mmHg</option><option value="mmh2o">mmH₂O</option><option value="torr">Torr</option><option value="ksi">ksi</option></select>
@@ -4383,16 +4383,21 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <select id="toUnit"><option value="psi">PSI</option><option value="bar">bar</option><option selected="" value="kpa">kPa</option><option value="mpa">MPa</option><option value="atm">atm</option><option value="inh2o">inH₂O</option><option value="inhg">inHg</option><option value="mmhg">mmHg</option><option value="mmh2o">mmH₂O</option><option value="torr">Torr</option><option value="ksi">ksi</option></select>
 <button class="btn" id="convertBtn"><i class="fas fa-sync-alt"></i> Convert</button>
 </div>
+<div class="row">
+<label>Reference</label>
+<select id="pressureRefMode">
+<option value="gauge-gauge" selected="">Gauge → Gauge</option>
+<option value="gauge-absolute">Gauge → Absolute</option>
+<option value="absolute-gauge">Absolute → Gauge</option>
+<option value="absolute-absolute">Absolute → Absolute</option>
+</select>
+</div>
+<div class="row" id="pressureAtmRow">
+<label>Local Atm.</label>
+<input id="atmPressure" step="any" type="number" value="101.325"/>
+<span class="chip">kPa</span>
+</div>
 <div class="result-box"><span>Result</span><span id="pressureResult">100.000 kPa</span></div>
-</div><div class="sub-panel hidden" id="conv-vacuum">
-<div class="card-header" style="margin-bottom:8px;"><i class="fas fa-gauge-high"></i><h3 style="font-size:0.85rem;">Vacuum / Pressure Units</h3><span>Gauge units</span></div>
-<div class="row"><label>From</label><select id="vacuumConvFrom">
-<option value="kpa">kPa</option><option value="bar">bar</option><option value="psi">psi</option><option selected="" value="inhg">inHg</option><option value="mmhg">mmHg</option><option value="inh2o">inH₂O</option><option value="mmh2o">mmH₂O</option>
-</select><input id="vacuumConvValue" step="any" type="number" value="29.92"/></div>
-<div class="row"><label>To</label><select id="vacuumConvTo">
-<option selected="" value="kpa">kPa</option><option value="bar">bar</option><option value="psi">psi</option><option value="inhg">inHg</option><option value="mmhg">mmHg</option><option value="inh2o">inH₂O</option><option value="mmh2o">mmH₂O</option>
-</select><button class="btn" id="vacuumConvBtn">Convert</button></div>
-<div class="result-box"><span>Result</span><span id="vacuumConvResult">—</span></div>
 </div></div><div class="sub-panel hidden" id="conv-temperature-group"><div class="sub-tabs converter-nested-tabs"><div class="sub-tab active" data-tab="conv-temp">Temperature</div><div class="sub-tab" data-tab="conv-rtd">RTD</div><div class="sub-tab" data-tab="conv-tc">Thermocouple</div></div><div class="sub-panel active" id="conv-temp">
 <div class="row">
 <label>°C</label>
@@ -5037,13 +5042,31 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <div class="sub-panel hidden" id="elec-unit-conversion">
 <div class="card-header" style="margin-bottom:8px;"><i class="fas fa-bolt"></i><h3 style="font-size:0.85rem;">Electrical Unit Conversion</h3><span>Units only</span></div>
 <div class="row"><label>Value</label><input id="elecUnitConvValue" step="any" type="number" value="1000"/></div>
-<div class="row"><label>From</label><select id="elecUnitConvFrom"><option value="v">V</option><option value="mv">mV</option><option value="a">A</option><option selected="" value="ma">mA</option><option value="ohm">Ω</option><option value="kohm">kΩ</option><option value="mohm">MΩ</option><option value="hz">Hz</option><option value="khz">kHz</option></select></div>
-<div class="row"><label>To</label><select id="elecUnitConvTo"><option value="v">V</option><option value="mv">mV</option><option value="a">A</option><option value="ma">mA</option><option selected="" value="ohm">Ω</option><option value="kohm">kΩ</option><option value="mohm">MΩ</option><option value="hz">Hz</option><option value="khz">kHz</option></select><button class="btn" id="elecUnitConvBtn">Convert</button></div>
+<div class="row"><label>From</label><select id="elecUnitConvFrom">
+<optgroup label="Voltage"><option value="kv">kV</option><option value="v">V</option><option value="mv">mV</option><option value="uv">µV</option></optgroup>
+<optgroup label="Current"><option value="ka">kA</option><option value="a">A</option><option selected="" value="ma">mA</option><option value="ua">µA</option></optgroup>
+<optgroup label="Resistance"><option value="gohm">GΩ</option><option value="mohm">MΩ</option><option value="kohm">kΩ</option><option value="ohm">Ω</option></optgroup>
+<optgroup label="Frequency"><option value="mhz">MHz</option><option value="khz">kHz</option><option value="hz">Hz</option></optgroup>
+<optgroup label="Power"><option value="mw_p">MW</option><option value="kw">kW</option><option value="w">W</option><option value="hp">HP</option><option value="btuh">BTU/hr</option></optgroup>
+<optgroup label="Energy"><option value="mj">MJ</option><option value="kj">kJ</option><option value="j">J</option><option value="kwh">kWh</option><option value="wh">Wh</option><option value="btu">BTU</option></optgroup>
+<optgroup label="Capacitance"><option value="f">F</option><option value="mf">mF</option><option value="uf">µF</option><option value="nf">nF</option><option value="pf">pF</option></optgroup>
+<optgroup label="Inductance"><option value="h">H</option><option value="mh">mH</option><option value="uh">µH</option></optgroup>
+</select></div>
+<div class="row"><label>To</label><select id="elecUnitConvTo">
+<optgroup label="Voltage"><option value="kv">kV</option><option value="v">V</option><option value="mv">mV</option><option value="uv">µV</option></optgroup>
+<optgroup label="Current"><option value="ka">kA</option><option value="a">A</option><option value="ma">mA</option><option value="ua">µA</option></optgroup>
+<optgroup label="Resistance"><option value="gohm">GΩ</option><option value="mohm">MΩ</option><option selected="" value="kohm">kΩ</option><option value="ohm">Ω</option></optgroup>
+<optgroup label="Frequency"><option value="mhz">MHz</option><option value="khz">kHz</option><option value="hz">Hz</option></optgroup>
+<optgroup label="Power"><option value="mw_p">MW</option><option value="kw">kW</option><option value="w">W</option><option value="hp">HP</option><option value="btuh">BTU/hr</option></optgroup>
+<optgroup label="Energy"><option value="mj">MJ</option><option value="kj">kJ</option><option value="j">J</option><option value="kwh">kWh</option><option value="wh">Wh</option><option value="btu">BTU</option></optgroup>
+<optgroup label="Capacitance"><option value="f">F</option><option value="mf">mF</option><option value="uf">µF</option><option value="nf">nF</option><option value="pf">pF</option></optgroup>
+<optgroup label="Inductance"><option value="h">H</option><option value="mh">mH</option><option value="uh">µH</option></optgroup>
+</select><button class="btn" id="elecUnitConvBtn">Convert</button></div>
 <div class="result-box"><span>Result</span><span id="elecUnitConvResult">—</span></div>
 </div><div class="sub-panel hidden" id="elec-power-conversion">
 <div class="card-header" style="margin-bottom:8px;"><i class="fas fa-plug"></i><h3 style="font-size:0.85rem;">Power Conversion</h3><span>Electrical</span></div>
-<div class="row"><label>From</label><select id="powerConvFrom"><option value="w">W</option><option selected="" value="kw">kW</option><option value="mw">MW</option><option value="hp">HP</option></select><input id="powerConvValue" step="any" type="number" value="100"/></div>
-<div class="row"><label>To</label><select id="powerConvTo"><option value="w">W</option><option value="kw">kW</option><option value="mw">MW</option><option selected="" value="hp">HP</option></select><button class="btn" id="powerConvBtn">Convert</button></div>
+<div class="row"><label>From</label><select id="powerConvFrom"><option value="w">W</option><option selected="" value="kw">kW</option><option value="mw">MW</option><option value="gw">GW</option><option value="hp">HP</option><option value="btuh">BTU/hr</option></select><input id="powerConvValue" step="any" type="number" value="100"/></div>
+<div class="row"><label>To</label><select id="powerConvTo"><option value="w">W</option><option value="kw">kW</option><option value="mw">MW</option><option value="gw">GW</option><option selected="" value="hp">HP</option><option value="btuh">BTU/hr</option></select><button class="btn" id="powerConvBtn">Convert</button></div>
 <div class="result-box"><span>Result</span><span id="powerConvResult">—</span></div>
 </div></div>
 </div>
@@ -7110,10 +7133,14 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
                 on('levelConvBtn',()=>set('actualLevelConvResult',(v('levelPctConvValue')/100*v('tankHeightConvValue')).toFixed(3)+' m'));
 
                 const eUnits={
-                    v:[1,'voltage'],mv:[0.001,'voltage'],
-                    a:[1,'current'],ma:[0.001,'current'],
-                    ohm:[1,'resistance'],kohm:[1000,'resistance'],mohm:[1e6,'resistance'],
-                    hz:[1,'frequency'],khz:[1000,'frequency']
+                    kv:[1000,'voltage'],v:[1,'voltage'],mv:[0.001,'voltage'],uv:[0.000001,'voltage'],
+                    ka:[1000,'current'],a:[1,'current'],ma:[0.001,'current'],ua:[0.000001,'current'],
+                    gohm:[1e9,'resistance'],mohm:[1e6,'resistance'],kohm:[1000,'resistance'],ohm:[1,'resistance'],
+                    mhz:[1e6,'frequency'],khz:[1000,'frequency'],hz:[1,'frequency'],
+                    mw_p:[1e6,'power'],kw:[1000,'power'],w:[1,'power'],hp:[745.699871582,'power'],btuh:[0.29307107,'power'],
+                    mj:[1e6,'energy'],kj:[1000,'energy'],j:[1,'energy'],kwh:[3.6e6,'energy'],wh:[3600,'energy'],btu:[1055.05585,'energy'],
+                    f:[1,'capacitance'],mf:[0.001,'capacitance'],uf:[0.000001,'capacitance'],nf:[1e-9,'capacitance'],pf:[1e-12,'capacitance'],
+                    h:[1,'inductance'],mh:[0.001,'inductance'],uh:[0.000001,'inductance']
                 };
                 on('elecUnitConvBtn',()=>{
                     const f=document.getElementById('elecUnitConvFrom').value,t=document.getElementById('elecUnitConvTo').value;
@@ -7121,16 +7148,10 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
                     set('elecUnitConvResult',(v('elecUnitConvValue')*eUnits[f][0]/eUnits[t][0]).toFixed(6)+' '+document.getElementById('elecUnitConvTo').selectedOptions[0].text);
                 });
 
-                const powerF={w:1,kw:1000,mw:1e6,hp:745.699871582};
+                const powerF={w:1,kw:1000,mw:1e6,gw:1e9,hp:745.699871582,btuh:0.29307107};
                 on('powerConvBtn',()=>{
                     const f=document.getElementById('powerConvFrom').value,t=document.getElementById('powerConvTo').value;
                     set('powerConvResult',(v('powerConvValue')*powerF[f]/powerF[t]).toFixed(4)+' '+document.getElementById('powerConvTo').selectedOptions[0].text);
-                });
-
-                const pressureF={kpa:0.01,bar:1,psi:0.0689475729,inhg:0.0338638816,mmhg:0.00133322368,inh2o:0.0024884,mmh2o:0.0000980665};
-                on('vacuumConvBtn',()=>{
-                    const f=document.getElementById('vacuumConvFrom').value,t=document.getElementById('vacuumConvTo').value;
-                    set('vacuumConvResult',(v('vacuumConvValue')*pressureF[f]/pressureF[t]).toFixed(5)+' '+document.getElementById('vacuumConvTo').selectedOptions[0].text);
                 });
 
                 const vibF={ms2:[1,'accel'],g:[9.80665,'accel'],mms:[1,'velocity'],ips:[25.4,'velocity']};
@@ -7162,19 +7183,30 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
             const inputVal = document.getElementById('inputVal');
             const pressureResult = document.getElementById('pressureResult');
             const convertBtn = document.getElementById('convertBtn');
+            const pressureRefMode = document.getElementById('pressureRefMode');
+            const atmPressure = document.getElementById('atmPressure');
 
             function convertPressure() {
                 const val = parseFloat(inputVal.value) || 0;
                 const from = fromUnit.value;
                 const to = toUnit.value;
-                const inBar = val * toBar[from];
+                let inBar = val * toBar[from];
+
+                const [fromRef, toRef] = pressureRefMode.value.split('-');
+                const atmBar = (parseFloat(atmPressure.value) || 101.325) * toBar.kpa;
+                if (fromRef === 'gauge' && toRef === 'absolute') inBar += atmBar;
+                if (fromRef === 'absolute' && toRef === 'gauge') inBar -= atmBar;
+
                 const result = inBar / toBar[to];
-                pressureResult.textContent = result.toFixed(4) + ' ' + toUnit.options[toUnit.selectedIndex].text;
+                const refLabel = toRef === 'absolute' ? ' abs' : ' g';
+                pressureResult.textContent = result.toFixed(4) + ' ' + toUnit.options[toUnit.selectedIndex].text + refLabel;
             }
             convertBtn.addEventListener('click', convertPressure);
             fromUnit.addEventListener('change', convertPressure);
             toUnit.addEventListener('change', convertPressure);
             inputVal.addEventListener('input', convertPressure);
+            pressureRefMode.addEventListener('change', convertPressure);
+            atmPressure.addEventListener('input', convertPressure);
             convertPressure();
 
             // =============================================================
@@ -10535,6 +10567,33 @@ body.dark #reportpanel-loopcheck .table-wrap tbody td {
     background: #1a2833 !important;
     border-color: #2d414b !important;
     color: #d8e3e8;
+}
+body.dark #reportpanel-loopcheck .card:nth-of-type(4) .row {
+    background: #17232d !important;
+    border-color: #2d414b !important;
+}
+body.dark #reportpanel-loopcheck #loopCheckPreview {
+    background: #111c27 !important;
+    border-color: #2d414b !important;
+    color: #d8e3e8 !important;
+}
+body.dark #reportpanel-loopcheck .card-header > span {
+    background: #223140 !important;
+    color: #9fb0bf !important;
+}
+body.dark #reportpanel-loopcheck > .card:first-child .card-header > span {
+    background: #3a3212 !important;
+    color: #e8c766 !important;
+}
+body.dark #reportpanel-loopcheck .loop-check-item::before {
+    background: #223140 !important;
+    color: #9fb0bf !important;
+}
+body.dark #reportpanel-loopcheck .row > label {
+    color: #9fb0bf !important;
+}
+body.dark #reportpanel-loopcheck .table-wrap thead th {
+    color: #8ea0af !important;
 }
 </style>
 <style id="loopcheck-top-form-compact">
