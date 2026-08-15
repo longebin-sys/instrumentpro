@@ -3655,6 +3655,181 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
   }
 }
 </style>
+<style>
+/* Calibration range row: keep the engineering-unit selector wide enough to
+   display the complete unit on phone screens. */
+.cal-range-row{
+    display:grid!important;
+    grid-template-columns:52px minmax(52px,.8fr) 16px minmax(52px,.8fr) minmax(118px,1.2fr) 42px!important;
+    gap:8px!important;
+    align-items:center!important;
+    flex-wrap:nowrap!important;
+}
+.cal-range-row > label{
+    min-width:0!important;
+    white-space:nowrap!important;
+}
+.cal-range-row > input,
+.cal-range-row > select,
+.cal-range-row > .btn{
+    width:100%!important;
+    min-width:0!important;
+    max-width:none!important;
+    box-sizing:border-box!important;
+}
+.cal-range-row > span{
+    text-align:center;
+    white-space:nowrap;
+}
+@media (max-width:420px){
+    .cal-range-row{
+        grid-template-columns:48px minmax(48px,.72fr) 14px minmax(48px,.72fr) minmax(112px,1.25fr) 40px!important;
+        gap:6px!important;
+    }
+    .cal-range-row > input,
+    .cal-range-row > select{
+        padding-left:10px!important;
+        padding-right:8px!important;
+    }
+    .cal-range-row #calUnit{
+        font-size:.78rem!important;
+        text-overflow:clip!important;
+    }
+    .cal-range-row #calUpdateBtn{
+        padding-left:0!important;
+        padding-right:0!important;
+    }
+}
+</style>
+
+<style id="instrumentpro-range-equal-spacing">
+/* Mobile calibration Range row: balanced controls with room for values up to 10000. */
+.calibration-range-row {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) minmax(0, 1fr) !important;
+    gap: 8px !important;
+    align-items: center !important;
+}
+.calibration-range-row > input,
+.calibration-range-row > select {
+    width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+}
+.calibration-range-row input[type="number"] {
+    font-variant-numeric: tabular-nums;
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+}
+.calibration-range-row select {
+    padding-left: 14px !important;
+    padding-right: 30px !important;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.calibration-range-row .range-to {
+    width: auto !important;
+    min-width: 18px !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+}
+@media (max-width: 480px) {
+    .calibration-range-row {
+        grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) minmax(0, 1fr) !important;
+        gap: 6px !important;
+    }
+    .calibration-range-row input[type="number"],
+    .calibration-range-row select {
+        font-size: 0.95rem !important;
+    }
+}
+</style>
+
+<style id="instrumentpro-cal-range-final">
+/* Calibration Range row — keep LRV/URV readable and move the unit selector toward the right edge. */
+.cal-range-row {
+    display: grid !important;
+    grid-template-columns: 58px minmax(78px, 1fr) 18px minmax(78px, 1fr) minmax(78px, 0.95fr) 48px !important;
+    gap: 6px !important;
+    align-items: center !important;
+}
+.cal-range-row > label {
+    min-width: 0 !important;
+    margin: 0 !important;
+}
+.cal-range-row > input[type="number"],
+.cal-range-row > select {
+    width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+    flex: none !important;
+}
+.cal-range-row > input[type="number"] {
+    font-variant-numeric: tabular-nums;
+    padding-left: 12px !important;
+    padding-right: 10px !important;
+}
+.cal-range-row > span {
+    text-align: center !important;
+    white-space: nowrap !important;
+}
+.cal-range-row > select {
+    padding-left: 10px !important;
+    padding-right: 26px !important;
+    font-size: 0.9rem !important;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.cal-range-row > button {
+    width: 48px !important;
+    min-width: 48px !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    justify-self: end !important;
+}
+@media (max-width: 480px) {
+    .cal-range-row {
+        grid-template-columns: 52px minmax(76px, 1fr) 16px minmax(76px, 1fr) minmax(76px, 0.9fr) 42px !important;
+        gap: 4px !important;
+    }
+    .cal-range-row > input[type="number"] {
+        font-size: 0.92rem !important;
+        padding-left: 10px !important;
+        padding-right: 8px !important;
+    }
+    .cal-range-row > select {
+        font-size: 0.84rem !important;
+        padding-left: 8px !important;
+        padding-right: 22px !important;
+    }
+    .cal-range-row > button {
+        width: 42px !important;
+        min-width: 42px !important;
+    }
+}
+</style>
+
+<style id="instrumentpro-range-unit-wider">
+.cal-range-row {
+    grid-template-columns: 52px minmax(76px, 1fr) 16px minmax(76px, 1fr) minmax(105px, 1.35fr) 42px !important;
+}
+@media (max-width: 480px) {
+    .cal-range-row {
+        grid-template-columns: 52px minmax(76px, 1fr) 16px minmax(76px, 1fr) minmax(105px, 1.35fr) 42px !important;
+    }
+}
+</style>
+
+<style id="instrumentpro-refresh-moved">
+.cal-range-row {
+    grid-template-columns: 52px minmax(76px, 1fr) 16px minmax(76px, 1fr) minmax(105px, 1.35fr) !important;
+}
+.cal-range-row > select {
+    justify-self: end !important;
+}
+</style>
 </head>
 <body>
 <script id="ip-draft-utils">
@@ -4362,6 +4537,18 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
                             </optgroup>
                         </select>
                     </div>
+                    <div class="row">
+                        <label>Relationship</label>
+                        <select id="maRelationship" style="flex:0.7;">
+                            <option value="auto" selected>Automatic</option>
+                            <option value="linear">Linear</option>
+                            <option value="sqrt">Square Root (DP → Flow)</option>
+                        </select>
+                    </div>
+                    <div id="maRelationshipNote" style="display:none;font-size:0.65rem;color:#64748b;margin:-2px 0 8px;">
+                        Square-root scaling is active because the input is pressure/DP and the output is flow.
+                    </div>
+
 
                     <div class="card-header mt-1" style="border-top:1px solid rgba(148,163,184,.25);padding-top:8px;"><i class="fas fa-list-check"></i><h3 style="font-size:.8rem;">5 Test Points</h3></div>
                     <div id="maCalPointsContainer" class="cal-points-grid"></div>
@@ -4388,9 +4575,9 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
                             <option value="pt1000">Pt1000</option>
                         </select>
                     </div>
-                    <div class="row">
+                    <div class="row calibration-range-row">
                         <label>Range</label>
-                        <input type="number" id="rtdRangeLow" value="0" step="any" style="flex:0.5;" /><span>to</span>
+                        <input type="number" id="rtdRangeLow" value="0" step="any" style="flex:0.5;" /><span class="range-to">to</span>
                         <input type="number" id="rtdRangeHigh" value="100" step="any" style="flex:0.5;" /><span class="chip">°C</span>
                     </div>
                     <div class="row">
@@ -4488,16 +4675,16 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
                         </select>
                     </div>
                     <div class="row"><label>Tag</label><input type="text" id="calTag" placeholder="PT-101" /></div>
-                    <div class="row">
+                    <div class="row cal-range-row">
                         <label>Range</label>
-                        <input type="number" id="calLow" value="0" step="any" style="flex:0.5;" />
+                        <input type="number" id="calLow" value="0" step="any" />
                         <span>to</span>
-                        <input type="number" id="calHigh" value="100" step="any" style="flex:0.5;" />
-                        <select id="calUnit" style="flex:0.6;"></select>
-                        <button class="btn btn-sm" id="calUpdateBtn"><i class="fas fa-sync"></i></button>
+                        <input type="number" id="calHigh" value="100" step="any" />
+                        <select id="calUnit"></select>
+                        
                     </div>
                     <div class="row"><label>Tolerance</label><input type="number" id="calTolerance" value="0.1" step="0.01" style="flex:0.4;" /><span class="chip" id="calToleranceUnit">% of span</span></div>
-                    <div style="font-size:0.65rem;color:#64748b;margin-bottom:6px;" id="calInstructions">Enter the <strong>actual</strong> mA reading measured at each test point — error is calculated from ideal vs. actual.</div>
+                    <div style="font-size:0.65rem;color:#64748b;margin-bottom:6px;" id="calInstructions">Enter the <strong>actual</strong> measured value at each test point in the selected engineering unit — error is calculated from ideal vs. actual.</div>
                     <div id="calLiveBar" class="row hidden" style="background:#f0fdf4;border-radius:16px;padding:8px 12px;">
                         <i class="fas fa-satellite-dish" style="color:#059669;"></i>
                         <span style="font-size:0.75rem;flex:1;">Live: <strong id="calLiveValue">—</strong></span>
@@ -4508,7 +4695,8 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
                         <span class="badge badge-pass" id="calPassFail"><i class="fas fa-check"></i> Pass</span>
                         <span class="chip" id="calErrorDisplay"><i class="fas fa-percent"></i> Max error: 0.00%</span>
                     </div>
-                    <button class="btn w-full mt-1" id="calExportBtn" style="justify-content:center;"><i class="fas fa-download"></i> Export as .txt</button>
+                    <button style="width:100%; margin-bottom:10px; justify-content:center;" class="btn btn-sm" id="calUpdateBtn" aria-label="Update range"><i class="fas fa-sync"></i></button>
+<button class="btn w-full mt-1" id="calExportBtn" style="justify-content:center;"><i class="fas fa-download"></i> Export as .txt</button>
                 </div>
 
             </div>
@@ -4553,7 +4741,7 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
                     <div class="result-box"><span>Level</span><span id="radarLevel">100.00 in</span></div>
                     <div class="result-box"><span>Level %</span><span id="radarPercent">83.3 %</span></div>
                     <div class="result-box"><span>mA Equivalent</span><span id="radarMa">17.33 mA</span></div>
-                    <div id="radarBlockWarning" class="hidden" style="background:#fee2e2;color:#991b1b;padding:8px 12px;border-radius:12px;font-size:0.7rem;margin-top:4px;">⚠️ Measured distance is within the blocking distance — reading is unreliable in this zone.</div>
+                    <div id="radarBlockWarning" class="hidden" style="padding:8px 12px;border-radius:12px;font-size:0.7rem;margin-top:4px;font-weight:600;"></div>
                     <hr />
                     <div><strong>Dielectric Constant Reference</strong></div>
                     <div style="font-size:0.65rem;color:#64748b;margin:4px 0 8px 0;">Non-contact radar needs a minimum reflectivity to get a clean echo — very low dielectric products are harder to see, and guided-wave radar (GWR) handles them better than non-contact.</div>
@@ -7009,9 +7197,61 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
                 if (u === 'mV') return { lrv: 0, urv: 1000 };
                 if (u === 'V') return { lrv: 0, urv: 10 };
 
-                // For an engineering-unit output, use the same numeric process span
-                // and change only the displayed engineering unit.
+                // Engineering-unit output uses the same numeric span as the
+                // process range because there is intentionally no second LRV/URV.
                 return { lrv: num(maLRV, 0), urv: num(maURV, 100) };
+            }
+
+            function isPressureUnit(unit) {
+                return ['kPa','MPa','bar','mbar','psi','inH2O','mmHg','atm'].includes(unit);
+            }
+
+            function isFlowUnit(unit) {
+                return ['m³/h','L/min','L/s','GPM','kg/h'].includes(unit);
+            }
+
+            function getMaRelationship() {
+                const selected = document.getElementById('maRelationship')?.value || 'auto';
+                if (selected === 'sqrt') return 'sqrt';
+                if (selected === 'linear') return 'linear';
+
+                // Automatic best-practice behavior for DP/pressure flow:
+                // pressure/DP input + flow output => square-root relationship.
+                return (isPressureUnit(maUnit.value) && isFlowUnit(maOutUnit.value))
+                    ? 'sqrt'
+                    : 'linear';
+            }
+
+            function updateMaRelationshipUI() {
+                const relationship = getMaRelationship();
+                const select = document.getElementById('maRelationship');
+                const note = document.getElementById('maRelationshipNote');
+
+                if (select && select.value === 'auto') {
+                    select.title = relationship === 'sqrt'
+                        ? 'Automatic: pressure/DP to flow uses square-root scaling'
+                        : 'Automatic: linear scaling';
+                }
+                if (note) note.style.display = relationship === 'sqrt' ? 'block' : 'none';
+            }
+
+            function outputFractionFromInputFraction(p) {
+                const relationship = getMaRelationship();
+                if (relationship === 'sqrt') {
+                    // DP is proportional to Q², therefore Q is proportional to √DP.
+                    return Math.sqrt(Math.max(0, Math.min(1, p)));
+                }
+                return p;
+            }
+
+            function inputFractionFromOutputFraction(p) {
+                const relationship = getMaRelationship();
+                if (relationship === 'sqrt') {
+                    // Reverse lookup: if Q/Qmax = √(DP/DPmax),
+                    // then DP/DPmax = (Q/Qmax)².
+                    return Math.pow(Math.max(0, Math.min(1, p)), 2);
+                }
+                return p;
             }
 
             function buildMaCalPoints() {
@@ -7025,11 +7265,15 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 
                 let html = `<div class="cal-point" style="font-weight:700;"><span>Point</span><span>Input / Process</span><span>Output</span></div>`;
                 maCalPts.forEach(p => {
-                    const inputValue = inLrv + (inSpan * p / 100);
-                    const outputValue = out.lrv + (outSpan * p / 100);
+                    const inputFraction = p / 100;
+                    const inputValue = inLrv + (inSpan * inputFraction);
+                    const outputFraction = outputFractionFromInputFraction(inputFraction);
+                    const outputValue = out.lrv + (outSpan * outputFraction);
+
                     html += `<div class="cal-point"><span>${p}%</span><span>${inputValue.toFixed(2)}${inUnit ? ' ' + inUnit : ''}</span><span>${outputValue.toFixed(2)}${outUnit ? ' ' + outUnit : ''}</span></div>`;
                 });
                 maCalPointsContainer.innerHTML = html;
+                updateMaRelationshipUI();
             }
 
             function updateMaReverse() {
@@ -7038,8 +7282,10 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
                 const out = getMaOutputRange();
                 const outSpan = out.urv - out.lrv;
                 const measured = num(maReverseInput, out.lrv);
-                const pct = outSpan === 0 ? 0 : ((measured - out.lrv) / outSpan * 100);
-                const inputValue = inLrv + ((inUrv - inLrv) * pct / 100);
+                const rawPct = outSpan === 0 ? 0 : ((measured - out.lrv) / outSpan * 100);
+                const pct = Math.max(0, Math.min(100, rawPct));
+                const inputFraction = inputFractionFromOutputFraction(pct / 100);
+                const inputValue = inLrv + ((inUrv - inLrv) * inputFraction);
                 const inUnit = (maUnit.value || '').trim();
                 const outUnit = (maOutUnit.value || '').trim();
 
@@ -7047,12 +7293,22 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
                 maReverseLabel.textContent = 'Input Value';
                 maReverseResult.textContent = inputValue.toFixed(2) + (inUnit ? ' ' + inUnit : '');
                 maReverseUnitChip.textContent = outUnit || 'Output';
+                updateMaRelationshipUI();
             }
 
             [maLRV, maURV, maUnit, maOutUnit].forEach(el => {
                 el.addEventListener('input', () => { buildMaCalPoints(); updateMaReverse(); });
                 el.addEventListener('change', () => { buildMaCalPoints(); updateMaReverse(); });
             });
+
+            const maRelationship = document.getElementById('maRelationship');
+            if (maRelationship) {
+                maRelationship.addEventListener('change', () => {
+                    buildMaCalPoints();
+                    updateMaReverse();
+                });
+            }
+
             maReverseInput.addEventListener('input', updateMaReverse);
             buildMaCalPoints();
             updateMaReverse();
@@ -7066,13 +7322,21 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
                 const outputRange = getMaOutputRange();
                 const outputUnit = (maOutUnit.value || '').trim();
                 const points = {};
-                maCalPts.forEach(p => { points[p] = lrv + (span * p / 100); });
+                const outputPoints = {};
+                maCalPts.forEach(p => {
+                    const inputFraction = p / 100;
+                    points[p] = lrv + (span * inputFraction);
+                    outputPoints[p] = outputRange.lrv +
+                        ((outputRange.urv - outputRange.lrv) * outputFractionFromInputFraction(inputFraction));
+                });
                 const handoff = {
                     lrv, urv, unit,
                     outputLrv: outputRange.lrv,
                     outputUrv: outputRange.urv,
                     outputUnit,
+                    relationship: getMaRelationship(),
                     points,
+                    outputPoints,
                     savedAt: new Date().toISOString()
                 };
                 try { localStorage.setItem(MA_HANDOFF_KEY, JSON.stringify(handoff)); } catch (e) {}
@@ -7135,7 +7399,9 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
                 } else {
                     calLow.value = 0;
                     calHigh.value = 100;
-                    calInstructions.innerHTML = 'Enter the <strong>actual</strong> mA reading measured at each test point — error is calculated from ideal vs. actual.';
+                    calInstructions.innerHTML = 'Enter the <strong>actual</strong> measured value at each test point in <strong>' +
+                        (calUnit.options[calUnit.selectedIndex] ? calUnit.options[calUnit.selectedIndex].text : 'selected unit') +
+                        '</strong> — error is calculated from ideal vs. actual.';
                 }
                 buildCalPoints();
             }
@@ -7153,9 +7419,12 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
                         html += `<div class="cal-point"><span>${p}% signal</span><span>ideal ${val.toFixed(2)} ${unit}</span>` +
                             `<input type="number" class="cal-actual" data-ideal="${val.toFixed(4)}" data-percent="${p}" data-target="${val.toFixed(4)}" data-span="${span}" step="0.01" placeholder="actual ${unit}" style="width:60px;" /></div>`;
                     } else {
-                        const idealMa = 4 + (16 * p / 100);
-                        html += `<div class="cal-point"><span>${p}% (${val.toFixed(2)} ${unit})</span><span>ideal ${idealMa.toFixed(2)} mA</span>` +
-                            `<input type="number" class="cal-actual" data-ideal="${idealMa}" data-percent="${p}" data-target="${val.toFixed(4)}" data-span="16" step="0.01" placeholder="actual mA" style="width:60px;" /></div>`;
+                        // Actual readings are always entered in the engineering/process
+                        // unit selected at the top of the calibration page.
+                        // The reference/ideal value is therefore the selected-unit
+                        // calibration point, not a hard-coded 4–20 mA value.
+                        html += `<div class="cal-point"><span>${p}% (${val.toFixed(2)} ${unit})</span><span>ideal ${val.toFixed(2)} ${unit}</span>` +
+                            `<input type="number" class="cal-actual" data-ideal="${val.toFixed(4)}" data-percent="${p}" data-target="${val.toFixed(4)}" data-span="${span}" step="0.01" placeholder="actual ${unit}" style="width:60px;" /></div>`;
                     }
                 });
                 calPointsContainer.innerHTML = html;
@@ -8669,17 +8938,98 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
             const radarBlockWarning = document.getElementById('radarBlockWarning');
 
             function calcRadar() {
-                const tankHeight = parseFloat(radarTankHeight.value) || 0;
-                const blocking = parseFloat(radarBlocking.value) || 0;
-                const distance = parseFloat(radarDistance.value) || 0;
+                const tankHeight = parseFloat(radarTankHeight.value);
+                const blocking = parseFloat(radarBlocking.value);
+                const distance = parseFloat(radarDistance.value);
                 const unit = radarHeightUnit.options[radarHeightUnit.selectedIndex].text;
+
+                // Radar blocking/dead zone is an unavailable measurement region.
+                // A reading at or inside the blocking distance must NOT be treated
+                // as a valid level calculation.
+                const invalidInputs =
+                    !Number.isFinite(tankHeight) || tankHeight <= 0 ||
+                    !Number.isFinite(blocking) || blocking < 0 ||
+                    !Number.isFinite(distance) || distance < 0;
+
+                const noUsableRange = !invalidInputs && blocking >= tankHeight;
+                const noDeadZoneConfigured = !invalidInputs && blocking === 0;
+                const verySmallDeadZone = !invalidInputs && blocking > 0 && blocking < (tankHeight * 0.01);
+                const inBlockingZone = !invalidInputs && distance <= blocking;
+                const beyondTank = !invalidInputs && distance > tankHeight;
+
+                radarBlockWarning.classList.add('hidden');
+                radarBlockWarning.style.background = '';
+                radarBlockWarning.style.color = '';
+
+                if (invalidInputs) {
+                    radarLevel.textContent = '—';
+                    radarPercent.textContent = '—';
+                    radarMa.textContent = '—';
+                    radarBlockWarning.textContent = '⚠️ Check the tank height, blocking distance and measured distance values.';
+                    radarBlockWarning.style.background = '#fee2e2';
+                    radarBlockWarning.style.color = '#991b1b';
+                    radarBlockWarning.classList.remove('hidden');
+                    return;
+                }
+
+                if (noUsableRange) {
+                    radarLevel.textContent = '—';
+                    radarPercent.textContent = '—';
+                    radarMa.textContent = '—';
+                    radarBlockWarning.textContent = '⚠️ Blocking/dead-zone distance is at or above the tank height. There is no usable measuring range — verify the transmitter settings/datasheet.';
+                    radarBlockWarning.style.background = '#fee2e2';
+                    radarBlockWarning.style.color = '#991b1b';
+                    radarBlockWarning.classList.remove('hidden');
+                    return;
+                }
+
+                if (inBlockingZone) {
+                    radarLevel.textContent = 'INVALID';
+                    radarPercent.textContent = 'INVALID';
+                    radarMa.textContent = 'INVALID';
+                    radarBlockWarning.textContent = '⚠️ Measured distance is inside the radar blocking/dead zone. Level and mA are not calculated because the radar reading is unreliable in this zone.';
+                    radarBlockWarning.style.background = '#fef3c7';
+                    radarBlockWarning.style.color = '#92400e';
+                    radarBlockWarning.classList.remove('hidden');
+                    return;
+                }
+
+                // A zero or unusually small dead zone is not treated as a valid
+                // commissioning setting. Rosemount documentation describes the
+                // upper null zone as a region where measurements are not made and
+                // requires the 100%/20 mA range point to be below that zone. The
+                // exact minimum is transmitter/antenna/application dependent, so
+                // this calculator warns rather than inventing a universal minimum.
+                if (noDeadZoneConfigured) {
+                    radarBlockWarning.textContent = '⚠️ No blocking/dead-zone protection is configured (0). Do not assume the radar can measure to the antenna face. Enter the manufacturer-specified upper null/blocking distance for the installed transmitter/antenna.';
+                    radarBlockWarning.style.background = '#fef3c7';
+                    radarBlockWarning.style.color = '#92400e';
+                    radarBlockWarning.classList.remove('hidden');
+                } else if (verySmallDeadZone) {
+                    radarBlockWarning.textContent = '⚠️ Blocking/dead-zone value is very small for this tank. Verify the transmitter/antenna manufacturer specification and the configured 100% reference. Measurements inside the manufacturer-defined upper null zone are not valid.';
+                    radarBlockWarning.style.background = '#fef3c7';
+                    radarBlockWarning.style.color = '#92400e';
+                    radarBlockWarning.classList.remove('hidden');
+                }
+
+                if (beyondTank) {
+                    radarLevel.textContent = 'OUT OF RANGE';
+                    radarPercent.textContent = 'OUT OF RANGE';
+                    radarMa.textContent = 'OUT OF RANGE';
+                    radarBlockWarning.textContent = '⚠️ Measured distance is greater than the configured tank height. The calculated level would be below zero — check the reference point, tank height and radar reading.';
+                    radarBlockWarning.style.background = '#fee2e2';
+                    radarBlockWarning.style.color = '#991b1b';
+                    radarBlockWarning.classList.remove('hidden');
+                    return;
+                }
+
                 const level = tankHeight - distance;
-                const percent = tankHeight > 0 ? (level / tankHeight) * 100 : 0;
+                const percent = (level / tankHeight) * 100;
                 const ma = 4 + (Math.max(0, Math.min(100, percent)) / 100) * 16;
+
                 radarLevel.textContent = level.toFixed(2) + ' ' + unit;
                 radarPercent.textContent = percent.toFixed(1) + ' %';
                 radarMa.textContent = ma.toFixed(2) + ' mA';
-                radarBlockWarning.classList.toggle('hidden', distance > blocking);
             }
             radarCalcBtn.addEventListener('click', calcRadar);
             radarTankHeight.addEventListener('input', calcRadar);
@@ -10066,6 +10416,7 @@ function rsEsc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){ret
 function rsId(){return 'IP-'+new Date().getFullYear()+'-'+String(Date.now()).slice(-8);}
 var rsCurrent=null;
 var MA_HANDOFF_KEY='instrumentpro_ma_handoff';
+var MA_HANDOFF_IMPORTED_KEY='instrumentpro_ma_handoff_imported';
 
 var DEVICE_CONFIG={
  'Pressure Transmitter':{
@@ -10480,8 +10831,14 @@ function importMaHandoff(cfg){
  var raw=null;
  try{raw=JSON.parse(localStorage.getItem(MA_HANDOFF_KEY)||'null');}catch(e){}
  if(!raw){alert('No saved 4-20mA test points found. Open the 4-20mA calculator and tap "Send to Field Report" first.');return;}
+
+ // IMPORTANT: imported calculator values are the REFERENCE/IDEAL points.
+ // They must not be written into the technician's actual-reading fields.
+ try{sessionStorage.setItem(MA_HANDOFF_IMPORTED_KEY,'1');}catch(e){}
+
  var rangeInp=document.getElementById('rsRange');
  if(rangeInp)rangeInp.value=raw.lrv+' to '+raw.urv;
+
  var unitSel=document.getElementById('rsUnit');
  if(unitSel&&raw.unit){
    var opts=Array.prototype.slice.call(unitSel.options);
@@ -10493,20 +10850,16 @@ function importMaHandoff(cfg){
      if(!already){
        var opt=document.createElement('option');
        opt.textContent=raw.unit;
+       opt.value=raw.unit;
        unitSel.insertBefore(opt,unitSel.lastElementChild);
      }
      unitSel.value=raw.unit;
    }
  }
- var body=document.getElementById('rsDeviceConfigBody');
- if(body&&raw.points){
-   body.querySelectorAll('.rs-dyn-point').forEach(function(e){
-     var p=e.dataset.point;
-     if(raw.points[p]!==undefined&&raw.points[p]!==null&&Number.isFinite(raw.points[p])){
-       e.value=Number(raw.points[p]).toFixed(2);
-     }
-   });
- }
+
+ // Rebuild the calibration-point display using the imported values as
+ // references. Actual-reading inputs remain blank for the technician.
+ renderDeviceConfig();
  rsCurrent=null;
  rsRender();
 }
@@ -10514,17 +10867,50 @@ function renderDeviceConfig(){
  var d=rsDevice(), cfg=DEVICE_CONFIG[d], body=document.getElementById('rsDeviceConfigBody');
  if(!body)return;
  if(!cfg){body.innerHTML='<div class="rs-analysis">Select a field device above. The report will load the correct configuration, measurements and functional checks for that device.</div>';return;}
+
+ var imported=null, importedActive=false;
+ try{
+   imported=JSON.parse(localStorage.getItem(MA_HANDOFF_KEY)||'null');
+   importedActive=sessionStorage.getItem(MA_HANDOFF_IMPORTED_KEY)==='1';
+ }catch(e){}
+
  var html='<div style="font-size:.62rem;color:#64748b;margin-bottom:7px;">'+rsEsc(cfg.description)+'</div>';
  html+=cfg.fields.map(function(f){return makeField(f[0],f[1],f[2],f[2]);}).join('');
+
  if(cfg.points){
-   var maHandoff=null;
-   try{maHandoff=JSON.parse(localStorage.getItem(MA_HANDOFF_KEY)||'null');}catch(e){}
    html+='<div style="margin-top:7px;font-size:.62rem;font-weight:800;color:#475569;">Calibration points</div>';
-   if(maHandoff){
-     html+='<button type="button" id="rsImportMaBtn" class="btn btn-sm" style="margin:4px 0 8px 0;"><i class="fas fa-file-import"></i> Import from 4-20mA Calculator ('+rsEsc(maHandoff.lrv)+'\u2013'+rsEsc(maHandoff.urv)+' '+rsEsc(maHandoff.unit)+')</button>';
+
+   if(imported){
+     html+='<button type="button" id="rsImportMaBtn" class="btn btn-sm" style="margin:4px 0 8px 0;"><i class="fas fa-file-import"></i> Re-import from 4-20mA Calculator ('+
+       rsEsc(imported.lrv)+'–'+rsEsc(imported.urv)+' '+rsEsc(imported.unit)+')</button>';
+   }else{
+     html+='<button type="button" id="rsImportMaBtn" class="btn btn-sm" style="margin:4px 0 8px 0;"><i class="fas fa-file-import"></i> Import from 4-20mA Calculator</button>';
    }
+
+   if(importedActive && imported){
+     html+='<div style="font-size:.62rem;color:#047857;background:#ecfdf5;border-radius:10px;padding:7px 9px;margin-bottom:8px;">'+
+       '<strong>Reference loaded from Converter.</strong> These values are the ideal/reference points. Enter only the actual measured values in the fields on the right.</div>';
+   }
+
+   var actualUnitLabel = (document.getElementById('rsUnit')?.value || (importedActive && imported ? imported.unit : '') || 'selected unit');
+   html+='<div style="font-size:.62rem;color:#64748b;margin-bottom:7px;">Enter the <strong>actual measured value</strong> at each test point in <strong>'+rsEsc(actualUnitLabel)+'</strong>. The actual fields are independent from the reference values.</div>';
+
    html+='<div id="rsDynamicPoints" class="cal-points-grid">';
-   [0,25,50,75,100].forEach(function(p){html+='<div class="cal-point"><span>'+p+'%</span><input type="number" step="any" class="cal-actual rs-dyn-point" data-point="'+p+'" placeholder="Actual '+p+'%"></div>';});
+   [0,25,50,75,100].forEach(function(p){
+     var refVal=p;
+     if(importedActive && imported && imported.points && imported.points[p]!==undefined && Number.isFinite(Number(imported.points[p]))){
+       refVal=Number(imported.points[p]);
+     }
+
+     var refText=(importedActive && imported)
+       ? (refVal.toFixed(2)+' '+rsEsc(imported.unit||''))
+       : (p+'% reference');
+
+     html+='<div class="cal-point">'+
+       '<span><strong>'+p+'%</strong><br><small style="color:#64748b;">Ref: '+refText+'</small></span>'+
+       '<input type="number" step="any" class="cal-actual rs-dyn-point" data-point="'+p+'" placeholder="Actual '+rsEsc((document.getElementById('rsUnit')?.value || (importedActive && imported ? imported.unit : '') || 'value'))+'">'+
+       '</div>';
+   });
    html+='</div><div class="row"><label>Calibration result</label><input type="text" data-dc="calibration_result" placeholder="PASS / FAIL / As-left result"></div>';
  }else{
    html+='<div style="margin-top:7px;font-size:.62rem;font-weight:800;color:#475569;">Functional checks</div>';
@@ -10533,6 +10919,7 @@ function renderDeviceConfig(){
    (cfg.tests||[]).forEach(function(t,i){html+='<label class="rs-test-item"><input type="checkbox" data-test-index="'+i+'"><span>'+rsEsc(t)+'</span></label>';});
    html+='</div><div class="rs-test-table"><div class="row"><label>Measured / observed result</label><textarea data-dc="measured_results" rows="3" placeholder="Record timing, pressures, positions, alarm response, reference comparison, etc."></textarea></div></div>';
  }
+
  body.innerHTML=html;
  var importBtn=body.querySelector('#rsImportMaBtn');
  if(importBtn)importBtn.addEventListener('click',function(){importMaHandoff(cfg);});
@@ -10563,8 +10950,30 @@ function parseTolerance(v){
 function rsCalc(o){
  var cfg=DEVICE_CONFIG[o.deviceType],tol=parseTolerance(o.rsToleranceSpec),max=0,entered=0,tests=0;
  if(cfg&&cfg.points){
-   [0,25,50,75,100].forEach(function(p){var v=parseFloat(o.deviceData.fields['point_'+p]);if(Number.isFinite(v)){entered++;max=Math.max(max,Math.abs(v-p));}});
-   return {kind:'calibration',tol:tol,max:max,entered:entered,tests:0,pass:entered===5 && (tol==null || max<=tol)};
+   var ref={};
+   var imported=null, importedActive=false;
+   try{
+     imported=JSON.parse(localStorage.getItem(MA_HANDOFF_KEY)||'null');
+     importedActive=sessionStorage.getItem(MA_HANDOFF_IMPORTED_KEY)==='1';
+   }catch(e){}
+
+   var fallbackRefs={0:0,25:25,50:50,75:75,100:100};
+   [0,25,50,75,100].forEach(function(p){
+     var v=parseFloat(o.deviceData.fields['point_'+p]);
+     if(Number.isFinite(v)){
+       entered++;
+       var reference=fallbackRefs[p];
+       if(importedActive && imported && imported.points && Number.isFinite(Number(imported.points[p]))){
+         reference=Number(imported.points[p]);
+       }
+       var span=100;
+       if(importedActive && imported && Number.isFinite(Number(imported.lrv)) && Number.isFinite(Number(imported.urv))){
+         span=Math.abs(Number(imported.urv)-Number(imported.lrv))||100;
+       }
+       max=Math.max(max,Math.abs(v-reference)/span*100);
+     }
+   });
+   return {kind:'calibration',tol:tol,max:max,entered:entered,tests:0,pass:entered===5 && (tol==null || max<=tol),importedReference:!!(importedActive&&imported)};
  }
  tests=(o.deviceData.tests||[]).filter(function(x){return x.passed;}).length;
  var total=(o.deviceData.tests||[]).length;
@@ -10602,7 +11011,26 @@ function deviceReportSections(o,c){
  var fields=Object.keys(dd.fields||{}).filter(function(k){return dd.fields[k]!=='';}).map(function(k){return '<tr><td><b>'+rsEsc(k.replace(/^dc_/,'').replace(/_/g,' '))+'</b></td><td>'+rsEsc(dd.fields[k])+'</td></tr>';}).join('');
  var tests=(dd.tests||[]).map(function(t){return '<tr><td>'+rsEsc(t.name)+'</td><td style="font-weight:700;color:'+(t.passed?'#15803d':'#b91c1c')+'">'+(t.passed?'PASS':'FAIL / NOT COMPLETE')+'</td></tr>';}).join('');
  var points='';
- if(c.kind==='calibration')points='<h3 style="font-size:14px;border-bottom:1px solid #ddd;padding-bottom:5px;">Calibration Results</h3><table style="width:100%;border-collapse:collapse;font-size:11px;"><tr><th>Point</th><th>Reference</th><th>Actual</th><th>Error</th><th>Status</th></tr>'+[0,25,50,75,100].map(function(p){var v=parseFloat(dd.fields['point_'+p]);var ok=Number.isFinite(v)&&(c.tol==null||Math.abs(v-p)<=c.tol);return '<tr><td>'+p+'%</td><td>'+p.toFixed(2)+'</td><td>'+(Number.isFinite(v)?v.toFixed(2):'—')+'</td><td>'+(Number.isFinite(v)?Math.abs(v-p).toFixed(2)+'%':'—')+'</td><td style="color:'+(ok?'#15803d':'#b91c1c')+';font-weight:bold">'+(Number.isFinite(v)?(ok?'PASS':'FAIL'):'—')+'</td></tr>';}).join('')+'</table>';
+ if(c.kind==='calibration'){
+   var reportImported=null,reportImportedActive=false;
+   try{
+     reportImported=JSON.parse(localStorage.getItem(MA_HANDOFF_KEY)||'null');
+     reportImportedActive=sessionStorage.getItem(MA_HANDOFF_IMPORTED_KEY)==='1';
+   }catch(e){}
+   var reportRefs=[0,25,50,75,100].reduce(function(a,p){
+     a[p]=(reportImportedActive&&reportImported&&reportImported.points&&Number.isFinite(Number(reportImported.points[p])))?Number(reportImported.points[p]):p;
+     return a;
+   },{});
+   var reportSpan=(reportImportedActive&&reportImported&&Number.isFinite(Number(reportImported.lrv))&&Number.isFinite(Number(reportImported.urv)))?
+     Math.abs(Number(reportImported.urv)-Number(reportImported.lrv))||100:100;
+   var reportUnit=(reportImportedActive&&reportImported&&reportImported.unit)?String(reportImported.unit):'';
+   points='<h3 style="font-size:14px;border-bottom:1px solid #ddd;padding-bottom:5px;">Calibration Results</h3><table style="width:100%;border-collapse:collapse;font-size:11px;"><tr><th>Point</th><th>Reference</th><th>Actual</th><th>Error</th><th>Status</th></tr>'+
+     [0,25,50,75,100].map(function(p){
+       var v=parseFloat(dd.fields['point_'+p]),ref=reportRefs[p],err=Number.isFinite(v)?Math.abs(v-ref)/reportSpan*100:null;
+       var ok=Number.isFinite(v)&&(c.tol==null||err<=c.tol);
+       return '<tr><td>'+p+'%</td><td>'+ref.toFixed(2)+(reportUnit?' '+rsEsc(reportUnit):'')+'</td><td>'+(Number.isFinite(v)?v.toFixed(2):'—')+'</td><td>'+(err!==null?err.toFixed(2)+'%':'—')+'</td><td style="color:'+(ok?'#15803d':'#b91c1c')+';font-weight:bold">'+(Number.isFinite(v)?(ok?'PASS':'FAIL'):'—')+'</td></tr>';
+     }).join('')+'</table>';
+ }
  else points='<h3 style="font-size:14px;border-bottom:1px solid #ddd;padding-bottom:5px;">Functional Test Results</h3><table style="width:100%;border-collapse:collapse;font-size:11px;"><tr><th>Test</th><th>Result</th></tr>'+tests+'</table><p style="font-size:11px;margin-top:8px;"><b>Measured / observed results:</b><br>'+rsEsc(dd.fields.measured_results||'—')+'</p>';
  return '<h3 style="font-size:14px;border-bottom:1px solid #ddd;padding-bottom:5px;">Device-Specific Configuration</h3><table style="width:100%;border-collapse:collapse;font-size:11px;">'+fields+'</table>'+points;
 }
