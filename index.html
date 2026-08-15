@@ -2775,6 +2775,63 @@ body.dark .trouble-dialog{background:#111827}.dark .trouble-dialog-title,.dark .
 @media(max-width:390px){.trouble-options{grid-template-columns:1fr}.trouble-dialog{padding:13px;border-radius:22px 22px 0 0}.trouble-top{padding:14px}.trouble-top-icon{display:none}}
 </style>
 
+<style id="shift-report-styles">
+/* ===== SHIFT / HANDOVER REPORT ===== */
+.fn-shift-bar{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:16px;background:#eff6ff;border:1px solid #bfdbfe;margin-bottom:10px;}
+.fn-shift-bar i{color:#2563eb;}
+.fn-shift-bar .fn-shift-text{flex:1;font-size:.66rem;font-weight:700;color:#1e3a8a;}
+.fn-shift-bar .fn-shift-text small{display:block;font-weight:500;color:#3b82f6;font-size:.58rem;margin-top:1px;}
+.fn-shift-bar button{min-height:32px;padding:0 10px;font-size:.6rem;}
+body.dark .fn-shift-bar{background:#0f2b44;border-color:#1e3a5f;}
+body.dark .fn-shift-bar .fn-shift-text{color:#bfdbfe;}
+
+.fn-report-cta{display:flex;align-items:center;gap:10px;padding:12px;border-radius:16px;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;margin-top:10px;}
+.fn-report-cta i{font-size:1.3rem;}
+.fn-report-cta div{flex:1;}
+.fn-report-cta strong{display:block;font-size:.72rem;}
+.fn-report-cta span{display:block;font-size:.58rem;opacity:.85;margin-top:1px;}
+.fn-report-cta button{background:#fff;color:#1d4ed8;border:0;border-radius:12px;padding:9px 12px;font-size:.62rem;font-weight:800;white-space:nowrap;}
+
+.fn-note-select{display:flex;align-items:center;gap:6px;}
+.fn-note-select input[type=checkbox]{width:16px;height:16px;accent-color:#2563eb;}
+
+.rpt-modal{display:none;position:fixed;inset:0;z-index:10000;align-items:flex-end;justify-content:center;}
+.rpt-modal.open{display:flex;}
+.rpt-backdrop{position:absolute;inset:0;background:rgba(2,8,23,.62);backdrop-filter:blur(4px);}
+.rpt-dialog{position:relative;z-index:1;width:min(560px,100%);max-height:92vh;overflow:auto;background:#fff;border-radius:24px 24px 0 0;padding:15px;box-shadow:0 -15px 45px rgba(0,0,0,.22);animation:troubleUp .18s ease-out;}
+body.dark .rpt-dialog{background:#111827;color:#e2e8f0;}
+.rpt-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;}
+.rpt-title{font-size:.94rem;font-weight:900;color:#1e293b;margin-top:2px;}
+body.dark .rpt-title{color:#f8fafc;}
+.rpt-close{border:0;background:#f1f5f9;width:34px;height:34px;border-radius:11px;color:#475569;flex:0 0 34px;}
+body.dark .rpt-close{background:#1e293b;color:#cbd5e1;}
+.rpt-range-row{display:flex;gap:6px;overflow-x:auto;margin:12px 0 10px;padding-bottom:2px;}
+.rpt-range-chip{flex:0 0 auto;border:1px solid #e2e8f0;background:#f8fafc;border-radius:20px;padding:7px 13px;font-size:.6rem;font-weight:750;color:#334155;white-space:nowrap;}
+.rpt-range-chip.active{border-color:#2563eb;background:#2563eb;color:#fff;}
+body.dark .rpt-range-chip{background:#1e293b;border-color:#334155;color:#cbd5e1;}
+.rpt-field-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
+.rpt-field-row label{display:block;font-size:.6rem;font-weight:700;color:#64748b;margin-bottom:3px;}
+.rpt-field-row input{width:100%;border-radius:12px;border:1px solid #d7dee8;padding:8px 10px;font-size:.68rem;box-sizing:border-box;}
+body.dark .rpt-field-row input{background:#0f172a;border-color:#334155;color:#e2e8f0;}
+.rpt-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px;}
+.rpt-summary div{background:#f8fafc;border-radius:12px;padding:8px 4px;text-align:center;}
+.rpt-summary strong{display:block;font-size:.9rem;color:#1e293b;}
+.rpt-summary span{font-size:.52rem;color:#64748b;font-weight:700;text-transform:uppercase;}
+body.dark .rpt-summary div{background:#1e293b;}
+body.dark .rpt-summary strong{color:#f8fafc;}
+.rpt-section-title{font-size:.6rem;font-weight:850;color:#2563eb;text-transform:uppercase;letter-spacing:.05em;margin:12px 0 6px;}
+.rpt-entry{border:1px solid #e2e8f0;border-radius:12px;padding:8px 10px;margin-bottom:6px;font-size:.62rem;color:#334155;}
+.rpt-entry b{color:#1e293b;}
+body.dark .rpt-entry{border-color:#334155;color:#cbd5e1;}
+body.dark .rpt-entry b{color:#f1f5f9;}
+.rpt-empty{font-size:.65rem;color:#94a3b8;text-align:center;padding:14px;}
+.rpt-footer{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:14px;}
+.rpt-footer button{min-height:42px;justify-content:center;}
+.rpt-footer .rpt-share{grid-column:1 / -1;background:#059669;}
+.rpt-footer .rpt-share:hover{background:#047857;}
+@media(max-width:390px){.rpt-summary{grid-template-columns:repeat(2,1fr);}.rpt-field-row{grid-template-columns:1fr;}}
+</style>
+
 <style id="favorites-size-fix">
 /* Favorites: larger, easier-to-tap cards */
 .favorite-item,.favorite-card,.favorite-tool{min-height:76px!important;padding:13px!important}
@@ -3833,6 +3890,16 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
                     <div class="fn-stat"><div class="fn-stat-label">HIGH</div><strong id="fnHigh">0</strong></div>
                     <div class="fn-stat"><div class="fn-stat-label">TODAY</div><strong id="fnToday">0</strong></div>
                 </div>
+                <div class="fn-shift-bar" style="margin-top:10px;margin-bottom:0;">
+                    <i class="fas fa-user-clock"></i>
+                    <div class="fn-shift-text" id="fnShiftText">No shift started<small>Start a shift to track notes for your handover report</small></div>
+                    <button class="btn-outline btn" id="fnShiftToggleBtn" type="button">Start Shift</button>
+                </div>
+                <div class="fn-report-cta">
+                    <i class="fas fa-file-signature"></i>
+                    <div><strong>End-of-Shift Report</strong><span>Compile notes into a handover report — PDF, text, or share directly</span></div>
+                    <button type="button" id="fnBuildReportBtn">Build Report</button>
+                </div>
             </div>
 
             <div class="card">
@@ -3861,18 +3928,61 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
                     <select id="fnFilterStatus"><option value="">All status</option><option>Open</option><option>In Progress</option><option>Resolved</option><option>Deferred</option></select>
                     <select id="fnFilterPriority"><option value="">All priority</option><option>Critical</option><option>High</option><option>Normal</option><option>Low</option></select>
                 </div>
+                <div class="row" style="justify-content:space-between;margin-top:6px;">
+                    <span style="font-size:.58rem;color:#94a3b8;font-weight:700;" id="fnSelectedCount">0 selected</span>
+                    <div style="display:flex;gap:6px;">
+                        <button class="btn-outline btn" id="fnSelectAllBtn" type="button" style="min-height:30px;padding:0 10px;font-size:.6rem;">Select all</button>
+                        <button class="btn-outline btn" id="fnSelectNoneBtn" type="button" style="min-height:30px;padding:0 10px;font-size:.6rem;">Clear</button>
+                    </div>
+                </div>
                 <div id="notesList" style="margin-top:10px;"><div style="font-size:0.75rem;color:#94a3b8;text-align:center;padding:16px;">No field notes yet.</div></div>
             </div>
 
             <div class="card">
-                <div class="card-header"><i class="fas fa-file-export"></i><h3>Field Log Tools</h3></div>
+                <div class="card-header"><i class="fas fa-file-export"></i><h3>Raw Data Export</h3></div>
                 <div class="fn-tool-grid">
                     <button class="btn-outline btn" id="noteExportBtn"><i class="fas fa-file-alt"></i> TXT</button>
                     <button class="btn-outline btn" id="noteExportCsvBtn"><i class="fas fa-file-csv"></i> CSV</button>
                     <button class="btn-outline btn" id="fnJsonBtn"><i class="fas fa-code"></i> JSON</button>
-                    <button class="btn-outline btn" id="fnReportBtn"><i class="fas fa-file-signature"></i> Report</button>
                     <button class="btn-outline btn" id="noteSyncBtn"><i class="fas fa-cloud-upload-alt"></i> Sync</button>
-                    <button class="btn-outline btn" id="noteClearBtn" style="color:#dc2626;"><i class="fas fa-trash"></i> Clear</button>
+                    <button class="btn-outline btn" id="noteClearBtn" style="color:#dc2626;grid-column:1/-1;"><i class="fas fa-trash"></i> Clear All Notes</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================================
+             SHIFT / HANDOVER REPORT MODAL
+        ========================================================== -->
+        <div class="rpt-modal" id="rptModal" aria-hidden="true">
+            <div class="rpt-backdrop" data-close-rpt></div>
+            <div class="rpt-dialog">
+                <div class="rpt-head">
+                    <div><div class="rpt-title"><i class="fas fa-file-signature" style="color:#2563eb;margin-right:6px;"></i>Shift / Handover Report</div></div>
+                    <button class="rpt-close" type="button" data-close-rpt><i class="fas fa-times"></i></button>
+                </div>
+
+                <div class="rpt-range-row" id="rptRangeRow">
+                    <button type="button" class="rpt-range-chip active" data-range="shift">This Shift</button>
+                    <button type="button" class="rpt-range-chip" data-range="today">Today</button>
+                    <button type="button" class="rpt-range-chip" data-range="7days">Last 7 Days</button>
+                    <button type="button" class="rpt-range-chip" data-range="selected">Selected Notes</button>
+                    <button type="button" class="rpt-range-chip" data-range="all">All Notes</button>
+                </div>
+
+                <div class="rpt-field-row">
+                    <div><label>Reported by</label><input id="rptReportedBy" placeholder="Your name" /></div>
+                    <div><label>Handed over to</label><input id="rptHandoverTo" placeholder="Next shift / supervisor" /></div>
+                </div>
+
+                <div class="rpt-summary" id="rptSummary"></div>
+                <div id="rptPreview"></div>
+
+                <div class="rpt-footer">
+                    <button class="btn-outline btn" id="rptCopyBtn" type="button"><i class="fas fa-copy"></i> Copy Text</button>
+                    <button class="btn-outline btn" id="rptEmailBtn" type="button"><i class="fas fa-envelope"></i> Email</button>
+                    <button class="btn-outline btn" id="rptTxtBtn" type="button"><i class="fas fa-file-alt"></i> Download TXT</button>
+                    <button class="btn-outline btn" id="rptPdfBtn" type="button"><i class="fas fa-file-pdf"></i> Download PDF</button>
+                    <button class="btn rpt-share" id="rptShareBtn" type="button"><i class="fas fa-share-alt"></i> Share (WhatsApp, Email, etc.)</button>
                 </div>
             </div>
         </div>
@@ -8790,6 +8900,7 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
             (function() {
                 const colors = { Critical:'#fee2e2', High:'#ffedd5', Normal:'#e0f2fe', Low:'#f1f5f9' };
                 const fg = { Critical:'#991b1b', High:'#9a3412', Normal:'#075985', Low:'#475569' };
+                const selected = new Set();
                 function notes(){ return getStorage('fieldNotes', []); }
                 function save(a){ setStorage('fieldNotes', a); }
                 function esc(v){ const d=document.createElement('div'); d.textContent=v==null?'':v; return d.innerHTML; }
@@ -8805,13 +8916,17 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
                     document.getElementById('fnOpen').textContent=all.filter(n=>n.status==='Open'||n.status==='In Progress').length;
                     document.getElementById('fnHigh').textContent=all.filter(n=>n.priority==='High'||n.priority==='Critical').length;
                     document.getElementById('fnToday').textContent=all.filter(n=>today(n.ts)).length;
+                    const validIds=new Set(all.map(n=>String(n.id)));
+                    Array.from(selected).forEach(id=>{ if(!validIds.has(id)) selected.delete(id); });
                     const el=document.getElementById('notesList');
-                    if(!filtered.length){el.innerHTML='<div style="font-size:.75rem;color:#94a3b8;text-align:center;padding:18px;">No matching field notes.</div>';return;}
+                    if(!filtered.length){el.innerHTML='<div style="font-size:.75rem;color:#94a3b8;text-align:center;padding:18px;">No matching field notes.</div>';updateSelectedCount();return;}
                     el.innerHTML=filtered.map(n=>{
                         const due=n.dueDate?new Date(n.dueDate+'T00:00:00'):null;
                         const overdue=due && due<new Date() && n.status!=='Resolved';
+                        const isSel=selected.has(String(n.id));
                         return '<div class="fn-note-card">'+
                           '<div class="fn-note-top">'+
+                          '<div class="fn-note-select"><input type="checkbox" class="fn-select" data-id="'+n.id+'" '+(isSel?'checked':'')+' /></div>'+
                           '<div><div class="fn-note-tags"><span class="badge" style="background:'+colors[n.priority]+';color:'+fg[n.priority]+';">'+esc(n.priority)+'</span><span class="badge" style="background:#f1f5f9;color:#334155;">'+esc(n.category)+'</span><span class="badge" style="background:#f1f5f9;color:#334155;">'+esc(n.status)+'</span></div>'+ 
                           '<div class="fn-note-title">'+esc(n.tag||'Unassigned asset')+(n.location?' · '+esc(n.location):'')+'</div>'+ 
                           '<div class="fn-note-meta">'+fmt(n.ts)+' · '+esc(n.discipline)+(n.dueDate?' · Due '+esc(n.dueDate):'')+(overdue?' · <b style="color:#dc2626;">OVERDUE</b>':'')+'</div></div>'+ 
@@ -8824,7 +8939,15 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
                     }).join('');
                     el.querySelectorAll('.fn-delete').forEach(b=>b.onclick=()=>{ if(confirm('Delete this field note?')){save(all.filter(n=>String(n.id)!==String(b.dataset.id)));render();}});
                     el.querySelectorAll('.fn-report').forEach(b=>b.onclick=()=>makeReport(notes().find(n=>String(n.id)===String(b.dataset.id))));
+                    el.querySelectorAll('.fn-select').forEach(cb=>cb.onchange=()=>{ const id=String(cb.dataset.id); if(cb.checked) selected.add(id); else selected.delete(id); updateSelectedCount(); });
+                    updateSelectedCount();
                 }
+                function updateSelectedCount(){
+                    const c=document.getElementById('fnSelectedCount');
+                    if(c) c.textContent=selected.size+' selected';
+                }
+                document.getElementById('fnSelectAllBtn').onclick=()=>{ document.querySelectorAll('#notesList .fn-select').forEach(cb=>{ cb.checked=true; selected.add(String(cb.dataset.id)); }); updateSelectedCount(); };
+                document.getElementById('fnSelectNoneBtn').onclick=()=>{ selected.clear(); document.querySelectorAll('#notesList .fn-select').forEach(cb=>cb.checked=false); updateSelectedCount(); };
                 function capture(){
                     const text=document.getElementById('fnText').value.trim(); if(!text){alert('Enter a field observation first.');return;}
                     const n={id:Date.now(),ts:Date.now(),category:document.getElementById('fnCategory').value,priority:document.getElementById('fnPriority').value,status:document.getElementById('fnStatus').value,discipline:document.getElementById('fnDiscipline').value,tag:document.getElementById('fnTag').value.trim(),location:document.getElementById('fnLocation').value.trim(),dueDate:document.getElementById('fnDue').value,keywords:document.getElementById('fnKeywords').value.trim(),text:text};
@@ -8844,9 +8967,254 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
                 document.getElementById('noteExportBtn').onclick=()=>{const a=notes().sort((x,y)=>x.ts-y.ts);if(!a.length){alert('No notes to export.');return;}let t='INSTRUMENTPRO FIELD LOG\nExported: '+new Date().toLocaleString()+'\n\n';a.forEach(n=>t+='['+fmt(n.ts)+'] '+n.priority+' | '+n.category+' | '+(n.tag||'')+' | '+n.status+'\n'+n.text+'\nAction: '+(n.action||'')+'\n\n');download('InstrumentPro_FieldLog_'+new Date().toISOString().slice(0,10)+'.txt',t,'text/plain');};
                 document.getElementById('noteExportCsvBtn').onclick=()=>{const a=notes().sort((x,y)=>x.ts-y.ts);if(!a.length){alert('No notes to export.');return;}let c='Timestamp,Category,Priority,Status,Discipline,Tag,Location,Follow-up,Keywords,Observation\n';a.forEach(n=>c+=[fmt(n.ts),n.category,n.priority,n.status,n.discipline,n.tag,n.location,n.dueDate,n.keywords,n.text].map(csv).join(',')+'\n');download('InstrumentPro_FieldLog_'+new Date().toISOString().slice(0,10)+'.csv',c,'text/csv');};
                 document.getElementById('fnJsonBtn').onclick=()=>download('InstrumentPro_FieldLog_'+new Date().toISOString().slice(0,10)+'.json',JSON.stringify(notes(),null,2),'application/json');
-                document.getElementById('fnReportBtn').onclick=()=>{const a=notes(); if(!a.length){alert('No field notes available.');return;} makeReport(a[0]);};
                 document.getElementById('noteSyncBtn').onclick=()=>{const a=notes();if(!a.length){alert('No notes to sync.');return;}window.syncReportToWebhooks({source:'InstrumentPro',type:'FieldNotesAdvanced',timestamp:new Date().toISOString(),notes:a});};
-                document.getElementById('noteClearBtn').onclick=()=>{if(notes().length&&confirm('Delete ALL field notes? This cannot be undone.')){save([]);render();}};
+                document.getElementById('noteClearBtn').onclick=()=>{if(notes().length&&confirm('Delete ALL field notes? This cannot be undone.')){save([]);selected.clear();render();}};
+
+                // =============================================================
+                // SHIFT TRACKING
+                // =============================================================
+                function shiftState(){ return getStorage('shiftState', {active:false, start:null, lastStart:null, lastEnd:null}); }
+                function renderShiftBar(){
+                    const s=shiftState();
+                    const textEl=document.getElementById('fnShiftText');
+                    const btn=document.getElementById('fnShiftToggleBtn');
+                    if(s.active && s.start){
+                        textEl.innerHTML='Shift in progress<small>Started '+new Date(s.start).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})+'</small>';
+                        btn.textContent='End Shift';
+                    } else {
+                        textEl.innerHTML='No shift started<small>Start a shift to track notes for your handover report</small>';
+                        btn.textContent='Start Shift';
+                    }
+                }
+                document.getElementById('fnShiftToggleBtn').onclick=()=>{
+                    const s=shiftState();
+                    if(s.active){
+                        if(!confirm('End your shift? You can still build a report for this shift afterward.')) return;
+                        setStorage('shiftState', {active:false, start:null, lastStart:s.start, lastEnd:Date.now()});
+                    } else {
+                        setStorage('shiftState', {active:true, start:Date.now(), lastStart:s.lastStart, lastEnd:s.lastEnd});
+                    }
+                    renderShiftBar();
+                };
+                renderShiftBar();
+
+                // =============================================================
+                // SHIFT / HANDOVER REPORT MODAL
+                // =============================================================
+                let rptRange='shift';
+                function getRangeNotes(range){
+                    const all=notes().sort((a,b)=>a.ts-b.ts);
+                    if(range==='selected') return all.filter(n=>selected.has(String(n.id)));
+                    if(range==='today') return all.filter(n=>today(n.ts));
+                    if(range==='7days'){ const cutoff=Date.now()-7*24*60*60*1000; return all.filter(n=>n.ts>=cutoff); }
+                    if(range==='all') return all;
+                    // 'shift'
+                    const s=shiftState();
+                    const start=s.active ? s.start : (s.lastStart || null);
+                    const end=s.active ? Date.now() : (s.lastEnd || Date.now());
+                    if(!start) return all.filter(n=>today(n.ts));
+                    return all.filter(n=>n.ts>=start && n.ts<=end);
+                }
+                function rangeLabel(range){
+                    const s=shiftState();
+                    if(range==='shift'){
+                        const start=s.active?s.start:s.lastStart;
+                        if(!start) return 'This Shift (no shift recorded — showing today)';
+                        const end=s.active?Date.now():s.lastEnd;
+                        return 'Shift: '+new Date(start).toLocaleString()+' → '+new Date(end).toLocaleString();
+                    }
+                    if(range==='today') return 'Today ('+new Date().toLocaleDateString()+')';
+                    if(range==='7days') return 'Last 7 Days';
+                    if(range==='selected') return selected.size+' Manually Selected Note(s)';
+                    return 'All Field Notes';
+                }
+                function buildReportData(){
+                    const items=getRangeNotes(rptRange);
+                    const openItems=items.filter(n=>n.status==='Open'||n.status==='In Progress');
+                    const highItems=items.filter(n=>n.priority==='High'||n.priority==='Critical');
+                    const resolvedItems=items.filter(n=>n.status==='Resolved');
+                    const overdueItems=items.filter(n=>{ if(!n.dueDate||n.status==='Resolved') return false; return new Date(n.dueDate+'T00:00:00')<new Date(); });
+                    return {items, openItems, highItems, resolvedItems, overdueItems,
+                        reportedBy:document.getElementById('rptReportedBy').value.trim(),
+                        handoverTo:document.getElementById('rptHandoverTo').value.trim(),
+                        range:rptRange, label:rangeLabel(rptRange)};
+                }
+                function entryLine(n){
+                    return '['+fmt(n.ts)+'] '+n.priority.toUpperCase()+' · '+n.category+' · '+(n.tag||'Unassigned')+(n.location?' ('+n.location+')':'')+' — '+n.status+'\n  '+n.text+(n.dueDate?'\n  Follow-up due: '+n.dueDate:'')+'\n';
+                }
+                function buildReportText(d){
+                    let t='INSTRUMENTPRO — SHIFT / HANDOVER REPORT\n=========================================\n';
+                    t+='Generated: '+new Date().toLocaleString()+'\n';
+                    t+='Range: '+d.label+'\n';
+                    if(d.reportedBy) t+='Reported by: '+d.reportedBy+'\n';
+                    if(d.handoverTo) t+='Handed over to: '+d.handoverTo+'\n';
+                    t+='\nSUMMARY\n-------\nTotal notes: '+d.items.length+'  |  Open: '+d.openItems.length+'  |  High/Critical: '+d.highItems.length+'  |  Overdue: '+d.overdueItems.length+'  |  Resolved: '+d.resolvedItems.length+'\n';
+                    if(d.overdueItems.length){ t+='\nOVERDUE FOLLOW-UPS\n-------------------\n'; d.overdueItems.forEach(n=>t+=entryLine(n)+'\n'); }
+                    if(d.highItems.length){ t+='\nHIGH / CRITICAL PRIORITY\n------------------------\n'; d.highItems.forEach(n=>t+=entryLine(n)+'\n'); }
+                    t+='\nOUTSTANDING (OPEN / IN PROGRESS)\n---------------------------------\n';
+                    t+= d.openItems.length ? d.openItems.map(entryLine).join('\n') : 'None — all clear.\n';
+                    t+='\nCOMPLETED TODAY / THIS RANGE\n-----------------------------\n';
+                    t+= d.resolvedItems.length ? d.resolvedItems.map(entryLine).join('\n') : 'None recorded.\n';
+                    t+='\nFULL LOG\n--------\n';
+                    t+= d.items.length ? d.items.map(entryLine).join('\n') : 'No notes in this range.\n';
+                    return t;
+                }
+                function renderPreview(){
+                    const d=buildReportData();
+                    document.getElementById('rptSummary').innerHTML=
+                        '<div><strong>'+d.items.length+'</strong><span>Total</span></div>'+
+                        '<div><strong>'+d.openItems.length+'</strong><span>Open</span></div>'+
+                        '<div><strong style="color:'+(d.overdueItems.length?'#dc2626':'#1e293b')+'">'+d.overdueItems.length+'</strong><span>Overdue</span></div>'+
+                        '<div><strong>'+d.resolvedItems.length+'</strong><span>Resolved</span></div>';
+                    const prev=document.getElementById('rptPreview');
+                    if(!d.items.length){ prev.innerHTML='<div class="rpt-empty">No field notes in this range yet.</div>'; return; }
+                    function section(title, arr){
+                        if(!arr.length) return '';
+                        return '<div class="rpt-section-title">'+title+'</div>'+arr.map(n=>
+                            '<div class="rpt-entry"><b>'+esc(n.tag||'Unassigned')+'</b> · '+esc(n.priority)+' · '+esc(n.status)+
+                            (n.location?' · '+esc(n.location):'')+'<br>'+esc(n.text)+'</div>'
+                        ).join('');
+                    }
+                    prev.innerHTML=
+                        section('Overdue follow-ups', d.overdueItems)+
+                        section('High / Critical', d.highItems)+
+                        section('Outstanding', d.openItems)+
+                        section('Resolved', d.resolvedItems)+
+                        section('Full log ('+d.items.length+')', d.items);
+                }
+                document.getElementById('rptRangeRow').querySelectorAll('.rpt-range-chip').forEach(chip=>{
+                    chip.onclick=()=>{
+                        rptRange=chip.dataset.range;
+                        document.querySelectorAll('#rptRangeRow .rpt-range-chip').forEach(c=>c.classList.toggle('active', c===chip));
+                        renderPreview();
+                    };
+                });
+                ['rptReportedBy','rptHandoverTo'].forEach(id=>document.getElementById(id).addEventListener('input',renderPreview));
+
+                document.getElementById('fnBuildReportBtn').onclick=()=>{
+                    rptRange='shift';
+                    document.querySelectorAll('#rptRangeRow .rpt-range-chip').forEach(c=>c.classList.toggle('active', c.dataset.range==='shift'));
+                    document.getElementById('rptModal').classList.add('open');
+                    document.getElementById('rptModal').setAttribute('aria-hidden','false');
+                    document.body.style.overflow='hidden';
+                    renderPreview();
+                };
+                document.querySelectorAll('[data-close-rpt]').forEach(x=>x.onclick=()=>{
+                    document.getElementById('rptModal').classList.remove('open');
+                    document.getElementById('rptModal').setAttribute('aria-hidden','true');
+                    document.body.style.overflow='';
+                });
+
+                // ---- jsPDF lazy loader ----
+                let jspdfPromise=null;
+                function loadJsPDF(){
+                    if(window.jspdf && window.jspdf.jsPDF) return Promise.resolve(window.jspdf.jsPDF);
+                    if(jspdfPromise) return jspdfPromise;
+                    jspdfPromise=new Promise((resolve,reject)=>{
+                        const script=document.createElement('script');
+                        script.src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+                        script.async=true;
+                        script.onload=()=>resolve(window.jspdf.jsPDF);
+                        script.onerror=()=>{ jspdfPromise=null; reject(new Error('PDF library could not be loaded')); };
+                        document.head.appendChild(script);
+                    });
+                    return jspdfPromise;
+                }
+                function buildPdfBlob(d){
+                    return loadJsPDF().then(jsPDF=>{
+                        const doc=new jsPDF({unit:'pt',format:'a4'});
+                        const marginX=40; let y=50; const pageH=doc.internal.pageSize.getHeight(); const maxW=515;
+                        function ensureSpace(lines){ if(y+lines*13>pageH-40){ doc.addPage(); y=50; } }
+                        doc.setFont('helvetica','bold'); doc.setFontSize(15);
+                        doc.text('InstrumentPro — Shift / Handover Report', marginX, y); y+=22;
+                        doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(90);
+                        doc.text('Generated: '+new Date().toLocaleString(), marginX, y); y+=13;
+                        doc.text('Range: '+d.label, marginX, y); y+=13;
+                        if(d.reportedBy){ doc.text('Reported by: '+d.reportedBy, marginX, y); y+=13; }
+                        if(d.handoverTo){ doc.text('Handed over to: '+d.handoverTo, marginX, y); y+=13; }
+                        y+=6; doc.setDrawColor(220); doc.line(marginX,y,marginX+maxW,y); y+=18;
+                        doc.setTextColor(20); doc.setFont('helvetica','bold'); doc.setFontSize(11);
+                        doc.text('Summary', marginX, y); y+=16;
+                        doc.setFont('helvetica','normal'); doc.setFontSize(9.5);
+                        doc.text('Total: '+d.items.length+'   Open: '+d.openItems.length+'   High/Critical: '+d.highItems.length+'   Overdue: '+d.overdueItems.length+'   Resolved: '+d.resolvedItems.length, marginX, y);
+                        y+=22;
+                        function writeSection(title, arr){
+                            if(!arr.length) return;
+                            ensureSpace(2);
+                            doc.setFont('helvetica','bold'); doc.setFontSize(11); doc.setTextColor(37,99,235);
+                            doc.text(title, marginX, y); y+=15;
+                            doc.setTextColor(20);
+                            arr.forEach(n=>{
+                                ensureSpace(3);
+                                doc.setFont('helvetica','bold'); doc.setFontSize(9.5);
+                                doc.text((n.tag||'Unassigned')+'  ·  '+n.priority+'  ·  '+n.status+(n.location?'  ·  '+n.location:''), marginX, y); y+=12;
+                                doc.setFont('helvetica','normal'); doc.setFontSize(9);
+                                const bodyLines=doc.splitTextToSize(n.text||'', maxW-10);
+                                bodyLines.forEach(line=>{ ensureSpace(1); doc.text(line, marginX+10, y); y+=11; });
+                                doc.setFontSize(8); doc.setTextColor(120);
+                                doc.text(fmt(n.ts)+(n.dueDate?'  ·  Follow-up due '+n.dueDate:''), marginX+10, y); y+=14;
+                                doc.setTextColor(20);
+                            });
+                            y+=4;
+                        }
+                        writeSection('Overdue Follow-ups', d.overdueItems);
+                        writeSection('High / Critical Priority', d.highItems);
+                        writeSection('Outstanding (Open / In Progress)', d.openItems);
+                        writeSection('Resolved', d.resolvedItems);
+                        writeSection('Full Log', d.items);
+                        return doc.output('blob');
+                    });
+                }
+                document.getElementById('rptTxtBtn').onclick=()=>{
+                    const d=buildReportData();
+                    if(!d.items.length){ alert('No notes in this range to export.'); return; }
+                    download('InstrumentPro_Shift_Report_'+new Date().toISOString().slice(0,10)+'.txt', buildReportText(d), 'text/plain');
+                };
+                document.getElementById('rptPdfBtn').onclick=(e)=>{
+                    const d=buildReportData();
+                    if(!d.items.length){ alert('No notes in this range to export.'); return; }
+                    const btn=e.currentTarget; const orig=btn.innerHTML; btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Building…'; btn.disabled=true;
+                    buildPdfBlob(d).then(blob=>{
+                        const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+                        a.download='InstrumentPro_Shift_Report_'+new Date().toISOString().slice(0,10)+'.pdf'; a.click();
+                        setTimeout(()=>URL.revokeObjectURL(a.href),500);
+                    }).catch(()=>alert('Could not load the PDF library — check your connection and try again.'))
+                      .finally(()=>{ btn.innerHTML=orig; btn.disabled=false; });
+                };
+                document.getElementById('rptCopyBtn').onclick=()=>{
+                    const d=buildReportData();
+                    if(!d.items.length){ alert('No notes in this range to copy.'); return; }
+                    const text=buildReportText(d);
+                    if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(()=>alert('Report copied to clipboard.')).catch(()=>alert('Could not copy — your browser may block clipboard access here.')); }
+                    else alert('Clipboard is not available in this browser.');
+                };
+                document.getElementById('rptEmailBtn').onclick=()=>{
+                    const d=buildReportData();
+                    if(!d.items.length){ alert('No notes in this range to email.'); return; }
+                    const subject=encodeURIComponent('InstrumentPro Shift Report — '+new Date().toLocaleDateString());
+                    const body=encodeURIComponent(buildReportText(d).slice(0,1800)+(buildReportText(d).length>1800?'\n\n[Report truncated — use Download PDF/TXT for the full report]':''));
+                    window.location.href='mailto:?subject='+subject+'&body='+body;
+                };
+                document.getElementById('rptShareBtn').onclick=(e)=>{
+                    const d=buildReportData();
+                    if(!d.items.length){ alert('No notes in this range to share.'); return; }
+                    const btn=e.currentTarget; const orig=btn.innerHTML; btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Preparing…'; btn.disabled=true;
+                    buildPdfBlob(d).then(blob=>{
+                        const filename='InstrumentPro_Shift_Report_'+new Date().toISOString().slice(0,10)+'.pdf';
+                        const file=new File([blob], filename, {type:'application/pdf'});
+                        if(navigator.canShare && navigator.canShare({files:[file]})){
+                            return navigator.share({files:[file], title:'InstrumentPro Shift Report', text:d.label}).catch(err=>{ if(err && err.name==='AbortError') return; throw err; });
+                        }
+                        if(navigator.share){
+                            return navigator.share({title:'InstrumentPro Shift Report', text:buildReportText(d).slice(0,1800)}).catch(err=>{ if(err && err.name==='AbortError') return; throw err; });
+                        }
+                        const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=filename; a.click();
+                        setTimeout(()=>URL.revokeObjectURL(a.href),500);
+                        alert('Direct sharing isn\'t supported in this browser — the PDF downloaded instead. Attach it manually to WhatsApp, email, etc.');
+                    }).catch(()=>alert('Could not prepare the report for sharing. Try Download PDF instead.'))
+                      .finally(()=>{ btn.innerHTML=orig; btn.disabled=false; });
+                };
+
                 render();
             })();
 
@@ -10412,6 +10780,12 @@ $('troubleDone').onclick=closeModal;
 
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape' && $('troubleModal').classList.contains('open')) closeModal();
+  if(e.key==='Escape'){
+    const rm=document.getElementById('rptModal');
+    if(rm && rm.classList.contains('open')){
+      rm.classList.remove('open'); rm.setAttribute('aria-hidden','true'); document.body.style.overflow='';
+    }
+  }
 });
 
 })();
