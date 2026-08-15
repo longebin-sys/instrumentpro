@@ -3654,6 +3654,32 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 </style>
 </head>
 <body>
+<script id="ip-draft-utils">
+(function(){
+    'use strict';
+    function save(key, data){
+        try{ localStorage.setItem(key, JSON.stringify({data:data, savedAt:new Date().toISOString()})); return true; }
+        catch(e){ console.error('InstrumentPro draft save failed:', e); return false; }
+    }
+    function load(key){
+        try{
+            var raw = localStorage.getItem(key);
+            if(!raw) return null;
+            var parsed = JSON.parse(raw);
+            return (parsed && parsed.data) ? parsed : null;
+        }catch(e){ console.error('InstrumentPro draft load failed:', e); return null; }
+    }
+    function clear(key){ try{ localStorage.removeItem(key); }catch(e){} }
+    function flash(btn, label, icon){
+        if(!btn) return;
+        var original = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-'+icon+'"></i> '+label;
+        setTimeout(function(){ btn.innerHTML = original; btn.disabled = false; }, 1400);
+    }
+    window.ipDraft = { save: save, load: load, clear: clear, flash: flash };
+})();
+</script>
 
     <!-- ============================================================
     SPLASH / LOADING SCREEN
@@ -5968,7 +5994,8 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
                                 <div class="rs-actions">
                                     <button type="button" class="btn" id="generateReportBtn"><i class="fas fa-sync"></i> Build</button>
                                     <button class="btn btn-outline" id="rsIssueBtn"><i class="fas fa-stamp"></i> Issue</button>
-                                    <button class="btn btn-outline" id="rsPrintBtn"><i class="fas fa-print"></i> Print</button>
+                                    <button class="btn btn-outline" id="rsSaveDraftBtn"><i class="fas fa-save"></i> Save Draft</button>
+                                    <button class="btn btn-outline" id="rsClearAllBtn"><i class="fas fa-eraser"></i> Clear All</button>
                                 </div>
                             </div>
                             <div class="rs-section rs-full">
@@ -5976,10 +6003,8 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
                                 <div id="reportPreview" class="report-preview">Report will appear here.</div>
                                 <div class="rs-actions" style="margin-top:8px;">
                                     <button class="btn btn-outline" id="exportReportBtn"><i class="fas fa-download"></i> Export HTML</button>
-                                    <button class="btn btn-outline" id="rsJsonBtn"><i class="fas fa-code"></i> JSON</button>
-                                    <button class="btn btn-outline" id="rsCsvBtn"><i class="fas fa-table"></i> CSV</button>
+                                    <button class="btn btn-outline" id="rsPrintBtn"><i class="fas fa-print"></i> Print</button>
                                 </div>
-                                <button class="btn btn-outline w-full mt-1" id="syncReportBtn"><i class="fas fa-cloud-upload-alt"></i> Sync Report</button>
                             </div>
                             <div class="rs-section rs-full">
                                 <h4><i class="fas fa-history"></i> Report History</h4>
@@ -6031,6 +6056,7 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
                         <div class="comm-grid"><input id="commTechnician" placeholder="Commissioning technician"/><input id="commWitness" placeholder="Witness / client representative"/><input id="commSupervisor" placeholder="Supervisor / approver"/><select id="commFinalStatus"><option>Pending Sign-off</option><option>Ready for Handover</option><option>Accepted</option><option>Accepted with Punch List</option><option>Rejected / Rework Required</option></select></div>
                     </div>
                     <div class="comm-actions"><button type="button" class="btn" id="commCheckBtn"><i class="fas fa-file-signature"></i> Build Report</button><button class="btn btn-outline" id="commPrintBtn"><i class="fas fa-print"></i> Print</button><button class="btn btn-outline" id="commExportBtn"><i class="fas fa-download"></i> Export</button><button class="btn btn-outline" id="commSyncBtn"><i class="fas fa-cloud-upload-alt"></i> Sync</button></div>
+                    <div class="comm-actions"><button class="btn btn-outline" id="commSaveDraftBtn"><i class="fas fa-save"></i> Save Draft</button><button class="btn btn-outline" id="commClearAllBtn"><i class="fas fa-eraser"></i> Clear All</button></div>
                     <div class="comm-section"><div class="comm-section-title"><i class="fas fa-file-contract"></i><span>Live Commissioning Report</span></div><div id="commOutput" class="comm-preview">Build the report to generate the professional commissioning report.</div></div>
                 </div>
 
@@ -6049,6 +6075,7 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <div class="card" style="padding:10px;margin-bottom:8px"><div class="card-header"><i class="fas fa-user-check"></i><h3>Sign-off & Findings</h3></div><div class="row"><label>Technician</label><input id="loopTech" placeholder="Name"></div><div class="row"><label>Witness</label><input id="loopWitness" placeholder="Optional"></div><div class="row"><label>Findings</label><textarea id="loopNotes" placeholder="Observations, deviations, corrective actions..."></textarea></div><div class="row"><label>Final Status</label><select id="loopFinalStatus"><option>Pending Review</option><option>Ready for Startup</option><option>Accepted with Punch List</option><option>Failed - Retest Required</option></select></div></div>
 <button class="btn w-full" id="loopCheckGenBtn"><i class="fas fa-file-circle-check"></i> Build Advanced Loop Report</button><div id="loopCheckPreview" class="report-preview mt-1">Advanced loop report will appear here.</div>
 <div class="row mt-1" style="gap:5px"><button class="btn btn-outline" id="loopCheckExportBtn"><i class="fas fa-download"></i> Export</button><button class="btn btn-outline" id="loopCheckCsvBtn"><i class="fas fa-table"></i> CSV</button><button class="btn btn-outline" id="loopCheckSyncBtn"><i class="fas fa-cloud-upload-alt"></i> Sync</button></div>
+<div class="row mt-1" style="gap:5px"><button class="btn btn-outline" id="loopCheckSaveDraftBtn"><i class="fas fa-save"></i> Save Draft</button><button class="btn btn-outline" id="loopCheckClearAllBtn"><i class="fas fa-eraser"></i> Clear All</button></div>
 </div>
 <div class="report-main-panel hidden" id="reportpanel-setpoints">
                     <div style="font-size:0.65rem;color:#64748b;margin-bottom:8px;">Document alarm/trip setpoints for a tag — useful for handover packages and change records.</div>
@@ -8157,6 +8184,46 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
                 document.getElementById('commPrintBtn').addEventListener('click',function(){build();const w=window.open('','_blank');w.document.write('<html><head><title>Commissioning Report</title><style>body{font-family:Arial;padding:28px;color:#172033}table{width:100%;border-collapse:collapse}td,th{padding:8px;border:1px solid #ddd;text-align:left}</style></head><body>'+document.getElementById('commOutput').innerHTML+'</body></html>');w.document.close();w.print();});
                 document.getElementById('commExportBtn').addEventListener('click',function(){const r=build();const blob=new Blob([document.getElementById('commOutput').innerText],{type:'text/plain'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=r.id+'.txt';a.click();});
                 document.getElementById('commSyncBtn').addEventListener('click',function(){const r=build();window.syncReportToWebhooks({source:'InstrumentPro',type:'Commissioning',reportId:r.id,project:r.project,tag:r.tag,status:r.status,completion:r.score,tests:r.tests,punchList:r.punches,timestamp:new Date().toISOString()});});
+                const COMM_DRAFT_KEY='instrumentpro_commissioning_draft';
+                const commStaticIds=['commProject','commTag','commSystem','commLocation','commManufacturer','commModel','commDate','commType','commPower','commCalibration','commLoop','commFunction','commAlarm','commHandover','commFindings','commTechnician','commWitness','commSupervisor','commFinalStatus'];
+                function commCollectDraft(){
+                    const data={fields:{},checks:[],punches:punches};
+                    commStaticIds.forEach(id=>{const e=document.getElementById(id);if(e)data.fields[id]=e.value;});
+                    document.querySelectorAll('[data-comm-check]').forEach(e=>{data.checks[Number(e.dataset.commCheck)]=e.checked;});
+                    return data;
+                }
+                function commApplyDraft(data){
+                    if(!data)return;
+                    commStaticIds.forEach(id=>{if(data.fields&&(id in data.fields)){const e=document.getElementById(id);if(e)e.value=data.fields[id];}});
+                    document.querySelectorAll('[data-comm-check]').forEach(e=>{const i=Number(e.dataset.commCheck);if(data.checks&&data.checks[i]!==undefined)e.checked=!!data.checks[i];});
+                    punches=Array.isArray(data.punches)?data.punches:[];
+                    renderPunches();
+                    update();
+                }
+                function commSaveDraft(btn){
+                    window.ipDraft.save(COMM_DRAFT_KEY,commCollectDraft());
+                    window.ipDraft.flash(btn,'Saved','check');
+                }
+                function commClearAll(){
+                    if(!confirm('Clear all fields in this commissioning report? This cannot be undone.'))return;
+                    commStaticIds.forEach(id=>{
+                        const e=document.getElementById(id);
+                        if(!e)return;
+                        if(e.tagName==='SELECT')e.selectedIndex=0; else e.value='';
+                    });
+                    document.getElementById('commDate').value=new Date().toISOString().slice(0,10);
+                    document.querySelectorAll('[data-comm-check]').forEach(e=>e.checked=false);
+                    punches=[];
+                    renderPunches();
+                    document.getElementById('commOutput').innerHTML='Build the report to generate the professional commissioning report.';
+                    document.getElementById('commReportId').textContent='COMM-DRAFT';
+                    window.ipDraft.clear(COMM_DRAFT_KEY);
+                    update();
+                }
+                document.getElementById('commSaveDraftBtn').addEventListener('click',function(){commSaveDraft(this);});
+                document.getElementById('commClearAllBtn').addEventListener('click',commClearAll);
+                const savedCommDraft=window.ipDraft&&window.ipDraft.load(COMM_DRAFT_KEY);
+                if(savedCommDraft)commApplyDraft(savedCommDraft.data);
                 update();
             })();
 
@@ -8180,6 +8247,51 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
                 document.getElementById('loopCheckExportBtn').addEventListener('click',function(){const c=document.getElementById('loopCheckPreview').textContent;if(c.startsWith('Advanced loop report'))return alert('Build the loop report first.');const b=new Blob([c],{type:'text/plain'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='LoopCheck_'+(document.getElementById('loopTag').value.trim()||'tag')+'_'+new Date().toISOString().slice(0,10)+'.txt';a.click();URL.revokeObjectURL(a.href);});
                 document.getElementById('loopCheckCsvBtn').addEventListener('click',function(){const rows=[['Point','Expected','Measured','Error','Status']];table.querySelectorAll('tr').forEach(tr=>rows.push(Array.from(tr.querySelectorAll('td')).map(td=>{let x=td.querySelector('input');return x?x.value:td.textContent.trim();})));const csv=rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n'),b=new Blob([csv],{type:'text/csv'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='LoopCheck_measurements.csv';a.click();URL.revokeObjectURL(a.href);});
                 document.getElementById('loopCheckSyncBtn').addEventListener('click',function(){const c=document.getElementById('loopCheckPreview').textContent;if(c.startsWith('Advanced loop report'))return alert('Build the loop report first.');window.syncReportToWebhooks({source:'InstrumentPro',type:'AdvancedLoopCheck',timestamp:new Date().toISOString(),tag:document.getElementById('loopTag').value.trim(),report:c});});
+                const LOOP_DRAFT_KEY='instrumentpro_loopcheck_draft';
+                const loopStaticIds=['loopTag','loopDesc','loopSystem','loopSignalType','loopLRV','loopURV','loopUnits','loopTolerance','loopAlarmResult','loopTripResult','loopFailSafeResult','loopHmiResult','loopTech','loopWitness','loopNotes','loopFinalStatus'];
+                function loopCollectDraft(){
+                    const data={fields:{},checks:[],measured:[]};
+                    loopStaticIds.forEach(id=>{const e=document.getElementById(id);if(e)data.fields[id]=e.value;});
+                    for(let i=1;i<=10;i++){const e=document.getElementById('loopChk'+i);if(e)data.checks[i-1]=e.checked;}
+                    table.querySelectorAll('.loop-measured').forEach(e=>{data.measured[Number(e.dataset.i)]=e.value;});
+                    return data;
+                }
+                function loopApplyDraft(data){
+                    if(!data)return;
+                    loopStaticIds.forEach(id=>{if(data.fields&&(id in data.fields)){const e=document.getElementById(id);if(e)e.value=data.fields[id];}});
+                    render();
+                    if(data.measured)table.querySelectorAll('.loop-measured').forEach(e=>{const i=Number(e.dataset.i);if(data.measured[i]!==undefined)e.value=data.measured[i];});
+                    evaluate();
+                    for(let i=1;i<=10;i++){const e=document.getElementById('loopChk'+i);if(e&&data.checks&&data.checks[i-1]!==undefined)e.checked=!!data.checks[i-1];}
+                    progress();
+                }
+                function loopSaveDraft(btn){
+                    window.ipDraft.save(LOOP_DRAFT_KEY,loopCollectDraft());
+                    window.ipDraft.flash(btn,'Saved','check');
+                }
+                function loopClearAll(){
+                    if(!confirm('Clear all fields in this loop check? This cannot be undone.'))return;
+                    loopStaticIds.forEach(id=>{
+                        const e=document.getElementById(id);
+                        if(!e)return;
+                        if(e.tagName==='SELECT'){e.selectedIndex=0;}
+                        else if(id==='loopLRV')e.value='0';
+                        else if(id==='loopURV')e.value='100';
+                        else if(id==='loopUnits')e.value='%';
+                        else if(id==='loopTolerance')e.value='.50';
+                        else e.value='';
+                    });
+                    for(let i=1;i<=10;i++){const e=document.getElementById('loopChk'+i);if(e)e.checked=false;}
+                    render();
+                    progress();
+                    document.getElementById('loopCheckPreview').textContent='Advanced loop report will appear here.';
+                    const chip=document.getElementById('loopOverallStatusChip');chip.textContent='NOT STARTED';chip.style.background='';chip.style.color='';
+                    window.ipDraft.clear(LOOP_DRAFT_KEY);
+                }
+                document.getElementById('loopCheckSaveDraftBtn').addEventListener('click',function(){loopSaveDraft(this);});
+                document.getElementById('loopCheckClearAllBtn').addEventListener('click',loopClearAll);
+                const savedLoopDraft=window.ipDraft&&window.ipDraft.load(LOOP_DRAFT_KEY);
+                if(savedLoopDraft)loopApplyDraft(savedLoopDraft.data);
             })();
 
             // ALARM/TRIP SETPOINT DOCUMENTATION
@@ -10358,6 +10470,52 @@ function rsExport(){rsRender();var html='<!doctype html><html><head><meta charse
 function rsJson(){rsRender();rsDownload(rsCurrent.id+'.json',JSON.stringify(rsCurrent,null,2),'application/json');}
 function rsCsv(){rsRender();var o=rsCurrent,c=o.calculation,rows=['Report ID,Device Type,Tag,Test,Result,Details'];(o.deviceData.tests||[]).forEach(function(t){rows.push([o.id,o.deviceType,o.reportTag,t.name,t.passed?'PASS':'FAIL',''].map(function(v){return '"'+String(v==null?'':v).replace(/"/g,'""')+'"';}).join(','));});if(c.kind==='calibration')[0,25,50,75,100].forEach(function(p){var v=o.deviceData.fields['point_'+p];rows.push([o.id,o.deviceType,o.reportTag,p+'% reference',Number.isFinite(parseFloat(v))?'Recorded':'Missing',v].map(function(v){return '"'+String(v==null?'':v).replace(/"/g,'""')+'"';}).join(','));});rsDownload(o.id+'.csv',rows.join('\n'),'text/csv');}
 function rsSync(){rsRender();if(typeof window.syncReportToWebhooks==='function')window.syncReportToWebhooks({source:'InstrumentPro',type:'FieldReport',report:rsCurrent});else alert('Report sync is not configured yet.');}
+var RS_DRAFT_KEY='instrumentpro_field_draft';
+function rsStaticIds(){
+ return ['reportTag','reportModel','rsManufacturer','rsSerial','rsLocation','rsTechnician','reportType','rsRange','rsUnit','rsToleranceSpec','rsReference','rsWorkOrder','rsObservations','rsRootCause','rsCorrective','rsVerification','rsTechSign','rsSupervisor'];
+}
+function rsCollectDraft(){
+ var data={device:rsDevice(),fields:{},dc:{},tests:[],points:{}};
+ rsStaticIds().forEach(function(id){var e=document.getElementById(id);if(e)data.fields[id]=e.value;});
+ var body=document.getElementById('rsDeviceConfigBody');
+ if(body){
+   body.querySelectorAll('[data-dc]').forEach(function(e){data.dc[e.dataset.dc]=e.value;});
+   body.querySelectorAll('[data-test-index]').forEach(function(e){data.tests[Number(e.dataset.testIndex)]=e.checked;});
+   body.querySelectorAll('.rs-dyn-point').forEach(function(e){data.points[e.dataset.point]=e.value;});
+ }
+ return data;
+}
+function rsApplyDraft(data){
+ if(!data)return;
+ var deviceSel=document.getElementById('rsDeviceType');
+ if(deviceSel)deviceSel.value=data.device||'';
+ updateRsMeta();
+ renderDeviceConfig();
+ rsStaticIds().forEach(function(id){if(data.fields&&(id in data.fields)){var e=document.getElementById(id);if(e)e.value=data.fields[id];}});
+ var body=document.getElementById('rsDeviceConfigBody');
+ if(body){
+   if(data.dc)body.querySelectorAll('[data-dc]').forEach(function(e){if(data.dc[e.dataset.dc]!==undefined)e.value=data.dc[e.dataset.dc];});
+   if(data.tests)body.querySelectorAll('[data-test-index]').forEach(function(e){var i=Number(e.dataset.testIndex);if(data.tests[i]!==undefined)e.checked=!!data.tests[i];});
+   if(data.points)body.querySelectorAll('.rs-dyn-point').forEach(function(e){if(data.points[e.dataset.point]!==undefined)e.value=data.points[e.dataset.point];});
+ }
+ rsCurrent=null;
+ rsRender();
+}
+function rsSaveDraft(btn){
+ window.ipDraft.save(RS_DRAFT_KEY,rsCollectDraft());
+ window.ipDraft.flash(btn,'Saved','check');
+}
+function rsClearAll(){
+ if(!confirm('Clear all fields in this field report? This cannot be undone.'))return;
+ rsStaticIds().forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});
+ var deviceSel=document.getElementById('rsDeviceType');
+ if(deviceSel)deviceSel.value='';
+ updateRsMeta();
+ renderDeviceConfig();
+ window.ipDraft.clear(RS_DRAFT_KEY);
+ rsCurrent=null;
+ rsRender();
+}
 function init(){
  var ids=['reportTag','reportModel','rsManufacturer','rsSerial','rsLocation','rsTechnician','reportType','rsRange','rsUnit','rsToleranceSpec','rsReference','rsWorkOrder','rsObservations','rsRootCause','rsCorrective','rsVerification','rsTechSign','rsSupervisor'];
  ids.forEach(function(id){var e=document.getElementById(id);if(e)e.addEventListener('input',rsRender);e&&e.addEventListener('change',rsRender);});
@@ -10379,9 +10537,13 @@ function init(){
  });
  var bind=function(id,fn){var e=document.getElementById(id);if(e)e.addEventListener('click',fn);};
  bind('generateReportBtn',rsRender);bind('rsIssueBtn',rsIssue);bind('rsPrintBtn',function(){rsRender();var w=window.open('','_blank');if(!w){alert('Allow pop-ups to print the report.');return;}w.document.write('<html><head><title>'+rsEsc(rsCurrent.id)+'</title></head><body>'+document.getElementById('reportPreview').innerHTML+'</body></html>');w.document.close();w.focus();w.print();});
- bind('exportReportBtn',rsExport);bind('rsJsonBtn',rsJson);bind('rsCsvBtn',rsCsv);bind('syncReportBtn',rsSync);
+ bind('exportReportBtn',rsExport);
+ bind('rsSaveDraftBtn',function(){rsSaveDraft(document.getElementById('rsSaveDraftBtn'));});
+ bind('rsClearAllBtn',rsClearAll);
  updateRsMeta();
  rsHistory();rsRender();
+ var savedFieldDraft=window.ipDraft&&window.ipDraft.load(RS_DRAFT_KEY);
+ if(savedFieldDraft)rsApplyDraft(savedFieldDraft.data);
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
