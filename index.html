@@ -1081,6 +1081,9 @@
         #rsDynamicPoints.cal-points-grid {
             grid-template-columns: 1fr;
         }
+        #maCalPointsContainer.cal-points-grid {
+            grid-template-columns: 1fr;
+        }
         .cal-point input.cal-actual {
             padding: 4px 10px;
             border: 1px solid #dce1e9;
@@ -4302,62 +4305,59 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
                     <div style="font-size:0.65rem;color:#64748b;margin-top:4px;">Typical usable linear range is roughly 10-90 mils (mid-scale bias around -10 Vdc on a -24V Proximitor supply) — readings pinned near 0V or near supply rail indicate the probe is out of its linear range or miswired.</div>
                 </div>
                 <div class="sub-panel hidden" id="conv-ma">
-                    <div class="card-header"><i class="fas fa-bolt"></i><h3>4-20mA Loop Calculator</h3><span>Linear</span></div>
+                    <div class="card-header"><i class="fas fa-bolt"></i><h3>4-20mA Test Points</h3><span>Linear</span></div>
                     <div class="row">
                         <label>LRV / URV</label>
                         <input type="number" id="maLRV" value="0" step="any" style="flex:0.4;" />
                         <span>to</span>
                         <input type="number" id="maURV" value="100" step="any" style="flex:0.4;" />
-                        <input type="text" id="maUnit" value="%" placeholder="Unit" style="flex:0.3;max-width:56px;" />
                     </div>
                     <div class="row">
-                        <label>Burden R</label>
-                        <input type="number" id="maBurdenR" value="250" step="any" style="flex:0.5;" /><span class="chip">Ω, for mV</span>
-                    </div>
-                    <div class="row">
-                        <label>Ω Range</label>
-                        <input type="number" id="maOhmLRV" value="0" step="any" style="flex:0.4;" />
-                        <span>to</span>
-                        <input type="number" id="maOhmURV" value="1000" step="any" style="flex:0.4;" /><span class="chip">Ω</span>
-                    </div>
-                    <div class="row">
-                        <label>Input</label>
-                        <input type="number" id="mAInput" value="12" step="any" style="flex:0.6;" />
-                        <select id="maInputType" style="flex:0.5;">
-                            <option value="ma" selected>mA</option>
-                            <option value="pct">%</option>
-                            <option value="pv">PV (Engineering)</option>
-                            <option value="mv">mV</option>
-                            <option value="ohm">Resistance (Ω)</option>
+                        <label>Unit</label>
+                        <select id="maUnit" style="flex:0.7;">
+                            <optgroup label="Pressure">
+                                <option value="kPa" selected>kPa</option>
+                                <option value="MPa">MPa</option>
+                                <option value="bar">bar</option>
+                                <option value="mbar">mbar</option>
+                                <option value="psi">psi</option>
+                                <option value="inH2O">inH2O</option>
+                                <option value="mmHg">mmHg</option>
+                                <option value="atm">atm</option>
+                            </optgroup>
+                            <optgroup label="Temperature">
+                                <option value="°C">°C</option>
+                                <option value="°F">°F</option>
+                                <option value="K">K</option>
+                            </optgroup>
+                            <optgroup label="Electrical">
+                                <option value="mA">mA</option>
+                                <option value="mV">mV</option>
+                                <option value="Ω">Ω (resistance)</option>
+                                <option value="%">% (percentage)</option>
+                            </optgroup>
+                            <optgroup label="Level / Flow">
+                                <option value="mm">mm</option>
+                                <option value="m">m</option>
+                                <option value="m³/h">m³/h</option>
+                                <option value="L/min">L/min</option>
+                                <option value="GPM">GPM</option>
+                            </optgroup>
                         </select>
                     </div>
-                    <div class="row">
-                        <label>Output</label>
-                        <select id="maOutputType" style="flex:0.6;">
-                            <option value="pv" selected>PV (Engineering)</option>
-                            <option value="ma">mA</option>
-                            <option value="pct">%</option>
-                            <option value="mv">mV</option>
-                            <option value="ohm">Resistance (Ω)</option>
-                        </select>
-                        <button class="btn" id="mAConvertBtn"><i class="fas fa-exchange-alt"></i> Convert</button>
-                    </div>
-                    <div class="result-box"><span id="mA_ResultLabel">Result (PV)</span><span id="mA_Result">50.00</span></div>
-                    <div class="result-box"><span>mA</span><span id="mA_MaResult">12.00 mA</span></div>
-                    <div class="result-box"><span>% of Range</span><span id="mA_PctResult">50.00 %</span></div>
-                    <div class="result-box"><span>PV</span><span id="mA_PvResult">50.00</span></div>
-                    <div class="result-box"><span>mV (across burden R)</span><span id="mA_MvResult">3000.00 mV</span></div>
-                    <div class="result-box"><span>Resistance</span><span id="mA_OhmResult">500.00 Ω</span></div>
-                    <div class="result-box"><span>Status</span><span id="mA_LoopStatus" style="color:#059669;">✓ Normal</span></div>
 
-                    <div class="card-header mt-1" style="border-top:1px solid rgba(148,163,184,.25);padding-top:8px;"><i class="fas fa-list-check"></i><h3 style="font-size:.8rem;">5-Point Calibration</h3></div>
-                    <div class="row"><label>Tolerance</label><input type="number" id="maCalTolerance" value="0.1" step="0.01" style="flex:0.4;" /><span class="chip">% of span</span></div>
-                    <div style="font-size:0.65rem;color:#64748b;margin-bottom:6px;">Enter the <strong>actual</strong> mA measured at each 0/25/50/75/100% test point — error is calculated against the ideal 4-20mA value.</div>
+                    <div class="card-header mt-1" style="border-top:1px solid rgba(148,163,184,.25);padding-top:8px;"><i class="fas fa-list-check"></i><h3 style="font-size:.8rem;">5 Test Points</h3></div>
                     <div id="maCalPointsContainer" class="cal-points-grid"></div>
-                    <div class="flex mt-1">
-                        <span class="badge badge-pass" id="maCalPassFail"><i class="fas fa-check"></i> Pass</span>
-                        <span class="chip" id="maCalErrorDisplay"><i class="fas fa-percent"></i> Max error: 0.00%</span>
+
+                    <div class="card-header mt-1" style="border-top:1px solid rgba(148,163,184,.25);padding-top:8px;"><i class="fas fa-arrow-right-arrow-left"></i><h3 style="font-size:.8rem;">Reverse Lookup</h3></div>
+                    <div style="font-size:0.65rem;color:#64748b;margin-bottom:6px;">Enter a measured mA reading to find the % and engineering value it corresponds to.</div>
+                    <div class="row">
+                        <label>mA reading</label>
+                        <input type="number" id="maReverseInput" value="16" step="any" style="flex:0.6;" />
                     </div>
+                    <div class="result-box"><span>% of Range</span><span id="maReversePct">75.00 %</span></div>
+                    <div class="result-box"><span id="maReverseLabel">Value</span><span id="maReverseResult">75.00</span></div>
+
                     <button class="btn w-full mt-1" id="maExportBtn" style="justify-content:center;"><i class="fas fa-download"></i> Export as .txt</button>
                 </div>
                 <div class="sub-panel hidden" id="conv-rtd">
@@ -6962,102 +6962,20 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
             convertTemp();
 
             // =============================================================
-            // 4-20mA LOOP CALCULATOR
+            // 4-20mA TEST POINTS (LRV/URV -> 5-point table + reverse lookup)
             // =============================================================
             const maLRV = document.getElementById('maLRV');
             const maURV = document.getElementById('maURV');
             const maUnit = document.getElementById('maUnit');
-            const maBurdenR = document.getElementById('maBurdenR');
-            const maOhmLRV = document.getElementById('maOhmLRV');
-            const maOhmURV = document.getElementById('maOhmURV');
-            const mAInput = document.getElementById('mAInput');
-            const maInputType = document.getElementById('maInputType');
-            const maOutputType = document.getElementById('maOutputType');
-            const mAConvertBtn = document.getElementById('mAConvertBtn');
-            const mA_ResultLabel = document.getElementById('mA_ResultLabel');
-            const mA_Result = document.getElementById('mA_Result');
-            const mA_MaResult = document.getElementById('mA_MaResult');
-            const mA_PctResult = document.getElementById('mA_PctResult');
-            const mA_PvResult = document.getElementById('mA_PvResult');
-            const mA_MvResult = document.getElementById('mA_MvResult');
-            const mA_OhmResult = document.getElementById('mA_OhmResult');
-            const mA_LoopStatus = document.getElementById('mA_LoopStatus');
-
-            const maOutputLabels = { ma: 'Result (mA)', pct: 'Result (%)', pv: 'Result (PV)', mv: 'Result (mV)', ohm: 'Result (Ω)' };
-
-            // Convert any supported input type + raw value into % of the 4-20mA span (0-100)
-            function maPctFromInput(type, val) {
-                const lrv = parseFloat(maLRV.value) || 0;
-                const urv = parseFloat(maURV.value) || 100;
-                const pvSpan = (urv - lrv) || 1;
-                const r = parseFloat(maBurdenR.value) || 250;
-                const oLo = parseFloat(maOhmLRV.value) || 0;
-                const oHi = parseFloat(maOhmURV.value) || 100;
-                const oSpan = (oHi - oLo) || 1;
-                if (type === 'ma') return (val - 4) / 16 * 100;
-                if (type === 'pct') return val;
-                if (type === 'pv') return (val - lrv) / pvSpan * 100;
-                if (type === 'mv') return ((val / (r || 1)) - 4) / 16 * 100;
-                if (type === 'ohm') return (val - oLo) / oSpan * 100;
-                return 0;
-            }
-
-            // Derive every representation (mA, %, PV, mV, Ω) from a % of span
-            function maAllFromPct(pct) {
-                const lrv = parseFloat(maLRV.value) || 0;
-                const urv = parseFloat(maURV.value) || 100;
-                const r = parseFloat(maBurdenR.value) || 250;
-                const oLo = parseFloat(maOhmLRV.value) || 0;
-                const oHi = parseFloat(maOhmURV.value) || 100;
-                const ma = 4 + (16 * pct / 100);
-                const pv = lrv + ((urv - lrv) * pct / 100);
-                const mv = ma * r;
-                const ohm = oLo + ((oHi - oLo) * pct / 100);
-                return { ma, pct, pv, mv, ohm };
-            }
-
-            function convertmA() {
-                const inType = maInputType.value;
-                const rawVal = parseFloat(mAInput.value) || 0;
-                const pct = maPctFromInput(inType, rawVal);
-                const vals = maAllFromPct(pct);
-                const unit = (maUnit.value || '').trim();
-
-                mA_MaResult.textContent = vals.ma.toFixed(2) + ' mA';
-                mA_PctResult.textContent = vals.pct.toFixed(2) + ' %';
-                mA_PvResult.textContent = vals.pv.toFixed(2) + (unit ? ' ' + unit : '');
-                mA_MvResult.textContent = vals.mv.toFixed(2) + ' mV';
-                mA_OhmResult.textContent = vals.ohm.toFixed(2) + ' Ω';
-
-                const outType = maOutputType.value;
-                mA_ResultLabel.textContent = maOutputLabels[outType] || 'Result';
-                if (outType === 'ma') mA_Result.textContent = vals.ma.toFixed(2) + ' mA';
-                else if (outType === 'pct') mA_Result.textContent = vals.pct.toFixed(2) + ' %';
-                else if (outType === 'pv') mA_Result.textContent = vals.pv.toFixed(2) + (unit ? ' ' + unit : '');
-                else if (outType === 'mv') mA_Result.textContent = vals.mv.toFixed(2) + ' mV';
-                else if (outType === 'ohm') mA_Result.textContent = vals.ohm.toFixed(2) + ' Ω';
-
-                const ma = vals.ma;
-                if (ma < 3.8) mA_LoopStatus.innerHTML = '⚠️ Loop open';
-                else if (ma > 20.5) mA_LoopStatus.innerHTML = '⚠️ Overrange';
-                else if (ma < 3.9 || ma > 20.1) mA_LoopStatus.innerHTML = '⚠️ Out of range';
-                else mA_LoopStatus.innerHTML = '✓ Normal';
-            }
-            [mAInput, maInputType, maOutputType, maLRV, maURV, maUnit, maBurdenR, maOhmLRV, maOhmURV].forEach(el => {
-                el.addEventListener('input', convertmA);
-                el.addEventListener('change', convertmA);
-            });
-            mAConvertBtn.addEventListener('click', convertmA);
-            convertmA();
-
-            // ---- 5-Point Calibration (0/25/50/75/100%) ----
             const maCalPointsContainer = document.getElementById('maCalPointsContainer');
-            const maCalTolerance = document.getElementById('maCalTolerance');
-            const maCalPassFail = document.getElementById('maCalPassFail');
-            const maCalErrorDisplay = document.getElementById('maCalErrorDisplay');
             const maExportBtn = document.getElementById('maExportBtn');
+            const maReverseInput = document.getElementById('maReverseInput');
+            const maReversePct = document.getElementById('maReversePct');
+            const maReverseLabel = document.getElementById('maReverseLabel');
+            const maReverseResult = document.getElementById('maReverseResult');
             const maCalPts = [0, 25, 50, 75, 100];
 
+            // ---- Forward: LRV/URV -> the 5 standard test points ----
             function buildMaCalPoints() {
                 const lrv = parseFloat(maLRV.value) || 0;
                 const urv = parseFloat(maURV.value) || 100;
@@ -7067,80 +6985,58 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
                 maCalPts.forEach(p => {
                     const idealMa = 4 + (16 * p / 100);
                     const idealPv = lrv + (span * p / 100);
-                    html += `<div class="cal-point"><span>${p}% (${idealPv.toFixed(2)}${unit ? ' ' + unit : ''})</span><span>ideal ${idealMa.toFixed(2)} mA</span>` +
-                        `<input type="number" class="cal-actual" data-ideal="${idealMa}" data-percent="${p}" data-target="${idealPv.toFixed(4)}" step="0.01" placeholder="actual mA" style="width:60px;" /></div>`;
+                    html += `<div class="cal-point"><span>${p}%</span><span>${idealPv.toFixed(2)}${unit ? ' ' + unit : ''}</span><span>${idealMa.toFixed(2)} mA</span></div>`;
                 });
                 maCalPointsContainer.innerHTML = html;
-                maCalPointsContainer.querySelectorAll('.cal-actual').forEach(inp => inp.addEventListener('input', evaluateMaCal));
-                evaluateMaCal();
             }
 
-            function evaluateMaCal() {
-                const tol = parseFloat(maCalTolerance.value) || 0.1;
-                let maxErrorPct = 0;
-                let anyEntered = false;
-                maCalPointsContainer.querySelectorAll('.cal-actual').forEach(inp => {
-                    if (inp.value.trim() === '') return;
-                    anyEntered = true;
-                    const ideal = parseFloat(inp.dataset.ideal);
-                    const actual = parseFloat(inp.value);
-                    const errorPct = Math.abs(actual - ideal) / 16 * 100;
-                    if (errorPct > maxErrorPct) maxErrorPct = errorPct;
-                });
-                if (!anyEntered) {
-                    maCalErrorDisplay.innerHTML = 'Max error: — (enter actual readings)';
-                    maCalPassFail.className = 'badge badge-warn';
-                    maCalPassFail.innerHTML = 'Pending';
-                    return;
-                }
-                maCalErrorDisplay.innerHTML = `Max error: ${maxErrorPct.toFixed(3)}%`;
-                const pass = maxErrorPct <= tol;
-                maCalPassFail.className = pass ? 'badge badge-pass' : 'badge badge-fail';
-                maCalPassFail.innerHTML = pass ? 'Pass' : 'Fail';
+            // ---- Reverse: measured mA -> % and engineering value ----
+            function updateMaReverse() {
+                const lrv = parseFloat(maLRV.value) || 0;
+                const urv = parseFloat(maURV.value) || 100;
+                const unit = (maUnit.value || '').trim();
+                const ma = parseFloat(maReverseInput.value) || 0;
+                const pct = (ma - 4) / 16 * 100;
+                const pv = lrv + ((urv - lrv) * pct / 100);
+                maReversePct.textContent = pct.toFixed(2) + ' %';
+                maReverseLabel.textContent = unit ? 'Value (' + unit + ')' : 'Value';
+                maReverseResult.textContent = pv.toFixed(2) + (unit ? ' ' + unit : '');
             }
-            maLRV.addEventListener('input', buildMaCalPoints);
-            maURV.addEventListener('input', buildMaCalPoints);
-            maUnit.addEventListener('input', buildMaCalPoints);
-            maCalTolerance.addEventListener('input', evaluateMaCal);
+
+            [maLRV, maURV, maUnit].forEach(el => {
+                el.addEventListener('input', () => { buildMaCalPoints(); updateMaReverse(); });
+                el.addEventListener('change', () => { buildMaCalPoints(); updateMaReverse(); });
+            });
+            maReverseInput.addEventListener('input', updateMaReverse);
             buildMaCalPoints();
+            updateMaReverse();
 
             maExportBtn.addEventListener('click', function() {
                 const lrv = parseFloat(maLRV.value) || 0;
                 const urv = parseFloat(maURV.value) || 100;
+                const span = urv - lrv;
                 const unit = (maUnit.value || '').trim();
-                const tol = parseFloat(maCalTolerance.value) || 0.1;
                 const date = new Date().toLocaleString();
-                let maxErrorPct = 0;
                 const lines = [];
-                maCalPointsContainer.querySelectorAll('.cal-point').forEach(row => {
-                    const inp = row.querySelector('.cal-actual');
-                    const percent = inp.dataset.percent;
-                    const target = parseFloat(inp.dataset.target);
-                    const ideal = parseFloat(inp.dataset.ideal);
-                    const actualRaw = inp.value.trim();
-                    const actual = actualRaw === '' ? null : parseFloat(actualRaw);
-                    const errorPct = actual === null ? null : Math.abs(actual - ideal) / 16 * 100;
-                    if (errorPct !== null && errorPct > maxErrorPct) maxErrorPct = errorPct;
-                    lines.push(`  ${percent.padStart(3)}%  |  Target PV: ${target.toFixed(2)}${unit ? ' ' + unit : ''}  |  Ideal: ${ideal.toFixed(2)} mA  |  Actual: ${actual === null ? '—' : actual.toFixed(2) + ' mA'}  |  Error: ${errorPct === null ? '—' : errorPct.toFixed(3) + '%'}`);
+                maCalPts.forEach(p => {
+                    const idealMa = 4 + (16 * p / 100);
+                    const idealPv = lrv + (span * p / 100);
+                    lines.push(`  ${String(p).padStart(3)}%  |  ${idealPv.toFixed(2)}${unit ? ' ' + unit : ''}  |  ${idealMa.toFixed(2)} mA`);
                 });
-                const pass = maxErrorPct <= tol;
                 const content =
                     `========================================\n` +
-                    `INSTRUMENTPRO 4-20mA LOOP CALIBRATION\n` +
+                    `INSTRUMENTPRO 4-20mA TEST POINTS\n` +
                     `========================================\n` +
                     `Date: ${date}\n` +
                     `Range: ${lrv} to ${urv} ${unit}\n` +
-                    `Tolerance: ${tol}% of span\n` +
                     `----------------------------------------\n` +
+                    `   %    |   Value   |   mA\n` +
                     lines.join('\n') + '\n' +
-                    `----------------------------------------\n` +
-                    `Max Error: ${maxErrorPct.toFixed(3)}%\n` +
-                    `Result: ${pass ? 'PASS' : 'FAIL'}\n` +
                     `========================================`;
                 const blob = new Blob([content], { type: 'text/plain' });
                 const a = document.createElement('a');
                 a.href = URL.createObjectURL(blob);
-                a.download = 'LoopCal_4-20mA_' + new Date().toISOString().slice(0, 10) + '.txt';
+                a.download = 'TestPoints_4-20mA_' + new Date().toISOString().slice(0, 10) + '.txt';
                 a.click();
                 URL.revokeObjectURL(a.href);
             });
