@@ -1942,15 +1942,6 @@
             min-height: 48px;
             flex: 0 0 82px;
         }
-        #page-calibration .cal-point .fill-live-btn {
-            width: 34px;
-            min-width: 34px;
-            height: 38px;
-            padding: 0;
-            display: inline-grid;
-            place-items: center;
-            line-height: 1;
-        }
         @media (max-width: 520px) {
             #page-calibration .card {
                 margin-bottom: 0;
@@ -3694,7 +3685,7 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
             </div>
             <div class="home-kpi">
                 <div class="home-kpi-value" id="homeRecentCount">0</div>
-                
+                <div class="home-kpi-label">Recent</div>
             </div>
         </div>
     </div>
@@ -4295,7 +4286,7 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
                     <div id="calLiveBar" class="row hidden" style="background:#f0fdf4;border-radius:16px;padding:8px 12px;">
                         <i class="fas fa-satellite-dish" style="color:#059669;"></i>
                         <span style="font-size:0.75rem;flex:1;">Live: <strong id="calLiveValue">—</strong></span>
-                        <span style="font-size:0.6rem;color:#64748b;">Tap a point's 📥 to fill it</span>
+                        <span style="font-size:0.6rem;color:#64748b;">Enter readings manually</span>
                     </div>
                     <div id="calPointsContainer" class="cal-points-grid"></div>
                     <div class="flex mt-1">
@@ -6870,28 +6861,15 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
                     const val = low + (span * p / 100);
                     if (isValve) {
                         html += `<div class="cal-point"><span>${p}% signal</span><span>ideal ${val.toFixed(2)} ${unit}</span>` +
-                            `<input type="number" class="cal-actual" data-ideal="${val.toFixed(4)}" data-percent="${p}" data-target="${val.toFixed(4)}" data-span="${span}" step="0.01" placeholder="actual ${unit}" style="width:60px;" />` +
-                            `<button type="button" class="fill-live-btn" title="Fill from live reading" style="background:none;border:none;cursor:pointer;font-size:0.9rem;">📥</button></div>`;
+                            `<input type="number" class="cal-actual" data-ideal="${val.toFixed(4)}" data-percent="${p}" data-target="${val.toFixed(4)}" data-span="${span}" step="0.01" placeholder="actual ${unit}" style="width:60px;" /></div>`;
                     } else {
                         const idealMa = 4 + (16 * p / 100);
                         html += `<div class="cal-point"><span>${p}% (${val.toFixed(2)} ${unit})</span><span>ideal ${idealMa.toFixed(2)} mA</span>` +
-                            `<input type="number" class="cal-actual" data-ideal="${idealMa}" data-percent="${p}" data-target="${val.toFixed(4)}" data-span="16" step="0.01" placeholder="actual mA" style="width:60px;" />` +
-                            `<button type="button" class="fill-live-btn" title="Fill from live reading" style="background:none;border:none;cursor:pointer;font-size:0.9rem;">📥</button></div>`;
+                            `<input type="number" class="cal-actual" data-ideal="${idealMa}" data-percent="${p}" data-target="${val.toFixed(4)}" data-span="16" step="0.01" placeholder="actual mA" style="width:60px;" /></div>`;
                     }
                 });
                 calPointsContainer.innerHTML = html;
                 calPointsContainer.querySelectorAll('.cal-actual').forEach(inp => inp.addEventListener('input', evaluateCal));
-                calPointsContainer.querySelectorAll('.fill-live-btn').forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        const input = this.previousElementSibling;
-                        if (window.InstrumentProLive && window.InstrumentProLive.value !== null) {
-                            input.value = window.InstrumentProLive.value;
-                            evaluateCal();
-                        } else {
-                            alert('No live device connected. Go to Settings → Connect Device to pair a Bluetooth or WiFi test instrument first.');
-                        }
-                    });
-                });
                 evaluateCal();
             }
 
