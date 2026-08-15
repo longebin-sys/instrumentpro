@@ -4928,11 +4928,56 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <div class="sub-tab" data-tab="elec-power-conversion">Power Conversion</div>
 </div>
 <div class="sub-panel active" id="elec-ohm">
-<div class="row"><label>V</label><input id="ohmV" step="any" type="number" value="24"/><span class="chip">V</span></div>
-<div class="row"><label>I</label><input id="ohmI" step="any" type="number" value="20"/><span class="chip">mA</span></div>
+<div class="card-header" style="margin-bottom:8px;">
+  <i class="fas fa-bolt"></i><h3 style="font-size:0.85rem;">Ohm's Law + Electrical Power</h3>
+  <span>Enter any 2 known values</span>
+</div>
+<div class="row">
+  <label>Voltage</label>
+  <input id="ohmV" step="any" type="number" placeholder="Enter value"/>
+  <select id="ohmVUnit">
+    <option value="v" selected>V</option>
+    <option value="mv">mV</option>
+    <option value="kv">kV</option>
+  </select>
+</div>
+<div class="row">
+  <label>Current</label>
+  <input id="ohmI" step="any" type="number" placeholder="Enter value"/>
+  <select id="ohmIUnit">
+    <option value="ua">µA</option>
+    <option value="ma" selected>mA</option>
+    <option value="a">A</option>
+  </select>
+</div>
+<div class="row">
+  <label>Resistance</label>
+  <input id="ohmR" step="any" type="number" placeholder="Enter value"/>
+  <select id="ohmRUnit">
+    <option value="ohm" selected>Ω</option>
+    <option value="kohm">kΩ</option>
+    <option value="mohm">MΩ</option>
+  </select>
+</div>
+<div class="row">
+  <label>Power</label>
+  <input id="ohmP" step="any" type="number" placeholder="Enter value"/>
+  <select id="ohmPUnit">
+    <option value="uw">µW</option>
+    <option value="mw">mW</option>
+    <option value="w" selected>W</option>
+    <option value="kw">kW</option>
+  </select>
+</div>
+<div id="ohmKnownHint" style="font-size:0.72rem;color:#64748b;margin:4px 0 8px;">
+  Enter any two values. InstrumentPro calculates the other two.
+</div>
 <button class="btn" id="ohmCalcBtn"><i class="fas fa-calculator"></i> Calculate</button>
-<div class="result-box"><span>R</span><span id="ohmResult">1200.00 Ω</span></div>
-<div class="result-box"><span>P</span><span id="powerResult">0.48 W</span></div>
+<div id="ohmStatus" style="font-size:0.78rem;font-weight:700;margin:8px 0;text-align:center;"></div>
+<div class="result-box"><span>Voltage</span><span id="ohmVResult">—</span></div>
+<div class="result-box"><span>Current</span><span id="ohmIResult">—</span></div>
+<div class="result-box"><span>Resistance</span><span id="ohmRResult">—</span></div>
+<div class="result-box"><span>Power</span><span id="ohmPResult">—</span></div>
 </div>
 <div class="sub-panel hidden" id="elec-vd">
 <div class="row"><label>V</label><input id="vdVoltage" step="any" type="number" value="480"/></div>
@@ -8778,22 +8823,116 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 
             // =============================================================
             const ohmV = document.getElementById('ohmV');
+            const ohmVUnit = document.getElementById('ohmVUnit');
             const ohmI = document.getElementById('ohmI');
-            const ohmResult = document.getElementById('ohmResult');
-            const powerResult = document.getElementById('powerResult');
+            const ohmIUnit = document.getElementById('ohmIUnit');
+            const ohmR = document.getElementById('ohmR');
+            const ohmRUnit = document.getElementById('ohmRUnit');
+            const ohmP = document.getElementById('ohmP');
+            const ohmPUnit = document.getElementById('ohmPUnit');
             const ohmCalcBtn = document.getElementById('ohmCalcBtn');
+            const ohmStatus = document.getElementById('ohmStatus');
+            const ohmKnownHint = document.getElementById('ohmKnownHint');
+            const ohmVResult = document.getElementById('ohmVResult');
+            const ohmIResult = document.getElementById('ohmIResult');
+            const ohmRResult = document.getElementById('ohmRResult');
+            const ohmPResult = document.getElementById('ohmPResult');
+
+            const ohmUnits = {
+                v: { scale: 1, label: 'V' }, mv: { scale: 1e-3, label: 'mV' }, kv: { scale: 1e3, label: 'kV' },
+                ua: { scale: 1e-6, label: 'µA' }, ma: { scale: 1e-3, label: 'mA' }, a: { scale: 1, label: 'A' },
+                ohm: { scale: 1, label: 'Ω' }, kohm: { scale: 1e3, label: 'kΩ' }, mohm: { scale: 1e6, label: 'MΩ' },
+                uw: { scale: 1e-6, label: 'µW' }, mw: { scale: 1e-3, label: 'mW' }, w: { scale: 1, label: 'W' }, kw: { scale: 1e3, label: 'kW' }
+            };
+
+            function readOhm(el, unitEl) {
+                const n = parseFloat(el.value);
+                return Number.isFinite(n) ? n * ohmUnits[unitEl.value].scale : null;
+            }
+            function fmtOhm(value, type) {
+                if (!Number.isFinite(value)) return '—';
+                let candidates;
+                if (type === 'v') candidates = [['kV',1e3],['V',1],['mV',1e-3]];
+                if (type === 'i') candidates = [['A',1],['mA',1e-3],['µA',1e-6]];
+                if (type === 'r') candidates = [['MΩ',1e6],['kΩ',1e3],['Ω',1]];
+                if (type === 'p') candidates = [['kW',1e3],['W',1],['mW',1e-3],['µW',1e-6]];
+                let pick = candidates[candidates.length - 1];
+                for (const c of candidates) {
+                    const x = Math.abs(value / c[1]);
+                    if (x >= 1 && x < 1000) { pick = c; break; }
+                }
+                const shown = value / pick[1];
+                const digits = Math.abs(shown) >= 100 ? 2 : Math.abs(shown) >= 10 ? 3 : 4;
+                return shown.toFixed(digits) + ' ' + pick[0];
+            }
 
             function calcOhm() {
-                const v = parseFloat(ohmV.value) || 0;
-                const i = parseFloat(ohmI.value) / 1000 || 0;
-                const r = i > 0 ? v / i : 0;
-                const p = v * i;
-                ohmResult.textContent = r.toFixed(2) + ' Ω';
-                powerResult.textContent = p.toFixed(4) + ' W';
+                const V = readOhm(ohmV, ohmVUnit);
+                const I = readOhm(ohmI, ohmIUnit);
+                const R = readOhm(ohmR, ohmRUnit);
+                const P = readOhm(ohmP, ohmPUnit);
+
+                const known = [
+                    ['V', V], ['I', I], ['R', R], ['P', P]
+                ].filter(x => x[1] !== null && Number.isFinite(x[1]));
+
+                if (known.length < 2) {
+                    ohmStatus.textContent = 'Enter any 2 known values to calculate the other 2.';
+                    ohmStatus.style.color = '#b45309';
+                    ohmKnownHint.textContent = 'Need at least two valid values.';
+                    ohmVResult.textContent = V !== null ? fmtOhm(V,'v') : '—';
+                    ohmIResult.textContent = I !== null ? fmtOhm(I,'i') : '—';
+                    ohmRResult.textContent = R !== null ? fmtOhm(R,'r') : '—';
+                    ohmPResult.textContent = P !== null ? fmtOhm(P,'p') : '—';
+                    return;
+                }
+
+                let v=V, i=I, r=R, p=P;
+                if (v === null && i !== null && r !== null) v = i*r;
+                if (i === null && v !== null && r !== null) i = v/r;
+                if (r === null && v !== null && i !== null) r = v/i;
+                if (p === null) {
+                    if (v !== null && i !== null) p = v*i;
+                    else if (i !== null && r !== null) p = i*i*r;
+                    else if (v !== null && r !== null) p = v*v/r;
+                }
+
+                const values = [v,i,r,p];
+                if (values.some(x => !Number.isFinite(x) || x < 0) || (r === 0 && (i > 0 || p > 0))) {
+                    ohmStatus.textContent = '⚠️ Check the entered values — they are not physically valid together.';
+                    ohmStatus.style.color = '#dc2626';
+                    return;
+                }
+
+                // If all four are supplied, verify consistency rather than silently overwriting them.
+                const supplied = {V,I,R,P};
+                const tolerances = {V:0.005,I:0.005,R:0.005,P:0.005};
+                const checks = [];
+                if (V !== null && i !== null && r !== null) checks.push(Math.abs(V-i*r)/Math.max(Math.abs(V),1e-12));
+                if (V !== null && I !== null && p !== null) checks.push(Math.abs(P-V*I)/Math.max(Math.abs(P),1e-12));
+                if (I !== null && R !== null && p !== null) checks.push(Math.abs(P-I*I*R)/Math.max(Math.abs(P),1e-12));
+                if (V !== null && R !== null && p !== null) checks.push(Math.abs(P-V*V/R)/Math.max(Math.abs(P),1e-12));
+
+                if (checks.some(x => x > 0.01)) {
+                    ohmStatus.textContent = '⚠️ The entered values are inconsistent. Check the measurements.';
+                    ohmStatus.style.color = '#dc2626';
+                } else {
+                    ohmStatus.textContent = known.length === 2 ? '✓ Calculated from the 2 entered values.' : '✓ Values are consistent.';
+                    ohmStatus.style.color = '#059669';
+                }
+
+                ohmKnownHint.textContent = 'Ohm’s Law: V = I × R  •  Power: P = V × I = I²R = V²/R';
+                ohmVResult.textContent = fmtOhm(v,'v');
+                ohmIResult.textContent = fmtOhm(i,'i');
+                ohmRResult.textContent = fmtOhm(r,'r');
+                ohmPResult.textContent = fmtOhm(p,'p');
             }
+
+            [ohmV,ohmI,ohmR,ohmP,ohmVUnit,ohmIUnit,ohmRUnit,ohmPUnit].forEach(el => {
+                el.addEventListener('input', calcOhm);
+                el.addEventListener('change', calcOhm);
+            });
             ohmCalcBtn.addEventListener('click', calcOhm);
-            ohmV.addEventListener('input', calcOhm);
-            ohmI.addEventListener('input', calcOhm);
             calcOhm();
 
             // =============================================================
