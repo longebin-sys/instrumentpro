@@ -5076,6 +5076,11 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <div class="page" id="page-bending">
 <div class="page-title"><i class="fas fa-pipe-valve"></i> Tube Bending</div>
 <div class="card">
+<div class="sub-tabs" id="bendingTabs">
+<div class="sub-tab active" data-tab="bend-single">Single Bend</div>
+<div class="sub-tab" data-tab="bend-run">Multi-Bend Run</div>
+</div>
+<div class="sub-panel active" id="bend-single">
 <div class="table-wrap"><table><thead><tr><th>Size</th><th>OD</th><th>Radius</th><th>Wall</th><th>Model</th></tr></thead>
 <tbody><tr><td>1/4"</td><td>0.250</td><td>0.5625</td><td>0.028-0.065"</td><td>MS-HTB-4</td></tr>
 <tr><td>5/16"</td><td>0.3125</td><td>0.75</td><td>0.028-0.065"</td><td>MS-HTB-5</td></tr>
@@ -5083,19 +5088,50 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <tr><td>1/2"</td><td>0.500</td><td>1.5</td><td>0.035-0.083"</td><td>MS-HTB-8</td></tr></tbody>
 </table></div>
 <div style="font-size:0.65rem;color:#64748b;margin:6px 0 10px 0;">Radius/wall figures per Swagelok tube bending guidance for standard hand benders. Always confirm against the specific bender and tubing spec sheet you're using — wall thickness outside this range risks wrinkling or wall thinning at the bend.</div>
-<div class="row mt-1"><label>Tube</label><select id="tubeSize"><option value="0.25">1/4"</option><option value="0.3125">5/16"</option><option selected="" value="0.375">3/8"</option><option value="0.5">1/2"</option></select></div>
+<div class="row mt-1"><label>Units</label><select id="bendUnit"><option selected="" value="in">Inches</option><option value="mm">Millimeters</option></select></div>
+<div class="row"><label>Tube</label><select id="tubeSize"><option value="0.25">1/4"</option><option value="0.3125">5/16"</option><option selected="" value="0.375">3/8"</option><option value="0.5">1/2"</option></select></div>
+<div class="row"><label>Custom R</label><input id="bendCustomRadius" placeholder="Override radius (optional)" step="any" type="number"/><span class="chip" id="bendUnitChip1">in</span></div>
+<div class="row"><label>Material</label><select id="bendMaterial"><option value="0">— None / no allowance —</option><option value="3" selected="">Stainless Steel (≈3° overbend)</option><option value="1.5">Copper — soft (≈1.5° overbend)</option><option value="2">Aluminum (≈2° overbend)</option><option value="0.5">PTFE / Poly — soft (≈0.5° overbend)</option></select></div>
 <div class="row"><label>Angle</label><input id="bendAngle" step="any" type="number" value="90"/><span class="chip">°</span></div>
-<div class="row"><label>Offset</label><input id="bendOffset" step="any" type="number" value="6"/><span class="chip">in</span></div>
+<div class="row"><label>Offset</label><input id="bendOffset" step="any" type="number" value="6"/><span class="chip" id="bendUnitChip2">in</span></div>
 <button class="btn" id="bendCalcBtn"><i class="fas fa-calculator"></i> Calculate</button>
 <div class="result-box"><span>Gain</span><span id="bendGain">0.563 in</span></div>
+<div class="result-box"><span>Setback</span><span id="bendSetback">—</span></div>
+<div class="result-box"><span>Arc / bend length</span><span id="bendArcLen">—</span></div>
 <div class="result-box"><span>Mark</span><span id="bendMark">6.56 in</span></div>
+<div class="result-box"><span>Bend-to angle (w/ springback)</span><span id="bendSpringback">—</span></div>
 <div class="result-box"><span>Model</span><span id="benderModel">MS-HTB-6</span></div>
-<div style="font-size:0.65rem;color:#64748b;margin-top:6px;">Gain computed from real bend geometry: 2R·tan(θ/2) − Rθ(rad), not a rough linear approximation.</div>
+<div style="font-size:0.65rem;color:#64748b;margin-top:6px;">Gain computed from real bend geometry: 2R·tan(θ/2) − Rθ(rad). Setback = R·tan(θ/2) — the tangent-point distance back from the mark, used to locate where the bend actually starts. Springback allowance is a field rule-of-thumb, not a substitute for a trial bend on scrap tube.</div>
+</div>
+<div class="sub-panel hidden" id="bend-run">
+<div class="row mt-1"><label>Tube</label><select id="tubeSizeRun"><option value="0.25">1/4"</option><option value="0.3125">5/16"</option><option selected="" value="0.375">3/8"</option><option value="0.5">1/2"</option></select><span class="chip" id="bendUnitChip3">in</span></div>
+<div style="font-size:0.65rem;color:#64748b;margin:2px 0 10px;">Build a run as a sequence of bends. For each bend, enter its angle and the straight tangent-to-tangent length running <strong>into</strong> that bend from the previous one (or from the start of the tube for the first bend).</div>
+<div class="table-wrap"><table id="bendRunTable"><thead><tr><th>#</th><th>Angle °</th><th>Straight in</th><th>Arc len</th><th></th></tr></thead><tbody id="bendRunBody"></tbody></table></div>
+<button class="btn btn-sm" id="bendRunAddBtn" style="margin-top:8px;"><i class="fas fa-plus"></i> Add Bend</button>
+<div class="row mt-1"><label>Tail length</label><input id="bendRunTail" step="any" type="number" value="0"/><span class="chip" id="bendUnitChip4">in</span></div>
+<div class="result-box"><span>Total developed (cut) length</span><span id="bendRunTotal">—</span></div>
+<div style="font-size:0.65rem;color:#64748b;margin-top:6px;">Total = sum of straight segments + sum of bend arc lengths (2πR·θ/360) + tail length after the last bend. Add stock for tube-cutter squareness and fitting insertion depth separately — this is developed centerline length only.</div>
+</div>
 </div>
 </div>
 <!-- ==========================================================
         PAGE: REFERENCES
         ========================================================== -->
+<style id="bending-modernize">
+#page-bending .bend-run-input {
+  width: 64px;
+  text-align: center;
+  padding: 6px;
+  border-radius: 8px;
+}
+#page-bending .bend-run-remove {
+  cursor: pointer;
+  color: #dc2626;
+  font-size: 0.9rem;
+}
+#page-bending #bendRunTable td { white-space: nowrap; }
+#page-bending .sub-tabs { margin-bottom: 12px; }
+</style>
 <div class="page" id="page-references">
 <div class="page-title"><i class="fas fa-book"></i> Reference Library</div>
 <div class="card">
@@ -6085,6 +6121,132 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 </div>
 </div>
 </div>
+<style id="references-modernize">
+/* ============================================================
+   REFERENCE LIBRARY — MODERNIZED UI
+   ============================================================ */
+#page-references .card {
+  padding: 16px !important;
+  border-radius: 20px !important;
+}
+
+/* Tabs: bigger, modern pill selector */
+#page-references #refTabs.tab-scroll {
+  gap: 8px !important;
+  padding: 2px 2px 14px !important;
+}
+#page-references #refTabs .tab {
+  font-size: 0.78rem !important;
+  font-weight: 650 !important;
+  padding: 10px 16px !important;
+  border-radius: 999px !important;
+  background: var(--ui-accent-soft, #eff6ff) !important;
+  color: var(--ui-accent, #2563eb) !important;
+  border: 1px solid transparent !important;
+  transition: .15s ease !important;
+}
+#page-references #refTabs .tab.active {
+  background: linear-gradient(135deg, var(--ui-accent,#2563eb), color-mix(in srgb, var(--ui-accent,#2563eb) 78%, #000)) !important;
+  color: #fff !important;
+  box-shadow: 0 4px 12px rgba(37,99,235,.25) !important;
+}
+body.dark #page-references #refTabs .tab {
+  background: #17232d !important;
+  color: #93c5fd !important;
+}
+body.dark #page-references #refTabs .tab.active {
+  color: #fff !important;
+}
+
+/* Panels: base readable font size + relaxed line height */
+#page-references .ref-panel {
+  font-size: 0.86rem !important;
+  line-height: 1.55 !important;
+  padding-top: 4px !important;
+}
+
+/* Section headers — a div wrapping a single <strong> acts as a heading */
+#page-references .ref-panel > div:has(> strong:only-child) {
+  font-size: 0.98rem !important;
+  font-weight: 800 !important;
+  color: var(--ui-accent, #2563eb) !important;
+  margin: 20px 0 10px !important;
+  padding-bottom: 7px !important;
+  border-bottom: 2px solid var(--ui-accent-soft, #eff6ff) !important;
+  letter-spacing: -.01em !important;
+}
+#page-references .ref-panel > div:has(> strong:only-child):first-child {
+  margin-top: 2px !important;
+}
+body.dark #page-references .ref-panel > div:has(> strong:only-child) {
+  border-bottom-color: #223140 !important;
+}
+
+/* Bump every inline tiny font-size to something readable, tiered by original size */
+#page-references [style*="font-size:0.6rem"]  { font-size: 0.8rem  !important; }
+#page-references [style*="font-size:0.65rem"] { font-size: 0.84rem !important; }
+#page-references [style*="font-size:0.68rem"] { font-size: 0.85rem !important; }
+#page-references [style*="font-size:0.7rem"]  { font-size: 0.86rem !important; }
+#page-references [style*="font-size:0.72rem"] { font-size: 0.88rem !important; }
+#page-references [style*="font-size:0.75rem"] { font-size: 0.9rem  !important; }
+#page-references [style*="font-size:0.8rem"]  { font-size: 0.95rem !important; }
+
+/* Notes / disclaimers stay muted but legible in both themes */
+body.dark #page-references [style*="color:#94a3b8"] { color: #8ea0af !important; }
+body.dark #page-references [style*="color:#64748b"] { color: #9fb0bf !important; }
+body.dark #page-references [style*="color:#0b2d4e"] { color: #cfe0f3 !important; }
+
+/* Chips */
+#page-references .chip {
+  font-size: 0.78rem !important;
+  padding: 6px 14px !important;
+  border-radius: 999px !important;
+  background: var(--ui-accent-soft, #eff6ff) !important;
+  color: #1d4ed8 !important;
+  font-weight: 650 !important;
+  margin: 3px 5px 3px 0 !important;
+  line-height: 1.4 !important;
+}
+body.dark #page-references .chip {
+  background: #17232d !important;
+  color: #93c5fd !important;
+}
+
+/* Tables */
+#page-references table { font-size: 0.8rem !important; }
+#page-references th {
+  font-size: 0.72rem !important;
+  padding: 10px 10px !important;
+  letter-spacing: .03em !important;
+}
+#page-references td {
+  font-size: 0.8rem !important;
+  padding: 10px 10px !important;
+}
+#page-references .table-wrap { border-radius: 16px !important; }
+
+/* Dividers */
+#page-references hr {
+  margin: 20px 0 !important;
+  opacity: .6 !important;
+}
+
+/* Diagram / callout boxes */
+#page-references .dp-diagram {
+  border-radius: 16px !important;
+  padding: 16px !important;
+}
+
+@media (max-width: 420px) {
+  #page-references #refTabs .tab {
+    font-size: 0.74rem !important;
+    padding: 9px 14px !important;
+  }
+  #page-references .ref-panel {
+    font-size: 0.84rem !important;
+  }
+}
+</style>
 <!-- ==========================================================
         PAGE: TROUBLESHOOTING (short)
         ========================================================== -->
@@ -6683,7 +6845,7 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
                         container.querySelectorAll(':scope > .sub-tab').forEach(t => t.classList.remove('active'));
                         this.classList.add('active');
                         const panelId = this.dataset.tab;
-                        const scope = container.closest('.sub-panel') || container.closest('.card');
+                        const scope = container.closest('.sub-panel') || container.closest('.ref-panel') || container.closest('.card');
                         scope.querySelectorAll(':scope > .sub-panel').forEach(p => {
                             p.classList.remove('active');
                             p.classList.add('hidden');
@@ -8635,12 +8797,24 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
             // BENDING
             // =============================================================
             const tubeSize = document.getElementById('tubeSize');
+            const tubeSizeRun = document.getElementById('tubeSizeRun');
             const bendAngle = document.getElementById('bendAngle');
             const bendOffset = document.getElementById('bendOffset');
+            const bendCustomRadius = document.getElementById('bendCustomRadius');
+            const bendMaterial = document.getElementById('bendMaterial');
             const bendGain = document.getElementById('bendGain');
+            const bendSetback = document.getElementById('bendSetback');
+            const bendArcLen = document.getElementById('bendArcLen');
             const bendMark = document.getElementById('bendMark');
+            const bendSpringback = document.getElementById('bendSpringback');
             const benderModel = document.getElementById('benderModel');
             const bendCalcBtn = document.getElementById('bendCalcBtn');
+            const bendUnit = document.getElementById('bendUnit');
+            const bendRunTail = document.getElementById('bendRunTail');
+            const bendRunBody = document.getElementById('bendRunBody');
+            const bendRunAddBtn = document.getElementById('bendRunAddBtn');
+            const bendRunTotal = document.getElementById('bendRunTotal');
+            const bendUnitChips = ['bendUnitChip1','bendUnitChip2','bendUnitChip3','bendUnitChip4'].map(id => document.getElementById(id));
 
             const benderData = {
                 '0.25': { radius: 0.5625, model: 'MS-HTB-4', wall: '0.028-0.065"' },
@@ -8649,24 +8823,132 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
                 '0.5': { radius: 1.5, model: 'MS-HTB-8', wall: '0.035-0.083"' }
             };
 
+            let bendPrevUnit = 'in';
+            const IN_TO_MM = 25.4;
+            function toIn(val, unit) { return unit === 'mm' ? val / IN_TO_MM : val; }
+            function fromIn(val, unit) { return unit === 'mm' ? val * IN_TO_MM : val; }
+
             function calcBend() {
+                const unit = bendUnit.value;
                 const size = tubeSize.value;
                 const angleDeg = parseFloat(bendAngle.value) || 90;
-                const offset = parseFloat(bendOffset.value) || 0;
+                const offsetIn = toIn(parseFloat(bendOffset.value) || 0, unit);
+                const data = benderData[size] || benderData['0.375'];
+                const customRaw = parseFloat(bendCustomRadius.value);
+                const usingCustom = !isNaN(customRaw) && customRaw > 0;
+                const R = usingCustom ? toIn(customRaw, unit) : data.radius;
+                const angleRad = angleDeg * Math.PI / 180;
+
+                // Real bend-gain geometry: Gain = 2R*tan(angle/2) - R*angle(rad)
+                const gainIn = (2 * R * Math.tan(angleRad / 2)) - (R * angleRad);
+                const setbackIn = R * Math.tan(angleRad / 2);
+                const arcIn = R * angleRad;
+                const markIn = offsetIn + gainIn;
+
+                bendGain.textContent = fromIn(gainIn, unit).toFixed(3) + ' ' + unit;
+                bendSetback.textContent = fromIn(setbackIn, unit).toFixed(3) + ' ' + unit;
+                bendArcLen.textContent = fromIn(arcIn, unit).toFixed(3) + ' ' + unit;
+                bendMark.textContent = fromIn(markIn, unit).toFixed(2) + ' ' + unit;
+
+                const allow = parseFloat(bendMaterial.value) || 0;
+                bendSpringback.textContent = allow > 0 ? (angleDeg + allow).toFixed(1) + '° (target ' + angleDeg + '° + ' + allow + '° allowance)' : angleDeg + '° (no allowance selected)';
+
+                benderModel.textContent = usingCustom
+                    ? 'Custom radius (R=' + fromIn(R, unit).toFixed(4) + ' ' + unit + ')'
+                    : data.model + ' (R=' + fromIn(R, unit).toFixed(4) + ' ' + unit + ', wall ' + data.wall + ')';
+
+                calcBendRun();
+            }
+
+            // ---- Multi-bend run builder ----
+            let bendRuns = [{ angle: 90, straight: 6 }];
+
+            function renderBendRuns() {
+                const unit = bendUnit.value;
+                bendRunBody.innerHTML = '';
+                bendRuns.forEach((b, i) => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML =
+                        '<td>' + (i + 1) + '</td>' +
+                        '<td><input type="number" step="any" class="bend-run-angle bend-run-input" data-i="' + i + '" value="' + b.angle + '"/></td>' +
+                        '<td><input type="number" step="any" class="bend-run-straight bend-run-input" data-i="' + i + '" value="' + b.straight + '"/></td>' +
+                        '<td class="bend-run-arc">—</td>' +
+                        '<td><i class="fas fa-trash bend-run-remove" data-i="' + i + '"></i></td>';
+                    bendRunBody.appendChild(tr);
+                });
+                bendRunBody.querySelectorAll('.bend-run-angle').forEach(el => el.addEventListener('input', e => {
+                    bendRuns[+e.target.dataset.i].angle = parseFloat(e.target.value) || 0;
+                    calcBendRun();
+                }));
+                bendRunBody.querySelectorAll('.bend-run-straight').forEach(el => el.addEventListener('input', e => {
+                    bendRuns[+e.target.dataset.i].straight = parseFloat(e.target.value) || 0;
+                    calcBendRun();
+                }));
+                bendRunBody.querySelectorAll('.bend-run-remove').forEach(el => el.addEventListener('click', e => {
+                    const i = +e.currentTarget.dataset.i;
+                    bendRuns.splice(i, 1);
+                    if (bendRuns.length === 0) bendRuns.push({ angle: 90, straight: 6 });
+                    renderBendRuns();
+                    calcBendRun();
+                }));
+            }
+
+            function calcBendRun() {
+                const unit = bendUnit.value;
+                const size = tubeSizeRun.value;
                 const data = benderData[size] || benderData['0.375'];
                 const R = data.radius;
-                const angleRad = angleDeg * Math.PI / 180;
-                // Real bend-gain geometry: Gain = 2R*tan(angle/2) - R*angle(rad)
-                const gain = (2 * R * Math.tan(angleRad / 2)) - (R * angleRad);
-                const mark = offset + gain;
-                bendGain.textContent = gain.toFixed(3) + ' in';
-                bendMark.textContent = mark.toFixed(2) + ' in';
-                benderModel.textContent = data.model + ' (R=' + R.toFixed(4) + '", wall ' + data.wall + ')';
+                const arcRows = bendRunBody.querySelectorAll('.bend-run-arc');
+                let totalIn = toIn(parseFloat(bendRunTail.value) || 0, unit);
+                bendRuns.forEach((b, i) => {
+                    const angleRad = (b.angle || 0) * Math.PI / 180;
+                    const arcIn = R * angleRad;
+                    const straightIn = toIn(b.straight || 0, unit);
+                    totalIn += straightIn + arcIn;
+                    if (arcRows[i]) arcRows[i].textContent = fromIn(arcIn, unit).toFixed(3);
+                });
+                bendRunTotal.textContent = fromIn(totalIn, unit).toFixed(3) + ' ' + unit;
             }
+
             bendCalcBtn.addEventListener('click', calcBend);
             tubeSize.addEventListener('change', calcBend);
+            tubeSizeRun.addEventListener('change', calcBendRun);
             bendAngle.addEventListener('input', calcBend);
             bendOffset.addEventListener('input', calcBend);
+            bendCustomRadius.addEventListener('input', calcBend);
+            bendMaterial.addEventListener('change', calcBend);
+            bendRunTail.addEventListener('input', calcBendRun);
+            bendRunAddBtn.addEventListener('click', () => {
+                bendRuns.push({ angle: 90, straight: 6 });
+                renderBendRuns();
+                calcBendRun();
+            });
+            bendUnit.addEventListener('change', () => {
+                const newUnit = bendUnit.value;
+                if (newUnit !== bendPrevUnit) {
+                    // Convert currently-entered values so they represent the same physical length in the new unit
+                    const convert = (input) => {
+                        const val = parseFloat(input.value);
+                        if (!isNaN(val)) {
+                            const inches = toIn(val, bendPrevUnit);
+                            input.value = (fromIn(inches, newUnit)).toFixed(newUnit === 'mm' ? 2 : 4);
+                        }
+                    };
+                    convert(bendOffset);
+                    convert(bendCustomRadius);
+                    convert(bendRunTail);
+                    bendRuns = bendRuns.map(b => ({
+                        angle: b.angle,
+                        straight: fromIn(toIn(b.straight, bendPrevUnit), newUnit)
+                    }));
+                    bendPrevUnit = newUnit;
+                    renderBendRuns();
+                }
+                bendUnitChips.forEach(chip => { if (chip) chip.textContent = newUnit; });
+                calcBend();
+            });
+
+            renderBendRuns();
             calcBend();
 
             // =============================================================
