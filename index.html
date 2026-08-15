@@ -2253,6 +2253,40 @@ body:not(.dark) #reportpanel-field .rs-test-item input[type="checkbox"]:checked{
   border-color:#2563eb!important;
 }
 
+
+/* Converter grouped sub-tabs */
+#page-converter .converter-nested-tabs{margin:8px 0 12px;padding:4px;border-radius:10px;background:var(--ui-surface, #f8fafc);border:1px solid var(--ui-border);}
+#page-converter .converter-nested-tabs .sub-tab{font-size:.72rem;min-height:36px;}
+
+/* Dark mode: keep every nested converter tab surface consistent with the dark UI.
+   This prevents the light/white strip that can appear behind grouped sub-tabs. */
+body.dark #page-converter .converter-nested-tabs{
+  background:#111827 !important;
+  border-color:#374151 !important;
+}
+body.dark #page-converter .converter-nested-tabs .sub-tab{
+  background:#1f2937 !important;
+  color:#cbd5e1 !important;
+  border-color:#374151 !important;
+}
+body.dark #page-converter .converter-nested-tabs .sub-tab.active{
+  background:linear-gradient(135deg,var(--ui-accent,#2563eb),color-mix(in srgb,var(--ui-accent,#2563eb) 78%, #000)) !important;
+  color:#fff !important;
+  border-color:var(--ui-accent,#2563eb) !important;
+}
+
+/* Keep converter controls and result surfaces dark even when other legacy
+   light-theme rules target generic form elements. */
+body.dark #page-converter .sub-panel{
+  color:#e5e7eb;
+}
+body.dark #page-converter .row label{color:#cbd5e1;}
+body.dark #page-converter .chip{
+  background:#334155 !important;
+  color:#cbd5e1 !important;
+  border-color:#475569 !important;
+}
+body.dark #page-converter hr{border-color:#374151 !important;}
 </style>
 <style id="instrumentpro-mobile-fix">
 /* ===== InstrumentPro mobile/report fixes =====
@@ -4329,24 +4363,16 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <div class="page" id="page-converter">
 <div class="page-title"><i class="fas fa-arrows-alt-h"></i> Unit Converter</div>
 <div class="card">
-<div class="sub-tabs" id="converterTabs">
-<div class="sub-tab active" data-tab="conv-pressure">Pressure</div>
-<div class="sub-tab" data-tab="conv-temp">Temperature</div>
-<div class="sub-tab" data-tab="conv-speed">Speed</div>
-<div class="sub-tab" data-tab="conv-vibration">Vibration</div>
-<div class="sub-tab" data-tab="conv-ma">4-20mA</div>
-<div class="sub-tab" data-tab="conv-rtd">RTD</div>
-<div class="sub-tab" data-tab="conv-tc">Thermocouple</div>
-<div class="sub-tab" data-tab="conv-flow">Flow</div>
-<div class="sub-tab" data-tab="conv-density">Density / SG</div>
-<div class="sub-tab" data-tab="conv-mass">Mass / Mass Flow</div>
-<div class="sub-tab" data-tab="conv-volume">Volume</div>
-<div class="sub-tab" data-tab="conv-level-head">Level / Head</div>
-<div class="sub-tab" data-tab="conv-vacuum">Vacuum</div>
-<div class="sub-tab" data-tab="conv-vibration-units">Vibration Units</div>
-<div class="sub-tab" data-tab="conv-concentration">Concentration</div>
-</div>
-<div class="sub-panel active" id="conv-pressure">
+<div class="sub-tabs" id="converterTabs"><div class="sub-tab active" data-tab="conv-pressure-group">Pressure</div><div class="sub-tab" data-tab="conv-temperature-group">Temperature</div><div class="sub-tab" data-tab="conv-speed-group">Speed</div><div class="sub-tab" data-tab="conv-vibration-group">Vibration</div><div class="sub-tab" data-tab="conv-signal-group">4-20mA</div><div class="sub-tab" data-tab="conv-flow-group">Flow</div><div class="sub-tab" data-tab="conv-density-group">Density / SG</div><div class="sub-tab" data-tab="conv-volume-group">Volume</div><div class="sub-tab" data-tab="conv-level-group">Level / Head</div><div class="sub-tab" data-tab="conv-concentration-group">Concentration</div></div>
+
+
+
+
+
+
+
+
+<div class="sub-panel active" id="conv-pressure-group"><div class="sub-tabs converter-nested-tabs"><div class="sub-tab active" data-tab="conv-pressure">Pressure</div><div class="sub-tab" data-tab="conv-vacuum">Vacuum</div></div><div class="sub-panel active" id="conv-pressure">
 <div class="row">
 <label>From</label>
 <select id="fromUnit"><option value="psi">PSI</option><option selected="" value="bar">bar</option><option value="kpa">kPa</option><option value="mpa">MPa</option><option value="atm">atm</option><option value="inh2o">inH₂O</option><option value="inhg">inHg</option><option value="mmhg">mmHg</option><option value="mmh2o">mmH₂O</option><option value="torr">Torr</option><option value="ksi">ksi</option></select>
@@ -4358,8 +4384,16 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <button class="btn" id="convertBtn"><i class="fas fa-sync-alt"></i> Convert</button>
 </div>
 <div class="result-box"><span>Result</span><span id="pressureResult">100.000 kPa</span></div>
-</div>
-<div class="sub-panel hidden" id="conv-temp">
+</div><div class="sub-panel hidden" id="conv-vacuum">
+<div class="card-header" style="margin-bottom:8px;"><i class="fas fa-gauge-high"></i><h3 style="font-size:0.85rem;">Vacuum / Pressure Units</h3><span>Gauge units</span></div>
+<div class="row"><label>From</label><select id="vacuumConvFrom">
+<option value="kpa">kPa</option><option value="bar">bar</option><option value="psi">psi</option><option selected="" value="inhg">inHg</option><option value="mmhg">mmHg</option><option value="inh2o">inH₂O</option><option value="mmh2o">mmH₂O</option>
+</select><input id="vacuumConvValue" step="any" type="number" value="29.92"/></div>
+<div class="row"><label>To</label><select id="vacuumConvTo">
+<option selected="" value="kpa">kPa</option><option value="bar">bar</option><option value="psi">psi</option><option value="inhg">inHg</option><option value="mmhg">mmHg</option><option value="inh2o">inH₂O</option><option value="mmh2o">mmH₂O</option>
+</select><button class="btn" id="vacuumConvBtn">Convert</button></div>
+<div class="result-box"><span>Result</span><span id="vacuumConvResult">—</span></div>
+</div></div><div class="sub-panel hidden" id="conv-temperature-group"><div class="sub-tabs converter-nested-tabs"><div class="sub-tab active" data-tab="conv-temp">Temperature</div><div class="sub-tab" data-tab="conv-rtd">RTD</div><div class="sub-tab" data-tab="conv-tc">Thermocouple</div></div><div class="sub-panel active" id="conv-temp">
 <div class="row">
 <label>°C</label>
 <input id="tempC" step="any" type="number" value="25"/>
@@ -4368,8 +4402,90 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <div class="result-box"><span>°F</span><span id="tempFResult">77.00</span></div>
 <div class="result-box"><span>Kelvin</span><span id="tempKResult">298.15</span></div>
 <div class="result-box"><span>°R</span><span id="tempRResult">536.67</span></div>
+</div><div class="sub-panel hidden" id="conv-rtd">
+<div class="card-header"><i class="fas fa-microchip"></i><h3>RTD Calculator</h3><span id="rtdTypeBadge">Pt100</span></div>
+<div class="row">
+<label>RTD Type</label>
+<select id="rtdType">
+<option value="pt100">Pt100</option>
+<option value="pt500">Pt500</option>
+<option value="pt1000">Pt1000</option>
+</select>
 </div>
-<div class="sub-panel hidden" id="conv-speed">
+<div class="row calibration-range-row">
+<label>Range</label>
+<input id="rtdRangeLow" step="any" style="flex:0.5;" type="number" value="0"/><span class="range-to">to</span>
+<input id="rtdRangeHigh" step="any" style="flex:0.5;" type="number" value="100"/><span class="chip">°C</span>
+</div>
+<div class="row">
+<label>Input</label>
+<input id="rtdInput" step="any" style="flex:0.6;" type="number" value="100"/>
+<select id="rtdInputUnit" style="flex:0.5;">
+<option value="ohm">Ω</option>
+<option value="ma">mA</option>
+<option value="percent">%</option>
+</select>
+</div>
+<div class="row">
+<label>Output</label>
+<select id="rtdOutputUnit" style="flex:0.6;">
+<option value="temp">Temperature</option>
+<option value="ma">mA</option>
+<option value="percent">%</option>
+</select>
+<button class="btn" id="rtdConvertBtn"><i class="fas fa-calculator"></i> Convert</button>
+</div>
+<div class="result-box"><span>Result</span><span id="rtdResult">0.00 °C</span></div>
+<div class="result-box"><span>mA Equivalent</span><span id="rtdMaResult">12.00 mA</span></div>
+<div class="result-box"><span>% of Range</span><span id="rtdPercentResult">50.00 %</span></div>
+<div id="rtdRangeNote" style="font-size:0.65rem;color:#64748b;margin-top:4px;">Range: 0-100°C · 4-20mA · Pt100 · α = 0.00385</div>
+<button class="btn w-full mt-1" id="tempCalExportBtn" style="justify-content:center;"><i class="fas fa-download"></i> Export as .txt</button>
+</div><div class="sub-panel hidden" id="conv-tc">
+<div class="card-header"><i class="fas fa-fire"></i><h3>Thermocouple Calculator</h3><span>IEC 60584</span></div>
+<div class="row">
+<label>TC Type</label>
+<select id="tcType">
+<option value="J">Type J</option>
+<option selected="" value="K">Type K</option>
+<option value="T">Type T</option>
+<option value="E">Type E</option>
+<option value="N">Type N</option>
+<option value="S">Type S</option>
+<option value="R">Type R</option>
+</select>
+</div>
+<div class="row">
+<label>Range</label>
+<input id="tcRangeLow" step="any" style="flex:0.5;" type="number" value="0"/><span>to</span>
+<input id="tcRangeHigh" step="any" style="flex:0.5;" type="number" value="1000"/><span class="chip">°C</span>
+</div>
+<div class="row">
+<label>Input</label>
+<input id="tcInput" step="any" style="flex:0.6;" type="number" value="0"/>
+<select id="tcInputUnit" style="flex:0.5;">
+<option value="mv">mV</option>
+<option value="ma">mA</option>
+<option value="percent">%</option>
+<option value="temp">°C</option>
+</select>
+</div>
+<div class="row">
+<label>Output</label>
+<select id="tcOutputUnit" style="flex:0.6;">
+<option value="temp">Temperature (°C)</option>
+<option value="ma">mA</option>
+<option value="percent">%</option>
+<option value="mv">mV</option>
+</select>
+<button class="btn" id="tcConvertBtn"><i class="fas fa-calculator"></i> Convert</button>
+</div>
+<div class="result-box"><span>Result</span><span id="tcResult">0.00 °C</span></div>
+<div class="result-box"><span>mV</span><span id="tcMvResult">0.00 mV</span></div>
+<div class="result-box"><span>mA</span><span id="tcMaResult">12.00 mA</span></div>
+<div class="result-box"><span>% of Range</span><span id="tcPercentResult">50.00 %</span></div>
+<div id="tcRangeNote" style="font-size:0.65rem;color:#64748b;margin-top:4px;">Range: 0-1000°C · 4-20mA · Reference junction: 0°C</div>
+<button class="btn w-full mt-1" id="tcExportBtn" style="justify-content:center;"><i class="fas fa-download"></i> Export as .txt</button>
+</div></div><div class="sub-panel hidden" id="conv-speed-group"><div class="sub-tabs converter-nested-tabs"><div class="sub-tab active" data-tab="conv-speed">Speed</div></div><div class="sub-panel active" id="conv-speed">
 <div class="row">
 <label>From</label>
 <select id="speedFromUnit"><option selected="" value="mps">m/s</option><option value="fps">ft/s</option><option value="fpm">ft/min</option><option value="kph">km/h</option><option value="mph">mph</option><option value="knot">knots</option></select>
@@ -4396,8 +4512,7 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <div class="result-box"><span>Speed</span><span id="freqRpmResult">3600.0 RPM</span></div>
 <div class="result-box"><span></span><span id="freqHzResult">60.00 Hz shaft rotation</span></div>
 <div style="font-size:0.65rem;color:#64748b;margin-top:4px;">RPM = (Frequency ÷ Pulses per Rev) × 60. For a magnetic pickup/gear-tooth speed probe, "Pulses/Rev" = number of gear teeth.</div>
-</div>
-<div class="sub-panel hidden" id="conv-vibration">
+</div></div><div class="sub-panel hidden" id="conv-vibration-group"><div class="sub-tabs converter-nested-tabs"><div class="sub-tab active" data-tab="conv-vibration-gap">Probe Gap ↔ mV</div><div class="sub-tab" data-tab="conv-vibration-units">Vibration Units</div></div><div class="sub-panel active" id="conv-vibration-gap">
 <div class="card-header" style="margin-bottom:8px;"><i class="fas fa-ruler-horizontal"></i><h3 style="font-size:0.85rem;">Vibration Probe Gap ↔ mV (DC)</h3></div>
 <div style="font-size:0.65rem;color:#64748b;margin-bottom:6px;">Eddy-current proximity probes (e.g. Bently Nevada 3300 series) output a DC gap voltage proportional to sensor-to-shaft distance. Standard scale factor is <strong>200 mV/mil</strong> for 8mm probes, <strong>100 mV/mil</strong> for 11mm probes — verify against your probe's actual datasheet since this varies by system.</div>
 <div class="row">
@@ -4422,8 +4537,13 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 </div>
 <div class="result-box"><span>Gap</span><span id="vibGapResult">50.0 mils</span></div>
 <div style="font-size:0.65rem;color:#64748b;margin-top:4px;">Typical usable linear range is roughly 10-90 mils (mid-scale bias around -10 Vdc on a -24V Proximitor supply) — readings pinned near 0V or near supply rail indicate the probe is out of its linear range or miswired.</div>
-</div>
-<div class="sub-panel hidden" id="conv-ma">
+</div><div class="sub-panel hidden" id="conv-vibration-units">
+<div class="card-header" style="margin-bottom:8px;"><i class="fas fa-wave-square"></i><h3 style="font-size:0.85rem;">Vibration Units</h3><span>Acceleration / Velocity</span></div>
+<div class="row"><label>From</label><select id="vibUnitFrom"><option value="ms2">m/s²</option><option selected="" value="g">g</option><option value="mms">mm/s</option><option value="ips">in/s</option></select><input id="vibUnitValue" step="any" type="number" value="1"/></div>
+<div class="row"><label>To</label><select id="vibUnitTo"><option value="ms2">m/s²</option><option value="g">g</option><option selected="" value="mms">mm/s</option><option value="ips">in/s</option></select><button class="btn" id="vibUnitBtn">Convert</button></div>
+<div class="result-box"><span>Result</span><span id="vibUnitResult">—</span></div>
+<div style="font-size:0.65rem;color:#64748b;margin-top:4px;">Acceleration and velocity are different quantities; converting between them requires frequency.</div>
+</div></div><div class="sub-panel hidden" id="conv-signal-group"><div class="sub-tabs converter-nested-tabs"><div class="sub-tab active" data-tab="conv-ma">4-20mA</div></div><div class="sub-panel active" id="conv-ma">
 <div class="card-header"><i class="fas fa-bolt"></i><h3>Signal Scaling / Test Points</h3><span>Input → Output</span></div>
 <div style="font-size:0.65rem;color:#64748b;margin-bottom:8px;">Set the process/input range first, then select the output signal or engineering unit you need. The 5-point table calculates the corresponding output automatically.</div>
 <div class="card-header" style="margin-top:4px;"><i class="fas fa-arrow-right-to-bracket"></i><h3 style="font-size:.8rem;">Input / Process Range</h3><span>LRV / URV</span></div>
@@ -4502,93 +4622,7 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <div class="result-box"><span>% of Range</span><span id="maReversePct">75.00 %</span></div>
 <div class="result-box"><span id="maReverseLabel">Input Value</span><span id="maReverseResult">75.00 kPa</span></div>
 <button class="btn w-full mt-1" id="maExportToReportBtn" style="justify-content:center;"><i class="fas fa-file-export"></i> Export to Report</button>
-</div>
-<div class="sub-panel hidden" id="conv-rtd">
-<div class="card-header"><i class="fas fa-microchip"></i><h3>RTD Calculator</h3><span id="rtdTypeBadge">Pt100</span></div>
-<div class="row">
-<label>RTD Type</label>
-<select id="rtdType">
-<option value="pt100">Pt100</option>
-<option value="pt500">Pt500</option>
-<option value="pt1000">Pt1000</option>
-</select>
-</div>
-<div class="row calibration-range-row">
-<label>Range</label>
-<input id="rtdRangeLow" step="any" style="flex:0.5;" type="number" value="0"/><span class="range-to">to</span>
-<input id="rtdRangeHigh" step="any" style="flex:0.5;" type="number" value="100"/><span class="chip">°C</span>
-</div>
-<div class="row">
-<label>Input</label>
-<input id="rtdInput" step="any" style="flex:0.6;" type="number" value="100"/>
-<select id="rtdInputUnit" style="flex:0.5;">
-<option value="ohm">Ω</option>
-<option value="ma">mA</option>
-<option value="percent">%</option>
-</select>
-</div>
-<div class="row">
-<label>Output</label>
-<select id="rtdOutputUnit" style="flex:0.6;">
-<option value="temp">Temperature</option>
-<option value="ma">mA</option>
-<option value="percent">%</option>
-</select>
-<button class="btn" id="rtdConvertBtn"><i class="fas fa-calculator"></i> Convert</button>
-</div>
-<div class="result-box"><span>Result</span><span id="rtdResult">0.00 °C</span></div>
-<div class="result-box"><span>mA Equivalent</span><span id="rtdMaResult">12.00 mA</span></div>
-<div class="result-box"><span>% of Range</span><span id="rtdPercentResult">50.00 %</span></div>
-<div id="rtdRangeNote" style="font-size:0.65rem;color:#64748b;margin-top:4px;">Range: 0-100°C · 4-20mA · Pt100 · α = 0.00385</div>
-<button class="btn w-full mt-1" id="tempCalExportBtn" style="justify-content:center;"><i class="fas fa-download"></i> Export as .txt</button>
-</div>
-<div class="sub-panel hidden" id="conv-tc">
-<div class="card-header"><i class="fas fa-fire"></i><h3>Thermocouple Calculator</h3><span>IEC 60584</span></div>
-<div class="row">
-<label>TC Type</label>
-<select id="tcType">
-<option value="J">Type J</option>
-<option selected="" value="K">Type K</option>
-<option value="T">Type T</option>
-<option value="E">Type E</option>
-<option value="N">Type N</option>
-<option value="S">Type S</option>
-<option value="R">Type R</option>
-</select>
-</div>
-<div class="row">
-<label>Range</label>
-<input id="tcRangeLow" step="any" style="flex:0.5;" type="number" value="0"/><span>to</span>
-<input id="tcRangeHigh" step="any" style="flex:0.5;" type="number" value="1000"/><span class="chip">°C</span>
-</div>
-<div class="row">
-<label>Input</label>
-<input id="tcInput" step="any" style="flex:0.6;" type="number" value="0"/>
-<select id="tcInputUnit" style="flex:0.5;">
-<option value="mv">mV</option>
-<option value="ma">mA</option>
-<option value="percent">%</option>
-<option value="temp">°C</option>
-</select>
-</div>
-<div class="row">
-<label>Output</label>
-<select id="tcOutputUnit" style="flex:0.6;">
-<option value="temp">Temperature (°C)</option>
-<option value="ma">mA</option>
-<option value="percent">%</option>
-<option value="mv">mV</option>
-</select>
-<button class="btn" id="tcConvertBtn"><i class="fas fa-calculator"></i> Convert</button>
-</div>
-<div class="result-box"><span>Result</span><span id="tcResult">0.00 °C</span></div>
-<div class="result-box"><span>mV</span><span id="tcMvResult">0.00 mV</span></div>
-<div class="result-box"><span>mA</span><span id="tcMaResult">12.00 mA</span></div>
-<div class="result-box"><span>% of Range</span><span id="tcPercentResult">50.00 %</span></div>
-<div id="tcRangeNote" style="font-size:0.65rem;color:#64748b;margin-top:4px;">Range: 0-1000°C · 4-20mA · Reference junction: 0°C</div>
-<button class="btn w-full mt-1" id="tcExportBtn" style="justify-content:center;"><i class="fas fa-download"></i> Export as .txt</button>
-</div>
-<div class="sub-panel hidden" id="conv-flow">
+</div></div><div class="sub-panel hidden" id="conv-flow-group"><div class="sub-tabs converter-nested-tabs"><div class="sub-tab active" data-tab="conv-flow">Flow</div><div class="sub-tab" data-tab="conv-mass">Mass / Mass Flow</div></div><div class="sub-panel active" id="conv-flow">
 <div class="row">
 <label>From</label>
 <select id="flowConvFrom">
@@ -4621,14 +4655,6 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <hr/>
 <div class="row"><label>Density</label><input id="flowConvDensity" step="any" type="number" value="1000"/><span class="chip">kg/m³</span></div>
 <div class="result-box"><span>Mass flow</span><span id="flowConvMassResult">—</span></div>
-</div><div class="sub-panel hidden" id="conv-density">
-<div class="row"><label>Density</label><input id="densityConvValue" step="any" type="number" value="1000"/><span class="chip">kg/m³</span></div>
-<button class="btn" id="densityToSgBtn"><i class="fas fa-calculator"></i> Convert</button>
-<div class="result-box"><span>Specific Gravity</span><span id="densitySgResult">1.0000 SG</span></div>
-<hr/>
-<div class="row"><label>Specific Gravity</label><input id="sgConvValue" step="any" type="number" value="1.20"/><span class="chip">SG</span></div>
-<button class="btn" id="sgToDensityBtn"><i class="fas fa-calculator"></i> Convert</button>
-<div class="result-box"><span>Density</span><span id="sgDensityResult">1200.00 kg/m³</span></div>
 </div><div class="sub-panel hidden" id="conv-mass">
 <div class="row">
 <label>From</label>
@@ -4657,7 +4683,15 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <div class="row"><label>Throughput</label><input id="tphConvValue" step="any" type="number" value="100"/><span class="chip">t/h</span></div>
 <div class="result-box"><span>kg/h</span><span id="tphKghResult">—</span></div>
 <div class="result-box"><span>tonnes/day</span><span id="tphTpdResult">—</span></div>
-</div><div class="sub-panel hidden" id="conv-volume">
+</div></div><div class="sub-panel hidden" id="conv-density-group"><div class="sub-tabs converter-nested-tabs"><div class="sub-tab active" data-tab="conv-density">Density / SG</div></div><div class="sub-panel active" id="conv-density">
+<div class="row"><label>Density</label><input id="densityConvValue" step="any" type="number" value="1000"/><span class="chip">kg/m³</span></div>
+<button class="btn" id="densityToSgBtn"><i class="fas fa-calculator"></i> Convert</button>
+<div class="result-box"><span>Specific Gravity</span><span id="densitySgResult">1.0000 SG</span></div>
+<hr/>
+<div class="row"><label>Specific Gravity</label><input id="sgConvValue" step="any" type="number" value="1.20"/><span class="chip">SG</span></div>
+<button class="btn" id="sgToDensityBtn"><i class="fas fa-calculator"></i> Convert</button>
+<div class="result-box"><span>Density</span><span id="sgDensityResult">1200.00 kg/m³</span></div>
+</div></div><div class="sub-panel hidden" id="conv-volume-group"><div class="sub-tabs converter-nested-tabs"><div class="sub-tab active" data-tab="conv-volume">Volume</div></div><div class="sub-panel active" id="conv-volume">
 <div class="row">
 <label>From</label>
 <select id="volumeConvFrom">
@@ -4685,7 +4719,7 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <button class="btn" id="volumeConvBtn"><i class="fas fa-sync-alt"></i> Convert</button>
 </div>
 <div class="result-box"><span>Result</span><span id="volumeConvResult">—</span></div>
-</div><div class="sub-panel hidden" id="conv-level-head">
+</div></div><div class="sub-panel hidden" id="conv-level-group"><div class="sub-tabs converter-nested-tabs"><div class="sub-tab active" data-tab="conv-level-head">Level / Head</div></div><div class="sub-panel active" id="conv-level-head">
 <div class="card-header" style="margin-bottom:8px;"><i class="fas fa-water"></i><h3 style="font-size:0.85rem;">Level / Pressure Head</h3><span>Process</span></div>
 <div class="row"><label>Head</label><input id="headConvValue" step="any" type="number" value="10"/><span class="chip">mH₂O</span><button class="btn btn-sm" id="headConvBtn">Convert</button></div>
 <div class="result-box"><span>Pressure</span><span id="headKpaResult">—</span></div>
@@ -4694,37 +4728,14 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <div class="row"><label>Level</label><input id="levelPctConvValue" step="any" type="number" value="65"/><span class="chip">%</span></div>
 <div class="row"><label>Tank Height</label><input id="tankHeightConvValue" step="any" type="number" value="10"/><span class="chip">m</span><button class="btn btn-sm" id="levelConvBtn">Calculate</button></div>
 <div class="result-box"><span>Actual level</span><span id="actualLevelConvResult">—</span></div>
-</div><div class="sub-panel hidden" id="conv-vacuum">
-<div class="card-header" style="margin-bottom:8px;"><i class="fas fa-gauge-high"></i><h3 style="font-size:0.85rem;">Vacuum / Pressure Units</h3><span>Gauge units</span></div>
-<div class="row"><label>From</label><select id="vacuumConvFrom">
-<option value="kpa">kPa</option><option value="bar">bar</option><option value="psi">psi</option><option selected="" value="inhg">inHg</option><option value="mmhg">mmHg</option><option value="inh2o">inH₂O</option><option value="mmh2o">mmH₂O</option>
-</select><input id="vacuumConvValue" step="any" type="number" value="29.92"/></div>
-<div class="row"><label>To</label><select id="vacuumConvTo">
-<option selected="" value="kpa">kPa</option><option value="bar">bar</option><option value="psi">psi</option><option value="inhg">inHg</option><option value="mmhg">mmHg</option><option value="inh2o">inH₂O</option><option value="mmh2o">mmH₂O</option>
-</select><button class="btn" id="vacuumConvBtn">Convert</button></div>
-<div class="result-box"><span>Result</span><span id="vacuumConvResult">—</span></div>
-</div><div class="sub-panel hidden" id="conv-vibration-units">
-<div class="card-header" style="margin-bottom:8px;"><i class="fas fa-wave-square"></i><h3 style="font-size:0.85rem;">Vibration Units</h3><span>Acceleration / Velocity</span></div>
-<div class="row"><label>From</label><select id="vibUnitFrom"><option value="ms2">m/s²</option><option selected="" value="g">g</option><option value="mms">mm/s</option><option value="ips">in/s</option></select><input id="vibUnitValue" step="any" type="number" value="1"/></div>
-<div class="row"><label>To</label><select id="vibUnitTo"><option value="ms2">m/s²</option><option value="g">g</option><option selected="" value="mms">mm/s</option><option value="ips">in/s</option></select><button class="btn" id="vibUnitBtn">Convert</button></div>
-<div class="result-box"><span>Result</span><span id="vibUnitResult">—</span></div>
-<div style="font-size:0.65rem;color:#64748b;margin-top:4px;">Acceleration and velocity are different quantities; converting between them requires frequency.</div>
-</div><div class="sub-panel hidden" id="conv-concentration">
+</div></div><div class="sub-panel hidden" id="conv-concentration-group"><div class="sub-tabs converter-nested-tabs"><div class="sub-tab active" data-tab="conv-concentration">Concentration</div></div><div class="sub-panel active" id="conv-concentration">
 <div class="card-header" style="margin-bottom:8px;"><i class="fas fa-flask"></i><h3 style="font-size:0.85rem;">Concentration</h3><span>Direct units</span></div>
 <div class="row"><label>From</label><select id="concConvFrom"><option value="pct">%</option><option selected="" value="ppm">ppm</option><option value="ppb">ppb</option></select><input id="concConvValue" step="any" type="number" value="1000"/></div>
 <div class="row"><label>To</label><select id="concConvTo"><option value="pct">%</option><option value="ppm">ppm</option><option value="ppb">ppb</option><option value="mgl">mg/L</option><option value="gl">g/L</option><option value="gt">g/t</option></select><button class="btn" id="concConvBtn">Convert</button></div>
 <div class="result-box"><span>Result</span><span id="concConvResult">—</span></div>
 <div style="font-size:0.65rem;color:#64748b;margin-top:4px;">% / ppm / ppb convert directly. mg/L, g/L and g/t require a defined density/basis for an exact conversion.</div>
-</div></div>
+</div></div></div>
 </div>
-
-
-
-
-
-
-
-
 <!-- ==========================================================
         PAGE: CALIBRATION (short)
         ========================================================== -->
@@ -4929,45 +4940,45 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 </div>
 <div class="sub-panel active" id="elec-ohm">
 <div class="card-header" style="margin-bottom:8px;">
-  <i class="fas fa-bolt"></i><h3 style="font-size:0.85rem;">Ohm's Law + Electrical Power</h3>
-  <span>Enter any 2 known values</span>
+<i class="fas fa-bolt"></i><h3 style="font-size:0.85rem;">Ohm's Law + Electrical Power</h3>
+<span>Enter any 2 known values</span>
 </div>
 <div class="row">
-  <label>Voltage</label>
-  <input id="ohmV" step="any" type="number" placeholder="Enter value"/>
-  <select id="ohmVUnit">
-    <option value="v" selected>V</option>
-    <option value="mv">mV</option>
-    <option value="kv">kV</option>
-  </select>
+<label>Voltage</label>
+<input id="ohmV" placeholder="Enter value" step="any" type="number"/>
+<select id="ohmVUnit">
+<option selected="" value="v">V</option>
+<option value="mv">mV</option>
+<option value="kv">kV</option>
+</select>
 </div>
 <div class="row">
-  <label>Current</label>
-  <input id="ohmI" step="any" type="number" placeholder="Enter value"/>
-  <select id="ohmIUnit">
-    <option value="ua">µA</option>
-    <option value="ma" selected>mA</option>
-    <option value="a">A</option>
-  </select>
+<label>Current</label>
+<input id="ohmI" placeholder="Enter value" step="any" type="number"/>
+<select id="ohmIUnit">
+<option value="ua">µA</option>
+<option selected="" value="ma">mA</option>
+<option value="a">A</option>
+</select>
 </div>
 <div class="row">
-  <label>Resistance</label>
-  <input id="ohmR" step="any" type="number" placeholder="Enter value"/>
-  <select id="ohmRUnit">
-    <option value="ohm" selected>Ω</option>
-    <option value="kohm">kΩ</option>
-    <option value="mohm">MΩ</option>
-  </select>
+<label>Resistance</label>
+<input id="ohmR" placeholder="Enter value" step="any" type="number"/>
+<select id="ohmRUnit">
+<option selected="" value="ohm">Ω</option>
+<option value="kohm">kΩ</option>
+<option value="mohm">MΩ</option>
+</select>
 </div>
 <div class="row">
-  <label>Power</label>
-  <input id="ohmP" step="any" type="number" placeholder="Enter value"/>
-  <select id="ohmPUnit">
-    <option value="uw">µW</option>
-    <option value="mw">mW</option>
-    <option value="w" selected>W</option>
-    <option value="kw">kW</option>
-  </select>
+<label>Power</label>
+<input id="ohmP" placeholder="Enter value" step="any" type="number"/>
+<select id="ohmPUnit">
+<option value="uw">µW</option>
+<option value="mw">mW</option>
+<option selected="" value="w">W</option>
+<option value="kw">kW</option>
+</select>
 </div>
 <div id="ohmKnownHint" style="font-size:0.72rem;color:#64748b;margin:4px 0 8px;">
   Enter any two values. InstrumentPro calculates the other two.
@@ -5036,8 +5047,6 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <div class="result-box"><span>Result</span><span id="powerConvResult">—</span></div>
 </div></div>
 </div>
-
-
 <!-- ==========================================================
         PAGE: BENDING
         ========================================================== -->
@@ -6259,13 +6268,13 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <div class="row"><label>Technician Sign</label><input id="rsTechSign" placeholder="Type name to sign" type="text"/></div>
 <div class="row"><label>Supervisor</label><input id="rsSupervisor" placeholder="Supervisor / witness" type="text"/></div>
 <div class="rs-actions">
-<button class="btn" id="generateReportBtn" type="button"><i class="fas fa-sync"></i> Build</button>
+<button class="btn" id="generateReportBtn" type="button"><i class="fas fa-file-signature"></i> Build Report</button>
 <button class="btn btn-outline" id="rsIssueBtn"><i class="fas fa-stamp"></i> Issue</button>
 <button class="btn btn-outline" id="rsSaveDraftBtn"><i class="fas fa-save"></i> Save Draft</button>
 <button class="btn btn-outline" id="rsClearAllBtn"><i class="fas fa-eraser"></i> Clear All</button>
 </div>
 </div>
-<div class="rs-section rs-full">
+<div class="rs-section rs-full" id="rsPreviewSection" style="display:none;">
 <h4><i class="fas fa-file-alt"></i> Live Report Preview</h4>
 <div class="report-preview" id="reportPreview">Report will appear here.</div>
 <div class="rs-actions" style="margin-top:8px;">
@@ -6346,10 +6355,10 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <div style="font-size:0.65rem;color:#64748b;margin-bottom:8px;">Document alarm/trip setpoints for a tag — useful for handover packages and change records.</div>
 <div class="row"><label>Tag</label><input id="spTag" placeholder="LT-201" type="text"/></div>
 <div class="row"><label>Units</label><input id="spUnits" placeholder="e.g. %, mH2O, bar" type="text"/></div>
-<div class="row"><label>LO-LO</label><input id="spLoLo" placeholder="value" step="any" type="number"><select id="spLoLoAction"><option value="Alarm">Alarm</option><option value="Trip">Trip</option><option value="Interlock">Interlock</option></select></input></div>
-<div class="row"><label>LO</label><input id="spLo" placeholder="value" step="any" type="number"><select id="spLoAction"><option value="Alarm">Alarm</option><option value="Trip">Trip</option><option value="Interlock">Interlock</option></select></input></div>
-<div class="row"><label>HI</label><input id="spHi" placeholder="value" step="any" type="number"><select id="spHiAction"><option value="Alarm">Alarm</option><option value="Trip">Trip</option><option value="Interlock">Interlock</option></select></input></div>
-<div class="row"><label>HI-HI</label><input id="spHiHi" placeholder="value" step="any" type="number"><select id="spHiHiAction"><option value="Alarm">Alarm</option><option value="Trip">Trip</option><option value="Interlock">Interlock</option></select></input></div>
+<div class="row"><label>LO-LO</label><input id="spLoLo" placeholder="value" step="any" type="number"/><select id="spLoLoAction"><option value="Alarm">Alarm</option><option value="Trip">Trip</option><option value="Interlock">Interlock</option></select></div>
+<div class="row"><label>LO</label><input id="spLo" placeholder="value" step="any" type="number"/><select id="spLoAction"><option value="Alarm">Alarm</option><option value="Trip">Trip</option><option value="Interlock">Interlock</option></select></div>
+<div class="row"><label>HI</label><input id="spHi" placeholder="value" step="any" type="number"/><select id="spHiAction"><option value="Alarm">Alarm</option><option value="Trip">Trip</option><option value="Interlock">Interlock</option></select></div>
+<div class="row"><label>HI-HI</label><input id="spHiHi" placeholder="value" step="any" type="number"/><select id="spHiHiAction"><option value="Alarm">Alarm</option><option value="Trip">Trip</option><option value="Interlock">Interlock</option></select></div>
 <div class="row"><label>Notes</label><textarea id="spNotes" placeholder="Notes / basis for setpoints..."></textarea></div>
 <button class="btn" id="spGenBtn"><i class="fas fa-file-alt"></i> Generate</button>
 <div class="report-preview mt-1" id="spPreview">Setpoint record will appear here.</div>
@@ -6420,7 +6429,7 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 </select>
 </div>
 <div class="row hidden" id="hartCustomCmdRow"><label>Cmd #</label><input id="hartCustomCmd" max="255" min="0" type="number" value="0"/></div>
-<div class="row"><label>Address</label><input id="hartAddress" max="15" min="0" step="1" type="number" value="0"><span class="chip">0-15 (polling addr)</span></input></div>
+<div class="row"><label>Address</label><input id="hartAddress" max="15" min="0" step="1" type="number" value="0"/><span class="chip">0-15 (polling addr)</span></div>
 <div class="row"><label>Data (hex)</label><input id="hartDataHex" placeholder="e.g. 39 43 C8 00 00 43 96 00 00" style="flex:1;font-family:monospace;" type="text"/></div>
 <button class="btn" id="hartBuildBtn"><i class="fas fa-hammer"></i> Build Frame</button>
 <div class="result-box"><span>Frame (hex)</span><span id="hartFrameResult" style="font-size:0.65rem;word-break:break-all;">—</span></div>
@@ -6429,9 +6438,9 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <div class="card">
 <div class="card-header"><i class="fas fa-calculator"></i><h3>Float ↔ Hex (IEEE-754)</h3></div>
 <div style="font-size:0.65rem;color:#64748b;margin-bottom:8px;">HART range values (LRV/URV) are sent as 4-byte IEEE-754 floats. Use this to get the hex bytes for a value like a new URV, to paste into the Data field above.</div>
-<div class="row"><label>Decimal</label><input id="floatDecInput" step="any" type="number" value="100"><button class="btn btn-sm" id="floatToHexBtn">→ Hex</button></input></div>
+<div class="row"><label>Decimal</label><input id="floatDecInput" step="any" type="number" value="100"/><button class="btn btn-sm" id="floatToHexBtn">→ Hex</button></div>
 <div class="result-box"><span>Hex (big-endian)</span><span id="floatHexResult">42 C8 00 00</span></div>
-<div class="row mt-1"><label>Hex</label><input id="hexDecInput" placeholder="42 C8 00 00" style="flex:1;font-family:monospace;" type="text"><button class="btn btn-sm" id="hexToFloatBtn">→ Dec</button></input></div>
+<div class="row mt-1"><label>Hex</label><input id="hexDecInput" placeholder="42 C8 00 00" style="flex:1;font-family:monospace;" type="text"/><button class="btn btn-sm" id="hexToFloatBtn">→ Dec</button></div>
 <div class="result-box"><span>Decimal</span><span id="hexDecResult">—</span></div>
 </div>
 </div>
@@ -6645,18 +6654,18 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
             // SUB-TAB SYSTEM
             // =============================================================
             document.querySelectorAll('.sub-tabs').forEach(tabContainer => {
-                tabContainer.querySelectorAll('.sub-tab').forEach(tab => {
+                tabContainer.querySelectorAll(':scope > .sub-tab').forEach(tab => {
                     tab.addEventListener('click', function() {
                         const container = this.closest('.sub-tabs');
-                        container.querySelectorAll('.sub-tab').forEach(t => t.classList.remove('active'));
+                        container.querySelectorAll(':scope > .sub-tab').forEach(t => t.classList.remove('active'));
                         this.classList.add('active');
                         const panelId = this.dataset.tab;
-                        const parent = container.closest('.card');
-                        parent.querySelectorAll('.sub-panel').forEach(p => {
+                        const scope = container.closest('.sub-panel') || container.closest('.card');
+                        scope.querySelectorAll(':scope > .sub-panel').forEach(p => {
                             p.classList.remove('active');
                             p.classList.add('hidden');
                         });
-                        const target = parent.querySelector('#' + panelId);
+                        const target = scope.querySelector('#' + panelId);
                         if (target) {
                             target.classList.add('active');
                             target.classList.remove('hidden');
@@ -11216,6 +11225,18 @@ function deviceReportSections(o,c){
  else points='<h3 style="font-size:14px;border-bottom:1px solid #ddd;padding-bottom:5px;">Functional Test Results</h3><table style="width:100%;border-collapse:collapse;font-size:11px;"><tr><th>Test</th><th>Result</th></tr>'+tests+'</table><p style="font-size:11px;margin-top:8px;"><b>Measured / observed results:</b><br>'+rsEsc(dd.fields.measured_results||'—')+'</p>';
  return '<h3 style="font-size:14px;border-bottom:1px solid #ddd;padding-bottom:5px;">Device-Specific Configuration</h3><table style="width:100%;border-collapse:collapse;font-size:11px;">'+fields+'</table>'+points;
 }
+var rsPreviewBuilt=false;
+function rsShowPreview(){
+ rsPreviewBuilt=true;
+ var sec=document.getElementById('rsPreviewSection');
+ if(sec)sec.style.display='';
+ rsRender();
+}
+function rsHidePreview(){
+ rsPreviewBuilt=false;
+ var sec=document.getElementById('rsPreviewSection');
+ if(sec)sec.style.display='none';
+}
 function rsRender(){
  var o=rsVals(),c=rsCalc(o),q=rsQuality(o,c);
  if(!rsCurrent)rsCurrent={id:rsId(),rev:1,status:'DRAFT',created:new Date().toISOString()};
@@ -11237,6 +11258,8 @@ function rsRender(){
  '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;font-size:11px;"><div><b>Observations</b><br>'+rsEsc(o.rsObservations||'—')+'<br><br><b>Root Cause</b><br>'+rsEsc(o.rsRootCause||'—')+'</div><div><b>Corrective Action</b><br>'+rsEsc(o.rsCorrective||'—')+'<br><br><b>Verification</b><br>'+rsEsc(o.rsVerification||'—')+'</div></div>'+
  '<div style="margin-top:16px;border-top:1px solid #ddd;padding-top:10px;font-size:10px;color:#64748b;">Work order: '+rsEsc(o.rsWorkOrder||'—')+' • Technician: '+rsEsc(o.rsTechSign||'—')+' • Supervisor/Witness: '+rsEsc(o.rsSupervisor||'—')+' • Status: '+rsEsc(rsCurrent.status)+'</div></div>';
  var prev=document.getElementById('reportPreview');if(prev)prev.innerHTML=preview;
+ var previewSection=document.getElementById('rsPreviewSection');
+ if(previewSection)previewSection.style.display=rsPreviewBuilt?'':'none';
 }
 function rsDownload(name,data,type){var b=new Blob([data],{type:type}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(u);}
 function rsHistory(){var arr=JSON.parse(localStorage.getItem('instrumentpro_reports')||'[]'),el=document.getElementById('rsHistory');if(!arr.length){el.textContent='No reports issued yet.';return;}el.innerHTML=arr.slice().reverse().map(function(r){return '<div class="rs-history-item"><div><b>'+rsEsc(r.id)+'</b><br><small>'+rsEsc(r.tag||'Untagged')+' • '+rsEsc(r.type||'Report')+' • '+rsEsc(r.deviceType||'Device')+'</small></div><div style="text-align:right"><b>'+rsEsc(r.result)+'</b><br><small>'+new Date(r.date).toLocaleString()+'</small></div></div>';}).join('');}
@@ -11289,6 +11312,7 @@ function rsClearAll(){
  renderDeviceConfig();
  window.ipDraft.clear(RS_DRAFT_KEY);
  rsCurrent=null;
+ rsHidePreview();
  rsRender();
 }
 function init(){
@@ -11311,7 +11335,7 @@ function init(){
    }
  });
  var bind=function(id,fn){var e=document.getElementById(id);if(e)e.addEventListener('click',fn);};
- bind('generateReportBtn',rsRender);bind('rsIssueBtn',rsIssue);bind('rsPrintBtn',function(){rsRender();var w=window.open('','_blank');if(!w){alert('Allow pop-ups to print the report.');return;}w.document.write('<html><head><title>'+rsEsc(rsCurrent.id)+'</title></head><body>'+document.getElementById('reportPreview').innerHTML+'</body></html>');w.document.close();w.focus();w.print();});
+ bind('generateReportBtn',rsShowPreview);bind('rsIssueBtn',rsIssue);bind('rsPrintBtn',function(){rsRender();var w=window.open('','_blank');if(!w){alert('Allow pop-ups to print the report.');return;}w.document.write('<html><head><title>'+rsEsc(rsCurrent.id)+'</title></head><body>'+document.getElementById('reportPreview').innerHTML+'</body></html>');w.document.close();w.focus();w.print();});
  bind('exportReportBtn',rsExport);
  bind('rsSaveDraftBtn',function(){rsSaveDraft(document.getElementById('rsSaveDraftBtn'));});
  bind('rsClearAllBtn',rsClearAll);
