@@ -5732,28 +5732,52 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
                                 <div class="row"><label>Field Device</label><select id="rsDeviceType">
                                     <option value="">Select field device...</option>
                                     <option>Pressure Transmitter</option>
+                                    <option>Pressure Gauge</option>
+                                    <option>Pressure Switch</option>
+                                    <option>Differential Pressure Switch</option>
                                     <option>Flow Transmitter</option>
+                                    <option>Rotameter (Local Flow Indicator)</option>
                                     <option>Level Transmitter</option>
                                     <option>Temperature Transmitter</option>
+                                    <option>Temperature Switch</option>
+                                    <option>Bearing Temperature Sensor</option>
                                     <option>Emergency Shut Down Valve</option>
                                     <option>Emergency Blow Down Valve</option>
+                                    <option>Pressure Safety Valve (PSV) / Relief Valve</option>
+                                    <option>Rupture Disc</option>
                                     <option>Control Valve</option>
                                     <option>Shut-off / On-off Valve</option>
                                     <option>Vibration Probe</option>
+                                    <option>Axial Displacement Probe</option>
                                     <option>Speed Probe</option>
+                                    <option>Tachometer / Overspeed Trip Device</option>
+                                    <option>Motor Starter / MCC Feeder</option>
+                                    <option>VFD (Variable Frequency Drive)</option>
+                                    <option>UPS / Battery Charger</option>
+                                    <option>Junction Box / Terminal Box</option>
                                     <option>Gas Detector</option>
                                     <option>Open Path Gas Detector</option>
                                     <option>Flame Detector</option>
+                                    <option>Manual Call Point</option>
+                                    <option>Beacon / Sounder (Audible-Visual Alarm)</option>
                                     <option>Fire Control Panel</option>
+                                    <option>Fire & Gas Logic Solver / I/O Card</option>
                                     <option>Smoke Detector</option>
                                     <option>Heat Detector</option>
                                     <option>pH Analyser</option>
                                     <option>ORP Analyser</option>
+                                    <option>Conductivity Analyser</option>
+                                    <option>Oxygen (O2) Analyser</option>
+                                    <option>Turbidity Analyser</option>
+                                    <option>Moisture Analyser</option>
                                     <option>Gas Chromatograph Analyser</option>
                                     <option>Dew Point Analyser</option>
                                     <option>Deluge Valve</option>
                                     <option>Fusible Loop</option>
+                                    <option>Foam System Valve / Proportioner</option>
+                                    <option>CO2 / Clean Agent Release Panel</option>
                                     <option>Proximity Sensor</option>
+                                    <option>Limit Switch</option>
                                     <option>Solenoid Valve</option>
                                     <option>Level Switch</option>
                                     <option>Other types</option>
@@ -9285,12 +9309,40 @@ var DEVICE_CONFIG={
     ['Reference pressure source','text','Deadweight tester / pressure calibrator ID'],['As-found condition','select','As-found,As-left']
    ], points:true
  },
+ 'Pressure Gauge':{
+   icon:'fa-gauge-simple', mode:'calibration', description:'Local pressure gauge verification against a certified reference gauge or calibrator.',
+   fields:[
+    ['Gauge type','select','Bourdon Tube,Diaphragm,Digital,Other'],['Range','text','e.g. 0-10 bar'],['Unit','text','bar, psi, kPa'],
+    ['Reference standard','text','Deadweight tester / calibrator ID'],['Dial / glass condition','select','Good,Damaged,Fogged Glass,Needs Replacement'],['As-found condition','select','As-found,As-left']
+   ], points:true
+ },
+ 'Pressure Switch':{
+   icon:'fa-toggle-on', mode:'switch', description:'Pressure switch functional test verifying set point, reset point and alarm/trip output.',
+   fields:[
+    ['Switch type','select','Bourdon Tube,Diaphragm,Piston,Electronic,Other'],['Set point','text','Pressure + unit'],['Reset point (deadband)','text','Pressure + unit'],
+    ['Reference standard','text','Calibrator / test pump ID'],['Alarm / trip function','select','High,High-High,Low,Low-Low,Other'],['PLC/DCS input','text','Channel / tag']
+   ], tests:['Physical condition','Simulated pressure applied','Switch set point','Switch reset point','Alarm/trip action','PLC/DCS indication','Return to service']
+ },
+ 'Differential Pressure Switch':{
+   icon:'fa-filter', mode:'switch', description:'Differential pressure switch functional test for filter/strainer or process DP monitoring, including set point and alarm verification.',
+   fields:[
+    ['Application','text','Filter DP / process DP / other'],['Set point','text','DP + unit'],['Reset point (deadband)','text','DP + unit'],
+    ['Reference standard','text','DP calibrator / test rig ID'],['Alarm / trip function','select','High,High-High,Low,Low-Low,Other'],['PLC/DCS input','text','Channel / tag']
+   ], tests:['Physical condition','Simulated DP applied','Switch set point','Switch reset point','Alarm/trip action','PLC/DCS indication','Return to service']
+ },
  'Flow Transmitter':{
    icon:'fa-water', mode:'calibration', description:'Flow transmitter verification. Select the measurement principle before recording points.',
    fields:[
     ['Flow principle','select','DP / Orifice,Magnetic,Vortex,Coriolis,Ultrasonic,Turbine,Variable Area,Other'],
     ['Flow range','text','e.g. 0–100 m³/h'],['Flow unit','text','m³/h, kg/h, L/min'],['Reference method','text','Master meter / prover / simulator / reference ID'],
     ['Process condition','text','Fluid, temperature, pressure, density if applicable'],['As-found condition','select','As-found,As-left']
+   ], points:true
+ },
+ 'Rotameter (Local Flow Indicator)':{
+   icon:'fa-ruler', mode:'localflow', description:'Local variable-area flow indicator (rotameter) verification against a reference flow method or comparison meter.',
+   fields:[
+    ['Float type','select','Ball,Conical,Other'],['Range','text','e.g. 0-50 L/min'],['Fluid / service','text','Fluid type / process service'],
+    ['Reference method','text','Reference meter / bucket-and-stopwatch / calibrated source'],['Scale / tube condition','select','Legible,Fogged,Damaged,Needs Replacement'],['As-found condition','select','As-found,As-left']
    ], points:true
  },
  'Level Transmitter':{
@@ -9309,6 +9361,21 @@ var DEVICE_CONFIG={
     ['Input simulation','text','Resistance / mV / simulator details'],['As-found condition','select','As-found,As-left']
    ], points:true
  },
+ 'Temperature Switch':{
+   icon:'fa-temperature-low', mode:'switch', description:'Temperature switch functional test verifying set point, reset and alarm/trip output using an approved reference source.',
+   fields:[
+    ['Switch type','select','Bimetallic,Capillary/Bulb,Electronic,Other'],['Set point','text','Temperature + unit'],['Reset point (deadband)','text','Temperature + unit'],
+    ['Reference standard','text','Dry block / bath / reference thermometer ID'],['Alarm / trip function','select','High,High-High,Low,Low-Low,Other'],['PLC/DCS input','text','Channel / tag']
+   ], tests:['Physical condition','Simulated temperature applied','Switch set point','Switch reset point','Alarm/trip action','PLC/DCS indication','Return to service']
+ },
+ 'Bearing Temperature Sensor':{
+   icon:'fa-gear', mode:'calibration', description:'Bearing temperature sensor (RTD/thermocouple) verification including installation check and reference comparison.',
+   fields:[
+    ['Sensor type','select','RTD Pt100,Thermocouple J,Thermocouple K,Thermocouple T,Other'],['Bearing / location','text','DE / NDE / thrust / specific bearing location'],
+    ['Range','text','e.g. 0-150 °C'],['Reference standard','text','Dry block / bath / reference thermometer ID'],
+    ['Installation condition','select','Good Contact,Loose,Damaged Well'],['As-found condition','select','As-found,As-left']
+   ], points:true
+ },
  'Emergency Shut Down Valve':{
    icon:'fa-circle-stop', mode:'valve', description:'ESD valve functional test: actuator, solenoid, travel/limits, timing and fail-safe operation.',
    fields:[
@@ -9320,6 +9387,20 @@ var DEVICE_CONFIG={
    fields:[
     ['Fail position','select','Fail Open,Fail Closed,Fail in Place'],['Actuator type','select','Pneumatic,Hydraulic,Other'],['Solenoid valve','text','Solenoid tag / model'],['Supply pressure','text','bar / psi'],['Required opening time','text','Approved/OEM limit'],['Limit switches','select','Open & Closed verified,Not fitted'],['Position feedback','select','Verified,Not fitted']
    ], tests:['Opening time','Closing time / reset','Open limit','Closed limit','Solenoid operation','DCS/ESD feedback','Fail-safe / blowdown action','Return to service']
+ },
+ 'Pressure Safety Valve (PSV) / Relief Valve':{
+   icon:'fa-triangle-exclamation', mode:'psv', description:'Pressure safety / relief valve inspection and set-pressure test against approved bench or in-situ test standard.',
+   fields:[
+    ['Valve type','select','Conventional Spring,Balanced Bellows,Pilot Operated,Rupture Pin,Other'],['Set pressure','text','Approved set pressure + unit'],['Orifice / capacity','text','Orifice designation or rated capacity'],
+    ['Test method','select','Bench Test,In-situ Test Rig,Other'],['Reference standard','text','Test bench / calibrator ID'],['As-found condition','select','As-found,As-left']
+   ], tests:['Physical / body condition','Seat leakage check','Set pressure — opening','Reseat / closing pressure','Lifting lever / test function','Seal / tag wire fitted','Return to service']
+ },
+ 'Rupture Disc':{
+   icon:'fa-circle-dot', mode:'ruptdisc', description:'Rupture disc inspection and replacement record, including burst rating and installation verification.',
+   fields:[
+    ['Disc type','select','Forward-Acting,Reverse-Acting,Graphite,Other'],['Burst pressure rating','text','Rated burst pressure + tolerance'],['Manufacturer / lot','text','Manufacturer / batch / lot number'],
+    ['Installed with holder','select','Yes,No'],['Companion PSV / relief path','text','Associated PSV tag if fitted'],['Condition on removal','select','Intact,Ruptured,Corroded,N/A New Install']
+   ], tests:['Physical condition / corrosion','Correct orientation confirmed','Burst rating matches design','Holder / gasket condition','Installation torque / fit','Tag / certificate recorded','Return to service']
  },
  'Control Valve':{
    icon:'fa-sliders', mode:'controlvalve', description:'Control valve report centred on the positioner, input signal, stroke, calibration, feedback and actuator action.',
@@ -9339,11 +9420,52 @@ var DEVICE_CONFIG={
     ['Probe type','select','Proximity / Eddy Current,Velocity,Accelerometer,Other'],['Measurement','text','mm/s, g, µm, mils'],['Probe gap','text','mm / mils'],['Bias / supply voltage','text','VDC'],['Simulation method','text','Signal simulator / shaker / approved method'],['Reference standard','text','Simulator / meter ID']
    ], tests:['Probe physical condition','Gap verified','Bias / supply voltage','Simulated signal applied','Indication compared with reference','Alarm/trip response','DCS/PLC indication','Return to service']
  },
+ 'Axial Displacement Probe':{
+   icon:'fa-ruler-horizontal', mode:'probe', description:'Axial (thrust) displacement probe verification using simulated signal, gap and trip setpoint checks.',
+   fields:[
+    ['Probe type','select','Proximity / Eddy Current,Other'],['Measurement range','text','mm / mils'],['Probe gap','text','mm / mils'],['Bias / supply voltage','text','VDC'],['Simulation method','text','Signal simulator / approved method'],['Trip setpoints','text','Alarm / trip values']
+   ], tests:['Probe physical condition','Gap verified','Bias / supply voltage','Simulated signal applied','Indication compared with reference','Alarm/trip response','DCS/PLC indication','Return to service']
+ },
  'Speed Probe':{
    icon:'fa-gauge', mode:'probe', description:'Speed probe verification focused on physical gap, bias/supply, simulated frequency and speed indication.',
    fields:[
     ['Probe type','select','Magnetic,Proximity / Eddy Current,Hall Effect,Other'],['Speed range','text','RPM'],['Probe gap','text','mm / mils'],['Bias / supply voltage','text','VDC'],['Simulation frequency','text','Hz / pulses per revolution'],['Reference tachometer','text','Reference ID']
    ], tests:['Probe condition','Gap verified','Bias / supply voltage','Simulated frequency','Calculated / indicated RPM','Alarm/trip response','DCS/PLC feedback','Return to service']
+ },
+ 'Tachometer / Overspeed Trip Device':{
+   icon:'fa-stopwatch', mode:'probe', description:'Tachometer / overspeed trip device functional test verifying speed indication and independent overspeed trip action.',
+   fields:[
+    ['Device type','select','Mechanical Tachometer,Magnetic Pickup System,Electronic Overspeed Trip,Other'],['Speed range','text','RPM'],['Trip setpoint','text','Approved overspeed trip RPM'],
+    ['Simulation method','text','Signal generator / test method'],['Reference tachometer','text','Reference ID'],['Independent from control system','select','Yes,No']
+   ], tests:['Physical condition','Simulated speed signal applied','Indicated speed compared with reference','Overspeed trip setpoint verified','Trip action confirmed (approved method)','Reset','DCS/PLC feedback','Return to service']
+ },
+ 'Motor Starter / MCC Feeder':{
+   icon:'fa-plug', mode:'electrical', description:'Motor starter / MCC feeder functional check covering protection settings, indication, interlocks and start/stop operation.',
+   fields:[
+    ['Starter type','select','DOL,Star-Delta,Soft Starter,VFD-Fed,Other'],['Motor rating','text','kW / HP, FLA'],['Overload / protection setting','text','Approved setting'],
+    ['Supply voltage','text','V / phases'],['Interlocks','text','Permissives / trip interlocks'],['PLC/DCS feedback','select','Verified,Not fitted']
+   ], tests:['Physical / panel condition','Protection relay settings verified','Local start/stop','Remote start/stop','Run indication feedback','Trip / fault indication','Interlock / permissive test','Return to service']
+ },
+ 'VFD (Variable Frequency Drive)':{
+   icon:'fa-rotate', mode:'electrical', description:'VFD functional and parameter verification covering speed reference, protection trips, bypass and feedback to the control system.',
+   fields:[
+    ['Drive model / rating','text','Model, kW/HP, voltage'],['Control mode','select','Local,Remote (4-20mA),Remote (Fieldbus),Other'],['Speed reference range','text','Hz / RPM range'],
+    ['Protection settings','text','Overload, overcurrent, thermal trip settings'],['Bypass fitted','select','Yes,No'],['PLC/DCS feedback','select','Verified,Not fitted']
+   ], tests:['Physical / panel condition','Parameter settings verified','Local speed control','Remote speed reference','Run / speed feedback','Fault / trip indication','Bypass operation (if fitted)','Return to service']
+ },
+ 'UPS / Battery Charger':{
+   icon:'fa-battery-full', mode:'electrical', description:'UPS / battery charger functional test covering output voltage, battery condition, changeover and alarm indication.',
+   fields:[
+    ['System type','select','UPS,Battery Charger,DC System,Other'],['Rated capacity','text','kVA / Ah'],['Battery type','text','VRLA / Ni-Cd / Lithium / Other'],
+    ['Last battery test','text','Date / result'],['Required autonomy','text','Approved backup time'],['Alarm / DCS feedback','select','Verified,Not fitted']
+   ], tests:['Physical / panel condition','Output voltage verified','Battery voltage / condition','Mains failure / changeover test','Load test / autonomy check','Alarm indication','Return to service']
+ },
+ 'Junction Box / Terminal Box':{
+   icon:'fa-box', mode:'electrical', description:'Junction/terminal box inspection covering insulation resistance, termination condition, ingress protection and labelling.',
+   fields:[
+    ['Box type / area classification','text','General purpose / Ex(e) / Ex(d) / Zone rating'],['Circuits terminated','text','Number of circuits / cores'],['Insulation resistance test','text','Meggar reading / test voltage'],
+    ['Cable gland condition','select','Good,Needs Attention,Replaced'],['IP rating verified','select','Yes,No']
+   ], tests:['Physical / enclosure condition','Gland / entry condition','Termination tightness','Insulation resistance test','Earth continuity','Labelling / identification','Return to service']
  },
  'Gas Detector':{
    icon:'fa-smog', mode:'gas', description:'Gas detector bump test / calibration record for zero reference and alarm levels.',
@@ -9363,11 +9485,32 @@ var DEVICE_CONFIG={
     ['Detector technology','select','UV,IR,UV/IR,Multi-spectrum'],['Test method','select','Lamp test,Approved flame simulator,Other'],['Detection distance','text','m'],['Voting / zone','text','Fire zone / logic reference'],['Alarm setpoint / delay','text','Approved value']
    ], tests:['Lens / detector condition','Lamp/test source applied','Detector fire alarm','Fire panel indication','DCS/Fire & Gas feedback','Reset','Return to service']
  },
+ 'Manual Call Point':{
+   icon:'fa-hand', mode:'mcp', description:'Manual call point functional test verifying operation, panel indication and reset using the approved test key/method.',
+   fields:[
+    ['MCP type','select','Break Glass,Resettable Element,Call Point with Cover,Other'],['Loop / address','text','Loop and device address'],['Location / zone','text','Location description'],
+    ['Test method','select','Test Key,Approved Test Element,Panel Test'],['Cover / protection fitted','select','Yes,No']
+   ], tests:['Physical / cover condition','Operate MCP (test method)','Fire panel alarm received','Correct zone/address','Reset','Return to service']
+ },
+ 'Beacon / Sounder (Audible-Visual Alarm)':{
+   icon:'fa-bell', mode:'avalarm', description:'Beacon / sounder functional test verifying audible and visual alarm output against the approved sound level and coverage.',
+   fields:[
+    ['Device type','select','Sounder,Beacon,Combined Sounder-Beacon,Other'],['Loop / address / circuit','text','Loop, address or hardwired circuit'],['Rated sound output','text','dB at 1m (if specified)'],
+    ['Location / zone','text','Location description'],['Test method','select','Panel Test,Manual Activation']
+   ], tests:['Physical condition','Activate device','Audible output verified','Visual / beacon output verified','Fire panel indication','Reset','Return to service']
+ },
  'Fire Control Panel':{
    icon:'fa-fire-extinguisher', mode:'firepanel', description:'Fire panel health and loop/device integrity report including isolation, faults and standby battery.',
    fields:[
     ['Panel / loop architecture','text','Panel model / loop count'],['Battery system','text','Battery rating / installation date'],['Standby requirement','text','Required autonomy'],['Last battery test','text','Date / result'],['Communication','text','F&G / DCS / repeater interface']
    ], tests:['Panel normal condition','Loop faults checked','Device faults checked','Isolated / disabled devices reviewed','Alarm operation','Fault indication','Battery voltage','Mains failure / standby operation','Communication / repeater','Event log reviewed','Return to service']
+ },
+ 'Fire & Gas Logic Solver / I/O Card':{
+   icon:'fa-server', mode:'fglogic', description:'Fire & gas logic solver / I/O card health check covering diagnostics, forced/bypassed points and voting logic verification.',
+   fields:[
+    ['System / platform','text','Logic solver model / platform'],['I/O card(s) under test','text','Card ID / channel range'],['Voting architecture','text','1oo1 / 1oo2 / 2oo3 / other'],
+    ['Diagnostics status','select','Healthy,Fault Present,Degraded'],['Forces / bypasses active','text','List if any, with authorization reference']
+   ], tests:['System diagnostics reviewed','I/O card status verified','Forced / bypassed points reviewed and justified','Voting logic function test','Input simulation / trip verification','Output / final element response','Event log reviewed','Return to service']
  },
  'Smoke Detector':{
    icon:'fa-smog', mode:'detector', description:'Smoke detector inspection and functional test with cleaning/replacement condition.',
@@ -9405,6 +9548,34 @@ var DEVICE_CONFIG={
     ['Technology','select','Chilled Mirror,Metal Oxide,Al2O3,Other'],['Range','text','°C dew point'],['Reference method','text','Reference analyser / generator'],['Sample pressure','text','bar / psi'],['Sample flow','text','L/min'],['Reference standard ID','text','ID / certificate']
    ], tests:['Sample system condition','Pressure / flow verified','Zero/reference check','Reference comparison','Alarm setpoint','Output / DCS indication','Return to service']
  },
+ 'Conductivity Analyser':{
+   icon:'fa-bolt-lightning', mode:'analytical', description:'Conductivity analyser verification using certified conductivity standards and cell constant check.',
+   fields:[
+    ['Cell type','text','Contacting / inductive / cell constant'],['Calibration standards','text','Certified conductivity standards used'],['Reference standard ID','text','Certificate / batch'],
+    ['Temperature compensation','text','ATC / manual / temperature'],['Range','text','µS/cm or mS/cm']
+   ], tests:['Probe / cell condition','Standard 1 response','Standard 2 response','Cell constant verified','Process sample comparison','Output / DCS indication','Return to service']
+ },
+ 'Oxygen (O2) Analyser':{
+   icon:'fa-wind', mode:'analytical', description:'Oxygen analyser verification using certified span gas and zero reference, covering paramagnetic, zirconia or electrochemical technologies.',
+   fields:[
+    ['Technology','select','Paramagnetic,Zirconia,Electrochemical,Laser (TDLAS),Other'],['Span gas concentration','text','Certified O2 span gas %'],['Zero gas','text','N2 / zero air source'],
+    ['Cylinder / standard ID','text','Certificate / cylinder ID'],['Alarm setpoints','text','Approved values']
+   ], tests:['Probe / cell condition','Zero gas response','Span gas response','Linearity / mid-point check','Process sample comparison','Alarm function','Output / DCS indication','Return to service']
+ },
+ 'Turbidity Analyser':{
+   icon:'fa-cloud', mode:'analytical', description:'Turbidity analyser verification using certified formazin/NTU standards and cell/optics check.',
+   fields:[
+    ['Technology','select','Nephelometric,Absorption,Other'],['Calibration standards','text','Certified NTU / formazin standards'],['Reference standard ID','text','Certificate / batch'],
+    ['Range','text','NTU'],['Sample flow / pressure','text','L/min / bar']
+   ], tests:['Optics / cell condition','Standard 1 response','Standard 2 response','Linearity check','Process sample comparison','Output / DCS indication','Return to service']
+ },
+ 'Moisture Analyser':{
+   icon:'fa-vial', mode:'analytical', description:'Moisture analyser field verification against a reference generator or certified sample, covering sensor technology and sample conditioning.',
+   fields:[
+    ['Technology','select','Al2O3,Capacitive,QCM,TDLAS,Other'],['Range','text','ppm / ppmv / % / lb/MMscf'],['Reference method','text','Reference generator / certified sample / comparison analyser'],
+    ['Sample pressure','text','bar / psi'],['Sample flow','text','L/min']
+   ], tests:['Sample system condition','Sensor / cell condition','Reference comparison','Zero / span check','Alarm setpoint','Output / DCS indication','Return to service']
+ },
  'Deluge Valve':{
    icon:'fa-water', mode:'deluge', description:'Deluge valve functional inspection including trim, release path, opening/reset and fire system feedback.',
    fields:[
@@ -9417,11 +9588,32 @@ var DEVICE_CONFIG={
     ['Loop type','select','Pneumatic Fusible Tubing,Fusible Link Cable,Linear Heat Detection Cable,Other'],['Fusing temperature','text','e.g. 68°C, 79°C, 105°C or approved rating'],['Loop length / route','text','m / area covered'],['Loop pressure (if pneumatic)','text','bar / psi'],['Pilot / release device','text','Pilot head, pressure switch or release valve tag'],['As-found condition','select','As-found,As-left']
    ], tests:['Loop physical condition / route','Loop pressure or continuity verified','Simulated fuse / trip test','Pilot / release device response','Suppression valve release confirmed','Fire panel / F&G indication','Reset / recharge loop','Return to service']
  },
+ 'Foam System Valve / Proportioner':{
+   icon:'fa-shower', mode:'foam', description:'Foam system deluge valve / proportioner functional test covering concentrate supply, induction ratio and release operation.',
+   fields:[
+    ['System type','select','Balanced Pressure Proportioner,Line Inductor,Around-the-Pump,Bladder Tank,Other'],['Foam concentrate type','text','AFFF / AR-AFFF / other, % rate'],['Release method','select','Pneumatic,Hydraulic,Electric,Manual'],
+    ['Supply pressure (water / foam)','text','bar / psi'],['Required induction ratio','text','Approved % rate'],['Pilot / solenoid','text','Release device tag']
+   ], tests:['Trim / valve condition','Concentrate tank / supply level','Pilot pressure','Release device operation','Valve opening','Induction ratio verified (if tested)','Fire panel / feedback','Reset','Return to service']
+ },
+ 'CO2 / Clean Agent Release Panel':{
+   icon:'fa-fire-extinguisher', mode:'cleanagent', description:'CO2 / clean agent release panel functional test covering cylinder pressure, detection zone status, manual/automatic release and time delay operation.',
+   fields:[
+    ['Agent type','select','CO2,FM-200,Novec 1230,Inergen,Other'],['Number of cylinders / bank','text','Cylinder count / bank arrangement'],['Cylinder pressure','text','bar / psi against OEM chart'],
+    ['Detection zone(s)','text','Zone / device coverage'],['Time delay setting','text','Approved discharge delay'],['Release method','select','Automatic,Manual,Both']
+   ], tests:['Cylinder pressure / weight check','Detection zone status reviewed','Abort / manual release station test','Time delay operation','Automatic release simulation (per approved procedure)','Damper / shutdown interlock response','Fire panel / feedback','Return to service']
+ },
  'Proximity Sensor':{
    icon:'fa-bullseye', mode:'switch', description:'Proximity sensor test covering target gap, switching state, supply and PLC/DCS indication.',
    fields:[
     ['Sensor type','select','Inductive,Capacitive,Magnetic,Photoelectric,Other'],['Supply voltage','text','VDC / VAC'],['Output','select','PNP,NPN,NO,NC,Other'],['Target material','text','Steel / specified target'],['Required sensing gap','text','mm'],['PLC/DCS input','text','Channel / tag']
    ], tests:['Physical condition','Supply voltage','Sensing gap','Target detection','Output state','PLC/DCS indication','Repeatability','Return to service']
+ },
+ 'Limit Switch':{
+   icon:'fa-compress', mode:'switch', description:'Mechanical limit switch functional test verifying actuation point, output state and PLC/DCS indication.',
+   fields:[
+    ['Switch type','select','Roller Lever,Plunger,Rotary,Other'],['Application','text','Door / guard / position / mechanical stop'],['Actuation point','text','Position / travel description'],
+    ['Output','select','NO,NC,Changeover,Other'],['PLC/DCS input','text','Channel / tag']
+   ], tests:['Physical condition','Actuation point verified','Output state — actuated','Output state — released','PLC/DCS indication','Repeatability','Return to service']
  },
  'Solenoid Valve':{
    icon:'fa-magnet', mode:'solenoid', description:'Solenoid valve field test covering coil supply, actuation, valve travel, exhaust/return and controlled output.',
