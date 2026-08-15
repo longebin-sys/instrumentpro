@@ -4252,6 +4252,7 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <div class="sub-tab" data-tab="ana-do">Dissolved O₂</div>
 <div class="sub-tab" data-tab="ana-gas">Gas Detection</div>
 <div class="sub-tab" data-tab="ana-rvp">RVP</div>
+<div class="sub-tab" data-tab="ana-oiw">OIW</div>
 <div class="sub-tab" data-tab="ana-gc">GC</div>
 </div>
 <!-- pH -->
@@ -4367,6 +4368,36 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <button class="btn btn-sm" id="rvpCorrelateBtn"><i class="fas fa-calculator"></i> Calculate</button>
 <div class="result-box"><span>RVP (D323 equiv.)</span><span id="rvpEquivResult">9.17 psi</span></div>
 <div style="font-size:0.6rem;color:#94a3b8;margin-top:4px;">RVP ≈ a × DVPE + b</div>
+</div>
+<!-- Oil in Water -->
+<div class="sub-panel hidden" id="ana-oiw">
+<div style="font-size:0.65rem;color:#64748b;margin-bottom:8px;">Oil-in-water (OIW) analysers measure residual hydrocarbon concentration in produced/process water, typically via UV fluorescence, infrared absorption or laser-induced fluorescence, verified against a certified oil-in-water standard.</div>
+<div class="row">
+<label>Standard</label>
+<input id="oiwStandard" step="any" style="flex:0.6;" type="number" value="50"/><span class="chip">mg/L</span>
+</div>
+<div class="row">
+<label>Measured</label>
+<input id="oiwMeasured" step="any" style="flex:0.6;" type="number" value="48"/><span class="chip">mg/L</span>
+</div>
+<div class="row"><label>Tolerance</label><input id="oiwTolerance" step="any" type="number" value="10"/><span class="chip">% of standard</span></div>
+<button class="btn btn-sm" id="oiwCalBtn"><i class="fas fa-check"></i> Verify</button>
+<div class="result-box"><span>Deviation</span><span id="oiwDeviation">-4.0%</span></div>
+<div class="result-box"><span>Status</span><span id="oiwStatus" style="color:#059669;">✓ Pass</span></div>
+<div style="font-size:0.65rem;color:#64748b;">Deviation = (Measured − Standard) ÷ Standard × 100. Typical field acceptance: ±10-15% of standard (confirm OEM/method spec).</div>
+<hr/>
+<div class="card-header" style="margin-bottom:8px;"><i class="fas fa-exchange-alt"></i><h3 style="font-size:0.85rem;">Concentration Unit Converter</h3></div>
+<div class="row">
+<label>Value</label>
+<input id="oiwConvInput" step="any" style="flex:0.6;" type="number" value="50"/>
+<select id="oiwConvUnit" style="flex:0.5;"><option selected="" value="mgl">mg/L</option><option value="ppm">ppm</option><option value="ugl">µg/L</option><option value="ppb">ppb</option><option value="pct">%</option></select>
+</div>
+<button class="btn btn-sm" id="oiwConvBtn"><i class="fas fa-calculator"></i> Convert</button>
+<div class="result-box"><span>mg/L</span><span id="oiwResMgl">50.00 mg/L</span></div>
+<div class="result-box"><span>ppm</span><span id="oiwResPpm">50.00 ppm</span></div>
+<div class="result-box"><span>µg/L</span><span id="oiwResUgl">50000.00 µg/L</span></div>
+<div class="result-box"><span>ppb</span><span id="oiwResPpb">50000.00 ppb</span></div>
+<div style="font-size:0.6rem;color:#94a3b8;margin-top:4px;">For dilute aqueous solutions (density ≈ 1 g/mL): 1 mg/L ≈ 1 ppm ≈ 1000 µg/L ≈ 1000 ppb.</div>
 </div>
 <div class="sub-panel hidden" id="ana-gc">
 <div class="tab-scroll" id="gcTabs">
@@ -6525,6 +6556,7 @@ body.dark #page-references .chip {
 <option>Gas Chromatograph Analyser</option>
 <option>Dew Point Analyser</option>
 <option>Reid Vapour Analyser</option>
+<option>Oil in Water Analyser</option>
 <option>Deluge Valve</option>
 <option>Fusible Loop</option>
 <option>Foam System Valve / Proportioner</option>
@@ -8290,6 +8322,48 @@ body.dark #page-references .chip {
             [rvpDvpe, rvpSlope, rvpIntercept].forEach(el => el.addEventListener('input', calcRvpCorrelate));
             calcRvpCorrelate();
 
+            // Oil in Water (OIW)
+            const oiwStandard = document.getElementById('oiwStandard');
+            const oiwMeasured = document.getElementById('oiwMeasured');
+            const oiwTolerance = document.getElementById('oiwTolerance');
+            const oiwDeviation = document.getElementById('oiwDeviation');
+            const oiwStatus = document.getElementById('oiwStatus');
+
+            function calcOiwCal() {
+                const std = parseFloat(oiwStandard.value) || 0;
+                const meas = parseFloat(oiwMeasured.value) || 0;
+                const tol = parseFloat(oiwTolerance.value) || 0;
+                const dev = std ? ((meas - std) / std) * 100 : 0;
+                const pass = Math.abs(dev) <= tol;
+                oiwDeviation.textContent = (dev >= 0 ? '+' : '') + dev.toFixed(1) + '%';
+                oiwStatus.textContent = pass ? '✓ Pass' : '✗ Fail';
+                oiwStatus.style.color = pass ? '#059669' : '#dc2626';
+            }
+            document.getElementById('oiwCalBtn').addEventListener('click', calcOiwCal);
+            [oiwStandard, oiwMeasured, oiwTolerance].forEach(el => el.addEventListener('input', calcOiwCal));
+            calcOiwCal();
+
+            const oiwConvInput = document.getElementById('oiwConvInput');
+            const oiwConvUnit = document.getElementById('oiwConvUnit');
+            const oiwResMgl = document.getElementById('oiwResMgl');
+            const oiwResPpm = document.getElementById('oiwResPpm');
+            const oiwResUgl = document.getElementById('oiwResUgl');
+            const oiwResPpb = document.getElementById('oiwResPpb');
+            const OIW_TO_MGL = { mgl: 1, ppm: 1, ugl: 0.001, ppb: 0.001, pct: 10000 };
+
+            function calcOiwConvert() {
+                const val = parseFloat(oiwConvInput.value) || 0;
+                const mgl = val * OIW_TO_MGL[oiwConvUnit.value];
+                oiwResMgl.textContent = mgl.toFixed(2) + ' mg/L';
+                oiwResPpm.textContent = mgl.toFixed(2) + ' ppm';
+                oiwResUgl.textContent = (mgl * 1000).toFixed(2) + ' µg/L';
+                oiwResPpb.textContent = (mgl * 1000).toFixed(2) + ' ppb';
+            }
+            document.getElementById('oiwConvBtn').addEventListener('click', calcOiwConvert);
+            oiwConvInput.addEventListener('input', calcOiwConvert);
+            oiwConvUnit.addEventListener('change', calcOiwConvert);
+            calcOiwConvert();
+
             document.getElementById('anaExportBtn').addEventListener('click', function() {
                 const activeTab = document.querySelector('#analyticalTabs .sub-tab.active').dataset.tab;
                 const date = new Date().toLocaleString();
@@ -8306,6 +8380,8 @@ body.dark #page-references .chip {
                     body = `Test: Gas Detection Check\nGas Type: ${gasType.value}\nReading: ${gasInput.value}\nStatus: ${gasStatus.textContent}\nAlarm Level: ${gasAlarm.textContent}`;
                 } else if (activeTab === 'ana-rvp') {
                     body = `Test: Reid Vapour Pressure (RVP)\nInput: ${rvpInput.value} ${rvpInputUnit.options[rvpInputUnit.selectedIndex].text}\nConverted: ${rvpResultPsi.textContent} / ${rvpResultKpa.textContent} / ${rvpResultBar.textContent} / ${rvpResultKgcm2.textContent}\n----------------------------------------\nDVPE (D5191): ${rvpDvpe.value} psi\nCorrelation: RVP = ${rvpSlope.value} x DVPE + ${rvpIntercept.value}\nRVP (D323 equiv.): ${rvpEquivResult.textContent}`;
+                } else if (activeTab === 'ana-oiw') {
+                    body = `Test: Oil in Water (OIW)\nStandard: ${oiwStandard.value} mg/L\nMeasured: ${oiwMeasured.value} mg/L\nTolerance: ±${oiwTolerance.value}%\nDeviation: ${oiwDeviation.textContent}\nStatus: ${oiwStatus.textContent}\n----------------------------------------\nConverter Input: ${oiwConvInput.value} ${oiwConvUnit.options[oiwConvUnit.selectedIndex].text}\nConverted: ${oiwResMgl.textContent} / ${oiwResPpm.textContent} / ${oiwResUgl.textContent} / ${oiwResPpb.textContent}`;
                 }
                 const content =
                     `========================================\n` +
@@ -11891,6 +11967,17 @@ var DEVICE_CONFIG={
     ['Bath / chamber temperature control','text','°C / °F, verified stability'],
     ['Reference sample / standard ID','text','Certified reference sample / certificate ID']
    ], tests:['Sample conditioning / chilling','Sample injection / chamber loading','Test temperature stabilised','Reference sample response','Result vs certified value','Repeatability check','Output / DCS indication','Return to service']
+ },
+ 'Oil in Water Analyser':{
+   icon:'fa-oil-can', mode:'analytical', description:'Oil-in-water (OIW) analyser field verification using a certified oil-in-water standard, covering UV fluorescence, infrared absorption or laser-induced fluorescence technologies.',
+   units:'mg/L,ppm,µg/L', range:'e.g. 0-200 mg/L (per discharge permit range)', tolerance:'±10-15% of standard value (typical) - confirm OEM/method spec',
+   fields:[
+    ['Technology','select','UV Fluorescence,Infrared (IR) Absorption,Laser-Induced Fluorescence,Turbidity / Ultrasonic,Other'],
+    ['Sample system','text','Sample conditioning / flow / pressure'],
+    ['Calibration standard','text','Certified oil-in-water standard used'],
+    ['Reference standard ID','text','Certificate / batch'],
+    ['Discharge / compliance limit','text','Approved regulatory limit, e.g. 29 mg/L (OSPAR) / 42 mg/L (US)']
+   ], tests:['Sample system condition','Zero check','Standard response','Linearity / mid-point check','Process sample comparison','Alarm setpoint','Output / DCS indication','Return to service']
  },
  'Conductivity Analyser':{
    icon:'fa-bolt-lightning', mode:'analytical', description:'Conductivity analyser verification using certified conductivity standards and cell constant check.',
