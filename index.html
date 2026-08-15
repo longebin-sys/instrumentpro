@@ -3948,14 +3948,7 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
             </div>
 
             <div class="card">
-                <div class="card-header"><i class="fas fa-file-export"></i><h3>Raw Data Export</h3></div>
-                <div class="fn-tool-grid">
-                    <button class="btn-outline btn" id="noteExportBtn"><i class="fas fa-file-alt"></i> TXT</button>
-                    <button class="btn-outline btn" id="noteExportCsvBtn"><i class="fas fa-file-csv"></i> CSV</button>
-                    <button class="btn-outline btn" id="fnJsonBtn"><i class="fas fa-code"></i> JSON</button>
-                    <button class="btn-outline btn" id="noteSyncBtn"><i class="fas fa-cloud-upload-alt"></i> Sync</button>
-                    <button class="btn-outline btn" id="noteClearBtn" style="color:#dc2626;grid-column:1/-1;"><i class="fas fa-trash"></i> Clear All Notes</button>
-                </div>
+                <button class="btn-outline btn w-full" id="noteClearBtn" style="color:#dc2626;justify-content:center;"><i class="fas fa-trash"></i> Clear All Notes</button>
             </div>
         </div>
 
@@ -8973,10 +8966,6 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
                 }
                 document.getElementById('fnAddBtn').onclick=capture;
                 ['noteSearch','fnFilterStatus','fnFilterPriority'].forEach(id=>document.getElementById(id).addEventListener('input',render));
-                document.getElementById('noteExportBtn').onclick=()=>{const a=notes().sort((x,y)=>x.ts-y.ts);if(!a.length){alert('No notes to export.');return;}let t='INSTRUMENTPRO FIELD LOG\nExported: '+new Date().toLocaleString()+'\n\n';a.forEach(n=>t+='['+fmt(n.ts)+'] '+n.priority+' | '+n.category+' | '+(n.tag||'')+' | '+n.status+'\n'+n.text+'\nAction: '+(n.action||'')+'\n\n');download('InstrumentPro_FieldLog_'+new Date().toISOString().slice(0,10)+'.txt',t,'text/plain');};
-                document.getElementById('noteExportCsvBtn').onclick=()=>{const a=notes().sort((x,y)=>x.ts-y.ts);if(!a.length){alert('No notes to export.');return;}let c='Timestamp,Category,Priority,Status,Discipline,Tag,Location,Follow-up,Keywords,Observation\n';a.forEach(n=>c+=[fmt(n.ts),n.category,n.priority,n.status,n.discipline,n.tag,n.location,n.dueDate,n.keywords,n.text].map(csv).join(',')+'\n');download('InstrumentPro_FieldLog_'+new Date().toISOString().slice(0,10)+'.csv',c,'text/csv');};
-                document.getElementById('fnJsonBtn').onclick=()=>download('InstrumentPro_FieldLog_'+new Date().toISOString().slice(0,10)+'.json',JSON.stringify(notes(),null,2),'application/json');
-                document.getElementById('noteSyncBtn').onclick=()=>{const a=notes();if(!a.length){alert('No notes to sync.');return;}window.syncReportToWebhooks({source:'InstrumentPro',type:'FieldNotesAdvanced',timestamp:new Date().toISOString(),notes:a});};
                 document.getElementById('noteClearBtn').onclick=()=>{if(notes().length&&confirm('Delete ALL field notes? This cannot be undone.')){save([]);selected.clear();render();}};
 
                 // =============================================================
