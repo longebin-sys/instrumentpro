@@ -4101,42 +4101,65 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
         PAGE: ANALYTICAL (Fully Functional)
         ========================================================== -->
 <!-- ==========================================================
-        PAGE: HART COMMUNICATOR
+        PAGE: HART COMMUNICATOR / DEVICE LIBRARY
         ========================================================== -->
 <div class="page" id="page-hart">
 <div class="page-title"><i class="fas fa-satellite-dish"></i> HART Communicator
-                <span id="hartConnDot" style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#dc2626;margin-left:8px;vertical-align:middle;"></span>
-<span id="hartConnText" style="font-size:0.6rem;font-weight:600;color:#dc2626;vertical-align:middle;">Not connected</span>
+                <span id="hcwConnDot" style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#dc2626;margin-left:8px;vertical-align:middle;"></span>
+<span id="hcwConnText" style="font-size:0.6rem;font-weight:600;color:#dc2626;vertical-align:middle;">Not connected</span>
 </div>
+
+<!-- Screen: home -->
+<div id="hcwScreen-home">
+<div class="card" style="text-align:center;padding:34px 16px;">
+<i class="fas fa-satellite-dish" style="font-size:2rem;color:#1e3a5f;margin-bottom:12px;"></i>
+<h3 style="margin-bottom:6px;">Connect to HART device</h3>
+<p style="font-size:0.72rem;color:#64748b;margin-bottom:16px;">Find a transmitter or positioner and open its device-specific controls.</p>
+<button class="btn w-full" id="hcwConnectBtn" style="justify-content:center;"><i class="fas fa-plug"></i> Connect</button>
+</div>
+<div class="card"><div style="font-size:0.65rem;color:#64748b;">The communicator identifies the device first, then uses its installed device description/profile to present the appropriate controls. DD/FDI files can be added from the Device Library.</div></div>
+</div>
+
+<!-- Screen: scan -->
+<div id="hcwScreen-scan" style="display:none;">
+<button class="btn-outline btn" id="hcwBackHome" style="justify-content:center;margin-bottom:10px;width:auto;padding:8px 14px;"><i class="fas fa-arrow-left"></i> Back</button>
+<div class="card"><div class="card-header"><i class="fas fa-search"></i><h3>Finding devices</h3></div><div id="hcwScanText" style="font-size:0.7rem;color:#64748b;">Choose a connection.</div></div>
+<div class="card" id="hcwTransportButtons" style="display:flex;flex-direction:column;gap:8px;"></div>
+<div id="hcwFound"></div>
+</div>
+
+<!-- Screen: device -->
+<div id="hcwScreen-device" style="display:none;">
+<button class="btn-outline btn" id="hcwBackScan" style="justify-content:center;margin-bottom:10px;width:auto;padding:8px 14px;"><i class="fas fa-arrow-left"></i> Devices</button>
+<div class="card"><div class="card-header"><i class="fas fa-microchip"></i><h3 id="hcwDeviceName">HART Device</h3></div><div id="hcwDeviceMeta" style="font-size:0.68rem;color:#64748b;"></div></div>
 <div class="card">
-<div class="card-header"><i class="fas fa-tag"></i><h3>Device Info &amp; PV</h3><span id="hartPvUnitsChip">—</span></div>
-<div class="row"><label>Address</label><input id="hartCommAddr" max="63" min="0" style="flex:0.4;" type="number" value="0"/><span class="chip">0-63 polling address</span></div>
-<div style="font-size:0.6rem;color:#94a3b8;margin-bottom:6px;">PV, loop current, and % range auto-poll every 3s while connected and this page is open.</div>
-<div class="result-box"><span>PV</span><span id="hartPvResult">—</span></div>
-<div class="result-box"><span>Loop Current</span><span id="hartCurrentResult">—</span></div>
-<div class="result-box"><span>% of Range</span><span id="hartPercentResult">—</span></div>
+<div class="row"><label>PV / Travel</label><span class="chip" id="hcwPv">—</span></div>
+<div class="row"><label>Loop / Input</label><span class="chip" id="hcwMa">—</span></div>
 </div>
+<div class="card" id="hcwMenu"></div>
+<button class="btn btn-outline w-full" id="hcwRefreshBtn" style="justify-content:center;"><i class="fas fa-rotate"></i> Refresh</button>
+</div>
+
+<!-- Screen: edit -->
+<div id="hcwScreen-edit" style="display:none;">
+<button class="btn-outline btn" id="hcwBackDevice" style="justify-content:center;margin-bottom:10px;width:auto;padding:8px 14px;"><i class="fas fa-arrow-left"></i> Device</button>
+<div class="card"><div class="card-header"><i class="fas fa-edit"></i><h3 id="hcwEditTitle">Edit</h3></div><div class="row"><label id="hcwEditLabel">Value</label><input id="hcwEditValue" type="text"/></div></div>
+<button class="btn btn-danger w-full" id="hcwSaveBtn" style="justify-content:center;"><i class="fas fa-paper-plane"></i> Save</button>
+<div class="card mt-1" id="hcwSaveNote" style="font-size:0.65rem;color:#64748b;">The app selects the appropriate HART operation in the background.</div>
+</div>
+
+<!-- Screen: library -->
+<div id="hcwScreen-library" style="display:none;">
+<button class="btn-outline btn" id="hcwBackDevice2" style="justify-content:center;margin-bottom:10px;width:auto;padding:8px 14px;"><i class="fas fa-arrow-left"></i> Device</button>
 <div class="card">
-<div class="card-header"><i class="fas fa-edit"></i><h3>Write Range (Cmd 35)</h3></div>
-<div style="font-size:0.65rem;color:#64748b;margin-bottom:8px;">Universal command — writes new LRV/URV to the connected transmitter. This changes the live device's configuration immediately.</div>
-<div class="row"><label>Units Code</label><input id="hartUnitsCode" style="flex:0.4;" type="number" value="12"/><span class="chip">12=%, see device manual for full table</span></div>
-<div class="row"><label>LRV</label><input id="hartLrvInput" step="any" type="number" value="0"/></div>
-<div class="row"><label>URV</label><input id="hartUrvInput" step="any" type="number" value="100"/></div>
-<button class="btn btn-danger w-full" id="hartWriteRangeBtn" style="justify-content:center;"><i class="fas fa-paper-plane"></i> Write LRV/URV to Device</button>
-<div class="result-box"><span>Last Write</span><span id="hartWriteResult">—</span></div>
+<div class="card-header"><i class="fas fa-book"></i><h3>Device Library</h3></div>
+<div style="font-size:0.68rem;color:#64748b;margin-bottom:8px;">Import a legally obtained EDD/FDI package or JSON device profile. Files are kept in this browser on this device.</div>
+<input accept=".fdix,.fma,.fm6,.fm8,.ddl,.edd,.json,.zip" id="hcwPkgInput" multiple="" type="file"/>
 </div>
-<div class="card">
-<div class="card-header"><i class="fas fa-wave-square"></i><h3>Simulate / Fix mA (Cmd 40)</h3></div>
-<div style="font-size:0.65rem;color:#64748b;margin-bottom:8px;">Forces the transmitter's analog output to a fixed value — most HART transmitters support this natively for loop testing. Remember to exit fixed mode when done.</div>
-<div class="row"><label>Fix at</label><input id="hartFixMa" step="any" type="number" value="12"/><span class="chip">mA</span></div>
-<button class="btn btn-danger w-full" id="hartFixBtn" style="justify-content:center;"><i class="fas fa-lock"></i> Enter Fixed Current Mode</button>
-<button class="btn-outline btn w-full mt-1" id="hartUnfixBtn" style="justify-content:center;"><i class="fas fa-lock-open"></i> Exit Fixed Current Mode</button>
-<div class="result-box"><span>Status</span><span id="hartFixResult">Not fixed</span></div>
+<div id="hcwLibraryList"></div>
+<div class="card"><div style="font-size:0.62rem;color:#64748b;">FDI packages can contain an encoded EDD and optional user-interface components. A full standards-compliant EDD/FDI interpreter is a host component; this page provides the library/identification framework and common device profiles. Encoded EDD binaries (fm6/fm8/fma) are retained as package assets but are not interpreted without the licensed FieldComm EDD Engine.</div></div>
 </div>
-<div class="card">
-<div class="card-header"><i class="fas fa-terminal"></i><h3>Raw Response Log</h3></div>
-<div id="hartRawLog" style="font-size:0.65rem;font-family:monospace;background:#f1f5f9;padding:10px;border-radius:12px;max-height:150px;overflow-y:auto;white-space:pre-wrap;">No commands sent yet.</div>
-</div>
+
 </div>
 <!-- ==========================================================
         PAGE: FIELD NOTES — ADVANCED
@@ -6714,10 +6737,10 @@ body.dark #page-references .chip {
 <div class="page" id="page-settings">
 <div class="page-title"><i class="fas fa-cog"></i> Settings</div>
 <details class="card settings-accordion">
-<summary><i class="fas fa-bluetooth-b"></i> Connect Device (Bluetooth / WiFi / HART)</summary>
+<summary><i class="fas fa-bluetooth-b"></i> Connect Device (Bluetooth / WiFi)</summary>
 <div class="settings-accordion-body">
 <div class="card" style="background:#fff7ed;border-color:#fde68a;">
-<div style="font-size:0.7rem;color:#92400e;"><i class="fas fa-triangle-exclamation"></i> <strong>Read before connecting:</strong> Bluetooth support depends on your instrument's actual hardware — this works with devices that expose a serial/UART-style Bluetooth LE service (a common pattern, but not universal). WiFi devices usually need to be reachable over plain HTTP, which browsers block from an HTTPS site like GitHub Pages unless the device also supports HTTPS. The HART tool below builds correctly-framed/checksummed command bytes, but <strong>writing range values (URV/LRV) changes a live transmitter's calibration</strong> — verify everything against your transmitter's manual and test on a bench setup before using on an installed, in-service device.</div>
+<div style="font-size:0.7rem;color:#92400e;"><i class="fas fa-triangle-exclamation"></i> <strong>Read before connecting:</strong> Bluetooth support depends on your instrument's actual hardware — this works with devices that expose a serial/UART-style Bluetooth LE service (a common pattern, but not universal). WiFi devices usually need to be reachable over plain HTTP, which browsers block from an HTTPS site like GitHub Pages unless the device also supports HTTPS. For HART devices, use the HART Communicator tool from the main menu instead — it handles framing/checksums for you and warns before any write that changes a live transmitter's configuration.</div>
 </div>
 <div class="card">
 <div class="card-header"><i class="fas fa-bluetooth-b"></i><h3>Bluetooth (BLE)</h3><span id="bleStatusChip">Disconnected</span></div>
@@ -6745,44 +6768,6 @@ body.dark #page-references .chip {
 <div class="card-header"><i class="fas fa-satellite-dish"></i><h3>Live Reading Feed</h3></div>
 <div style="font-size:0.75rem;">This value auto-fills into Calibration test points when you tap 📥 next to a point.</div>
 <div class="result-box mt-1"><span>Current Value</span><span id="liveGlobalValue">— (not connected)</span></div>
-</div>
-<div class="card">
-<div class="card-header"><i class="fas fa-microchip"></i><h3>HART Frame Builder</h3></div>
-<div style="font-size:0.65rem;color:#64748b;margin-bottom:8px;">Builds a correctly-framed, checksummed HART short-frame command. You supply the command number, polling address, and data bytes (per your transmitter's HART command manual) — this tool handles the fiddly preamble/framing/checksum math.</div>
-<div class="row">
-<label>Command</label>
-<select id="hartCommand" style="flex:1;">
-<option value="0">0 — Read Unique Identifier</option>
-<option value="1">1 — Read Primary Variable</option>
-<option value="2">2 — Read Loop Current &amp; % Range</option>
-<option value="3">3 — Read Dynamic Variables</option>
-<option value="6">6 — Write Polling Address</option>
-<option value="12">12 — Read Message</option>
-<option value="13">13 — Read Tag/Descriptor/Date</option>
-<option value="15">15 — Read Device Range/Units/Damping</option>
-<option value="17">17 — Write Message</option>
-<option value="18">18 — Write Tag/Descriptor/Date</option>
-<option value="35">35 — Write PV Range Values (LRV/URV)</option>
-<option value="40">40 — Enter/Exit Fixed Current Mode</option>
-<option value="42">42 — Perform Device Reset</option>
-<option value="44">44 — Write PV Units</option>
-<option value="custom">Custom command number...</option>
-</select>
-</div>
-<div class="row hidden" id="hartCustomCmdRow"><label>Cmd #</label><input id="hartCustomCmd" max="255" min="0" type="number" value="0"/></div>
-<div class="row"><label>Address</label><input id="hartAddress" max="15" min="0" step="1" type="number" value="0"/><span class="chip">0-15 (polling addr)</span></div>
-<div class="row"><label>Data (hex)</label><input id="hartDataHex" placeholder="e.g. 39 43 C8 00 00 43 96 00 00" style="flex:1;font-family:monospace;" type="text"/></div>
-<button class="btn" id="hartBuildBtn"><i class="fas fa-hammer"></i> Build Frame</button>
-<div class="result-box"><span>Frame (hex)</span><span id="hartFrameResult" style="font-size:0.65rem;word-break:break-all;">—</span></div>
-<button class="btn btn-danger w-full mt-1" id="hartSendBtn" style="justify-content:center;"><i class="fas fa-paper-plane"></i> Send via Bluetooth</button>
-</div>
-<div class="card">
-<div class="card-header"><i class="fas fa-calculator"></i><h3>Float ↔ Hex (IEEE-754)</h3></div>
-<div style="font-size:0.65rem;color:#64748b;margin-bottom:8px;">HART range values (LRV/URV) are sent as 4-byte IEEE-754 floats. Use this to get the hex bytes for a value like a new URV, to paste into the Data field above.</div>
-<div class="row"><label>Decimal</label><input id="floatDecInput" step="any" type="number" value="100"/><button class="btn btn-sm" id="floatToHexBtn">→ Hex</button></div>
-<div class="result-box"><span>Hex (big-endian)</span><span id="floatHexResult">42 C8 00 00</span></div>
-<div class="row mt-1"><label>Hex</label><input id="hexDecInput" placeholder="42 C8 00 00" style="flex:1;font-family:monospace;" type="text"/><button class="btn btn-sm" id="hexToFloatBtn">→ Dec</button></div>
-<div class="result-box"><span>Decimal</span><span id="hexDecResult">—</span></div>
 </div>
 </div>
 </details>
@@ -8544,7 +8529,7 @@ body.dark #page-references .chip {
             const bleLastReading = document.getElementById('bleLastReading');
             const bleRawData = document.getElementById('bleRawData');
             let bleDevice = null, bleWriteChar = null;
-            let lastBleRawBytes = null, pendingHartResolve = null;
+            let lastBleRawBytes = null;
 
             async function connectBluetooth() {
                 if (!navigator.bluetooth) {
@@ -8570,11 +8555,6 @@ body.dark #page-references .chip {
                     notifyChar.addEventListener('characteristicvaluechanged', function(event) {
                         const rawBytes = new Uint8Array(event.target.value.buffer);
                         lastBleRawBytes = rawBytes;
-                        if (pendingHartResolve) {
-                            const resolve = pendingHartResolve;
-                            pendingHartResolve = null;
-                            resolve(rawBytes);
-                        }
                         const text = new TextDecoder().decode(event.target.value);
                         bleRawData.textContent = text.trim().slice(0, 40);
                         const num = extractFirstFloat(text);
@@ -8658,316 +8638,6 @@ body.dark #page-references .chip {
                 wifiStatusChip.textContent = 'Disconnected';
                 wifiConnectBtn.classList.remove('hidden');
                 wifiDisconnectBtn.classList.add('hidden');
-            });
-
-            // =============================================================
-            // HART FRAME BUILDER (short-frame format, correct checksum math)
-            // =============================================================
-            const hartCommand = document.getElementById('hartCommand');
-            const hartCustomCmdRow = document.getElementById('hartCustomCmdRow');
-            const hartCustomCmd = document.getElementById('hartCustomCmd');
-            const hartAddress = document.getElementById('hartAddress');
-            const hartDataHex = document.getElementById('hartDataHex');
-            const hartBuildBtn = document.getElementById('hartBuildBtn');
-            const hartFrameResult = document.getElementById('hartFrameResult');
-            const hartSendBtn = document.getElementById('hartSendBtn');
-            let lastHartFrameBytes = null;
-
-            hartCommand.addEventListener('change', function() {
-                hartCustomCmdRow.classList.toggle('hidden', this.value !== 'custom');
-            });
-
-            function parseHexBytes(str) {
-                const cleaned = str.trim().replace(/,/g, ' ').split(/\s+/).filter(Boolean);
-                const bytes = [];
-                for (const h of cleaned) {
-                    const b = parseInt(h, 16);
-                    if (isNaN(b) || b < 0 || b > 255) return null;
-                    bytes.push(b);
-                }
-                return bytes;
-            }
-
-            function toHexStr(bytes) {
-                return bytes.map(b => b.toString(16).toUpperCase().padStart(2, '0')).join(' ');
-            }
-
-            // =============================================================
-            // SHARED HART PROTOCOL HELPERS (used by both the raw Frame
-            // Builder above and the HART Communicator page)
-            // =============================================================
-            function hartFloatToBytes(val) {
-                const buf = new ArrayBuffer(4);
-                new DataView(buf).setFloat32(0, val, false); // big-endian per HART spec
-                return Array.from(new Uint8Array(buf));
-            }
-            function hartBytesToFloat(bytes) {
-                const buf = new Uint8Array(bytes).buffer;
-                return new DataView(buf).getFloat32(0, false);
-            }
-            function buildHartFrame(cmd, addr, dataBytes) {
-                const preamble = [0xFF, 0xFF, 0xFF, 0xFF, 0xFF];
-                const start = 0x02; // short frame, primary master
-                const addressByte = 0x80 | (Math.min(63, Math.max(0, addr)) & 0x3F);
-                const frameBody = [start, addressByte, cmd, dataBytes.length, ...dataBytes];
-                let checksum = 0;
-                frameBody.forEach(b => { checksum ^= b; });
-                return [...preamble, ...frameBody, checksum];
-            }
-            // Parses a HART short-frame response. Returns {cmd, status, data} or null if it doesn't look like a valid frame.
-            function parseHartResponse(rawBytes) {
-                if (!rawBytes || rawBytes.length < 8) return null;
-                const bytes = Array.from(rawBytes);
-                let i = 0;
-                while (i < bytes.length && bytes[i] === 0xFF) i++; // skip preamble
-                const delim = bytes[i];
-                if (delim !== 0x06 && delim !== 0x86) return null; // expect a slave short/long-frame response
-                const isLong = delim === 0x86;
-                const addrLen = isLong ? 5 : 1;
-                const addrStart = i + 1;
-                const cmdIdx = addrStart + addrLen;
-                if (cmdIdx + 1 >= bytes.length) return null;
-                const cmd = bytes[cmdIdx];
-                const byteCount = bytes[cmdIdx + 1];
-                const dataStart = cmdIdx + 2;
-                const dataEnd = dataStart + byteCount;
-                if (dataEnd > bytes.length) return null;
-                const respBytes = bytes.slice(dataStart, dataEnd);
-                // Verify checksum: XOR of everything from delimiter through last data byte
-                const checksumIdx = dataEnd;
-                let checksum = 0;
-                for (let k = i; k < dataEnd; k++) checksum ^= bytes[k];
-                const checksumOk = bytes[checksumIdx] === checksum;
-                // First 2 response bytes are normally [Command Response Code, Device Status]
-                const status = respBytes.slice(0, 2);
-                const data = respBytes.slice(2);
-                return { cmd, status, data, checksumOk, raw: bytes };
-            }
-            function sendHartAndWait(frameBytes, timeoutMs) {
-                return new Promise(function(resolve, reject) {
-                    if (!bleWriteChar) {
-                        reject(new Error('No connected Bluetooth device with a write characteristic. Connect one in Settings → Connect Device first.'));
-                        return;
-                    }
-                    const timer = setTimeout(function() {
-                        pendingHartResolve = null;
-                        reject(new Error('No response within ' + (timeoutMs / 1000) + 's — check the connection and that the device supports this command.'));
-                    }, timeoutMs);
-                    pendingHartResolve = function(rawBytes) {
-                        clearTimeout(timer);
-                        resolve(rawBytes);
-                    };
-                    bleWriteChar.writeValue(new Uint8Array(frameBytes)).catch(function(err) {
-                        clearTimeout(timer);
-                        pendingHartResolve = null;
-                        reject(err);
-                    });
-                });
-            }
-
-            hartBuildBtn.addEventListener('click', function() {
-                const cmd = hartCommand.value === 'custom' ? parseInt(hartCustomCmd.value) || 0 : parseInt(hartCommand.value);
-                const addr = Math.min(63, Math.max(0, parseInt(hartAddress.value) || 0));
-                const dataBytes = hartDataHex.value.trim() === '' ? [] : parseHexBytes(hartDataHex.value);
-                if (dataBytes === null) {
-                    hartFrameResult.textContent = 'Invalid hex in data field.';
-                    return;
-                }
-                // Short-frame format: Preamble (5x FF) + Start(0x02) + Address (1 byte, bit7=1 for primary master) + Command + ByteCount + Data + Checksum (XOR of everything from Start through Data)
-                const preamble = [0xFF, 0xFF, 0xFF, 0xFF, 0xFF];
-                const start = 0x02;
-                const addressByte = 0x80 | (addr & 0x3F); // primary master, short-frame polling address
-                const byteCount = dataBytes.length;
-                const frameBody = [start, addressByte, cmd, byteCount, ...dataBytes];
-                let checksum = 0;
-                frameBody.forEach(b => { checksum ^= b; });
-                const fullFrame = [...preamble, ...frameBody, checksum];
-                lastHartFrameBytes = fullFrame;
-                hartFrameResult.textContent = toHexStr(fullFrame);
-            });
-
-            hartSendBtn.addEventListener('click', async function() {
-                if (!lastHartFrameBytes) {
-                    alert('Build a frame first.');
-                    return;
-                }
-                if (!bleWriteChar) {
-                    alert('No Bluetooth device with a write characteristic is connected. Connect one in the Bluetooth section above first.');
-                    return;
-                }
-                const confirmed = confirm(
-                    'This will transmit a raw HART command frame to the connected device:\n\n' + toHexStr(lastHartFrameBytes) +
-                    '\n\nIf this is command 35 (write range) or another write command, it WILL change the live transmitter\'s configuration. Are you sure you want to send this?'
-                );
-                if (!confirmed) return;
-                try {
-                    await bleWriteChar.writeValue(new Uint8Array(lastHartFrameBytes));
-                    alert('Frame sent.');
-                } catch (err) {
-                    alert('Send failed: ' + err.message);
-                }
-            });
-
-            // =============================================================
-            // FLOAT <-> HEX (IEEE-754) HELPER
-            // =============================================================
-            const floatDecInput = document.getElementById('floatDecInput');
-            const floatToHexBtn = document.getElementById('floatToHexBtn');
-            const floatHexResult = document.getElementById('floatHexResult');
-            const hexDecInput = document.getElementById('hexDecInput');
-            const hexToFloatBtn = document.getElementById('hexToFloatBtn');
-            const hexDecResult = document.getElementById('hexDecResult');
-
-            floatToHexBtn.addEventListener('click', function() {
-                const val = parseFloat(floatDecInput.value) || 0;
-                const buf = new ArrayBuffer(4);
-                new DataView(buf).setFloat32(0, val, false); // big-endian, standard for HART
-                const bytes = Array.from(new Uint8Array(buf));
-                floatHexResult.textContent = toHexStr(bytes);
-            });
-            hexToFloatBtn.addEventListener('click', function() {
-                const bytes = parseHexBytes(hexDecInput.value);
-                if (!bytes || bytes.length !== 4) {
-                    hexDecResult.textContent = 'Need exactly 4 hex bytes.';
-                    return;
-                }
-                const buf = new Uint8Array(bytes).buffer;
-                const val = new DataView(buf).getFloat32(0, false);
-                hexDecResult.textContent = val.toString();
-            });
-            floatToHexBtn.click();
-
-            // =============================================================
-            // HART COMMUNICATOR PAGE
-            // =============================================================
-            const hartConnDot = document.getElementById('hartConnDot');
-            const hartConnText = document.getElementById('hartConnText');
-            const hartCommAddr = document.getElementById('hartCommAddr');
-            const hartRawLog = document.getElementById('hartRawLog');
-            let hartPollHandle = null;
-            let hartPollBusy = false;
-
-            function logHartRaw(label, bytes) {
-                const line = `[${new Date().toLocaleTimeString()}] ${label}: ${toHexStr(Array.from(bytes))}`;
-                hartRawLog.textContent = (hartRawLog.textContent === 'No commands sent yet.' ? '' : hartRawLog.textContent + '\n') + line;
-                hartRawLog.scrollTop = hartRawLog.scrollHeight;
-            }
-
-            function isHartConnected() {
-                return !!(bleDevice && bleDevice.gatt && bleDevice.gatt.connected && bleWriteChar);
-            }
-
-            function updateHartConnStatus() {
-                if (isHartConnected()) {
-                    hartConnDot.style.background = '#059669';
-                    hartConnText.textContent = 'Connected';
-                    hartConnText.style.color = '#059669';
-                } else {
-                    hartConnDot.style.background = '#dc2626';
-                    hartConnText.textContent = 'Not connected';
-                    hartConnText.style.color = '#dc2626';
-                }
-            }
-
-            async function hartPollOnce() {
-                if (hartPollBusy || !isHartConnected()) return;
-                hartPollBusy = true;
-                try {
-                    const pvParsed = await hartSendCommand(1, [], 'Poll PV');
-                    const unitsCode = pvParsed.data[0];
-                    const pv = hartBytesToFloat(pvParsed.data.slice(1, 5));
-                    document.getElementById('hartPvResult').textContent = pv.toFixed(3);
-                    document.getElementById('hartPvUnitsChip').textContent = 'units code ' + unitsCode;
-                    pushLiveReading(pv, 'HART PV');
-
-                    const curParsed = await hartSendCommand(2, [], 'Poll Current/%Range');
-                    const current = hartBytesToFloat(curParsed.data.slice(0, 4));
-                    const percent = hartBytesToFloat(curParsed.data.slice(4, 8));
-                    document.getElementById('hartCurrentResult').textContent = current.toFixed(3) + ' mA';
-                    document.getElementById('hartPercentResult').textContent = percent.toFixed(1) + ' %';
-                } catch (err) {
-                    logHartRaw('Poll error', new Uint8Array([]));
-                    hartRawLog.textContent += ' (' + err.message + ')';
-                }
-                hartPollBusy = false;
-            }
-
-            function startHartPolling() {
-                if (hartPollHandle) return;
-                hartPollOnce();
-                hartPollHandle = setInterval(hartPollOnce, 3000);
-            }
-            function stopHartPolling() {
-                if (hartPollHandle) {
-                    clearInterval(hartPollHandle);
-                    hartPollHandle = null;
-                }
-            }
-            // Poll only while the HART page is actually open
-            document.querySelectorAll('[data-page="hart"]').forEach(el => {
-                el.addEventListener('click', function() {
-                    updateHartConnStatus();
-                    startHartPolling();
-                });
-            });
-            document.querySelectorAll('.nav-item, .bottom-tabs .tab-item, .quick-item, .recent-item').forEach(el => {
-                el.addEventListener('click', function() {
-                    if (this.dataset.page !== 'hart') stopHartPolling();
-                });
-            });
-            updateHartConnStatus();
-
-            async function hartSendCommand(cmd, dataBytes, label) {
-                const addr = parseInt(hartCommAddr.value) || 0;
-                const frame = buildHartFrame(cmd, addr, dataBytes);
-                logHartRaw('TX ' + label, frame);
-                const respBytes = await sendHartAndWait(frame, 4000);
-                logHartRaw('RX ' + label, respBytes);
-                const parsed = parseHartResponse(respBytes);
-                if (!parsed) throw new Error('Response didn\'t look like a valid HART frame — check RX log above.');
-                if (!parsed.checksumOk) throw new Error('Checksum mismatch on response — data may be corrupted.');
-                if (parsed.status[0] !== 0) throw new Error('Device returned an error status (code ' + parsed.status[0] + ') — command may not be supported by this device.');
-                return parsed;
-            }
-
-            document.getElementById('hartWriteRangeBtn').addEventListener('click', async function() {
-                const lrv = parseFloat(document.getElementById('hartLrvInput').value) || 0;
-                const urv = parseFloat(document.getElementById('hartUrvInput').value) || 0;
-                const units = parseInt(document.getElementById('hartUnitsCode').value) || 0;
-                const confirmed = confirm('This will WRITE LRV=' + lrv + ' / URV=' + urv + ' to the connected transmitter right now. This changes live configuration. Continue?');
-                if (!confirmed) return;
-                try {
-                    const dataBytes = [units, ...hartFloatToBytes(urv), ...hartFloatToBytes(lrv)];
-                    await hartSendCommand(35, dataBytes, 'Write Range');
-                    document.getElementById('hartWriteResult').textContent = 'LRV=' + lrv + ', URV=' + urv + ' sent ✓';
-                } catch (err) {
-                    document.getElementById('hartWriteResult').textContent = 'Failed';
-                    alert('Write range failed: ' + err.message);
-                }
-            });
-
-            document.getElementById('hartFixBtn').addEventListener('click', async function() {
-                const ma = parseFloat(document.getElementById('hartFixMa').value) || 4;
-                const confirmed = confirm('This will FORCE the transmitter output to a fixed ' + ma + ' mA, overriding the real process reading, until you exit fixed mode. Continue?');
-                if (!confirmed) return;
-                try {
-                    await hartSendCommand(40, hartFloatToBytes(ma), 'Enter Fixed Current');
-                    document.getElementById('hartFixResult').textContent = 'Fixed at ' + ma + ' mA ⚠️';
-                    document.getElementById('hartFixResult').style.color = '#dc2626';
-                } catch (err) {
-                    alert('Enter fixed current failed: ' + err.message);
-                }
-            });
-
-            document.getElementById('hartUnfixBtn').addEventListener('click', async function() {
-                try {
-                    // Command 40 with a single 0x00 data byte exits fixed-current mode per the HART spec convention
-                    await hartSendCommand(40, [0x00], 'Exit Fixed Current');
-                    document.getElementById('hartFixResult').textContent = 'Not fixed';
-                    document.getElementById('hartFixResult').style.color = '';
-                } catch (err) {
-                    alert('Exit fixed current failed: ' + err.message);
-                }
             });
 
             // =============================================================
@@ -13020,6 +12690,396 @@ document.addEventListener('keydown',e=>{
   }
 });
 
+})();
+</script>
+
+<!-- ==========================================================
+        HART COMMUNICATOR / DEVICE LIBRARY
+        ========================================================== -->
+<script id="hart-communicator-js">
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+const dbKey='hartPackageIndexV2';
+let transport=null, device={type:'generic'}, currentEdit='';
+
+function showScreen(id){
+  ['home','scan','device','edit','library'].forEach(s=>{
+    const el=$('hcwScreen-'+s);
+    if(el) el.style.display = (s===id ? 'block' : 'none');
+  });
+}
+function setStatus(connected,label){
+  const dot=$('hcwConnDot'), txt=$('hcwConnText');
+  if(!dot||!txt) return;
+  if(connected){ dot.style.background='#059669'; txt.textContent=label||'Connected'; txt.style.color='#059669'; }
+  else { dot.style.background='#dc2626'; txt.textContent=label||'Not connected'; txt.style.color='#dc2626'; }
+}
+function hex(a){return [...a].map(x=>x.toString(16).padStart(2,'0')).join(' ').toUpperCase()}
+function xor(a){return a.reduce((v,x)=>v^x,0)}
+function buildFrame(cmd,data){
+  data=data||[];
+  const pre=new Array(5).fill(255),addr=[2],body=[...addr,cmd&255,data.length,...data];
+  return new Uint8Array([...pre,2,...body,xor(body)]);
+}
+function parseFrame(b){
+  let a=[...b],i=0;
+  while(a[i]===255)i++;
+  if(i>=a.length)return null;
+  const d=a[i++],al=(d&128)?5:1;
+  const address=a.slice(i,i+al);i+=al;
+  const c=a[i++],n=a[i++];
+  const data=a.slice(i,i+n);i+=n;
+  return{command:c,data,status:data.slice(0,2),address};
+}
+
+// ---- Transports ----
+class Sim{constructor(){this.connected=false}
+  async connect(){this.connected=true}
+  async write(f){
+    let i=0;while(f[i]===255)i++;
+    const c=f[i+2];let d=[0,0];
+    if(c===0)d=[0,0,0x26,0x01,7,7,0,0,1,0x23,0x45];
+    if(c===1)d=[0,0,0x42,0x48,0xF5,0xC3];
+    if(c===2)d=[0,0,0x42,0x48,0xF5,0xC3,0x41,0x20,0,0];
+    if(c===3)d=[0,0,0x42,0x48,0xF5,0xC3,0x41,0x20,0,0,0x40,0xC0,0,0];
+    if(c===13)d=[0,0,...new TextEncoder().encode('PT-101')];
+    let body=[2,c,d.length,...d];
+    return new Uint8Array([...new Array(5).fill(255),...body,xor(body)]);
+  }
+}
+class Serial{
+  async connect(){
+    if(!navigator.serial)throw Error('USB Serial is not available in this browser.');
+    this.p=await navigator.serial.requestPort();
+    await this.p.open({baudRate:1200});
+    this.w=this.p.writable.getWriter();
+    this.connected=true;
+  }
+  async write(f){await this.w.write(f);return new Uint8Array()}
+  async disconnect(){try{this.w.releaseLock();await this.p.close()}catch(e){}}
+}
+class USB{
+  async connect(){
+    if(!navigator.usb)throw Error('WebUSB is not available in this browser.');
+    this.d=await navigator.usb.requestDevice({filters:[]});
+    await this.d.open();
+    if(!this.d.configuration)await this.d.selectConfiguration(1);
+    let i=this.d.configuration.interfaces.find(x=>x.alternates.some(a=>a.endpoints&&a.endpoints.length));
+    if(!i)throw Error('No usable USB interface.');
+    this.iface=i.interfaceNumber;
+    let a=i.alternates.find(x=>x.endpoints&&x.endpoints.length);
+    this.inEp=a.endpoints.find(e=>e.direction==='in');
+    this.outEp=a.endpoints.find(e=>e.direction==='out');
+    await this.d.claimInterface(this.iface);
+    this.connected=true;
+  }
+  async write(f){
+    await this.d.transferOut(this.outEp.endpointNumber,f);
+    let r=await this.d.transferIn(this.inEp.endpointNumber,512);
+    return new Uint8Array(r.data.buffer.slice(r.data.byteOffset,r.data.byteOffset+r.data.byteLength));
+  }
+  async disconnect(){try{await this.d.close()}catch(e){}}
+}
+
+async function connectTransport(C,label){
+  try{
+    transport=new C();
+    await transport.connect();
+    setStatus(true,label);
+    $('hcwScanText').textContent='Scanning HART addresses…';
+    await scan();
+  }catch(e){
+    setStatus(false);
+    $('hcwScanText').textContent=e.message;
+  }
+}
+async function scan(){
+  let found=null;
+  if(transport instanceof Sim){
+    found={address:0,manufacturer:'Emerson / Rosemount',model:'HART Pressure Transmitter',hart:7,type:'transmitter',tag:'PT-101'};
+  }else{
+    for(let a=0;a<64;a++){
+      try{
+        let r=await transport.write(buildFrame(0));
+        let p=parseFrame(r);
+        if(p){found={address:a,manufacturer:'Detected HART device',model:'Device',hart:'Auto',type:'generic',tag:''};break}
+      }catch(e){}
+    }
+  }
+  $('hcwFound').innerHTML='';
+  if(found){
+    device=found;
+    let x=document.createElement('div');
+    x.className='card';
+    x.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;"><div><b>'+found.manufacturer+'</b><div style="font-size:0.65rem;color:#64748b;">'+found.model+' • HART '+found.hart+' • Address '+found.address+'</div><span class="chip">'+found.type+'</span></div><button class="btn btn-sm" style="width:auto;">CONNECT</button></div>';
+    $('hcwFound').appendChild(x);
+    x.querySelector('button').onclick=openDevice;
+    $('hcwScanText').textContent='Device found';
+  }else{
+    $('hcwScanText').textContent='No HART device found.';
+  }
+}
+
+// ---- Device profile registry ----
+const DPR={
+  key:'hartProfilesV2',
+  load(){try{return JSON.parse(localStorage.getItem(this.key)||'[]')}catch(e){return[]}},
+  save(x){localStorage.setItem(this.key,JSON.stringify(x))},
+  add(profile){
+    let a=this.load();
+    a=a.filter(x=>!(x.manufacturerId===profile.manufacturerId&&x.deviceType===profile.deviceType&&x.deviceRevision===profile.deviceRevision));
+    a.push(profile);this.save(a);return profile;
+  },
+  match(d){
+    const a=this.load();
+    return a.find(x=>x.manufacturerId==d.manufacturerId&&x.deviceType==d.deviceType&&(!x.deviceRevision||x.deviceRevision==d.deviceRevision))
+        ||a.find(x=>x.manufacturerId==d.manufacturerId&&x.deviceType==d.deviceType)
+        ||a.find(x=>x.model&&d.model&&x.model.toLowerCase()==d.model.toLowerCase());
+  }
+};
+const builtInProfiles=[
+  {manufacturerId:38,manufacturer:'Emerson',deviceType:1,deviceRevision:7,model:'HART Pressure Transmitter',kind:'transmitter',parameters:[
+    {id:'tag',label:'Tag',type:'string',command:13},
+    {id:'range',label:'Range',type:'range',command:35},
+    {id:'units',label:'Units',type:'enum',command:44},
+    {id:'damping',label:'Damping',type:'float',command:34},
+    {id:'descriptor',label:'Descriptor',type:'string',command:18},
+    {id:'output',label:'Output',type:'enum'},
+    {id:'diagnostics',label:'Diagnostics',type:'action',command:48}]},
+  {manufacturerId:42,manufacturer:'Fisher / Emerson',deviceType:0,model:'FIELDVUE Positioner',kind:'positioner',parameters:[
+    {id:'travel',label:'Travel',type:'float',unit:'%'},
+    {id:'input',label:'Input',type:'float',unit:'mA'},
+    {id:'setpoint',label:'Setpoint',type:'float',unit:'%'},
+    {id:'calibration',label:'Calibration',type:'action'},
+    {id:'tuning',label:'Tuning',type:'menu'},
+    {id:'characterization',label:'Characterization',type:'menu'},
+    {id:'limits',label:'Limits',type:'menu'},
+    {id:'diagnostics',label:'Diagnostics',type:'action',command:48}]}
+];
+builtInProfiles.forEach(x=>{if(!DPR.match(x))DPR.add(x)});
+function deviceProfile(){
+  return DPR.match(device)||builtInProfiles.find(x=>x.kind===device.type)||null;
+}
+
+// ---- Native EDD/FDI host bridge (optional, populated by a native wrapper) ----
+window.HART_HOST = window.HART_HOST || null;
+async function hostIdentify(){
+  if(!(window.HART_HOST&&window.HART_HOST.identify)) return null;
+  try{return await window.HART_HOST.identify()}catch(e){return null}
+}
+async function hostExecute(command,data){
+  if(!(window.HART_HOST&&window.HART_HOST.execute)) return null;
+  return await window.HART_HOST.execute({command,data:data||[]});
+}
+async function executeDeviceOperation(parameter,value){
+  const prof=deviceProfile();
+  const par=prof&&prof.parameters?prof.parameters.find(x=>x.id===parameter):null;
+  if(!par) return {ok:false,error:'No parameter definition'};
+  if(window.HART_HOST&&window.HART_HOST.executeParameter)
+    return await window.HART_HOST.executeParameter({parameter,value,profile:prof,device});
+  if(par.command!==undefined){
+    let data=[];
+    if(par.type==='string') data=[...new TextEncoder().encode(String(value))];
+    const result=await hostExecute(par.command,data);
+    if(result) return result;
+    if(transport) return {ok:true,data:await transport.write(buildFrame(par.command,data))};
+  }
+  return {ok:false,error:'No communication host available for this device operation'};
+}
+
+// ---- Device screen ----
+async function openDevice(){
+  showScreen('device');
+  const id=await hostIdentify();
+  if(id) Object.assign(device,id);
+  renderDeviceMenu();
+  await refreshDevice();
+}
+function renderDeviceMenu(){
+  $('hcwDeviceName').textContent=device.model||'HART Device';
+  $('hcwDeviceMeta').textContent=(device.manufacturer||'HART')+' • HART '+(device.hartRevision||device.hart||'—')+' • Address '+(device.address!=null?device.address:0);
+  const prof=deviceProfile();
+  const menu=$('hcwMenu');
+  menu.innerHTML='';
+  const params=(prof&&prof.parameters)?prof.parameters:[];
+  params.forEach(par=>{
+    const val=device[par.id]!=null?device[par.id]:'—';
+    const r=document.createElement('div');
+    r.className='row';
+    r.innerHTML='<label>'+par.label+'</label><span class="chip">'+val+(par.unit&&val!=='—'?' '+par.unit:'')+'</span>';
+    r.style.cursor='pointer';
+    r.onclick=()=>editParameter(par);
+    menu.appendChild(r);
+  });
+  const lib=document.createElement('div');
+  lib.className='row';
+  lib.style.cursor='pointer';
+  lib.innerHTML='<label>Device Library</label><span class="chip">Manage</span>';
+  lib.onclick=()=>{showScreen('library');renderLibrary()};
+  menu.appendChild(lib);
+}
+async function refreshDevice(){
+  if(!transport)return;
+  try{
+    let r=await transport.write(buildFrame(1));
+    let p=parseFrame(r);
+    if(p&&p.data.length>=6) $('hcwPv').textContent=new DataView(Uint8Array.from(p.data.slice(2,6)).buffer).getFloat32(0,false).toFixed(3);
+    let r2=await transport.write(buildFrame(2));
+    let p2=parseFrame(r2);
+    if(p2&&p2.data.length>=10) $('hcwMa').textContent=new DataView(Uint8Array.from(p2.data.slice(6,10)).buffer).getFloat32(0,false).toFixed(3)+' mA';
+  }catch(e){}
+}
+function editParameter(par){
+  currentEdit=par.id;
+  $('hcwEditTitle').textContent=par.label;
+  $('hcwEditLabel').textContent=par.label;
+  $('hcwEditValue').value=device[par.id]||'';
+  $('hcwSaveNote').textContent=par.command?('HART operation mapped automatically (Command '+par.command+').'):'This parameter requires the installed device profile\'s device-specific operation.';
+  showScreen('edit');
+}
+
+// ---- Library screen ----
+async function importJSONProfile(file){
+  const text=await file.text();
+  const obj=JSON.parse(text);
+  const profile=obj.profile||obj;
+  if(!profile.manufacturerId||profile.deviceType===undefined||!Array.isArray(profile.parameters))
+    throw Error('JSON profile needs manufacturerId, deviceType and parameters[]');
+  DPR.add(profile);
+  renderLibrary();
+  alert('Device profile installed: '+(profile.model||profile.manufacturer||'profile'));
+}
+async function inspectPackage(file){
+  const name=file.name.toLowerCase();
+  if(name.endsWith('.json')) return importJSONProfile(file);
+  if(name.endsWith('.fdix')||name.endsWith('.zip')){
+    const buf=new Uint8Array(await file.arrayBuffer());
+    const text=new TextDecoder().decode(buf);
+    const hits=[];
+    ['DevicePackage','DeviceInfo','feature-table','manufacturer','deviceType','deviceRevision','.fm6','.fm8'].forEach(token=>{
+      if(text.toLowerCase().includes(token.toLowerCase()))hits.push(token);
+    });
+    let db=JSON.parse(localStorage.getItem(dbKey)||'[]');
+    db.push({name:file.name,size:file.size,added:new Date().toISOString(),signals:hits});
+    localStorage.setItem(dbKey,JSON.stringify(db));
+    renderLibrary();
+    alert('Package registered. Detected metadata: '+(hits.join(', ')||'container present')+'. Encoded EDD is retained as a package asset but is not interpreted by this browser-only engine.');
+    return;
+  }
+  throw Error('Use a JSON profile or FDI/ZIP package.');
+}
+const OFFICIAL_DEVICE_SOURCES=[
+  {vendor:'FieldComm Group',kind:'Registry',url:'https://www.fieldcommgroup.org/registered-products',note:'Registered HART EDD and FDI device packages'},
+  {vendor:'Emerson / Fisher',kind:'Manufacturer',url:'https://www.emerson.com/',note:'Fisher FIELDVUE / DVC HART device support'},
+  {vendor:'Yokogawa',kind:'Manufacturer',url:'https://www.yokogawa.com/',note:'EJA/EJX and other HART device software'},
+  {vendor:'Endress+Hauser',kind:'Manufacturer',url:'https://www.endress.com/',note:'Device downloads include DD/EDD/DTM resources'},
+  {vendor:'ABB',kind:'Manufacturer',url:'https://new.abb.com/products/measurement-products/device-management-fieldbus-and-wireless/download',note:'EDD Zip, FDI Package and HART libraries'},
+  {vendor:'Siemens',kind:'Manufacturer',url:'https://support.industry.siemens.com/',note:'Product Support software downloads; HART EDD/FDI files'},
+  {vendor:'Honeywell',kind:'Manufacturer',url:'https://process.honeywell.com/',note:'SmartLine HART device support and configuration software'},
+  {vendor:'VEGA',kind:'Manufacturer',url:'https://www.vega.com/',note:'Device software/download area'},
+  {vendor:'KROHNE',kind:'Manufacturer',url:'https://krohne.com/',note:'HART device support/downloads'},
+  {vendor:'Rotork',kind:'Manufacturer',url:'https://www.rotork.com/',note:'HART/positioner device support'},
+  {vendor:'Azbil',kind:'Manufacturer',url:'https://www.azbil.com/',note:'HART device support'},
+  {vendor:'Schneider Electric',kind:'Manufacturer',url:'https://www.se.com/',note:'HART device support'},
+  {vendor:'Valmet',kind:'Manufacturer',url:'https://www.valmet.com/',note:'ND-series HART positioner support'}
+];
+function renderLibrary(){
+  const a=DPR.load(), b=JSON.parse(localStorage.getItem(dbKey)||'[]');
+  const host=$('hcwLibraryList');
+  host.innerHTML='';
+
+  const capCard=document.createElement('div');
+  capCard.className='card';
+  capCard.innerHTML=window.HART_HOST
+    ? '<b>Device engine connected</b><div style="font-size:0.65rem;color:#64748b;">Native EDD/FDI host available.</div>'
+    : '<b>Browser mode</b><div style="font-size:0.65rem;color:#64748b;">Generic HART operation is available. For full EDD/FDI behavior, run this page inside the native host bridge.</div>';
+  host.appendChild(capCard);
+
+  if(!a.length&&!b.length){
+    const empty=document.createElement('div');
+    empty.className='card';
+    empty.innerHTML='<div style="font-size:0.68rem;color:#64748b;">No device profiles installed yet.</div>';
+    host.appendChild(empty);
+  }
+  a.forEach(x=>{
+    const d=document.createElement('div');
+    d.className='card';
+    d.innerHTML='<b>'+(x.manufacturer||'')+' '+(x.model||'')+'</b><div style="font-size:0.65rem;color:#64748b;">ID '+x.manufacturerId+' • Device '+x.deviceType+' • Rev '+(x.deviceRevision||'any')+' • '+x.parameters.length+' parameters</div>';
+    host.appendChild(d);
+  });
+  b.forEach(x=>{
+    const d=document.createElement('div');
+    d.className='card';
+    d.innerHTML='<b>'+x.name+'</b><div style="font-size:0.65rem;color:#64748b;">'+x.size+' bytes • '+(x.signals.join(', ')||'FDI container')+'</div>';
+    host.appendChild(d);
+  });
+
+  const sec=document.createElement('div');
+  sec.className='card';
+  sec.innerHTML='<div class="card-header"><i class="fas fa-globe"></i><h3>Official device sources</h3></div><div style="font-size:0.62rem;color:#64748b;margin-bottom:6px;">Manufacturer/FieldComm sources. Download or import files only where the publisher permits redistribution or direct user download.</div>';
+  OFFICIAL_DEVICE_SOURCES.forEach(x=>{
+    const d=document.createElement('div');
+    d.className='row';
+    d.style.cursor='pointer';
+    d.innerHTML='<label>'+x.vendor+'</label><span class="chip">'+x.kind+'</span>';
+    d.onclick=()=>window.open(x.url,'_blank','noopener,noreferrer');
+    sec.appendChild(d);
+  });
+  host.appendChild(sec);
+}
+
+// ---- Wire up screens ----
+$('hcwConnectBtn').onclick=()=>{
+  showScreen('scan');
+  const box=$('hcwTransportButtons');
+  box.innerHTML='';
+  [['USB / OTG',USB],['USB Serial',Serial],['Bluetooth / BLE',null],['Wi-Fi / HART-IP',null],['Demo',Sim]].forEach(([n,C])=>{
+    let b=document.createElement('button');
+    b.className='btn btn-outline';
+    b.style.justifyContent='center';
+    b.textContent=n;
+    b.onclick=()=>C?connectTransport(C,n):($('hcwScanText').textContent='This transport needs its modem/gateway adapter configuration.');
+    box.appendChild(b);
+  });
+};
+$('hcwBackHome').onclick=()=>showScreen('home');
+$('hcwBackScan').onclick=()=>showScreen('scan');
+$('hcwBackDevice').onclick=()=>showScreen('device');
+$('hcwBackDevice2').onclick=()=>showScreen('device');
+$('hcwRefreshBtn').onclick=refreshDevice;
+
+$('hcwSaveBtn').onclick=async()=>{
+  const prof=deviceProfile();
+  const par=prof&&prof.parameters?prof.parameters.find(x=>x.id===currentEdit):null;
+  const value=$('hcwEditValue').value;
+  const old=device[currentEdit];
+  device[currentEdit]=value;
+  renderDeviceMenu();
+  showScreen('device');
+  if(!par){setStatus(!!transport,'Saved locally');return}
+  try{
+    const r=await executeDeviceOperation(currentEdit,value);
+    if(r&&r.ok===false) throw Error(r.error||'Device rejected write');
+    setStatus(!!transport,'Saved');
+  }catch(e){
+    device[currentEdit]=old;
+    renderDeviceMenu();
+    setStatus(!!transport,'Write failed');
+    alert('The value was not confirmed by the device. '+e.message);
+  }
+};
+
+$('hcwPkgInput').onchange=async(e)=>{
+  for(const f of [...e.target.files]){
+    try{await inspectPackage(f)}catch(err){alert(f.name+': '+err.message)}
+  }
+  e.target.value='';
+};
+
+document.querySelectorAll('[data-page="hart"]').forEach(el=>{
+  el.addEventListener('click',()=>setStatus(!!transport, transport?undefined:'Not connected'));
+});
 })();
 </script>
 </body>
