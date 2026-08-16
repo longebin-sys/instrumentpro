@@ -15,10 +15,16 @@
 <link href="icon-180.png" rel="apple-touch-icon"/>
 <title>InstrumentPro · Temperature &amp; Analytical</title>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&amp;display=swap" rel="stylesheet"/>
 <!-- Tesseract (OCR) is loaded lazily by loadTesseract() only when the
          user scans a tag, instead of blocking here on every page load. -->
 <style>
         /* ===== RESET & BASE ===== */
+        :root {
+            --font-heading: 'Sora', -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
+        }
         * {
             margin: 0;
             padding: 0;
@@ -113,6 +119,7 @@
         }
         body.dark table th {
             background: #334155;
+            color: #cbd5e1;
         }
         body.dark table td {
             border-color: #334155;
@@ -185,9 +192,10 @@
             100% { transform: rotate(-52deg); }
         }
         .splash-title {
-            font-size: 1.6rem;
-            font-weight: 800;
-            letter-spacing: -0.5px;
+            font-family: var(--font-heading);
+            font-size: 1.7rem;
+            font-weight: 700;
+            letter-spacing: -0.3px;
             margin-bottom: 4px;
             animation: splashFadeUp 0.6s ease both;
         }
@@ -335,7 +343,10 @@
             color: #64748b;
         }
         .sidebar h2 {
+            font-family: var(--font-heading);
+            font-weight: 600;
             font-size: 1.1rem;
+            letter-spacing: -0.2px;
             margin-bottom: 16px;
             padding-top: 10px;
         }
@@ -414,9 +425,10 @@
             align-items: center;
         }
         .greeting h1 {
-            font-weight: 700;
+            font-family: var(--font-heading);
+            font-weight: 600;
             font-size: 1.2rem;
-            letter-spacing: -0.5px;
+            letter-spacing: -0.2px;
         }
         .greeting h1 i {
             margin-right: 6px;
@@ -639,8 +651,10 @@
             width: 30px;
         }
         .card-header h3 {
+            font-family: var(--font-heading);
             font-weight: 600;
             font-size: 1rem;
+            letter-spacing: -0.1px;
         }
         .card-header span {
             margin-left: auto;
@@ -651,9 +665,11 @@
             border-radius: 30px;
         }
         .page-title {
+            font-family: var(--font-heading);
             padding: 0 12px 10px 12px;
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             font-weight: 700;
+            letter-spacing: -0.2px;
         }
         .page-title i {
             margin-right: 8px;
@@ -2842,7 +2858,7 @@ body.dark #page-home .home-mini-title{color:#e2e8f0}
 .trouble-step{font-size:.55rem;font-weight:850;color:#2563eb;text-transform:uppercase}.trouble-question{font-size:.92rem;font-weight:900;color:#1e293b;line-height:1.25;margin:5px 0 12px}
 .trouble-options{display:grid;grid-template-columns:1fr 1fr;gap:7px}.trouble-options button{text-align:left;min-width:0;border:1px solid #e2e8f0;background:#f8fafc;border-radius:14px;padding:11px;font-size:.62rem;font-weight:750;color:#334155;overflow-wrap:anywhere}.trouble-options button.selected{border-color:#2563eb;background:#eff6ff;color:#1d4ed8;box-shadow:inset 0 0 0 1px #2563eb}
 .trouble-result{display:none;margin-top:10px}.trouble-result.show{display:block}.trouble-result-tag{font-size:.55rem;font-weight:900;color:#2563eb;letter-spacing:.06em}.trouble-result-title{font-size:.86rem;font-weight:900;color:#1e3a8a;margin:5px 0 8px}.trouble-result-grid{display:grid;grid-template-columns:1fr;gap:7px}.trouble-result-grid>div{padding:9px;border:1px solid #e2e8f0;border-radius:13px;background:#f8fafc}.trouble-result-grid b{font-size:.58rem;color:#334155}.trouble-result-grid p{font-size:.57rem;line-height:1.45;color:#64748b;margin:4px 0 0}.trouble-safety{display:flex;gap:7px;margin-top:8px;padding:9px;border-radius:12px;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;font-size:.55rem;line-height:1.4}.trouble-footer{display:grid;grid-template-columns:auto 1fr;gap:7px;margin-top:11px}.trouble-footer .trouble-next{width:100%;justify-content:center}.trouble-footer .btn-outline{min-height:40px}.trouble-footer .btn{min-height:40px}
-body.dark .trouble-dialog{background:#111827}.dark .trouble-dialog-title,.dark .trouble-question{color:#f8fafc}.dark .trouble-options button{background:#1e293b;border-color:#334155;color:#cbd5e1}.dark .trouble-result-grid>div{background:#1e293b;border-color:#334155}.dark .trouble-result-grid b{color:#e2e8f0}
+body.dark .trouble-dialog{background:#111827}body.dark .trouble-dialog-title,body.dark .trouble-question{color:#f8fafc}body.dark .trouble-options button{background:#1e293b;border-color:#334155;color:#cbd5e1}body.dark .trouble-result-grid>div{background:#1e293b;border-color:#334155}body.dark .trouble-result-grid b{color:#e2e8f0}
 @media(max-width:390px){.trouble-options{grid-template-columns:1fr}.trouble-dialog{padding:13px;border-radius:22px 22px 0 0}.trouble-top{padding:14px}.trouble-top-icon{display:none}}
 </style>
 <style id="shift-report-styles">
@@ -4431,32 +4447,32 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 </div>
 <div id="gcContent">
 <div class="gc-panel" id="gc-daniel">
-<div><strong>Daniel 700 Series</strong></div>
+<div class="ref-section-head"><strong>Daniel 700 Series</strong></div>
 <div class="chip">TCD · He carrier @ 90 psig</div>
 <div class="chip">Temp: -29°C to +55°C ambient</div>
 <div style="font-size:0.75rem;margin-top:6px;">Calibration: Certified gas standards · Multi-point</div>
 </div>
 <div class="gc-panel hidden" id="gc-siemens">
-<div><strong>Siemens Maxum II</strong></div>
+<div class="ref-section-head"><strong>Siemens Maxum II</strong></div>
 <div class="chip">TCD · 50-260°C oven</div>
 <div class="chip">Dynamic Range: 10⁵</div>
 <div style="font-size:0.75rem;margin-top:6px;">Carrier: H₂/N₂/He/Ar (4.6 purity)</div>
 </div>
 <div class="gc-panel hidden" id="gc-abb">
-<div><strong>ABB PGC5000</strong></div>
+<div class="ref-section-head"><strong>ABB PGC5000</strong></div>
 <div class="chip">DBDID · ppb detection</div>
 <div class="chip">Smart Oven™</div>
 <div style="font-size:0.75rem;margin-top:6px;">Auto-calibration with internal standards</div>
 </div>
 <div class="gc-panel hidden" id="gc-agilent">
-<div><strong>Agilent 8890</strong></div>
+<div class="ref-section-head"><strong>Agilent 8890</strong></div>
 <div class="chip">FID · TCD · µECD</div>
 <div class="chip">Temp: 15-35°C ambient</div>
 <div style="font-size:0.75rem;margin-top:6px;">Carrier: H₂/He/N₂ (high purity)</div>
 </div>
 </div>
 <hr/>
-<div><strong>Operating Parameters</strong></div>
+<div class="ref-section-head"><strong>Operating Parameters</strong></div>
 <div class="row mt-1"><label>Carrier Pressure</label><input id="gcCarrierPressure" step="any" type="number" value="90"/><span class="chip">psig</span></div>
 <div class="row"><label>Oven Temp</label><input id="gcOvenTemp" step="any" type="number" value="60"/><span class="chip">°C</span></div>
 <div style="font-size:0.65rem;color:#64748b;margin-bottom:6px;">Defaults auto-fill from the selected analyzer above — edit for your actual unit's setpoints.</div>
@@ -4944,7 +4960,7 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <div class="result-box"><span>mA Equivalent</span><span id="radarMa">17.33 mA</span></div>
 <div class="hidden" id="radarBlockWarning" style="padding:8px 12px;border-radius:12px;font-size:0.7rem;margin-top:4px;font-weight:600;"></div>
 <hr/>
-<div><strong>Dielectric Constant Reference</strong></div>
+<div class="ref-section-head"><strong>Dielectric Constant Reference</strong></div>
 <div style="font-size:0.65rem;color:#64748b;margin:4px 0 8px 0;">Non-contact radar needs a minimum reflectivity to get a clean echo — very low dielectric products are harder to see, and guided-wave radar (GWR) handles them better than non-contact.</div>
 <div class="chip">Water: DC ≈ 80</div>
 <div class="chip">Ammonia: DC ≈ 17</div>
@@ -5038,13 +5054,13 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 </div>
 <div class="flow-main-panel hidden" id="flow-coriolis">
 <div style="font-size:0.65rem;color:#64748b;margin-bottom:8px;">Coriolis meters measure mass flow directly from the phase/time delay between inlet and outlet tube sensors, and density from the tube's natural oscillation period. FCF and K0/K1 are calibration constants from the meter's tag/datasheet.</div>
-<div><strong>Mass Flow</strong></div>
+<div class="ref-section-head"><strong>Mass Flow</strong></div>
 <div class="row mt-1"><label>FCF</label><input id="coriolisFcf" step="any" type="number" value="10"/><span class="chip">(g/s)/µs</span></div>
 <div class="row"><label>Time Delay</label><input id="coriolisDt" step="any" type="number" value="2.5"/><span class="chip">µs</span></div>
 <button class="btn" id="coriolisMassBtn"><i class="fas fa-calculator"></i> Calculate</button>
 <div class="result-box"><span>Mass Flow</span><span id="coriolisMassResult">25.0 g/s</span></div>
 <hr/>
-<div><strong>Density (from tube period)</strong></div>
+<div class="ref-section-head"><strong>Density (from tube period)</strong></div>
 <div class="row mt-1"><label>K0</label><input id="coriolisK0" step="any" type="number" value="0"/><label>K1</label><input id="coriolisK1" step="any" type="number" value="0.001"/></div>
 <div class="row"><label>Period</label><input id="coriolisPeriod" step="any" type="number" value="1000"/><span class="chip">µs</span></div>
 <button class="btn" id="coriolisDensityBtn"><i class="fas fa-calculator"></i> Calculate</button>
@@ -5338,24 +5354,24 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <div class="tab" data-ref="torque">Torque Specs</div>
 </div>
 <div class="ref-panel hidden" id="ref-formulas">
-<div><strong>Pressure</strong></div>
+<div class="ref-section-head"><strong>Pressure</strong></div>
 <div style="font-size:0.75rem;margin:4px 0 10px 0;">P = F ÷ A  (Pa)<br/>Head of liquid column: P = ρ·g·h</div>
-<div><strong>Flow</strong></div>
+<div class="ref-section-head"><strong>Flow</strong></div>
 <div style="font-size:0.75rem;margin:4px 0 10px 0;">Q = V ÷ t = A·v  (volumetric, m³/s)<br/>Mass flow: ṁ = ρ·Q</div>
-<div><strong>Level</strong></div>
+<div class="ref-section-head"><strong>Level</strong></div>
 <div style="font-size:0.75rem;margin:4px 0 10px 0;">Hydrostatic: P = ρ·g·h<br/>From a DP transmitter: h = ΔP ÷ (ρ·g)</div>
-<div><strong>Temperature</strong></div>
+<div class="ref-section-head"><strong>Temperature</strong></div>
 <div style="font-size:0.75rem;margin:4px 0 10px 0;">°F = (°C × 9/5) + 32<br/>RTD resistance: Rₜ = R₀ [1 + α(T − T₀)]</div>
-<div><strong>Density / Specific Gravity</strong></div>
+<div class="ref-section-head"><strong>Density / Specific Gravity</strong></div>
 <div style="font-size:0.75rem;margin:4px 0 10px 0;">ρ = m ÷ V<br/>SG = ρ(fluid) ÷ ρ(water)</div>
-<div><strong>Viscosity</strong></div>
+<div class="ref-section-head"><strong>Viscosity</strong></div>
 <div style="font-size:0.75rem;margin:4px 0 10px 0;">Shear stress: τ = μ·(dv/dy)<br/>Kinematic viscosity: ν = μ ÷ ρ</div>
-<div><strong>Gas Law</strong></div>
+<div class="ref-section-head"><strong>Gas Law</strong></div>
 <div style="font-size:0.75rem;margin:4px 0 10px 0;">Ideal gas: PV = nRT (R = 8.314 J/mol·K)<br/>Gas density: ρ = PM ÷ RT (P = absolute pressure)</div>
-<div><strong>Signals &amp; 4-20mA</strong></div>
+<div class="ref-section-head"><strong>Signals &amp; 4-20mA</strong></div>
 <div style="font-size:0.75rem;margin:4px 0 10px 0;">% of Span = (PV − LRV) ÷ (URV − LRV) × 100<br/>Linear transmitter: I = 4 + [(PV − LRV) ÷ (URV − LRV)] × 16</div>
 <hr/>
-<div><strong>Common Unit Conversions</strong></div>
+<div class="ref-section-head"><strong>Common Unit Conversions</strong></div>
 <div class="chip">1 bar = 100 kPa</div>
 <div class="chip">1 MPa = 10 bar</div>
 <div class="chip">1 mH₂O = 9,806.65 Pa</div>
@@ -5367,7 +5383,7 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <div style="font-size:0.6rem;color:#94a3b8;margin-top:8px;">g = 9.80665 m/s² · Always keep units consistent across a calculation — mixing e.g. psi with m and kg/m³ will silently give a wrong answer.</div>
 </div>
 <div class="ref-panel hidden" id="ref-actuators">
-<div><strong>Direct-Acting vs. Reverse-Acting Actuators</strong></div>
+<div class="ref-section-head"><strong>Direct-Acting vs. Reverse-Acting Actuators</strong></div>
 <div style="font-size:0.72rem;margin:6px 0;">
 <strong>Direct-acting actuator:</strong> air pressure applied above the diaphragm pushes the stem <strong>down</strong> as pressure increases. On a normally-seated (push-down-to-close) body, this closes the valve — air pressure is what closes it, so it's called <strong>Air-to-Close (ATC)</strong>. Losing air lets the spring push the stem back up, so it fails <strong>open (FO)</strong>.
                     </div>
@@ -5395,7 +5411,7 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 </div>
 <div style="font-size:0.6rem;color:#94a3b8;margin-top:8px;">Safety-critical: the fail position is chosen based on which state is safer for the process if air/power is lost — e.g. an ESD valve on a fuel line is typically fail-closed; a vent or relief path is typically fail-open. Always verify against the specific P&amp;ID/datasheet, not assumption.</div>
 <hr/>
-<div><strong>Control Valve Working Principle</strong></div>
+<div class="ref-section-head"><strong>Control Valve Working Principle</strong></div>
 <div style="font-size:0.72rem;margin:6px 0;">A controller sends a 4-20mA signal to an I/P converter, which converts it to a 3-15psi pneumatic signal. The positioner compares this against actual valve position and adjusts actuator air pressure. The actuator moves the stem, which moves the plug, changing flow through the valve — closing the loop with a position feedback signal back to the controller.</div>
 <div class="chip">Actuator (diaphragm) — provides force to move the stem</div>
 <div class="chip">Positioner — ensures accurate valve positioning</div>
@@ -5415,7 +5431,7 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 </div>
 <div class="ref-panel hidden" id="ref-isatags">
 <div style="font-size:0.72rem;margin-bottom:6px;">ISA S5.1 tag numbers: the <strong>first letter</strong> is the measured/initiating variable, following letters describe the function. E.g. <strong>PIC-101</strong> = Pressure, Indicating, Controller, loop 101.</div>
-<div><strong>First Letter (Variable)</strong></div>
+<div class="ref-section-head"><strong>First Letter (Variable)</strong></div>
 <div class="table-wrap mt-1"><table>
 <tbody>
 <tr><td>A</td><td>Analysis</td><td>F</td><td>Flow</td><td>P</td><td>Pressure</td></tr>
@@ -5445,7 +5461,7 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <div style="font-size:0.6rem;color:#94a3b8;margin-top:8px;">Some site standards deviate slightly from ISA S5.1 — always confirm against the project's own tag-numbering philosophy document if one exists.</div>
 </div>
 <div class="ref-panel hidden" id="ref-pid">
-<div><strong>Line Types</strong></div>
+<div class="ref-section-head"><strong>Line Types</strong></div>
 <div style="font-size:0.72rem;margin:6px 0;">
 <div style="border-top:2px solid #0b2d4e;margin:6px 0;"></div>Solid line — process piping (main flow path)
                         <div style="border-top:2px dashed #0b2d4e;margin:10px 0 6px 0;"></div>Dashed line — electrical signal / wiring
@@ -5476,7 +5492,7 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 </div>
 <div class="ref-panel hidden" id="ref-grounding">
 <div style="font-size:0.72rem;margin-bottom:6px;">Grounding/earthing protects people and equipment and gives noise a return path. Bonding ties conductive parts together so they sit at the same potential, preventing dangerous voltage differences.</div>
-<div><strong>Typical Resistance Targets</strong></div>
+<div class="ref-section-head"><strong>Typical Resistance Targets</strong></div>
 <div class="chip">General equipment grounding: ≤25Ω (many codes' minimum) — ≤5Ω or ≤1Ω is common for critical/substation grounds</div>
 <div class="chip">Intrinsically-safe system grounding: typically ≤1Ω, per the specific IS system's documentation</div>
 <div class="chip">Sensitive electronics/instrumentation: often ≤5Ω target where practical</div>
@@ -5512,7 +5528,7 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <div class="chip">Lightly lubricated (machine oil): K ≈ 0.18-0.20</div>
 <div class="chip">Dry / unlubricated threads: K ≈ 0.20-0.30</div>
 <div style="font-size:0.65rem;color:#64748b;margin:8px 0;">The same torque wrench setting can produce roughly 2× different actual clamp load depending only on whether threads are lubricated, dry, or corroded — the lubricant condition matters more than almost anything else in this calculation.</div>
-<div><strong>Tightening Sequence</strong></div>
+<div class="ref-section-head"><strong>Tightening Sequence</strong></div>
 <div style="font-size:0.72rem;margin:6px 0;">Use a star/cross pattern (never sequential around the flange), applied in stages — typically ~30% → 60% → 100% of target torque — to keep gasket compression even and avoid flange rotation or misalignment.</div>
 <div style="background:#fee2e2;color:#991b1b;padding:10px 14px;border-radius:14px;font-size:0.68rem;margin-top:8px;">⚠️ This is not a substitute for a real torque value. Actual target torque depends on flange class, gasket type, bolt material/grade, and lubricant — always use the project's engineering spec or the gasket/flange manufacturer's torque chart (e.g. per ASME PCC-1) for the actual number used on a real joint.</div>
 </div>
@@ -5612,7 +5628,7 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <div class="chip">20mA = 100% (URV)</div>
 <div class="chip">Typical loop supply: 24VDC (12-36VDC device dependent)</div>
 <hr/>
-<div><strong>NAMUR NE43 fault indication</strong></div>
+<div class="ref-section-head"><strong>NAMUR NE43 fault indication</strong></div>
 <div class="chip">&lt;3.6mA — under-range / loop fault</div>
 <div class="chip">4-20mA — normal operating range</div>
 <div class="chip">&gt;20.5/21mA — over-range / diagnostic</div>
@@ -5652,7 +5668,7 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <div style="font-size:0.72rem;margin-bottom:6px;"><strong>3-wire:</strong> separate power supply wires, with the signal sharing a common return. Common on proximity/photoelectric sensors.</div>
 <div style="font-size:0.72rem;margin-bottom:6px;"><strong>4-wire:</strong> completely separate power and signal circuits. Used for flow meters, gas analyzers, and other transmitters that need more power than a 2-wire loop can supply.</div>
 <hr/>
-<div><strong>Smart vs Conventional Transmitters</strong></div>
+<div class="ref-section-head"><strong>Smart vs Conventional Transmitters</strong></div>
 <div style="font-size:0.7rem;margin:4px 0;">Smart transmitters add digital communication (HART, Fieldbus, Profibus PA, Modbus) on top of the 4-20mA signal, giving remote configuration, advanced diagnostics, and generally higher accuracy. Conventional transmitters give 4-20mA only, with configuration limited to physical zero/span adjustments and little to no self-diagnostics.</div>
 </div>
 </div>
@@ -6019,7 +6035,7 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <div class="sub-tab" data-tab="ts-thermistor">Thermistor NTC/PTC</div>
 </div>
 <div class="sub-panel active" id="ts-rtdtypes">
-<div><strong>By metal</strong></div>
+<div class="ref-section-head"><strong>By metal</strong></div>
 <div class="chip">Platinum (Pt100/Pt1000) — most widely used, high accuracy/stability</div>
 <div class="chip">Copper — high linearity, limited temp range, oxidizes</div>
 <div class="chip">Nickel — lower cost, less stable/linear than platinum</div>
@@ -6075,7 +6091,7 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 </div>
 <div id="refContent">
 <div class="ref-panel" id="ref-tc">
-<div><strong>TC Color Codes</strong></div>
+<div class="ref-section-head"><strong>TC Color Codes</strong></div>
 <div class="chip">J: White/Red</div>
 <div class="chip">K: Green/Red</div>
 <div class="chip">T: Blue/Red</div>
@@ -6083,7 +6099,7 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <div class="chip">N: Orange/Red</div>
 <div class="chip">S: Black/Red</div>
 <hr/>
-<div><strong>mV Output Table (NIST ITS-90, 0°C ref. junction)</strong></div>
+<div class="ref-section-head"><strong>mV Output Table (NIST ITS-90, 0°C ref. junction)</strong></div>
 <div style="font-size:0.65rem;color:#64748b;margin:4px 0 8px 0;">Cold junction at 0°C. Field readings need cold-junction compensation if your reference isn't at 0°C.</div>
 <div class="table-wrap"><table>
 <thead><tr><th>°C</th><th>Type K</th><th>Type J</th><th>Type T</th><th>Type E</th></tr></thead>
@@ -6104,7 +6120,7 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <div style="font-size:0.6rem;color:#94a3b8;margin-top:6px;">Type T max ~400°C, Type J max ~760°C (oxidizing atmosphere degrades J above that).</div>
 </div>
 <div class="ref-panel hidden" id="ref-ranges">
-<div><strong>Common Transmitters</strong></div>
+<div class="ref-section-head"><strong>Common Transmitters</strong></div>
 <div class="chip">Rosemount 3051S</div>
 <div class="chip">Yokogawa EJX</div>
 <div class="chip">ABB TTH300</div>
@@ -6133,13 +6149,13 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <div style="font-size:0.6rem;color:#94a3b8;margin-top:8px;">Always confirm exact behavior against the specific model's manual — firmware/hardware revisions change menu structures and default settings over time.</div>
 </div>
 <div class="ref-panel hidden" id="ref-rtd">
-<div><strong>RTD Types</strong></div>
+<div class="ref-section-head"><strong>RTD Types</strong></div>
 <div class="chip">Pt100: 100Ω @ 0°C</div>
 <div class="chip">Pt500: 500Ω @ 0°C</div>
 <div class="chip">Pt1000: 1000Ω @ 0°C</div>
 <div style="font-size:0.8rem;">α = 0.00385 · IEC 60751</div>
 <hr/>
-<div><strong>Resistance vs. Temperature Table</strong></div>
+<div class="ref-section-head"><strong>Resistance vs. Temperature Table</strong></div>
 <div style="font-size:0.65rem;color:#64748b;margin:4px 0 8px 0;">Computed live from the IEC 60751 Callendar-Van Dusen equation (R = R₀(1 + At + Bt²), A=3.9083×10⁻³, B=-5.775×10⁻⁷) — not a static/rounded lookup.</div>
 <div class="row" style="margin-bottom:6px;">
 <label>Base</label>
@@ -6155,11 +6171,11 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 </table></div>
 </div>
 <div class="ref-panel hidden" id="ref-fluke">
-<div><strong>Fluke 789 ProcessMeter</strong></div>
+<div class="ref-section-head"><strong>Fluke 789 ProcessMeter</strong></div>
 <div class="chip">mA source/simulate</div>
 <div class="chip">24V loop power</div>
 <div class="chip">HART resistor 250Ω</div>
-<div><strong>Which switch position to use</strong></div>
+<div class="ref-section-head"><strong>Which switch position to use</strong></div>
 <div style="font-size:0.72rem;margin:6px 0;">
 <strong>mA DC (measure):</strong> reading an existing loop's current without breaking it — connect in series, or across a 250Ω resistor if reading via HART. The meter's own 250Ω resistor auto-engages in this mode so you can read HART on the same connection.
                         </div>
@@ -6177,7 +6193,7 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
                         </div>
 <div style="font-size:0.65rem;color:#64748b;margin-top:8px;">HART IN/OUT terminals let the 789 pass HART communication through while it measures — handy for reading a HART variable at the same time as the raw mA.</div>
 <hr/>
-<div><strong>Common Field Technician Tools</strong></div>
+<div class="ref-section-head"><strong>Common Field Technician Tools</strong></div>
 <div class="chip">Multimeter — voltage/current/resistance/continuity</div>
 <div class="chip">Temperature calibrator — sources/reads RTD, TC, mA</div>
 <div class="chip">Loop calibrator — sources/measures 4-20mA loops</div>
@@ -6190,7 +6206,7 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <div class="chip">Decade resistance box — simulates precise RTD resistance values for bench testing</div>
 </div>
 <div class="ref-panel hidden" id="ref-fault-ref">
-<div><strong>Fault Codes</strong></div>
+<div class="ref-section-head"><strong>Fault Codes</strong></div>
 <div class="chip">4-20mA: 0mA (no power), 2-3.5mA (fault), &gt;20.5mA (overrange)</div>
 <div class="chip">HART: 250Ω resistor required</div>
 <div class="sub-tabs mt-1" id="faultMfgTabs">
@@ -6238,7 +6254,7 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <div class="sub-tab" data-tab="net-loop">Open vs Closed Loop</div>
 </div>
 <div class="sub-panel active" id="net-tcpudp">
-<div><strong>TCP vs UDP</strong></div>
+<div class="ref-section-head"><strong>TCP vs UDP</strong></div>
 <div style="font-size:0.75rem;margin:6px 0;">
 <strong>TCP</strong> — connection-based; both ends handshake (SYN → SYN-ACK → ACK) before data flows, and every packet is acknowledged and re-sent if lost. Reliable and ordered, but has more overhead/latency. Used where data loss isn't acceptable.
                             </div>
@@ -6248,7 +6264,7 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <div class="chip">TCP: web, email, file transfer, Modbus TCP</div>
 <div class="chip">UDP: streaming, broadcast, discovery, DNS</div>
 <hr/>
-<div><strong>Common Industrial Ports</strong></div>
+<div class="ref-section-head"><strong>Common Industrial Ports</strong></div>
 <div class="chip">Modbus TCP: 502 (TCP)</div>
 <div class="chip">EtherNet/IP: 44818 (TCP) / 2222 (UDP)</div>
 <div class="chip">DNP3: 20000 (TCP/UDP)</div>
@@ -6298,9 +6314,21 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 </div>
 </div>
 <style id="references-modernize">
-/* ============================================================
-   REFERENCE LIBRARY — MODERNIZED UI
-   ============================================================ */
+/* Neutral light content boxes (e.g. Fault Codes list items, badge chips) use
+   inline background:#f1f5f9 with no explicit text color, so they inherited
+   body.dark's light body text on a light box — unreadable. Force a dark
+   surface here to match the rest of the dark theme. */
+body.dark [style*="background:#f1f5f9"] {
+  background: #1e293b !important;
+}
+/* Badges additionally set an explicit dark-gray text color inline, which
+   also needs overriding (the rule above only fixes the background). */
+body.dark [style*="background:#f1f5f9;color:#334155"] {
+  background: #334155 !important;
+  color: #cbd5e1 !important;
+}
+
+
 #page-references .card {
   padding: 16px !important;
   border-radius: 20px !important;
@@ -6341,8 +6369,11 @@ body.dark #page-references #refTabs .tab.active {
   padding-top: 4px !important;
 }
 
-/* Section headers — a div wrapping a single <strong> acts as a heading */
-#page-references .ref-panel > div:has(> strong:only-child) {
+/* Section headers — explicitly marked with .ref-section-head, rather than
+   inferred structurally (a `div:has(> strong:only-child)` also matched
+   paragraphs that simply start with a bold lead-in phrase, incorrectly
+   theme-coloring entire paragraphs of body text). */
+#page-references .ref-panel > div.ref-section-head {
   font-size: 0.98rem !important;
   font-weight: 800 !important;
   color: var(--ui-accent, #2563eb) !important;
@@ -6351,10 +6382,10 @@ body.dark #page-references #refTabs .tab.active {
   border-bottom: 2px solid var(--ui-accent-soft, #eff6ff) !important;
   letter-spacing: -.01em !important;
 }
-#page-references .ref-panel > div:has(> strong:only-child):first-child {
+#page-references .ref-panel > div.ref-section-head:first-child {
   margin-top: 2px !important;
 }
-body.dark #page-references .ref-panel > div:has(> strong:only-child) {
+body.dark #page-references .ref-panel > div.ref-section-head {
   border-bottom-color: #223140 !important;
 }
 
@@ -6737,41 +6768,6 @@ body.dark #page-references .chip {
 <div class="page" id="page-settings">
 <div class="page-title"><i class="fas fa-cog"></i> Settings</div>
 <details class="card settings-accordion">
-<summary><i class="fas fa-bluetooth-b"></i> Connect Device (Bluetooth / WiFi)</summary>
-<div class="settings-accordion-body">
-<div class="card" style="background:#fff7ed;border-color:#fde68a;">
-<div style="font-size:0.7rem;color:#92400e;"><i class="fas fa-triangle-exclamation"></i> <strong>Read before connecting:</strong> Bluetooth support depends on your instrument's actual hardware — this works with devices that expose a serial/UART-style Bluetooth LE service (a common pattern, but not universal). WiFi devices usually need to be reachable over plain HTTP, which browsers block from an HTTPS site like GitHub Pages unless the device also supports HTTPS. For HART devices, use the HART Communicator tool from the main menu instead — it handles framing/checksums for you and warns before any write that changes a live transmitter's configuration.</div>
-</div>
-<div class="card">
-<div class="card-header"><i class="fas fa-bluetooth-b"></i><h3>Bluetooth (BLE)</h3><span id="bleStatusChip">Disconnected</span></div>
-<div style="font-size:0.65rem;color:#64748b;margin-bottom:8px;">Works in Chrome or Edge on Android/desktop. Not supported in Safari or iOS (Apple doesn't allow Web Bluetooth).</div>
-<div class="row"><label>Service UUID</label><input id="bleServiceUuid" style="flex:1;font-size:0.7rem;" type="text" value="6e400001-b5a3-f393-e0a9-e50e24dcca9e"/></div>
-<div class="row"><label>Notify Char</label><input id="bleNotifyUuid" style="flex:1;font-size:0.7rem;" type="text" value="6e400003-b5a3-f393-e0a9-e50e24dcca9e"/></div>
-<div class="row"><label>Write Char</label><input id="bleWriteUuid" style="flex:1;font-size:0.7rem;" type="text" value="6e400002-b5a3-f393-e0a9-e50e24dcca9e"/></div>
-<div style="font-size:0.6rem;color:#64748b;margin-bottom:8px;">Defaults are the Nordic UART Service — a common BLE serial-bridge pattern used by many DIY/serial-to-BLE adapters. If your instrument uses different UUIDs (check its manual/datasheet), edit them above before connecting.</div>
-<button class="btn w-full" id="bleConnectBtn" style="justify-content:center;"><i class="fas fa-bluetooth-b"></i> Connect Bluetooth Device</button>
-<button class="btn btn-outline w-full mt-1 hidden" id="bleDisconnectBtn" style="justify-content:center;"><i class="fas fa-xmark"></i> Disconnect</button>
-<div class="result-box mt-1"><span>Last Reading</span><span id="bleLastReading">—</span></div>
-<div class="result-box"><span>Raw Data</span><span id="bleRawData" style="font-size:0.65rem;">—</span></div>
-</div>
-<div class="card">
-<div class="card-header"><i class="fas fa-wifi"></i><h3>WiFi (local network)</h3><span id="wifiStatusChip">Disconnected</span></div>
-<div style="font-size:0.65rem;color:#64748b;margin-bottom:8px;">Enter your instrument's local HTTP endpoint (e.g. its IP address). This will likely fail if this app is loaded over HTTPS and the device only serves plain HTTP — that's a browser security restriction (mixed content), not a bug.</div>
-<div class="row"><label>Endpoint</label><input id="wifiEndpoint" placeholder="http://192.168.1.50/reading" style="flex:1;" type="text"/></div>
-<div class="row"><label>Poll</label><select id="wifiPollInterval"><option value="0">Manual only</option><option selected="" value="2000">Every 2s</option><option value="5000">Every 5s</option></select></div>
-<button class="btn w-full" id="wifiConnectBtn" style="justify-content:center;"><i class="fas fa-wifi"></i> Connect / Fetch</button>
-<button class="btn btn-outline w-full mt-1 hidden" id="wifiDisconnectBtn" style="justify-content:center;"><i class="fas fa-xmark"></i> Stop Polling</button>
-<div class="result-box mt-1"><span>Last Reading</span><span id="wifiLastReading">—</span></div>
-<div id="wifiError" style="font-size:0.65rem;color:#dc2626;margin-top:4px;"></div>
-</div>
-<div class="card">
-<div class="card-header"><i class="fas fa-satellite-dish"></i><h3>Live Reading Feed</h3></div>
-<div style="font-size:0.75rem;">This value auto-fills into Calibration test points when you tap 📥 next to a point.</div>
-<div class="result-box mt-1"><span>Current Value</span><span id="liveGlobalValue">— (not connected)</span></div>
-</div>
-</div>
-</details>
-<details class="card settings-accordion">
 <summary><i class="fas fa-cloud-upload-alt"></i> Report Sync (Google Sheets / Excel)</summary>
 <div class="settings-accordion-body">
 <div class="card" style="background:#fff7ed;border-color:#fde68a;">
@@ -6793,27 +6789,6 @@ body.dark #page-references .chip {
 </div>
 <div class="card">
 <div style="font-size:0.65rem;color:#64748b;">Once a webhook is saved here, a "Sync" button appears next to Export on Field Notes, Field Report, Commissioning, Loop Check, and Setpoints — tapping it sends that record to whichever webhook(s) you've linked. Browser security means this app can't confirm the row actually landed (the response can't be read back) — check your sheet/workbook directly the first time to confirm it's working, using Send Test Row above.</div>
-</div>
-</div>
-</details>
-<details class="card settings-accordion">
-<summary><i class="fas fa-upload"></i> File Upload</summary>
-<div class="settings-accordion-body">
-<div class="card">
-<div class="upload-zone" id="uploadZone"><i class="fas fa-cloud-upload-alt"></i><div>Tap to upload</div><input id="fileInput" multiple="" style="display:none;" type="file"/></div>
-<div id="fileList"></div>
-<div class="result-box"><span>Files</span><span id="fileCount">0</span></div>
-</div>
-</div>
-</details>
-<details class="card settings-accordion">
-<summary><i class="fas fa-tags"></i> Tag Scanner</summary>
-<div class="settings-accordion-body">
-<div class="card">
-<div class="upload-zone" id="cameraZone"><i class="fas fa-camera"></i><div>Tap to photograph tag (OCR)</div><input accept="image/*" capture="environment" id="cameraInput" style="display:none;" type="file"/></div>
-<div class="mt-1" id="scanPreview"><div class="scanner-preview"><i class="fas fa-camera"></i><div>Ready</div></div></div>
-<div class="row mt-1"><label>Tag</label><input id="tagNumber" placeholder="FT-1001" type="text"/><button class="btn" id="saveTagBtn"><i class="fas fa-save"></i> Save</button></div>
-<div id="tagContainer"></div>
 </div>
 </div>
 </details>
@@ -8497,150 +8472,6 @@ body.dark #page-references .chip {
             // Note: commissioning tabs use the shared '.sub-tabs' handler defined above — no separate binding needed.
 
             // =============================================================
-            // LIVE READING FEED (shared by Bluetooth + WiFi, consumed by Calibration page)
-            // =============================================================
-            window.InstrumentProLive = { value: null, source: null };
-            const liveGlobalValue = document.getElementById('liveGlobalValue');
-            const calLiveBar = document.getElementById('calLiveBar');
-            const calLiveValue = document.getElementById('calLiveValue');
-
-            function pushLiveReading(value, source) {
-                window.InstrumentProLive.value = value;
-                window.InstrumentProLive.source = source;
-                liveGlobalValue.textContent = value.toFixed(3) + ' (' + source + ')';
-                calLiveBar.classList.remove('hidden');
-                calLiveValue.textContent = value.toFixed(3);
-            }
-
-            function extractFirstFloat(text) {
-                const match = text.match(/-?\d+(\.\d+)?/);
-                return match ? parseFloat(match[0]) : null;
-            }
-
-            // =============================================================
-            // BLUETOOTH (Web Bluetooth API — BLE serial/UART-bridge pattern)
-            // =============================================================
-            const bleServiceUuid = document.getElementById('bleServiceUuid');
-            const bleNotifyUuid = document.getElementById('bleNotifyUuid');
-            const bleWriteUuid = document.getElementById('bleWriteUuid');
-            const bleConnectBtn = document.getElementById('bleConnectBtn');
-            const bleDisconnectBtn = document.getElementById('bleDisconnectBtn');
-            const bleStatusChip = document.getElementById('bleStatusChip');
-            const bleLastReading = document.getElementById('bleLastReading');
-            const bleRawData = document.getElementById('bleRawData');
-            let bleDevice = null, bleWriteChar = null;
-            let lastBleRawBytes = null;
-
-            async function connectBluetooth() {
-                if (!navigator.bluetooth) {
-                    alert('Web Bluetooth isn\'t supported in this browser. Use Chrome or Edge on Android or desktop — Safari/iOS doesn\'t support it.');
-                    return;
-                }
-                try {
-                    const serviceUuid = bleServiceUuid.value.trim().toLowerCase();
-                    bleDevice = await navigator.bluetooth.requestDevice({
-                        filters: [{ services: [serviceUuid] }],
-                        optionalServices: [serviceUuid]
-                    });
-                    bleStatusChip.textContent = 'Connecting…';
-                    const server = await bleDevice.gatt.connect();
-                    const service = await server.getPrimaryService(serviceUuid);
-                    const notifyChar = await service.getCharacteristic(bleNotifyUuid.value.trim().toLowerCase());
-                    try {
-                        bleWriteChar = await service.getCharacteristic(bleWriteUuid.value.trim().toLowerCase());
-                    } catch (e) {
-                        bleWriteChar = null; // some devices are notify-only; that's fine for reading
-                    }
-                    await notifyChar.startNotifications();
-                    notifyChar.addEventListener('characteristicvaluechanged', function(event) {
-                        const rawBytes = new Uint8Array(event.target.value.buffer);
-                        lastBleRawBytes = rawBytes;
-                        const text = new TextDecoder().decode(event.target.value);
-                        bleRawData.textContent = text.trim().slice(0, 40);
-                        const num = extractFirstFloat(text);
-                        if (num !== null) {
-                            bleLastReading.textContent = num.toFixed(3);
-                            pushLiveReading(num, 'Bluetooth');
-                        }
-                    });
-                    bleStatusChip.textContent = '✅ ' + (bleDevice.name || 'Connected');
-                    bleConnectBtn.classList.add('hidden');
-                    bleDisconnectBtn.classList.remove('hidden');
-                    bleDevice.addEventListener('gattserverdisconnected', function() {
-                        bleStatusChip.textContent = 'Disconnected';
-                        bleConnectBtn.classList.remove('hidden');
-                        bleDisconnectBtn.classList.add('hidden');
-                    });
-                } catch (err) {
-                    bleStatusChip.textContent = 'Disconnected';
-                    if (err.name !== 'NotFoundError') { // user simply cancelled the picker
-                        alert('Bluetooth connection failed: ' + err.message + '\n\nCheck that the Service/Notify UUIDs above match your device (see its manual).');
-                    }
-                }
-            }
-            bleConnectBtn.addEventListener('click', connectBluetooth);
-            bleDisconnectBtn.addEventListener('click', function() {
-                if (bleDevice && bleDevice.gatt.connected) bleDevice.gatt.disconnect();
-            });
-
-            // =============================================================
-            // WIFI (fetch a local HTTP endpoint)
-            // =============================================================
-            const wifiEndpoint = document.getElementById('wifiEndpoint');
-            const wifiPollInterval = document.getElementById('wifiPollInterval');
-            const wifiConnectBtn = document.getElementById('wifiConnectBtn');
-            const wifiDisconnectBtn = document.getElementById('wifiDisconnectBtn');
-            const wifiStatusChip = document.getElementById('wifiStatusChip');
-            const wifiLastReading = document.getElementById('wifiLastReading');
-            const wifiError = document.getElementById('wifiError');
-            let wifiPollHandle = null;
-
-            async function fetchWifiReading() {
-                const url = wifiEndpoint.value.trim();
-                if (!url) { wifiError.textContent = 'Enter an endpoint URL first.'; return; }
-                try {
-                    const res = await fetch(url, { cache: 'no-store' });
-                    const text = await res.text();
-                    let num = null;
-                    try {
-                        const json = JSON.parse(text);
-                        num = json.value ?? json.reading ?? json.mA ?? json.pv ?? extractFirstFloat(text);
-                    } catch (e) {
-                        num = extractFirstFloat(text);
-                    }
-                    if (num === null) {
-                        wifiError.textContent = 'Connected, but couldn\'t find a numeric reading in the response.';
-                        return;
-                    }
-                    num = parseFloat(num);
-                    wifiError.textContent = '';
-                    wifiStatusChip.textContent = '✅ Connected';
-                    wifiLastReading.textContent = num.toFixed(3);
-                    pushLiveReading(num, 'WiFi');
-                } catch (err) {
-                    wifiStatusChip.textContent = 'Disconnected';
-                    wifiError.textContent = 'Fetch failed: ' + err.message + '. If this app is on HTTPS and the device is plain HTTP, browsers block that (mixed content) — try hosting locally over HTTP, or use a device with HTTPS support.';
-                }
-            }
-            wifiConnectBtn.addEventListener('click', function() {
-                fetchWifiReading();
-                const interval = parseInt(wifiPollInterval.value);
-                if (interval > 0) {
-                    if (wifiPollHandle) clearInterval(wifiPollHandle);
-                    wifiPollHandle = setInterval(fetchWifiReading, interval);
-                    wifiConnectBtn.classList.add('hidden');
-                    wifiDisconnectBtn.classList.remove('hidden');
-                }
-            });
-            wifiDisconnectBtn.addEventListener('click', function() {
-                if (wifiPollHandle) clearInterval(wifiPollHandle);
-                wifiPollHandle = null;
-                wifiStatusChip.textContent = 'Disconnected';
-                wifiConnectBtn.classList.remove('hidden');
-                wifiDisconnectBtn.classList.add('hidden');
-            });
-
-            // =============================================================
             // SOLENOID
             // =============================================================
             const solenoidType = document.getElementById('solenoidType');
@@ -9996,123 +9827,6 @@ body.dark #page-references .chip {
             aiInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') aiSendBtn.click(); });
 
             // =============================================================
-            // FILE UPLOAD
-            // =============================================================
-            const uploadZone = document.getElementById('uploadZone');
-            const fileInput = document.getElementById('fileInput');
-            const fileList = document.getElementById('fileList');
-            const fileCount = document.getElementById('fileCount');
-            let uploadedFiles = getStorage('files', []);
-
-            function renderFiles() {
-                fileList.innerHTML = uploadedFiles.map((f, i) =>
-                    `<div class="tag-item"><span>${f.name}</span><span>${(f.size/1024).toFixed(1)}KB</span><button onclick="removeFile(${i})"><i class="fas fa-times"></i></button></div>`
-                ).join('');
-                fileCount.textContent = uploadedFiles.length;
-                setStorage('files', uploadedFiles);
-            }
-
-            window.removeFile = function(index) {
-                uploadedFiles.splice(index, 1);
-                renderFiles();
-            };
-
-            uploadZone.addEventListener('click', function() { fileInput.click(); });
-            fileInput.addEventListener('change', function() {
-                for (let file of this.files) {
-                    if (file.size > 10 * 1024 * 1024) { alert(file.name + ' is too large'); continue; }
-                    uploadedFiles.push({ name: file.name, size: file.size });
-                }
-                renderFiles();
-                this.value = '';
-            });
-            renderFiles();
-
-            // =============================================================
-            // TAG SCANNER
-            // =============================================================
-            const cameraZone = document.getElementById('cameraZone');
-            const cameraInput = document.getElementById('cameraInput');
-            const tagNumber = document.getElementById('tagNumber');
-            const saveTagBtn = document.getElementById('saveTagBtn');
-            const tagContainer = document.getElementById('tagContainer');
-            let savedTags = getStorage('tags', []);
-
-            function renderTags() {
-                tagContainer.innerHTML = savedTags.map((tag, i) =>
-                    `<div class="tag-item"><span class="tag-number"><i class="fas fa-tag"></i> ${tag}</span><div><button onclick="copyTag('${tag}')"><i class="fas fa-copy"></i></button><button onclick="removeTag(${i})"><i class="fas fa-times"></i></button></div></div>`
-                ).join('');
-                setStorage('tags', savedTags);
-            }
-
-            window.copyTag = function(tag) {
-                navigator.clipboard.writeText(tag).then(() => alert('Copied: ' + tag));
-            };
-
-            window.removeTag = function(index) {
-                savedTags.splice(index, 1);
-                renderTags();
-            };
-
-            cameraZone.addEventListener('click', function() { cameraInput.click(); });
-
-            cameraInput.addEventListener('change', function() {
-                const file = this.files[0];
-                if (!file) return;
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const preview = document.getElementById('scanPreview');
-                    preview.innerHTML =
-                        `<div class="scanner-preview"><img src="${e.target.result}" style="max-width:100%;max-height:120px;border-radius:12px;" /><div class="scan-result">🔍 Reading text (OCR)...</div></div>`;
-
-                    loadTesseract()
-                        .then(function(Tesseract) { return Tesseract.recognize(e.target.result, 'eng'); })
-                        .then(function(result) {
-                            const rawText = (result.data.text || '').trim();
-                            // Look for a typical instrument tag pattern, e.g. FT-1001, PT203, TT-450
-                            const match = rawText.match(/\b[A-Z]{2,4}-?\d{2,5}[A-Z]?\b/);
-                            const resultEl = document.querySelector('.scan-result');
-                            if (match) {
-                                const tag = match[0].toUpperCase();
-                                tagNumber.value = tag;
-                                resultEl.innerHTML = `Detected: <strong>${tag}</strong><br/><span style="font-size:0.65rem;opacity:0.7;">Raw OCR: ${rawText.slice(0, 80) || '(empty)'}</span>`;
-                                resultEl.style.color = '#059669';
-                            } else if (rawText) {
-                                resultEl.innerHTML = `No tag pattern found.<br/><span style="font-size:0.65rem;opacity:0.7;">Raw OCR: ${rawText.slice(0, 100)}</span>`;
-                                resultEl.style.color = '#b45309';
-                            } else {
-                                resultEl.textContent = '⚠️ No text detected — try a clearer photo, or enter the tag manually.';
-                                resultEl.style.color = '#b45309';
-                            }
-                        })
-                        .catch(function(err) {
-                            const resultEl = document.querySelector('.scan-result');
-                            resultEl.textContent = '⚠️ OCR failed: ' + (err.message || 'unknown error') + '. Enter tag manually.';
-                            resultEl.style.color = '#dc2626';
-                        });
-                };
-                reader.readAsDataURL(file);
-                this.value = '';
-            });
-
-            saveTagBtn.addEventListener('click', function() {
-                const tag = tagNumber.value.trim();
-                if (!tag) { alert('Enter a tag'); return; }
-                if (!savedTags.includes(tag)) {
-                    savedTags.push(tag);
-                    renderTags();
-                    tagNumber.value = '';
-                    document.getElementById('scanPreview').innerHTML =
-                        `<div class="scanner-preview"><i class="fas fa-check-circle" style="color:#059669;font-size:2rem;"></i><div>✅ Tag saved: ${tag}</div></div>`;
-                    alert('✅ Tag ' + tag + ' saved!');
-                } else {
-                    alert('⚠️ Tag already exists.');
-                }
-            });
-
-            renderTags();
-
-            // =============================================================
             // REPORT GENERATOR
             // Advanced Report Studio is initialized by the dedicated
             // script at the end of this file. The old generator was
@@ -11223,6 +10937,7 @@ body.dark #reportpanel-loopcheck .loop-check-item {
 body.dark #reportpanel-loopcheck .loop-check-item.checked {
     background: rgba(15,159,120,.14) !important;
     border-color: rgba(52,211,153,.4) !important;
+    color: #6ee7b7 !important;
 }
 body.dark #reportpanel-loopcheck .table-wrap,
 body.dark #reportpanel-loopcheck .table-wrap table {
