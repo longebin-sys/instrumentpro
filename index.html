@@ -2972,13 +2972,13 @@ body.dark #page-home .home-mini-title{color:#e2e8f0}
 </style>
 <style id="trouble-qa-css">
 #page-trouble{padding-bottom:96px;overflow-x:hidden}
-.trouble-top{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:17px;border-radius:22px;background:linear-gradient(135deg,#0f2744,#2563eb);color:#fff;box-shadow:0 12px 28px rgba(15,39,68,.18)}
+.trouble-top{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:17px;margin:0 12px 14px 12px;border-radius:28px;background:linear-gradient(135deg,var(--ui-accent,#2563eb),color-mix(in srgb,var(--ui-accent,#2563eb) 60%, #0f2744));color:#fff;box-shadow:0 12px 28px rgba(15,39,68,.18)}
 .trouble-kicker{font-size:.72rem;font-weight:900;letter-spacing:.08em;opacity:.8}
 .trouble-title{font-size:1.32rem;font-weight:900;line-height:1.18;margin-top:4px}
 .trouble-sub{font-size:.85rem;opacity:.92;margin-top:5px;line-height:1.5}
 .trouble-top-icon{width:46px;height:46px;flex:0 0 46px;border-radius:15px;background:rgba(255,255,255,.12);display:grid;place-items:center}
-.trouble-start{width:100%;margin-top:9px;border:0;border-radius:16px;padding:13px 14px;background:#fff;color:#1d4ed8;box-shadow:0 7px 18px rgba(15,23,42,.08);display:flex;align-items:center;justify-content:space-between;font-weight:850;font-size:.86rem}
-.trouble-workflow-note{display:flex;align-items:center;gap:10px;margin-top:10px;padding:11px 13px;border:1px solid #dbeafe;background:#f8fbff;border-radius:16px;color:#334155}
+.trouble-start{margin:9px 12px 14px 12px;border:0;border-radius:16px;padding:13px 14px;background:#fff;color:var(--ui-accent,#1d4ed8);box-shadow:0 7px 18px rgba(15,23,42,.08);display:flex;align-items:center;justify-content:space-between;font-weight:850;font-size:.86rem}
+.trouble-workflow-note{display:flex;align-items:center;gap:10px;margin:10px 12px 14px 12px;padding:11px 13px;border:1px solid #dbeafe;background:#f8fbff;border-radius:16px;color:#334155}
 .trouble-workflow-note>i{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:#eff6ff;color:#2563eb;font-size:.9rem;flex:0 0 30px}
 .trouble-workflow-note strong{display:block;font-size:.85rem;font-weight:900;color:#1e3a5f}
 .trouble-workflow-note span{display:block;margin-top:2px;font-size:.76rem;color:#64748b;line-height:1.4}
@@ -2994,6 +2994,7 @@ body.dark #page-home .home-mini-title{color:#e2e8f0}
 .trouble-options{display:grid;grid-template-columns:1fr 1fr;gap:8px}.trouble-options button{text-align:left;min-width:0;border:1px solid #e2e8f0;background:#f8fafc;border-radius:14px;padding:12px;font-size:.84rem;line-height:1.35;font-weight:750;color:#334155;overflow-wrap:anywhere}.trouble-options button.selected{border-color:#2563eb;background:#eff6ff;color:#1d4ed8;box-shadow:inset 0 0 0 1px #2563eb}
 .trouble-result{display:none;margin-top:10px}.trouble-result.show{display:block}.trouble-result-tag{font-size:.72rem;font-weight:900;color:#2563eb;letter-spacing:.05em}.trouble-result-title{font-size:1.12rem;font-weight:900;color:#1e3a8a;margin:6px 0 10px;line-height:1.3}.trouble-result-grid{display:grid;grid-template-columns:1fr;gap:8px}.trouble-result-grid>div{padding:11px;border:1px solid #e2e8f0;border-radius:13px;background:#f8fafc}.trouble-result-grid b{font-size:.82rem;color:#334155}.trouble-result-grid p{font-size:.84rem;line-height:1.55;color:#475569;margin:5px 0 0}.trouble-safety{display:flex;gap:8px;margin-top:9px;padding:11px;border-radius:12px;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;font-size:.8rem;line-height:1.5}.trouble-footer{display:grid;grid-template-columns:auto 1fr;gap:7px;margin-top:11px}.trouble-footer .trouble-next{width:100%;justify-content:center}.trouble-footer .btn-outline{min-height:44px;font-size:.88rem}.trouble-footer .btn{min-height:44px;font-size:.88rem}
 body.dark .trouble-dialog{background:#111827}body.dark .trouble-dialog-title,body.dark .trouble-question{color:#f8fafc}body.dark .trouble-options button{background:#1e293b;border-color:#334155;color:#cbd5e1}body.dark .trouble-result-grid>div{background:#1e293b;border-color:#334155}body.dark .trouble-result-grid b{color:#e2e8f0}
+body.dark .trouble-start{background:#1e293b;color:var(--ui-accent,#60a5fa)}body.dark .trouble-workflow-note{background:#1a253a;border-color:#334155;color:#cbd5e1}body.dark .trouble-workflow-note strong{color:#e2e8f0}body.dark .trouble-workflow-note span{color:#94a3b8}body.dark .trouble-workflow-note>i{background:#0f172a;color:var(--ui-accent,#60a5fa)}
 @media(max-width:390px){.trouble-options{grid-template-columns:1fr}.trouble-dialog{padding:13px;border-radius:22px 22px 0 0}.trouble-top{padding:14px}.trouble-top-icon{display:none}}
 </style>
 <style id="shift-report-styles">
@@ -6589,6 +6590,39 @@ body.dark #page-references .chip {
   }
 }
 </style>
+<style id="colorpick-styles">
+.colorpick-modal{display:none;position:fixed;inset:0;z-index:10050;align-items:flex-end;justify-content:center}
+.colorpick-modal.open{display:flex}
+.colorpick-backdrop{position:absolute;inset:0;background:rgba(2,8,23,.62);backdrop-filter:blur(4px)}
+.colorpick-dialog{position:relative;z-index:1;width:min(480px,100%);max-height:92vh;overflow:auto;background:#fff;border-radius:24px 24px 0 0;padding:16px 16px calc(16px + env(safe-area-inset-bottom));box-shadow:0 -15px 45px rgba(0,0,0,.22);animation:troubleUp .18s ease-out}
+body.dark .colorpick-dialog{background:#111827}
+.colorpick-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.colorpick-title{font-size:1.05rem;font-weight:900;color:#1e293b}
+body.dark .colorpick-title{color:#f8fafc}
+.colorpick-close{border:0;background:#f1f5f9;width:34px;height:34px;border-radius:11px;color:#475569}
+body.dark .colorpick-close{background:#1e293b;color:#cbd5e1}
+.colorpick-sat{position:relative;width:100%;height:170px;border-radius:16px;overflow:hidden;cursor:crosshair;touch-action:none;
+  background-image:linear-gradient(to top,#000,rgba(0,0,0,0)),linear-gradient(to right,#fff,rgba(255,255,255,0));
+  border:1px solid #e2e8f0;}
+body.dark .colorpick-sat{border-color:#334155}
+.colorpick-sat-thumb{position:absolute;width:20px;height:20px;border-radius:50%;border:2.5px solid #fff;box-shadow:0 0 0 1.5px rgba(0,0,0,.4),0 2px 6px rgba(0,0,0,.35);transform:translate(-50%,-50%);pointer-events:none;top:0;left:100%}
+.colorpick-hue{position:relative;width:100%;height:16px;border-radius:9px;margin-top:14px;cursor:pointer;touch-action:none;
+  background:linear-gradient(to right,#ff0000,#ffff00,#00ff00,#00ffff,#0000ff,#ff00ff,#ff0000);
+  border:1px solid #e2e8f0;}
+body.dark .colorpick-hue{border-color:#334155}
+.colorpick-hue-thumb{position:absolute;top:50%;width:22px;height:22px;border-radius:50%;background:#fff;border:2.5px solid #fff;box-shadow:0 0 0 1.5px rgba(0,0,0,.4),0 2px 6px rgba(0,0,0,.35);transform:translate(-50%,-50%);pointer-events:none;left:100%}
+.colorpick-row{display:flex;align-items:center;gap:10px;margin-top:16px}
+.colorpick-preview{width:44px;height:44px;flex:0 0 44px;border-radius:13px;border:1px solid #e2e8f0;box-shadow:inset 0 0 0 3px #fff, 0 0 0 1px #e2e8f0}
+body.dark .colorpick-preview{border-color:#334155;box-shadow:inset 0 0 0 3px #111827, 0 0 0 1px #334155}
+.colorpick-hexwrap{flex:1;display:flex;flex-direction:column;gap:3px}
+.colorpick-hexwrap label{font-size:.66rem;font-weight:800;letter-spacing:.06em;color:#94a3b8}
+.colorpick-hexwrap input{width:100%;border:1px solid #e2e8f0;border-radius:11px;padding:9px 11px;font-size:.92rem;font-weight:750;letter-spacing:.03em;color:#1e293b;background:#f8fafc;text-transform:uppercase;font-family:monospace}
+body.dark .colorpick-hexwrap input{background:#0f172a;border-color:#334155;color:#e2e8f0}
+.colorpick-swatches{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.colorpick-swatches button{width:28px;height:28px;border-radius:9px;border:1px solid rgba(0,0,0,.08);cursor:pointer}
+.colorpick-footer{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:18px}
+.colorpick-footer .btn,.colorpick-footer .btn-outline{min-height:46px;justify-content:center;font-size:.88rem}
+</style>
 <!-- ==========================================================
         PAGE: TROUBLESHOOTING (short)
         ========================================================== -->
@@ -6946,17 +6980,39 @@ body.dark #page-references .chip {
 <button class="theme-swatch" data-color="#65a30d" style="--sw:#65a30d;--sw2:#3f6212;" type="button"><span class="swatch-ring"><span class="swatch-orb"></span></span><span class="swatch-check"><i class="fas fa-check"></i></span><span class="swatch-label">Lime</span></button>
 <button class="theme-swatch" data-color="#06b6d4" style="--sw:#06b6d4;--sw2:#0e7490;" type="button"><span class="swatch-ring"><span class="swatch-orb"></span></span><span class="swatch-check"><i class="fas fa-check"></i></span><span class="swatch-label">Cyan</span></button>
 <button class="theme-swatch" data-color="#f43f5e" style="--sw:#f43f5e;--sw2:#be123c;" type="button"><span class="swatch-ring"><span class="swatch-orb"></span></span><span class="swatch-check"><i class="fas fa-check"></i></span><span class="swatch-label">Crimson</span></button>
-<label class="theme-swatch theme-swatch-custom" id="themeCustomSwatch" style="--sw:conic-gradient(from 180deg,#f43f5e,#f59e0b,#84cc16,#10b981,#06b6d4,#3b82f6,#8b5cf6,#f43f5e);">
+<button class="theme-swatch theme-swatch-custom" id="themeCustomSwatch" style="--sw:conic-gradient(from 180deg,#f43f5e,#f59e0b,#84cc16,#10b981,#06b6d4,#3b82f6,#8b5cf6,#f43f5e);" type="button">
 <span class="swatch-ring"><span class="swatch-orb custom-orb"><i class="fas fa-eye-dropper"></i></span></span>
 <span class="swatch-check"><i class="fas fa-check"></i></span>
 <span class="swatch-label">Custom</span>
-<input id="themeCustomInput" style="position:absolute;inset:0;opacity:0;cursor:pointer;" type="color"/>
-</label>
+</button>
 </div>
 <div class="theme-active-preview" id="themeActivePreview">
 <span class="tap-dot" id="themeActiveDot"></span>
 <span id="themeActiveLabel">Active accent</span>
 <span class="tap-hex" id="themeActiveHex">#2563EB</span>
+</div>
+</div>
+<div aria-hidden="true" class="colorpick-modal" id="colorPickModal">
+<div class="colorpick-backdrop" data-close-colorpick=""></div>
+<div aria-modal="true" class="colorpick-dialog" role="dialog">
+<div class="colorpick-head">
+<div class="colorpick-title">Custom Color</div>
+<button class="colorpick-close" data-close-colorpick="" type="button"><i class="fas fa-times"></i></button>
+</div>
+<div class="colorpick-sat" id="colorpickSat"><div class="colorpick-sat-thumb" id="colorpickSatThumb"></div></div>
+<div class="colorpick-hue" id="colorpickHue"><div class="colorpick-hue-thumb" id="colorpickHueThumb"></div></div>
+<div class="colorpick-row">
+<div class="colorpick-preview" id="colorpickPreview"></div>
+<div class="colorpick-hexwrap">
+<label>HEX</label>
+<input id="colorpickHexInput" maxlength="7" type="text" value="#2563EB"/>
+</div>
+</div>
+<div class="colorpick-swatches" id="colorpickSwatches"></div>
+<div class="colorpick-footer">
+<button class="btn-outline btn" id="colorpickCancel" type="button">Cancel</button>
+<button class="btn" id="colorpickSet" type="button">Set Color</button>
+</div>
 </div>
 </div>
 <div class="card">
@@ -7225,12 +7281,132 @@ body.dark #page-references .chip {
                 });
                 if (el.dataset.color === savedColor) el.classList.add('active');
             });
-            const themeCustomInput = document.getElementById('themeCustomInput');
-            if (themeCustomInput) {
-                themeCustomInput.addEventListener('input', function() {
-                    applyThemeColor(this.value);
+            // =============================================================
+            // CUSTOM COLOR PICKER (in-app, replaces native <input type=color>)
+            // =============================================================
+            (function() {
+                const modal = document.getElementById('colorPickModal');
+                const satBox = document.getElementById('colorpickSat');
+                const satThumb = document.getElementById('colorpickSatThumb');
+                const hueBox = document.getElementById('colorpickHue');
+                const hueThumb = document.getElementById('colorpickHueThumb');
+                const preview = document.getElementById('colorpickPreview');
+                const hexInput = document.getElementById('colorpickHexInput');
+                const customTrigger = document.getElementById('themeCustomSwatch');
+                const swatchRow = document.getElementById('colorpickSwatches');
+                if (!modal || !satBox || !hueBox) return;
+
+                let h = 217, s = 83, v = 92; // starting point ~ #2563eb
+
+                function hsvToHex(h, s, v) {
+                    s /= 100; v /= 100;
+                    const k = n => (n + h / 60) % 6;
+                    const f = n => v - v * s * Math.max(0, Math.min(k(n), 4 - k(n), 1));
+                    const toHex = c => Math.round(c * 255).toString(16).padStart(2, '0');
+                    return '#' + [toHex(f(5)), toHex(f(3)), toHex(f(1))].join('');
+                }
+                function hexToHsv(hex) {
+                    hex = hex.replace('#', '');
+                    if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+                    const r = parseInt(hex.slice(0, 2), 16) / 255,
+                        g = parseInt(hex.slice(2, 4), 16) / 255,
+                        b = parseInt(hex.slice(4, 6), 16) / 255;
+                    const max = Math.max(r, g, b), min = Math.min(r, g, b), d = max - min;
+                    let hh = 0;
+                    if (d !== 0) {
+                        if (max === r) hh = 60 * (((g - b) / d) % 6);
+                        else if (max === g) hh = 60 * ((b - r) / d + 2);
+                        else hh = 60 * ((r - g) / d + 4);
+                    }
+                    if (hh < 0) hh += 360;
+                    const ss = max === 0 ? 0 : (d / max) * 100;
+                    const vv = max * 100;
+                    return { h: hh, s: ss, v: vv };
+                }
+
+                function updateUI() {
+                    const hex = hsvToHex(h, s, v);
+                    satBox.style.backgroundColor = hsvToHex(h, 100, 100);
+                    satThumb.style.left = s + '%';
+                    satThumb.style.top = (100 - v) + '%';
+                    hueThumb.style.left = (h / 360 * 100) + '%';
+                    preview.style.background = hex;
+                    hexInput.value = hex.toUpperCase();
+                }
+
+                function setFromHex(hex) {
+                    if (!/^#([0-9a-f]{6})$/i.test(hex)) return false;
+                    const hsv = hexToHsv(hex);
+                    h = hsv.h; s = hsv.s; v = hsv.v;
+                    updateUI();
+                    return true;
+                }
+
+                function pointFromEvent(box, evt) {
+                    const rect = box.getBoundingClientRect();
+                    const x = Math.max(0, Math.min(1, (evt.clientX - rect.left) / rect.width));
+                    const y = Math.max(0, Math.min(1, (evt.clientY - rect.top) / rect.height));
+                    return { x, y };
+                }
+                function dragify(box, onMove) {
+                    let dragging = false;
+                    function move(evt) {
+                        if (!dragging) return;
+                        const p = pointFromEvent(box, evt.touches ? evt.touches[0] : evt);
+                        onMove(p);
+                        updateUI();
+                    }
+                    function start(evt) {
+                        dragging = true;
+                        move(evt);
+                        evt.preventDefault();
+                    }
+                    function stop() { dragging = false; }
+                    box.addEventListener('pointerdown', start);
+                    window.addEventListener('pointermove', move);
+                    window.addEventListener('pointerup', stop);
+                    box.addEventListener('touchstart', start, { passive: false });
+                    window.addEventListener('touchmove', move, { passive: false });
+                    window.addEventListener('touchend', stop);
+                }
+                dragify(satBox, p => { s = p.x * 100; v = 100 - p.y * 100; });
+                dragify(hueBox, p => { h = p.x * 360; });
+
+                hexInput.addEventListener('change', function() {
+                    let val = this.value.trim();
+                    if (val[0] !== '#') val = '#' + val;
+                    if (!setFromHex(val)) updateUI();
                 });
-            }
+
+                const quickColors = ['#dc2626', '#ea580c', '#d97706', '#65a30d', '#059669', '#0d9488', '#0284c7', '#2563eb', '#4f46e5', '#7c3aed', '#db2777', '#1e293b'];
+                quickColors.forEach(c => {
+                    const b = document.createElement('button');
+                    b.type = 'button';
+                    b.style.background = c;
+                    b.addEventListener('click', () => setFromHex(c));
+                    swatchRow.appendChild(b);
+                });
+
+                function openPicker() {
+                    const current = getStorage('themeColor', '#2563eb');
+                    setFromHex(/^#([0-9a-f]{6})$/i.test(current) ? current : '#2563eb');
+                    modal.classList.add('open');
+                    modal.setAttribute('aria-hidden', 'false');
+                }
+                function closePicker() {
+                    modal.classList.remove('open');
+                    modal.setAttribute('aria-hidden', 'true');
+                }
+                if (customTrigger) customTrigger.addEventListener('click', openPicker);
+                modal.querySelectorAll('[data-close-colorpick]').forEach(el => el.addEventListener('click', closePicker));
+                document.getElementById('colorpickCancel').addEventListener('click', closePicker);
+                document.getElementById('colorpickSet').addEventListener('click', function() {
+                    applyThemeColor(hsvToHex(h, s, v));
+                    closePicker();
+                });
+                updateUI();
+            })();
+
             applyThemeColor(savedColor);
 
             // =============================================================
