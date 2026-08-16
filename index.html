@@ -9888,14 +9888,21 @@ body.dark .colorpick-hexwrap input{background:#0f172a;border-color:#334155;color
                 level: ['level transmitter','level probe','tank level','level'],
                 pressure: ['pressure transmitter','pressure sensor','pressure'],
                 flow: ['flow transmitter','flow meter','flowmeter','flow'],
-                controlvalve: ['control valve','positioner','modulating valve'],
+                controlvalve: ['control valve','modulating valve'],
+                positioner: ['valve positioner','smart positioner','digital positioner','pneumatic positioner','electro-pneumatic positioner','i/p positioner','positioner'],
                 shutdownvalve: ['shutdown valve','esd valve','esdv','emergency shutdown'],
                 onoff: ['on/off valve','on-off valve','block valve','isolation valve'],
                 speedprobe: ['speed probe','tachometer','tach','overspeed'],
                 vibprobe: ['vibration probe','vib probe','proximity probe','eddy current','vibration sensor'],
                 gasdet: ['gas detector','gas sensor'],
                 firepanel: ['fire panel','fire alarm panel','facp'],
-                genset: ['generator control panel','generator','genset','diesel generator']
+                genset: ['generator control panel','generator','genset','diesel generator'],
+                iomodule: ['io module','i/o module','io card','i/o card','input card','output card','channel fault'],
+                fieldnetwork: ['fieldbus','profibus','modbus','hart multiplexer','hart mux','devicenet','ethernet/ip','bus communication','network segment'],
+                controllercpu: ['plc','dcs controller','cpu fault','processor fault','controller fault','redundant controller'],
+                controlpower: ['rack power supply','io power supply','controller power supply','24vdc supply','power supply fault'],
+                hmiscada: ['hmi','scada','opc server','historian','operator station'],
+                alarmforce: ['nuisance alarm','alarm flooding','forced io','stuck force','shelved alarm','alarm management']
             };
             const AI_SYMPTOM_SYNONYMS = {
                 low: ['reads low','low reading','low signal','stuck low','stuck at 4ma','4ma','low'],
@@ -12392,6 +12399,36 @@ const D = {
     }
   },
 
+  positioner: {
+    n:'Valve Positioner',
+    s:{
+      notmoving:['Positioner will not drive the valve to the commanded position',
+        'Confirm the positioner is receiving a valid input (4–20 mA, HART, Fieldbus or Profibus command) and that regulated supply air is present at the positioner\'s own supply port, not just at the header. Then watch whether the pilot/relay stage actually supplies or exhausts air to the actuator when the command changes.',
+        'A stuck valve is almost always the input signal, supply air, or the pilot/relay/I-to-P stage — not the feedback element. Common causes across every make: loss of instrument air or low regulated supply, command held inside the positioner\'s deadband, a plugged nozzle-flapper or clogged piezo pilot valve, a stuck relay spool, or the actuator itself seized, regardless of whether the positioner uses arm-linkage or magnetic feedback.',
+        'Prove signal and supply air first with a communicator or local gauge, then confirm the relay/pilot stage is actually modulating output pressure to the actuator before assuming the feedback sensor has failed.'],
+      hunting:['Positioner output hunts or oscillates instead of settling',
+        'Trend the input command against actual valve travel. Note whether the oscillation is fast and small (tuning/relay gain) or slow and large (stiction, unstable supply, or a feedback tracking error).',
+        'Hunting can come from positioner gain/dynamic response set too aggressive, a dead-band set too tight, unstable supply air pressure, packing/stem friction (stiction) that keeps fighting the correction, or play in the feedback path — backlash in an arm/cam linkage, or a magnetic feedback puck that has slipped/rotated relative to its sensor, causing the positioner to chase a false position.',
+        'Separate tuning from mechanical/feedback problems with a step test: travel that tracks a slow step cleanly but oscillates on fast demand points to tuning; oscillation while holding a fixed command points to feedback or stiction — check the linkage or magnet coupling first.'],
+      calibration:['Auto-calibration/auto-stroke fails, or travel is mis-scaled across 0–100%',
+        'Run the positioner\'s own auto-stroke/auto-calibration routine and note whether it completes, times out, or finds the end-stops in the wrong place. Independently verify actual mechanical travel limits (fully closed and fully open) against a scale or the valve\'s own travel indicator.',
+        'A failed or incorrect calibration is almost always a feedback or travel-limit problem, not the electronics: a feedback arm/cam that is loose or not indexed correctly on the shaft, a magnetic feedback target not centered or at the wrong air-gap from its sensor, mechanical travel stops set incorrectly, or excess friction preventing the positioner from finding a true end position during the stroke.',
+        'Confirm the mechanical feedback coupling — linkage arm tight and correctly indexed, or magnet properly seated and within the manufacturer\'s air-gap spec — before repeating calibration.'],
+      feedback:['Position feedback is erratic or lost (linkage or magnetic sensor)',
+        'Compare the positioner\'s displayed/transmitted position against the actual physical stem or shaft position at several points across full travel, not just at one end.',
+        'Lever-arm/cam feedback: wear or slop in the linkage pins or cam follower, a loose set-screw letting the arm slip on the shaft, or a worn feedback potentiometer will all give erratic or non-linear position reports. Contactless magnetic feedback: a magnet that has weakened, shifted, or a nearby ferrous object/stray magnetic field can make the Hall-effect or GMR sensor misread position even though nothing is visibly worn.',
+        'For linkage types, check mechanical tightness and free movement through full travel (valve isolated per procedure). For magnetic types, confirm magnet-to-sensor air gap and alignment against spec, and rule out nearby stray fields or ferrous debris before replacing the sensor module.'],
+      airleak:['Excess air consumption or a continuous/audible leak from the positioner or actuator',
+        'With the loop holding a steady, unchanging command, check for continuous air flow at the positioner\'s exhaust port, actuator connections, tubing fittings and diaphragm/piston seals.',
+        'A healthy positioner stops bleeding air once it reaches the commanded position. Continuous bleed at a steady command usually points to a worn relay/spool seal, a nozzle-flapper or pilot valve not seating fully, a damaged actuator diaphragm/piston seal, or loose/damaged tubing and fittings — not the feedback sensor or transducer.',
+        'Isolate whether the leak is in the positioner itself (block downstream tubing and check the exhaust) or downstream in the actuator/tubing before disassembling or replacing any component.'],
+      comm:['No communication with the positioner (HART/Fieldbus/Profibus)',
+        'Verify the positioner has valid loop power/current or bus power at its terminals, and check wiring, termination and address/tag configuration before assuming the positioner itself has failed.',
+        'Loss of loop or bus power, incorrect wiring polarity, a termination fault, an address conflict, or a failed communication interface can remove digital communication while the positioner may still be responding to its analog command and stroking the valve normally.',
+        'Confirm the valve is still physically responding to command — a fully failed positioner rarely fails in communications alone. Then verify power/wiring at the terminals and retry with the correct protocol, address and bus settings before replacing the unit.']
+    }
+  },
+
   shutdownvalve: {
     n:'Shutdown / ESD valve',
     s:{
@@ -13052,6 +13089,191 @@ const D = {
       falsealarm:['CO2/clean agent release panel causes a nuisance or false alarm','Check the event log for the exact initiating condition and inspect the device for contamination, damage or environmental interference.','Dust/contamination, insects, condensation, physical damage, incorrect sensitivity setting or a genuine process/environmental condition can trigger a false alarm.','Confirm there is no real hazard first per site procedure, then inspect and clean/test the device before resetting.']
     }
   },
+
+  // =====================================================================
+  // CONTROL SYSTEM SIDE — PLC / DCS (vendor-agnostic: Allen-Bradley,
+  // Siemens, Honeywell, Emerson DeltaV, Yokogawa, ABB, Schneider, GE, etc.)
+  // =====================================================================
+
+  iomodule: {
+    n:'I/O Module / Channel',
+    s:{
+      badreading:['A specific channel reads wrong while the field device proves out good',
+        'Prove the field device first (loop-check with a hand-held reference/simulator at the terminal block), then check the same signal at the I/O module\'s own terminals and at the controller tag/point.',
+        'If the field device and terminal-block reading are correct but the controller value is wrong, the fault is in the channel itself, its range/scaling configuration, or the module — not the field device.',
+        'Confirm the module\'s configured range and engineering units match the field signal before swapping the module; a scaling mismatch looks identical to a bad channel.'],
+      deadchannel:['A channel shows no signal / stuck at zero or full-scale regardless of the field device',
+        'Verify field signal is present at the terminal block, then check the channel status/diagnostic bit and any blown-fuse or open-wire indication on the module.',
+        'A blown input fuse, an open-wire/broken-wire detection trip, a failed channel, or the module not properly seated in its slot can hold a channel at a fixed value independent of the field signal.',
+        'Swap to a known-good spare channel (or module, if permitted by procedure) only after confirming the field wiring and signal are proven good at the terminal block.'],
+      moduleerror:['I/O module shows a fault/diagnostic LED or alarm',
+        'Read the module\'s own diagnostic/status indication (LED pattern or software diagnostic page) before pulling the module — most platforms report the specific fault type.',
+        'Common causes are internal module failure, backplane communication loss, configuration mismatch with the slot, overrange/underrange on a channel, or a firmware/keying mismatch after a replacement.',
+        'Match the reported diagnostic against the platform\'s fault-code reference before replacing the module; many faults are configuration issues, not hardware failures.'],
+      notseated:['Module is unresponsive / not communicating with the backplane or rack',
+        'Check the module\'s power/backplane-communication indicator and confirm it is fully seated and latched in its slot.',
+        'A partially seated module, a failed backplane connector, rack power loss to that slot, or a failed module can all present as "not communicating."',
+        'Reseat only per the platform\'s hot-swap procedure (some platforms require power-down); confirm rack power at that slot before condemning the module.'],
+      scaling:['Value at the controller doesn\'t match the actual field signal (scaling/range mismatch)',
+        'Compare the raw signal at the terminal block (mA, volts, counts) against the engineering-unit value shown at the controller for the same instant.',
+        'A range/scaling configuration error — wrong 4–20 mA to engineering-unit span, wrong raw count range, or an unconverted unit — produces a wrong value even though the module and field device are both healthy.',
+        'Verify the configured low/high range in the I/O or tag database against the transmitter\'s actual configured range before touching either device.'],
+      intermittent:['Channel or module reading is intermittent / cuts out',
+        'Trend the point over time and correlate dropouts with nearby activity — cabinet vibration, temperature, maintenance work, or other loop testing.',
+        'A loose terminal, marginal backplane connection, intermittent internal module fault, or wiring damage near a vibration/heat source can cause an intermittent reading that a static check won\'t catch.',
+        'Wiggle-test terminals and backplane connections under controlled conditions and check module temperature/environment before replacing the module.']
+    }
+  },
+
+  fieldnetwork: {
+    n:'Field Network / Bus Communication',
+    s:{
+      devicedropoff:['One or more field devices drop on and off the network/segment',
+        'Check the device\'s own communication diagnostics (retry count, signal level) and compare against other devices on the same segment.',
+        'Marginal cable/termination, an improperly grounded shield, too many devices or too much cable length on one segment, a failing device, or a marginal power supply on the segment can cause intermittent dropouts.',
+        'Confirm segment loading, termination resistors and shield grounding against the network\'s design spec before replacing the device.'],
+      segmentdown:['An entire bus segment or everything behind a multiplexer/gateway loses communication',
+        'Check the health/status of the multiplexer, gateway or segment coupler itself before troubleshooting individual devices — one shared component going down looks like many devices failing at once.',
+        'A failed HART multiplexer, gateway or segment coupler, a tripped/removed segment power supply, a cut/damaged trunk cable, or a short on the trunk can take an entire segment offline.',
+        'Verify power and status at the multiplexer/gateway/coupler first, then check trunk cable continuity and termination before troubleshooting individual field devices.'],
+      noredundancy:['Redundant network path/media doesn\'t fail over as expected',
+        'Simulate or observe the failover event (per the approved test procedure) and confirm which path is actually active before and after the failure.',
+        'Incorrect redundancy configuration, a failed secondary path that was never actually healthy, a switch/media converter not participating in the redundancy protocol, or a common point of failure shared by both paths can prevent failover.',
+        'Confirm both paths are genuinely independent (separate cable routes, separate power) and test failover under controlled conditions, not just assume it based on configuration.'],
+      slowupdate:['Data updates are slow, stale, or lag behind the actual process',
+        'Compare the update rate/timestamp of the value against the network\'s configured scan or update rate, and check for excessive retries or bus load.',
+        'An overloaded segment (too many devices or too much diagnostic/parameter traffic), a slow polling configuration, a device requesting excessive retries due to marginal signal, or a controller-side scan-rate setting can cause stale data.',
+        'Check bus utilization/diagnostics against the platform\'s recommended loading before changing scan rates or adding more devices to the same segment.'],
+      addressconflict:['Device address/tag conflict or duplicate address on the network',
+        'Check the network\'s live device list/diagnostics for duplicate addresses or an address that doesn\'t match the engineering database.',
+        'A device replaced without setting the correct address, a configuration error, or two devices manually set to the same address can cause conflicts, intermittent comms, or one device masking another.',
+        'Verify the address in the engineering/asset database against what is actually set in the physical device before returning it to service.'],
+      noisecomm:['Communication errors, retries, or CRC faults appear intermittently',
+        'Check the segment\'s error/retry counters and correlate spikes with nearby electrical activity (VFDs, welding, switching loads, nearby power cabling).',
+        'Poor shield grounding/bonding, cable routed too close to power/VFD cabling, a marginal connector, or electrical noise coupling into the segment can cause intermittent CRC/communication errors even when devices "work most of the time."',
+        'Inspect shield grounding (grounded at one end per the network standard), cable separation from power sources, and connector condition before replacing devices.']
+    }
+  },
+
+  controllercpu: {
+    n:'PLC / DCS Controller (CPU)',
+    s:{
+      faultstop:['Controller is in FAULT/STOP/HALT and will not run logic',
+        'Read the controller\'s specific fault code/diagnostic message before clearing it — most platforms record the exact cause (I/O fault, program fault, hardware fault, watchdog, etc.).',
+        'An I/O fault escalated to the controller, a program/logic fault, a hardware failure, a firmware issue, or an operator/engineer action (forced stop, download) can put the controller in a faulted state.',
+        'Document the fault code and conditions before clearing it, and confirm the underlying cause (not just the symptom) is resolved before returning the controller to RUN.'],
+      noredundancy:['Redundant controller does not fail over, or fails over unexpectedly',
+        'Check redundancy/synchronization status between primary and secondary before and during a test, using the approved redundancy test procedure.',
+        'An out-of-sync secondary, mismatched firmware/program between primary and secondary, a failed redundancy link, or a configuration difference can prevent proper failover or cause an unexpected/nuisance failover.',
+        'Confirm both controllers show a healthy, in-sync redundancy status and matching firmware/program versions before relying on the redundant pair.'],
+      watchdog:['Watchdog timeout / scan overrun fault',
+        'Check the reported scan time trend against the controller\'s configured watchdog/maximum scan time limit.',
+        'Logic that has grown too large or complex, an infinite loop or blocking instruction, excessive communication load on the same processor, or added tasks/programs can push scan time past the watchdog limit.',
+        'Trend scan time over time (not just at the moment of fault) to see if it is trending up gradually or spiked suddenly, which points to different causes (logic growth vs. a specific event).'],
+      forcedio:['Forces or overrides are active on I/O or logic without documentation',
+        'Check the controller\'s force/override status list — most platforms flag this clearly (e.g., a forces-active indicator) — and identify exactly which points are forced.',
+        'Forces are commonly left active after troubleshooting or commissioning and forgotten, which can mask a real field/I/O problem or create a hazard if the process condition changes.',
+        'Never remove a force without understanding why it was applied; verify against MOC/work-permit documentation and confirm the real field condition before removing it.'],
+      syncfault:['Primary/secondary controllers won\'t synchronize (out of sync)',
+        'Compare firmware revision, program/logic checksum, and configuration between the two controllers using the platform\'s redundancy diagnostic tool.',
+        'A firmware mismatch, an online change made only to one controller, a failed sync link/cable, or memory/configuration differences can prevent synchronization.',
+        'Resolve the mismatch (matching firmware/program) before forcing a sync, and confirm the sync link itself is healthy if firmware/program already match.'],
+      programfault:['Logic/program fault, checksum error, or unexpected program change',
+        'Compare the running program against the last known-good backup/checksum and review the change log/audit trail for recent online edits.',
+        'An unintentional online edit, a corrupted download, memory card failure, or an unauthorized change can alter logic and cause unexpected behavior or a program-fault condition.',
+        'Identify exactly what changed by comparing checksums/versions before restoring from backup, so the root cause isn\'t simply re-introduced.']
+    }
+  },
+
+  controlpower: {
+    n:'Control System Power Supply',
+    s:{
+      supplyfailed:['Power supply has failed / is not powering the rack or controller',
+        'Measure output voltage directly at the supply\'s terminals and at the rack/backplane, and check the supply\'s own status indicator.',
+        'Internal power-supply failure, loss of incoming line power/UPS output, a blown internal fuse, or an overload condition on the rack can remove power to a supply.',
+        'Confirm incoming supply voltage is actually present and correct before condemning the power supply itself.'],
+      noredundancy:['Redundant power supply doesn\'t take over when the primary fails',
+        'Simulate or observe a primary supply failure (per approved procedure) and confirm the secondary actually assumes the load, not just that both show powered.',
+        'A secondary supply that isn\'t actually load-sharing/ready, a configuration where redundancy isn\'t truly wired independently, or a failed secondary that was never tested can leave the rack unprotected despite appearing redundant.',
+        'Test failover under controlled conditions periodically — a redundant supply that has never actually been proven to take the load is not a proven redundant supply.'],
+      lowvoltage:['Rack/controller shows a low-voltage or brownout alarm',
+        'Measure actual supply voltage under normal load and compare to the rack/controller\'s minimum operating spec.',
+        'A weak/failing power supply, excessive load on the rack from added I/O, poor incoming line quality, or a marginal UPS/battery can cause a low-voltage condition that behaves intermittently under load.',
+        'Check voltage under full operating load (not just idle) and review how much spare capacity remains on that supply before adding any further I/O.'],
+      groundfault:['Ground fault trips a card, rack, or the whole cabinet',
+        'Use the approved ground-fault location procedure (isolate circuits one at a time, or use ground-fault detection equipment) rather than randomly disconnecting live circuits.',
+        'Damaged field wiring insulation, water ingress at a field junction box, a chafed cable, or a failed component with an internal short to ground can create a ground fault anywhere on that circuit.',
+        'Locate the actual fault before resetting and re-energizing — repeatedly resetting a ground fault without finding the cause risks equipment damage.'],
+      intermittentpower:['Intermittent power loss / rack reboots unexpectedly',
+        'Trend supply voltage and correlate reboots with time of day, nearby load switching, or environmental conditions (temperature, vibration).',
+        'A marginal/aging power supply, a loose power connection, thermal cycling causing a connector to expand/contract, or upstream power quality issues (sags, transients) can cause intermittent resets that are hard to catch with a single spot check.',
+        'Use a data logger/trend rather than a single measurement to catch an intermittent event, and check all power connections for tightness and heat discoloration.'],
+      fuse:['Blown fuse or tripped breaker on a specific rack, card, or field power distribution',
+        'Identify exactly which fuse/breaker opened and what it protects before replacing/resetting it — check for a downstream short before simply putting in a new fuse.',
+        'A genuine overload, a short circuit in field wiring or a device, or a fuse original to marginal/undersized rating can cause repeated blowing.',
+        'If a fuse blows again immediately after replacement, stop and locate the downstream fault rather than continuing to replace fuses.']
+    }
+  },
+
+  hmiscada: {
+    n:'HMI / SCADA',
+    s:{
+      staledata:['HMI shows stale/frozen data while the controller has current values',
+        'Compare the HMI value and its update timestamp against the live value read directly from the controller.',
+        'A frozen/failed communication driver, a stopped or crashed OPC/data server, a network issue between the HMI and controller, or the HMI itself hung can leave the display showing an old value while the process has moved on.',
+        'Confirm the controller value is actually current first, then check the communication driver/server status before troubleshooting the controller or field device.'],
+      nocomm:['HMI/SCADA lost communication with the controller (comm-fault banner)',
+        'Check the specific communication path reported at fault (which controller, which driver/channel) rather than assuming the whole system is down.',
+        'A network switch/cable failure, the controller itself being down, a communication driver crash, a licensing/session limit issue, or a firewall/security change can break HMI-to-controller communication.',
+        'Verify the controller is actually reachable on the network (ping/diagnostic) before assuming the fault is on the HMI/SCADA side.'],
+      wrongvalue:['HMI displays a value that doesn\'t match the controller or field value',
+        'Compare HMI display, controller tag value, and field value at the same instant to find exactly where the mismatch starts.',
+        'A stale/cached display, an incorrect tag mapping or database link, a scaling/engineering-unit mismatch in the HMI configuration, or a display built against an old point list can cause a mismatch even when the controller itself is correct.',
+        'Confirm the HMI tag configuration (address, scaling, units) matches the controller database before assuming a field or controller problem.'],
+      opcfault:['OPC server/driver fault or disconnected',
+        'Check the OPC server\'s own status/diagnostic screen for the specific tag group or device driver reported as faulted.',
+        'A crashed or hung OPC server process, a licensing issue, a driver configuration change, or the underlying device/network path it depends on being down can fault the OPC layer even when the controller itself is healthy.',
+        'Restart/reset the OPC service only per the approved procedure, and confirm the underlying controller/network path is healthy first so the same fault doesn\'t immediately recur.'],
+      historiangap:['Historian has data gaps or has stopped logging',
+        'Check the historian\'s own collector/interface status and compare the gap window against any known network, server, or OPC outage.',
+        'A collector/interface service stopping, a full disk/storage issue, a network interruption between the historian and its data source, or a licensing/tag-count limit can cause gaps.',
+        'Identify the exact time window of the gap and cross-reference it with other system logs (network, server, OPC) to find the shared root cause.'],
+      alarmnotshow:['Alarm exists in the controller but doesn\'t appear on the HMI',
+        'Confirm the alarm is genuinely active in the controller (not just assumed), then check the HMI\'s alarm configuration for that specific point — enabled/disabled, priority, or filtered view.',
+        'A disabled or unmapped alarm in the HMI/SCADA alarm database, an alarm filtered out of the current view, a shelved/suppressed alarm, or a broken link between the controller alarm and the HMI alarm system can hide a real alarm from the operator.',
+        'Check all filter/view settings and the alarm\'s enable status in the HMI database — this is a common gap between "the controller knows" and "the operator sees."']
+    }
+  },
+
+  alarmforce: {
+    n:'Alarms & Forces/Overrides',
+    s:{
+      nuisance:['Nuisance or repeating/flooding alarms on the same point',
+        'Trend the point through several alarm/clear cycles and compare against its alarm setpoint and any deadband/hysteresis configuration.',
+        'A setpoint too close to normal operating variation, no deadband configured, a noisy/erratic signal at the source, or a genuinely marginal process condition can all produce repeated nuisance alarming.',
+        'Determine whether the process is actually marginal (needs a real fix) versus the alarm configuration being too tight before changing any setpoint — don\'t just widen a setpoint to silence a real problem.'],
+      stuckforce:['A force or manual override is active and left in place',
+        'Check the controller/HMI\'s force or override status list for that point, and review the maintenance/work-permit log for when and why it was applied.',
+        'Forces are commonly applied during troubleshooting, commissioning, or bypassing a known-faulty device, then left in place after the work is complete.',
+        'Confirm the real field condition and the original reason for the force before removing it — removing an undocumented force blind can also create a hazard if the underlying issue was never actually fixed.'],
+      alarmnotclear:['Alarm won\'t clear even though the condition has returned to normal',
+        'Confirm the actual process/field condition is genuinely back to normal (not just assumed), then check whether the alarm requires a manual acknowledge/reset versus being configured to auto-clear.',
+        'A latching alarm configuration requiring manual reset, a stuck/failed input still reporting the alarm condition, or an alarm configured with a deadband that hasn\'t been crossed in the clearing direction can all keep an alarm active.',
+        'Verify the live input value against the alarm\'s clear/deadband setpoint before assuming the alarm system itself is at fault.'],
+      missingalarm:['Expected alarm did not annunciate for a real process condition',
+        'Verify the actual process value crossed the configured alarm setpoint, then check whether the alarm was disabled, shelved, or the point was in a forced/simulated state at the time.',
+        'A disabled alarm, a point in manual/forced simulation, an incorrect setpoint, a suppressed/shelved alarm, or an alarm not actually configured on that point despite expectation can all result in a missed alarm.',
+        'Review the alarm and point configuration, and any shelving/suppression logs, immediately after the event — this needs to be documented as a safety-relevant finding, not just quietly fixed.'],
+      prioritywrong:['Alarm priority/routing doesn\'t match what\'s expected',
+        'Compare the alarm\'s configured priority and routing/destination against the site\'s alarm philosophy or design document.',
+        'A configuration error, an unauthorized/undocumented change, or a default priority never updated after commissioning can leave an alarm at the wrong priority or routed to the wrong operator station/group.',
+        'Correct configuration changes through the site\'s management-of-change process, not directly in the field, since alarm priority is a safety-relevant setting.'],
+      shelved:['Alarm appears to be shelved/suppressed/disabled unexpectedly',
+        'Check the alarm shelving/suppression list and who applied it and when, per the site\'s alarm management system.',
+        'Alarms are commonly shelved during known abnormal conditions or maintenance and then forgotten, or a suppression rule (alarm rationalization logic) is masking it based on another condition that may no longer apply.',
+        'Confirm whether the original reason for shelving/suppression still applies before unshelving, and follow the site\'s alarm management procedure either way.']
+    }
+  },
 };
 
 window.D = D; // exposed for the AI Technician knowledge base
@@ -13061,6 +13283,7 @@ const devices = [
   ['pressure','Pressure transmitter'],
   ['flow','Flow meter'],
   ['controlvalve','Control valve'],
+  ['positioner','Valve Positioner'],
   ['shutdownvalve','Shutdown / ESD valve'],
   ['onoff','Shut-off / On-off valve'],
   ['speedprobe','Speed probe'],
@@ -13110,6 +13333,13 @@ const devices = [
   ['solenoid','Solenoid Valve'],
   ['fusibleloop','Fusible Loop'],
   ['co2panel','CO2 / Clean Agent Release Panel'],
+  // ---- Control system side (PLC / DCS) ----
+  ['iomodule','I/O Module / Channel'],
+  ['fieldnetwork','Field Network / Bus Communication'],
+  ['controllercpu','PLC / DCS Controller (CPU)'],
+  ['controlpower','Control System Power Supply'],
+  ['hmiscada','HMI / SCADA'],
+  ['alarmforce','Alarms & Forces/Overrides'],
 ];
 window.devices = devices; // exposed for the AI Technician knowledge base
 
