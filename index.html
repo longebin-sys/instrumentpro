@@ -1378,7 +1378,7 @@
         }
 
         /* ============================================================
-                   THEME COLORS
+                   THEME COLORS — techy swatch picker
                    ============================================================ */
         .theme-grid {
             display: grid;
@@ -1411,6 +1411,141 @@
         body.dark .theme-option.active {
             border-color: #60a5fa;
             box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+        }
+
+        .theme-swatch-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin: 4px 0 14px 0;
+        }
+        .theme-swatch {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            padding: 12px 4px 10px 4px;
+            border-radius: 18px;
+            border: 1px solid #e9edf3;
+            background: #fbfcfe;
+            cursor: pointer;
+            font: inherit;
+            color: #475569;
+            font-size: 0.62rem;
+            font-weight: 700;
+            overflow: hidden;
+            transition: transform .16s ease, border-color .16s ease, background .16s ease, box-shadow .16s ease;
+        }
+        .theme-swatch::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 50% 0%, var(--sw, #2563eb) 0%, transparent 65%);
+            opacity: 0;
+            transition: opacity .2s ease;
+        }
+        .theme-swatch:active { transform: scale(.94); }
+        .theme-swatch .swatch-ring {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            background: conic-gradient(from 180deg, var(--sw, #2563eb), var(--sw2, #1d4ed8), var(--sw, #2563eb));
+            padding: 3px;
+            transition: box-shadow .2s ease, transform .2s ease;
+        }
+        .theme-swatch .swatch-orb {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: var(--sw, #2563eb);
+            box-shadow: inset 0 2px 4px rgba(255,255,255,.35), inset 0 -3px 6px rgba(0,0,0,.18);
+            display: grid;
+            place-items: center;
+        }
+        .theme-swatch[data-color="#ffffff"] .swatch-orb { box-shadow: inset 0 0 0 1px #d7dee7, inset 0 -3px 6px rgba(0,0,0,.05); }
+        .theme-swatch .swatch-check {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--sw, #2563eb);
+            color: #fff;
+            display: grid;
+            place-items: center;
+            font-size: .5rem;
+            opacity: 0;
+            transform: scale(.4);
+            transition: opacity .18s ease, transform .18s ease;
+            box-shadow: 0 2px 6px rgba(0,0,0,.25);
+        }
+        .theme-swatch .swatch-label { position: relative; letter-spacing: .01em; }
+        .theme-swatch:hover .swatch-ring { transform: scale(1.06); }
+        .theme-swatch.active {
+            border-color: var(--sw, #2563eb);
+            background: #fff;
+            color: #1e293b;
+            box-shadow: 0 6px 18px -6px color-mix(in srgb, var(--sw, #2563eb) 55%, transparent);
+        }
+        .theme-swatch.active::before { opacity: .08; }
+        .theme-swatch.active .swatch-ring {
+            box-shadow: 0 0 0 4px color-mix(in srgb, var(--sw, #2563eb) 22%, transparent), 0 0 16px 2px color-mix(in srgb, var(--sw, #2563eb) 45%, transparent);
+            animation: swatchPulse 1.8s ease-in-out infinite;
+        }
+        .theme-swatch.active .swatch-check { opacity: 1; transform: scale(1); }
+        @keyframes swatchPulse {
+            0%, 100% { box-shadow: 0 0 0 4px color-mix(in srgb, var(--sw, #2563eb) 22%, transparent), 0 0 14px 2px color-mix(in srgb, var(--sw, #2563eb) 40%, transparent); }
+            50% { box-shadow: 0 0 0 6px color-mix(in srgb, var(--sw, #2563eb) 14%, transparent), 0 0 22px 6px color-mix(in srgb, var(--sw, #2563eb) 55%, transparent); }
+        }
+        .theme-swatch-custom { border-style: dashed; }
+        .theme-swatch-custom .custom-orb { background: var(--sw); color: #fff; font-size: .8rem; text-shadow: 0 1px 3px rgba(0,0,0,.35); }
+        .theme-swatch-custom.active { border-style: solid; }
+        .theme-active-preview {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            padding: 10px 13px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, color-mix(in srgb, var(--ui-accent, #2563eb) 10%, #fff), color-mix(in srgb, var(--ui-accent, #2563eb) 4%, #fff));
+            border: 1px solid color-mix(in srgb, var(--ui-accent, #2563eb) 25%, #e5e9f0);
+            font-size: .68rem;
+            font-weight: 700;
+            color: #475569;
+        }
+        .theme-active-preview .tap-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--ui-accent, #2563eb);
+            box-shadow: 0 0 0 3px color-mix(in srgb, var(--ui-accent, #2563eb) 25%, transparent);
+            flex: 0 0 auto;
+        }
+        .theme-active-preview .tap-hex {
+            margin-left: auto;
+            font-family: 'SFMono-Regular', Menlo, Consolas, monospace;
+            font-size: .64rem;
+            letter-spacing: .03em;
+            color: var(--ui-accent, #2563eb);
+            background: #fff;
+            padding: 3px 8px;
+            border-radius: 8px;
+            border: 1px solid color-mix(in srgb, var(--ui-accent, #2563eb) 30%, #e5e9f0);
+        }
+        body.dark .theme-swatch { background: #16202f; border-color: #2c3a4f; color: #94a3b8; }
+        body.dark .theme-swatch.active { background: #1c2a3d; color: #f1f5f9; }
+        body.dark .theme-active-preview {
+            background: linear-gradient(135deg, color-mix(in srgb, var(--ui-accent, #2563eb) 20%, #16202f), color-mix(in srgb, var(--ui-accent, #2563eb) 8%, #16202f));
+            border-color: color-mix(in srgb, var(--ui-accent, #2563eb) 35%, #2c3a4f);
+            color: #cbd5e1;
+        }
+        body.dark .theme-active-preview .tap-hex { background: #0f172a; }
+        @media(max-width:380px){
+            .theme-swatch-grid { grid-template-columns: repeat(3, 1fr); }
         }
 
         /* ============================================================
@@ -2838,26 +2973,26 @@ body.dark #page-home .home-mini-title{color:#e2e8f0}
 <style id="trouble-qa-css">
 #page-trouble{padding-bottom:96px;overflow-x:hidden}
 .trouble-top{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:17px;border-radius:22px;background:linear-gradient(135deg,#0f2744,#2563eb);color:#fff;box-shadow:0 12px 28px rgba(15,39,68,.18)}
-.trouble-kicker{font-size:.55rem;font-weight:900;letter-spacing:.1em;opacity:.72}
-.trouble-title{font-size:1.2rem;font-weight:900;line-height:1.15;margin-top:4px}
-.trouble-sub{font-size:.66rem;opacity:.86;margin-top:5px;line-height:1.4}
+.trouble-kicker{font-size:.72rem;font-weight:900;letter-spacing:.08em;opacity:.8}
+.trouble-title{font-size:1.32rem;font-weight:900;line-height:1.18;margin-top:4px}
+.trouble-sub{font-size:.85rem;opacity:.92;margin-top:5px;line-height:1.5}
 .trouble-top-icon{width:46px;height:46px;flex:0 0 46px;border-radius:15px;background:rgba(255,255,255,.12);display:grid;place-items:center}
-.trouble-start{width:100%;margin-top:9px;border:0;border-radius:16px;padding:13px 14px;background:#fff;color:#1d4ed8;box-shadow:0 7px 18px rgba(15,23,42,.08);display:flex;align-items:center;justify-content:space-between;font-weight:850;font-size:.67rem}
+.trouble-start{width:100%;margin-top:9px;border:0;border-radius:16px;padding:13px 14px;background:#fff;color:#1d4ed8;box-shadow:0 7px 18px rgba(15,23,42,.08);display:flex;align-items:center;justify-content:space-between;font-weight:850;font-size:.86rem}
 .trouble-workflow-note{display:flex;align-items:center;gap:10px;margin-top:10px;padding:11px 13px;border:1px solid #dbeafe;background:#f8fbff;border-radius:16px;color:#334155}
-.trouble-workflow-note>i{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:#eff6ff;color:#2563eb;font-size:.8rem;flex:0 0 30px}
-.trouble-workflow-note strong{display:block;font-size:.66rem;font-weight:900;color:#1e3a5f}
-.trouble-workflow-note span{display:block;margin-top:2px;font-size:.57rem;color:#64748b}
+.trouble-workflow-note>i{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:#eff6ff;color:#2563eb;font-size:.9rem;flex:0 0 30px}
+.trouble-workflow-note strong{display:block;font-size:.85rem;font-weight:900;color:#1e3a5f}
+.trouble-workflow-note span{display:block;margin-top:2px;font-size:.76rem;color:#64748b;line-height:1.4}
 .trouble-modal{display:none;position:fixed;inset:0;z-index:10000;align-items:flex-end;justify-content:center}
 .trouble-modal.open{display:flex}
 .trouble-backdrop{position:absolute;inset:0;background:rgba(2,8,23,.62);backdrop-filter:blur(4px)}
 .trouble-dialog{position:relative;z-index:1;width:min(560px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:24px 24px 0 0;padding:15px;box-shadow:0 -15px 45px rgba(0,0,0,.22);animation:troubleUp .18s ease-out}
 @keyframes troubleUp{from{transform:translateY(25px);opacity:.5}to{transform:none;opacity:1}}
-.trouble-dialog-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.trouble-dialog-title{font-size:.94rem;font-weight:900;color:#1e293b;margin-top:3px}
+.trouble-dialog-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.trouble-dialog-title{font-size:1.18rem;font-weight:900;color:#1e293b;margin-top:3px}
 .trouble-close{border:0;background:#f1f5f9;width:34px;height:34px;border-radius:11px;color:#475569}
 .trouble-progress{display:flex;gap:5px;margin:13px 0 10px}.trouble-progress span{height:4px;flex:1;border-radius:9px;background:#e2e8f0}.trouble-progress span.active{background:#2563eb}
-.trouble-step{font-size:.55rem;font-weight:850;color:#2563eb;text-transform:uppercase}.trouble-question{font-size:.92rem;font-weight:900;color:#1e293b;line-height:1.25;margin:5px 0 12px}
-.trouble-options{display:grid;grid-template-columns:1fr 1fr;gap:7px}.trouble-options button{text-align:left;min-width:0;border:1px solid #e2e8f0;background:#f8fafc;border-radius:14px;padding:11px;font-size:.62rem;font-weight:750;color:#334155;overflow-wrap:anywhere}.trouble-options button.selected{border-color:#2563eb;background:#eff6ff;color:#1d4ed8;box-shadow:inset 0 0 0 1px #2563eb}
-.trouble-result{display:none;margin-top:10px}.trouble-result.show{display:block}.trouble-result-tag{font-size:.55rem;font-weight:900;color:#2563eb;letter-spacing:.06em}.trouble-result-title{font-size:.86rem;font-weight:900;color:#1e3a8a;margin:5px 0 8px}.trouble-result-grid{display:grid;grid-template-columns:1fr;gap:7px}.trouble-result-grid>div{padding:9px;border:1px solid #e2e8f0;border-radius:13px;background:#f8fafc}.trouble-result-grid b{font-size:.58rem;color:#334155}.trouble-result-grid p{font-size:.57rem;line-height:1.45;color:#64748b;margin:4px 0 0}.trouble-safety{display:flex;gap:7px;margin-top:8px;padding:9px;border-radius:12px;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;font-size:.55rem;line-height:1.4}.trouble-footer{display:grid;grid-template-columns:auto 1fr;gap:7px;margin-top:11px}.trouble-footer .trouble-next{width:100%;justify-content:center}.trouble-footer .btn-outline{min-height:40px}.trouble-footer .btn{min-height:40px}
+.trouble-step{font-size:.74rem;font-weight:850;color:#2563eb;text-transform:uppercase;letter-spacing:.04em}.trouble-question{font-size:1.14rem;font-weight:900;color:#1e293b;line-height:1.32;margin:6px 0 14px}
+.trouble-options{display:grid;grid-template-columns:1fr 1fr;gap:8px}.trouble-options button{text-align:left;min-width:0;border:1px solid #e2e8f0;background:#f8fafc;border-radius:14px;padding:12px;font-size:.84rem;line-height:1.35;font-weight:750;color:#334155;overflow-wrap:anywhere}.trouble-options button.selected{border-color:#2563eb;background:#eff6ff;color:#1d4ed8;box-shadow:inset 0 0 0 1px #2563eb}
+.trouble-result{display:none;margin-top:10px}.trouble-result.show{display:block}.trouble-result-tag{font-size:.72rem;font-weight:900;color:#2563eb;letter-spacing:.05em}.trouble-result-title{font-size:1.12rem;font-weight:900;color:#1e3a8a;margin:6px 0 10px;line-height:1.3}.trouble-result-grid{display:grid;grid-template-columns:1fr;gap:8px}.trouble-result-grid>div{padding:11px;border:1px solid #e2e8f0;border-radius:13px;background:#f8fafc}.trouble-result-grid b{font-size:.82rem;color:#334155}.trouble-result-grid p{font-size:.84rem;line-height:1.55;color:#475569;margin:5px 0 0}.trouble-safety{display:flex;gap:8px;margin-top:9px;padding:11px;border-radius:12px;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;font-size:.8rem;line-height:1.5}.trouble-footer{display:grid;grid-template-columns:auto 1fr;gap:7px;margin-top:11px}.trouble-footer .trouble-next{width:100%;justify-content:center}.trouble-footer .btn-outline{min-height:44px;font-size:.88rem}.trouble-footer .btn{min-height:44px;font-size:.88rem}
 body.dark .trouble-dialog{background:#111827}body.dark .trouble-dialog-title,body.dark .trouble-question{color:#f8fafc}body.dark .trouble-options button{background:#1e293b;border-color:#334155;color:#cbd5e1}body.dark .trouble-result-grid>div{background:#1e293b;border-color:#334155}body.dark .trouble-result-grid b{color:#e2e8f0}
 @media(max-width:390px){.trouble-options{grid-template-columns:1fr}.trouble-dialog{padding:13px;border-radius:22px 22px 0 0}.trouble-top{padding:14px}.trouble-top-icon{display:none}}
 </style>
@@ -6794,20 +6929,34 @@ body.dark #page-references .chip {
 </details>
 <div class="card">
 <div class="card-header"><i class="fas fa-palette"></i><h3>Theme Color</h3></div>
-<div class="theme-grid" id="themeColorGrid">
-<div class="theme-option" data-color="#ffffff"><span class="color-dot" style="background:#ffffff;border:1px solid #cbd5e1;"></span>White</div>
-<div class="theme-option" data-color="#1e3a5f"><span class="color-dot" style="background:#1e3a5f;"></span>Navy</div>
-<div class="theme-option" data-color="#2563eb"><span class="color-dot" style="background:#2563eb;"></span>Blue</div>
-<div class="theme-option" data-color="#7c3aed"><span class="color-dot" style="background:#7c3aed;"></span>Purple</div>
-<div class="theme-option" data-color="#059669"><span class="color-dot" style="background:#059669;"></span>Green</div>
-<div class="theme-option" data-color="#b45309"><span class="color-dot" style="background:#b45309;"></span>Orange</div>
-<div class="theme-option" data-color="#dc2626"><span class="color-dot" style="background:#dc2626;"></span>Red</div>
-<div class="theme-option" data-color="#8b5cf6"><span class="color-dot" style="background:#8b5cf6;"></span>Violet</div>
-<div class="theme-option" data-color="#d97706"><span class="color-dot" style="background:#d97706;"></span>Gold</div>
-<div class="theme-option" data-color="#0d9488"><span class="color-dot" style="background:#0d9488;"></span>Teal</div>
-<div class="theme-option" data-color="#db2777"><span class="color-dot" style="background:#db2777;"></span>Rose</div>
-<div class="theme-option" data-color="#4f46e5"><span class="color-dot" style="background:#4f46e5;"></span>Indigo</div>
-<div class="theme-option" data-color="#65a30d"><span class="color-dot" style="background:#65a30d;"></span>Lime</div>
+<div style="font-size:0.68rem;color:#64748b;margin-bottom:10px;">Pick an accent — it updates buttons, highlights, tabs and charts across the whole app.</div>
+<div class="theme-swatch-grid" id="themeColorGrid">
+<button class="theme-swatch" data-color="#ffffff" style="--sw:#f8fafc;--sw2:#e2e8f0;" type="button"><span class="swatch-ring"><span class="swatch-orb"></span></span><span class="swatch-check"><i class="fas fa-check"></i></span><span class="swatch-label">White</span></button>
+<button class="theme-swatch" data-color="#1e3a5f" style="--sw:#1e3a5f;--sw2:#0f2744;" type="button"><span class="swatch-ring"><span class="swatch-orb"></span></span><span class="swatch-check"><i class="fas fa-check"></i></span><span class="swatch-label">Navy</span></button>
+<button class="theme-swatch" data-color="#2563eb" style="--sw:#2563eb;--sw2:#1d4ed8;" type="button"><span class="swatch-ring"><span class="swatch-orb"></span></span><span class="swatch-check"><i class="fas fa-check"></i></span><span class="swatch-label">Blue</span></button>
+<button class="theme-swatch" data-color="#7c3aed" style="--sw:#7c3aed;--sw2:#5b21b6;" type="button"><span class="swatch-ring"><span class="swatch-orb"></span></span><span class="swatch-check"><i class="fas fa-check"></i></span><span class="swatch-label">Purple</span></button>
+<button class="theme-swatch" data-color="#059669" style="--sw:#059669;--sw2:#047857;" type="button"><span class="swatch-ring"><span class="swatch-orb"></span></span><span class="swatch-check"><i class="fas fa-check"></i></span><span class="swatch-label">Green</span></button>
+<button class="theme-swatch" data-color="#b45309" style="--sw:#b45309;--sw2:#92400e;" type="button"><span class="swatch-ring"><span class="swatch-orb"></span></span><span class="swatch-check"><i class="fas fa-check"></i></span><span class="swatch-label">Orange</span></button>
+<button class="theme-swatch" data-color="#dc2626" style="--sw:#dc2626;--sw2:#991b1b;" type="button"><span class="swatch-ring"><span class="swatch-orb"></span></span><span class="swatch-check"><i class="fas fa-check"></i></span><span class="swatch-label">Red</span></button>
+<button class="theme-swatch" data-color="#8b5cf6" style="--sw:#8b5cf6;--sw2:#6d28d9;" type="button"><span class="swatch-ring"><span class="swatch-orb"></span></span><span class="swatch-check"><i class="fas fa-check"></i></span><span class="swatch-label">Violet</span></button>
+<button class="theme-swatch" data-color="#d97706" style="--sw:#d97706;--sw2:#b45309;" type="button"><span class="swatch-ring"><span class="swatch-orb"></span></span><span class="swatch-check"><i class="fas fa-check"></i></span><span class="swatch-label">Gold</span></button>
+<button class="theme-swatch" data-color="#0d9488" style="--sw:#0d9488;--sw2:#0f766e;" type="button"><span class="swatch-ring"><span class="swatch-orb"></span></span><span class="swatch-check"><i class="fas fa-check"></i></span><span class="swatch-label">Teal</span></button>
+<button class="theme-swatch" data-color="#db2777" style="--sw:#db2777;--sw2:#9d174d;" type="button"><span class="swatch-ring"><span class="swatch-orb"></span></span><span class="swatch-check"><i class="fas fa-check"></i></span><span class="swatch-label">Rose</span></button>
+<button class="theme-swatch" data-color="#4f46e5" style="--sw:#4f46e5;--sw2:#3730a3;" type="button"><span class="swatch-ring"><span class="swatch-orb"></span></span><span class="swatch-check"><i class="fas fa-check"></i></span><span class="swatch-label">Indigo</span></button>
+<button class="theme-swatch" data-color="#65a30d" style="--sw:#65a30d;--sw2:#3f6212;" type="button"><span class="swatch-ring"><span class="swatch-orb"></span></span><span class="swatch-check"><i class="fas fa-check"></i></span><span class="swatch-label">Lime</span></button>
+<button class="theme-swatch" data-color="#06b6d4" style="--sw:#06b6d4;--sw2:#0e7490;" type="button"><span class="swatch-ring"><span class="swatch-orb"></span></span><span class="swatch-check"><i class="fas fa-check"></i></span><span class="swatch-label">Cyan</span></button>
+<button class="theme-swatch" data-color="#f43f5e" style="--sw:#f43f5e;--sw2:#be123c;" type="button"><span class="swatch-ring"><span class="swatch-orb"></span></span><span class="swatch-check"><i class="fas fa-check"></i></span><span class="swatch-label">Crimson</span></button>
+<label class="theme-swatch theme-swatch-custom" id="themeCustomSwatch" style="--sw:conic-gradient(from 180deg,#f43f5e,#f59e0b,#84cc16,#10b981,#06b6d4,#3b82f6,#8b5cf6,#f43f5e);">
+<span class="swatch-ring"><span class="swatch-orb custom-orb"><i class="fas fa-eye-dropper"></i></span></span>
+<span class="swatch-check"><i class="fas fa-check"></i></span>
+<span class="swatch-label">Custom</span>
+<input id="themeCustomInput" style="position:absolute;inset:0;opacity:0;cursor:pointer;" type="color"/>
+</label>
+</div>
+<div class="theme-active-preview" id="themeActivePreview">
+<span class="tap-dot" id="themeActiveDot"></span>
+<span id="themeActiveLabel">Active accent</span>
+<span class="tap-hex" id="themeActiveHex">#2563EB</span>
 </div>
 </div>
 <div class="card">
@@ -7010,9 +7159,21 @@ body.dark #page-references .chip {
             const savedColor = getStorage('themeColor', '#ffffff');
 
             function applyThemeColor(color) {
-                document.querySelectorAll('.theme-option').forEach(el => {
+                document.querySelectorAll('.theme-swatch').forEach(el => {
                     el.classList.toggle('active', el.dataset.color === color);
                 });
+                const customSwatch = document.getElementById('themeCustomSwatch');
+                const customInput = document.getElementById('themeCustomInput');
+                const isKnownPreset = Array.from(document.querySelectorAll('.theme-swatch[data-color]')).some(el => el.dataset.color === color);
+                if (customSwatch) {
+                    const isCustom = !isKnownPreset;
+                    customSwatch.classList.toggle('active', isCustom);
+                    if (isCustom) {
+                        customSwatch.style.setProperty('--sw', color);
+                        customSwatch.style.setProperty('--sw2', adjustColor(color, -25));
+                    }
+                }
+                if (customInput && color.toLowerCase() !== '#ffffff') customInput.value = color;
                 const isWhite = color.toLowerCase() === '#ffffff';
                 document.body.classList.toggle('theme-light', isWhite);
                 const greeting = document.querySelector('.greeting');
@@ -7036,6 +7197,15 @@ body.dark #page-references .chip {
                 document.documentElement.style.setProperty('--primary', isWhite ? '#2563eb' : color);
                 document.documentElement.style.setProperty('--primary-2', isWhite ? '#1d4ed8' : adjustColor(color, -25));
                 document.documentElement.style.setProperty('--accent', isWhite ? '#7c3aed' : adjustColor(color, 35));
+                const activeDot = document.getElementById('themeActiveDot');
+                const activeLabel = document.getElementById('themeActiveLabel');
+                const activeHex = document.getElementById('themeActiveHex');
+                if (activeDot) activeDot.style.background = isWhite ? '#2563eb' : color;
+                if (activeLabel) {
+                    const activeSwatch = document.querySelector('.theme-swatch.active .swatch-label');
+                    activeLabel.textContent = activeSwatch ? activeSwatch.textContent + ' active' : 'Custom accent active';
+                }
+                if (activeHex) activeHex.textContent = (isWhite ? '#2563EB' : color).toUpperCase();
                 setStorage('themeColor', color);
             }
 
@@ -7049,12 +7219,18 @@ body.dark #page-references .chip {
                 return '#' + [r, g, b].map(c => c.toString(16).padStart(2, '0')).join('');
             }
 
-            document.querySelectorAll('.theme-option').forEach(el => {
+            document.querySelectorAll('.theme-swatch[data-color]').forEach(el => {
                 el.addEventListener('click', function() {
                     applyThemeColor(this.dataset.color);
                 });
                 if (el.dataset.color === savedColor) el.classList.add('active');
             });
+            const themeCustomInput = document.getElementById('themeCustomInput');
+            if (themeCustomInput) {
+                themeCustomInput.addEventListener('input', function() {
+                    applyThemeColor(this.value);
+                });
+            }
             applyThemeColor(savedColor);
 
             // =============================================================
@@ -12248,7 +12424,458 @@ const D = {
         'A control-panel power or display fault can occur independently of the engine and alternator.',
         'Confirm the controller remains powered and inspect the display/module connection before troubleshooting engine performance.']
     }
-  }
+  },
+
+  pressuregauge: {
+    n:'Pressure Gauge',
+    s:{
+      low:['Gauge reads low','Compare the gauge with a certified test gauge/dead-weight tester at the same connection point.','A damaged Bourdon tube/diaphragm, blocked connection, or a genuine low process pressure can cause a low reading.','If the reference confirms the gauge is inaccurate, replace or recalibrate it; do not adjust a damaged mechanical gauge in the field.'],
+      high:['Gauge reads high','Compare the gauge with a certified test gauge/dead-weight tester at the same connection point.','Trapped pressure, a damaged movement, or a genuine high process pressure can cause a high reading.','Confirm actual pressure independently before assuming the gauge has failed or the process is faulty.'],
+      erratic:['Gauge pointer flutters or sticks','Tap the gauge lightly (where permitted) and observe whether the pointer moves freely across its full range.','A worn movement, dry/seized bearing, pulsating process pressure or debris inside the case can cause a sticking or fluttering pointer.','If pulsation is suspected, verify with a snubber/restrictor per the approved procedure before replacing the gauge.'],
+      zero:['Gauge zero has shifted','With the gauge isolated and vented to atmosphere, confirm the pointer reads zero.','Overpressure events, mechanical shock or normal ageing of the movement can shift the zero point.','If zero is off and non-adjustable, replace the gauge; do not force the pointer to zero on a damaged movement.'],
+      leak:['Liquid-filled gauge is leaking or fogged','Inspect the case, lens and fill-fluid level for leakage, cracking or condensation/fogging.','A damaged case seal, cracked lens or fill-fluid loss can allow leakage or moisture ingress that obscures the dial.','Replace a leaking or fogged gauge; a compromised case can no longer be relied on for an accurate reading.']
+    }
+  },
+
+  pressureswitch: {
+    n:'Pressure Switch',
+    s:{
+      notrip:['Pressure switch does not trip at setpoint','Apply a traceable test source and slowly approach the set point while watching the contact/output state.','A drifted or incorrectly set set point, a stuck/worn switch mechanism, or a wiring/output fault can prevent the contact from changing state.','If the contact does not change within the expected tolerance, confirm the applied test value with a calibrated reference before adjusting or replacing the switch.'],
+      falsetrip:['Pressure switch trips prematurely or nuisance-trips','Compare the actual pressure condition at the moment of trip with the configured set point and check for vibration, surges or electrical noise.','An incorrect set point, mechanical wear, loose wiring, vibration or a genuine process upset can all cause an early or nuisance trip.','Rule out a real process excursion first, then check the mechanism and wiring before changing the set point.'],
+      chatter:['Pressure switch contact chatters near the set point','Trend the process near the switch point and observe whether the contact opens/closes repeatedly.','A process that hovers close to the set point, insufficient deadband, or a worn contact/mechanism can cause chatter.','Confirm actual process behaviour independently, then check deadband configuration and mechanical condition before replacing the switch.'],
+      stuck:['Pressure switch contact is stuck in one state','Manually operate or apply a full-range test signal and confirm whether the output ever changes state.','Contact welding, mechanical seizure, corrosion or an internal component failure can leave the switch stuck.','If a full-range test signal produces no change, isolate and replace the switch under the approved procedure.'],
+      driftsp:['Pressure switch set point appears to have drifted','Test the switch at its configured set point against a certified reference and record the actual trip value.','Mechanical wear, temperature effects or an out-of-calibration switch can shift the actual trip point from the configured value.','If the trip value is outside tolerance, recalibrate or replace the switch under the approved procedure and document the as-found/as-left values.']
+    }
+  },
+
+  dpswitch: {
+    n:'Differential Pressure Switch',
+    s:{
+      notrip:['Differential pressure switch does not trip at setpoint','Apply a traceable test source and slowly approach the set point while watching the contact/output state.','A drifted or incorrectly set set point, a stuck/worn switch mechanism, or a wiring/output fault can prevent the contact from changing state.','If the contact does not change within the expected tolerance, confirm the applied test value with a calibrated reference before adjusting or replacing the switch.'],
+      falsetrip:['Differential pressure switch trips prematurely or nuisance-trips','Compare the actual differential pressure condition at the moment of trip with the configured set point and check for vibration, surges or electrical noise.','An incorrect set point, mechanical wear, loose wiring, vibration or a genuine process upset can all cause an early or nuisance trip.','Rule out a real process excursion first, then check the mechanism and wiring before changing the set point.'],
+      chatter:['Differential pressure switch contact chatters near the set point','Trend the process near the switch point and observe whether the contact opens/closes repeatedly.','A process that hovers close to the set point, insufficient deadband, or a worn contact/mechanism can cause chatter.','Confirm actual process behaviour independently, then check deadband configuration and mechanical condition before replacing the switch.'],
+      stuck:['Differential pressure switch contact is stuck in one state','Manually operate or apply a full-range test signal and confirm whether the output ever changes state.','Contact welding, mechanical seizure, corrosion or an internal component failure can leave the switch stuck.','If a full-range test signal produces no change, isolate and replace the switch under the approved procedure.'],
+      driftsp:['Differential pressure switch set point appears to have drifted','Test the switch at its configured set point against a certified reference and record the actual trip value.','Mechanical wear, temperature effects or an out-of-calibration switch can shift the actual trip point from the configured value.','If the trip value is outside tolerance, recalibrate or replace the switch under the approved procedure and document the as-found/as-left values.']
+    }
+  },
+
+  tempswitch: {
+    n:'Temperature Switch',
+    s:{
+      notrip:['Temperature switch does not trip at setpoint','Apply a traceable test source and slowly approach the set point while watching the contact/output state.','A drifted or incorrectly set set point, a stuck/worn switch mechanism, or a wiring/output fault can prevent the contact from changing state.','If the contact does not change within the expected tolerance, confirm the applied test value with a calibrated reference before adjusting or replacing the switch.'],
+      falsetrip:['Temperature switch trips prematurely or nuisance-trips','Compare the actual temperature condition at the moment of trip with the configured set point and check for vibration, surges or electrical noise.','An incorrect set point, mechanical wear, loose wiring, vibration or a genuine process upset can all cause an early or nuisance trip.','Rule out a real process excursion first, then check the mechanism and wiring before changing the set point.'],
+      chatter:['Temperature switch contact chatters near the set point','Trend the process near the switch point and observe whether the contact opens/closes repeatedly.','A process that hovers close to the set point, insufficient deadband, or a worn contact/mechanism can cause chatter.','Confirm actual process behaviour independently, then check deadband configuration and mechanical condition before replacing the switch.'],
+      stuck:['Temperature switch contact is stuck in one state','Manually operate or apply a full-range test signal and confirm whether the output ever changes state.','Contact welding, mechanical seizure, corrosion or an internal component failure can leave the switch stuck.','If a full-range test signal produces no change, isolate and replace the switch under the approved procedure.'],
+      driftsp:['Temperature switch set point appears to have drifted','Test the switch at its configured set point against a certified reference and record the actual trip value.','Mechanical wear, temperature effects or an out-of-calibration switch can shift the actual trip point from the configured value.','If the trip value is outside tolerance, recalibrate or replace the switch under the approved procedure and document the as-found/as-left values.']
+    }
+  },
+
+  levelswitch: {
+    n:'Level Switch',
+    s:{
+      notrip:['Level switch does not trip at setpoint','Apply a traceable test source and slowly approach the set point while watching the contact/output state.','A drifted or incorrectly set trip level, a stuck/worn switch mechanism, or a wiring/output fault can prevent the contact from changing state.','If the contact does not change within the expected tolerance, confirm the applied test value with a calibrated reference before adjusting or replacing the switch.'],
+      falsetrip:['Level switch trips prematurely or nuisance-trips','Compare the actual level condition at the moment of trip with the configured trip level and check for vibration, surges or electrical noise.','An incorrect trip level, mechanical wear, loose wiring, vibration or a genuine process upset can all cause an early or nuisance trip.','Rule out a real process excursion first, then check the mechanism and wiring before changing the trip level.'],
+      chatter:['Level switch contact chatters near the set point','Trend the process near the switch point and observe whether the contact opens/closes repeatedly.','A process that hovers close to the trip level, insufficient deadband, or a worn contact/mechanism can cause chatter.','Confirm actual process behaviour independently, then check deadband configuration and mechanical condition before replacing the switch.'],
+      stuck:['Level switch contact is stuck in one state','Manually operate or apply a full-range test signal and confirm whether the output ever changes state.','Contact welding, mechanical seizure, corrosion or an internal component failure can leave the switch stuck.','If a full-range test signal produces no change, isolate and replace the switch under the approved procedure.'],
+      driftsp:['Level switch set point appears to have drifted','Test the switch at its configured trip level against a certified reference and record the actual trip value.','Mechanical wear, temperature effects or an out-of-calibration switch can shift the actual trip point from the configured value.','If the trip value is outside tolerance, recalibrate or replace the switch under the approved procedure and document the as-found/as-left values.']
+    }
+  },
+
+  limitswitch: {
+    n:'Limit Switch',
+    s:{
+      notrip:['Limit switch does not trip at setpoint','Apply a traceable test source and slowly approach the set point while watching the contact/output state.','A drifted or incorrectly set trip point, a stuck/worn switch mechanism, or a wiring/output fault can prevent the contact from changing state.','If the contact does not change within the expected tolerance, confirm the applied test value with a calibrated reference before adjusting or replacing the switch.'],
+      falsetrip:['Limit switch trips prematurely or nuisance-trips','Compare the actual travel position condition at the moment of trip with the configured trip point and check for vibration, surges or electrical noise.','An incorrect trip point, mechanical wear, loose wiring, vibration or a genuine process upset can all cause an early or nuisance trip.','Rule out a real process excursion first, then check the mechanism and wiring before changing the trip point.'],
+      chatter:['Limit switch contact chatters near the set point','Trend the process near the switch point and observe whether the contact opens/closes repeatedly.','A process that hovers close to the trip point, insufficient deadband, or a worn contact/mechanism can cause chatter.','Confirm actual process behaviour independently, then check deadband configuration and mechanical condition before replacing the switch.'],
+      stuck:['Limit switch contact is stuck in one state','Manually operate or apply a full-range test signal and confirm whether the output ever changes state.','Contact welding, mechanical seizure, corrosion or an internal component failure can leave the switch stuck.','If a full-range test signal produces no change, isolate and replace the switch under the approved procedure.'],
+      driftsp:['Limit switch set point appears to have drifted','Test the switch at its configured trip point against a certified reference and record the actual trip value.','Mechanical wear, temperature effects or an out-of-calibration switch can shift the actual trip point from the configured value.','If the trip value is outside tolerance, recalibrate or replace the switch under the approved procedure and document the as-found/as-left values.']
+    }
+  },
+
+  proximity: {
+    n:'Proximity Sensor',
+    s:{
+      notrip:['Proximity sensor does not detect the target','Present the correct target at the rated sensing distance and check the sensor output/LED indication.','Excessive sensing gap, misalignment, target material mismatch, or a wiring/output fault can prevent detection.','Confirm target distance/alignment against the datasheet before assuming the sensor has failed.'],
+      falsetrip:['Proximity sensor triggers with no target present','Check for nearby metallic/ferrous objects, electrical noise or moisture, and confirm the sensing face is clean.','Interference from nearby metal, contamination on the sensing face, electrical noise or a failing sensor can cause false triggering.','Remove interference sources and clean the sensing face before replacing the sensor.'],
+      intermittent:['Proximity sensor output is intermittent','Trend the output while gently checking cable/connector movement and mounting security.','A loose connector, damaged cable, vibration-loosened mounting or marginal sensing gap can cause an intermittent signal.','Secure mounting and wiring first, then re-check sensing gap before replacing the sensor.'],
+      comm:['No signal from proximity sensor','Verify supply voltage at the sensor and continuity of the output wiring to the input card.','Loss of supply, a broken cable, blown fuse or failed input channel can remove the signal.','Confirm supply and wiring are healthy before replacing the sensor.']
+    }
+  },
+
+  rotameter: {
+    n:'Rotameter (Local Flow Indicator)',
+    s:{
+      low:['Rotameter reads low','Verify actual flow independently and check the float, tube and inlet/outlet connections for restriction.','A dirty/scratched tube, sticking or coated float, or a partially blocked line can make the indicated flow read low.','If independent flow is correct, inspect and clean the tube/float before assuming a real process problem.'],
+      high:['Rotameter reads high','Verify actual flow independently and confirm the fluid density/viscosity matches the rotameter\'s calibrated service.','An incorrect fluid density/viscosity assumption, wrong scale for the service, or float damage can make the indicated flow read high.','Confirm the correct scale/float is fitted for the actual service before adjusting anything.'],
+      stuck:['Float is stuck or does not respond to flow changes','Isolate per the approved procedure and inspect the tube bore and float for coating, debris or damage.','Scale buildup, debris, a damaged float or a scratched/dirty tube can cause the float to stick.','Clean the tube and float, or replace if damaged, then re-verify indication against a known flow before returning to service.'],
+      erratic:['Float bounces or reading is unstable','Check for pulsating flow, entrained gas/bubbles, or an undersized/oversized tube for the actual flow rate.','Pulsating flow, two-phase flow (gas in liquid) or an incorrectly sized rotameter for the service can cause an unstable float.','Confirm the flow is single-phase and steady, and the rotameter is correctly sized, before concluding the device has failed.']
+    }
+  },
+
+  loadcell: {
+    n:'Load Cell',
+    s:{
+      low:['Load cell reads low','Compare the indicated weight/force with a certified test weight or independent reference.','Mechanical binding, debris under the load cell, cable damage or a genuine load change can cause a low reading.','If the reference confirms an error, inspect the mechanical mounting and cabling before recalibrating.'],
+      high:['Load cell reads high','Compare the indicated weight/force with a certified test weight or independent reference.','A shifted mechanical mount, side-loading, temperature effects or electrical interference can cause a high reading.','Confirm nothing is fouling or side-loading the cell before recalibrating.'],
+      drift:['Load cell reading drifts','Apply a stable, known reference load and monitor the reading over time.','Temperature effects, creep, cable/connection problems or a damaged sensing element can cause drift.','If drift continues under a stable known load, inspect wiring/connections and consider load cell replacement.'],
+      noisy:['Load cell signal is noisy','Check cable shielding/grounding and look for nearby sources of electrical or mechanical vibration/noise.','Poor grounding, damaged cable shielding, nearby VFD/motor noise or mechanical vibration can introduce signal noise.','Improve grounding/shielding and isolate mechanical vibration sources before suspecting the load cell itself.'],
+      comm:['No signal from load cell','Verify excitation voltage at the cell and continuity of the signal wiring to the indicator/transmitter.','Loss of excitation power, a broken/shorted cable or a failed summing junction box can remove the signal.','Confirm excitation voltage and wiring continuity before replacing the load cell.']
+    }
+  },
+
+  temptx: {
+    n:'Temperature Transmitter',
+    s:{
+      low:['Temperature reads low','Compare the transmitter with a certified reference sensor at the same measurement point.','A degraded sensor (RTD/thermocouple), poor thermowell contact, wiring resistance error or incorrect configuration can cause a low reading.','If the reference disagrees, check sensor condition and wiring before adjusting calibration.'],
+      high:['Temperature reads high','Compare the transmitter with a certified reference sensor at the same measurement point.','Sensor degradation, incorrect sensor type/range configuration, or a genuine process condition can cause a high reading.','Confirm the actual process temperature independently before recalibrating.'],
+      erratic:['Temperature reading is unstable','Check sensor wiring connections, thermowell fit and for electrical interference near the signal wiring.','A loose sensor connection, poor thermowell contact, damaged sensor element or electrical noise can cause instability.','Secure and inspect wiring/thermowell fit before recalibrating the transmitter.'],
+      drift:['Temperature reading drifts','Compare against a certified reference over time while the process is held as steady as practical.','Sensor ageing/degradation (especially thermocouples), moisture ingress at the connection head, or configuration drift can appear as drift.','If the reference is stable while the transmitter moves, inspect the sensor and connection head before recalibrating.'],
+      comm:['No communication with temperature transmitter','Verify loop power and the physical communication wiring before checking software settings.','Loss of loop power, incorrect wiring/load, addressing or a failed communication interface can prevent HART/digital communication.','Confirm the loop is powered and correctly wired, then retry using the correct address/protocol.']
+    }
+  },
+
+  bearingtemp: {
+    n:'Bearing Temperature Sensor',
+    s:{
+      low:['Bearing temperature reads low','Compare with a handheld reference thermometer at the same accessible location where possible.','A poorly seated RTD, wiring resistance error, or a sensor not making good thermal contact can cause a low reading.','If the reference disagrees, check sensor seating/contact and wiring before recalibration.'],
+      high:['Bearing temperature reads high or trips','Verify with an independent reference and check actual bearing condition (lubrication, load, vibration) before assuming a sensor fault.','A genuine bearing problem (lubrication, wear, misalignment) or a sensor/wiring fault can both cause a high reading.','Treat a high bearing temperature as a real condition until proven otherwise; do not bypass the protection to keep running.'],
+      erratic:['Bearing temperature reading is unstable','Check sensor wiring connections and routing near power cables or rotating equipment.','A loose connection, damaged sensor element or electrical noise from nearby equipment can cause instability.','Secure wiring and check routing/shielding before assuming the sensor has failed.'],
+      comm:['No signal from bearing temperature sensor','Verify power/excitation and continuity of the wiring to the monitoring system.','A broken/shorted cable, failed sensor element or loss of power to the monitoring channel can remove the signal.','Confirm wiring continuity and power before replacing the sensor.']
+    }
+  },
+
+  ebdvalve: {
+    n:'Emergency Blow Down Valve',
+    s:{
+      notopen:['Emergency blowdown valve fails to open/actuate on demand','Use the approved isolation/permit procedure. Verify actuating supply (air/hydraulic/electric) and the solenoid/pilot signal reach the valve before assuming a mechanical failure.','Loss of actuating supply, a failed solenoid/pilot, linkage seizure or mechanical obstruction can prevent the valve from actuating.','Confirm supply and the pilot/solenoid signal are present at the valve, then inspect the mechanism under the approved test procedure.'],
+      notclose:['Emergency blowdown valve fails to close/reseat or passes when closed','Use the approved isolation/permit procedure. With the valve commanded closed, check for through-seat leakage using the approved test method and confirm actuator supply is removed/vented correctly.','Seat wear/damage, debris on the seat, actuator venting problems or linkage wear can prevent a tight shutoff.','Confirm actual seat leakage against the acceptance criteria before deciding on seat lapping, repair or replacement.'],
+      slow:['Emergency blowdown valve is slow to actuate','Use the approved isolation/permit procedure. Measure actuation/stroke time and compare with the approved baseline.','Restricted actuating supply, a partially blocked solenoid/pilot, low pressure or mechanical friction can slow the stroke.','Verify supply pressure/flow at the valve and check the solenoid/pilot response before adjusting speed controls.'],
+      nofeedback:['Emergency blowdown valve has no position feedback/indication','Compare actual physical valve position with the indicated/reported position.','A failed or misadjusted limit switch/position sensor, broken linkage or wiring fault can remove correct indication without the valve itself being faulty.','Confirm actual position independently, then inspect the feedback device and wiring before replacing the valve.'],
+      leak:['Emergency blowdown valve shows external or body leakage','Use the approved isolation/permit procedure. Visually inspect the body, bonnet, packing and connections for leakage while the valve is in a safe, de-pressurised state where possible.','Packing wear, gasket failure, a cracked body/bonnet or a loose connection can produce external leakage.','Isolate under the approved procedure and confirm the source of leakage before tightening, repacking or repairing the valve.']
+    }
+  },
+
+  psv: {
+    n:'Pressure Safety Valve (PSV) / Relief Valve',
+    s:{
+      setpoint:['PSV set pressure appears incorrect','This must only be verified on an approved test bench/rig under the site PSV testing procedure; do not test in service.','Spring set/fatigue, corrosion/deposits on the seat or disc, or an incorrect nameplate/setting can cause an incorrect set pressure.','Confirm as-found set pressure on the approved test rig and document against the nameplate before any adjustment.'],
+      leak:['PSV is simmering or leaking below set pressure','Check for audible leakage or downstream tell-tale/discharge indication at normal operating pressure.','Seat damage, debris on the seat, corrosion or a set pressure too close to operating pressure can cause simmering/leakage.','Confirm via the tell-tale or approved inspection method before scheduling removal for bench testing.'],
+      notlift:['PSV fails to lift / did not relieve during an overpressure event','Following an event, do not assume the PSV is faulty; follow the site incident investigation and PSV removal procedure.','A stuck disc, corrosion/fouling, incorrect installation (isolation valve left shut) or an incorrectly set spring can prevent lifting.','Remove for bench testing under the approved procedure; verify no upstream isolation valve was left closed.'],
+      chatter:['PSV chatters during relief','Review process data from the relief event, including inlet/outlet piping pressure drop.','Excessive inlet pressure drop, oversizing for the actual relief case, or backpressure problems can cause chatter.','Have the piping and sizing reviewed by process/relief engineering before the valve is returned to service.']
+    }
+  },
+
+  rupturedisc: {
+    n:'Rupture Disc',
+    s:{
+      burst:['Rupture disc has burst','Do not assume the cause; follow the incident investigation procedure and inspect the disc fragments and downstream condition.','A genuine overpressure event, fatigue from cyclic/pulsating pressure, corrosion, or an undersized disc rating can cause bursting.','Confirm the process cause of the overpressure before installing a replacement disc of the correct rating.'],
+      leak:['Suspected leakage through an intact-looking disc','Check for pressure/leakage using the excess-flow or rupture indicator (telltale) where fitted, without breaking containment.','Pinhole fatigue failure, corrosion or a manufacturing defect can allow leakage while the disc still appears physically intact.','Use the fitted tell-tale/monitoring device to confirm before planning a controlled replacement under the approved procedure.'],
+      install:['Suspected incorrect disc installation','Verify the disc part number, rating and orientation (flow direction arrow) against the specification without breaking containment if avoidable.','An incorrect rating, reversed installation or a mismatched holder can compromise correct operation.','Confirm correct part, rating and orientation against records before the system is returned to service.']
+    }
+  },
+
+  axialprobe: {
+    n:'Axial Displacement Probe',
+    s:{
+      low:['Axial position reads low/short','Compare with the mechanical reference/target position and known thrust-bearing clearance.','Probe gap misadjustment, sensor drift, target/collar wear or wiring problems can cause a false reading.','Verify actual axial position mechanically where possible before adjusting probe gap or trip settings.'],
+      high:['Axial position reads high / trips','Treat as a real thrust condition until proven otherwise; check driver/driven equipment for genuine axial movement.','Thrust bearing wear/failure, coupling problems or a genuine process/load condition can move the shaft; probe gap or wiring faults can also cause a false reading.','Do not bypass an axial trip without engineering authorization; confirm the actual condition first.'],
+      erratic:['Axial reading is noisy or unstable','Check probe gap, cabling and extension cable connections, and look for electrical interference.','An incorrect probe gap, damaged cable/connector, or electrical noise from nearby power cabling can cause instability.','Verify probe gap against the setup procedure and inspect cabling before adjusting monitor settings.'],
+      comm:['No signal from axial probe','Verify power to the monitor/driver and continuity of probe extension cabling.','Loss of power, a broken probe/extension cable or a failed driver/monitor channel can remove the signal.','Confirm power and cable continuity before replacing the probe.']
+    }
+  },
+
+  tachtrip: {
+    n:'Tachometer / Overspeed Trip Device',
+    s:{
+      low:['Speed reads low','Compare with an independent handheld tachometer or reference speed measurement where safe to do so.','A damaged/misaligned sensor, incorrect gear-tooth count configuration or wiring fault can cause a low reading.','Confirm actual speed independently before adjusting configuration or trip settings.'],
+      notrip:['Overspeed trip does not activate at the set speed','This must only be verified using the approved test method (simulated signal/test rig); do not attempt to overspeed the machine.','An incorrect trip set point, sensor/wiring fault, or a failed trip relay/logic solver can prevent tripping.','Verify the trip function on the approved test rig and confirm the set point matches the protection philosophy before return to service.'],
+      falsetrip:['Overspeed trip activates without a genuine overspeed','Check the event/trend record for the actual speed at the moment of trip versus the configured set point.','Sensor/target damage, electrical noise, a loose sensor or an incorrect set point can cause a spurious trip.','Confirm actual speed at the time of trip before resetting; inspect sensor and target condition.'],
+      comm:['No signal from speed sensor','Verify sensor power/excitation and continuity of the cabling to the monitor.','A damaged sensor, broken cable, incorrect gap or loss of power can remove the signal.','Confirm power and cable continuity, and check the sensor-to-target gap before replacing the sensor.']
+    }
+  },
+
+  motorstarter: {
+    n:'Motor Starter / MCC Feeder',
+    s:{
+      trip:['Motor starter / MCC feeder trips or fails to start on demand','Check the trip/fault indication or event log first, then verify incoming supply and control voltage before resetting.','Overload, short circuit, an interlock/permissive not satisfied, or a genuine electrical fault can prevent starting or cause a trip.','Identify the specific trip/fault reason from the indication or log before resetting; repeated resets without finding the cause can cause further damage.'],
+      noindication:['Motor starter / MCC feeder shows no run/status indication','Verify control power and the status indication circuit/wiring independently of the main power path.','A blown indicator lamp/fuse, failed auxiliary contact, wiring fault or loss of control power can remove status indication while the equipment itself may be healthy.','Confirm actual equipment status by other means, then isolate the indication circuit fault before assuming the equipment has failed.'],
+      overheat:['Motor starter / MCC feeder runs hot / overload trips','Check load current against rating, inspect ventilation/cooling, and review the overload/thermal trip settings.','Overloading, poor ventilation, an unbalanced supply, a failing load or incorrectly set thermal protection can cause overheating or nuisance overload trips.','Confirm actual load current with a calibrated meter and verify overload settings match the equipment rating before adjusting or resetting.'],
+      comm:['Motor starter / MCC feeder has no communication with the control/monitoring system','Verify power and the physical communication/network wiring before checking configuration.','Loss of power, a network/wiring fault, incorrect address/configuration or a failed communication module can remove the digital connection.','Confirm local operation is normal, then trace the approved communication path and verify addressing/protocol settings.'],
+      fault:['Motor starter / MCC feeder displays a fault code or alarm','Record the exact fault code/alarm text and consult the approved OEM fault-code reference before resetting.','The fault code identifies a specific condition (overcurrent, overtemperature, phase loss, communication, etc.) rather than a generic failure.','Investigate and correct the specific condition indicated by the fault code before resetting and returning the equipment to service.']
+    }
+  },
+
+  vfd: {
+    n:'VFD (Variable Frequency Drive)',
+    s:{
+      trip:['VFD trips or fails to start on demand','Check the trip/fault indication or event log first, then verify incoming supply and control voltage before resetting.','Overload, short circuit, an interlock/permissive not satisfied, or a genuine electrical fault can prevent starting or cause a trip.','Identify the specific trip/fault reason from the indication or log before resetting; repeated resets without finding the cause can cause further damage.'],
+      noindication:['VFD shows no run/status indication','Verify control power and the status indication circuit/wiring independently of the main power path.','A blown indicator lamp/fuse, failed auxiliary contact, wiring fault or loss of control power can remove status indication while the equipment itself may be healthy.','Confirm actual equipment status by other means, then isolate the indication circuit fault before assuming the equipment has failed.'],
+      overheat:['VFD runs hot / overload trips','Check load current against rating, inspect ventilation/cooling, and review the overload/thermal trip settings.','Overloading, poor ventilation, an unbalanced supply, a failing load or incorrectly set thermal protection can cause overheating or nuisance overload trips.','Confirm actual load current with a calibrated meter and verify overload settings match the equipment rating before adjusting or resetting.'],
+      comm:['VFD has no communication with the control/monitoring system','Verify power and the physical communication/network wiring before checking configuration.','Loss of power, a network/wiring fault, incorrect address/configuration or a failed communication module can remove the digital connection.','Confirm local operation is normal, then trace the approved communication path and verify addressing/protocol settings.'],
+      fault:['VFD displays a fault code or alarm','Record the exact fault code/alarm text and consult the approved OEM fault-code reference before resetting.','The fault code identifies a specific condition (overcurrent, overtemperature, phase loss, communication, etc.) rather than a generic failure.','Investigate and correct the specific condition indicated by the fault code before resetting and returning the equipment to service.']
+    }
+  },
+
+  ups: {
+    n:'UPS / Battery Charger',
+    s:{
+      trip:['UPS fails to power the load / trips to bypass','Check the UPS status/alarm display and event log before assuming complete failure.','Overload, a failed inverter/rectifier module, or a genuine input supply problem can cause a trip to bypass or loss of output.','Identify the specific alarm/fault from the display before resetting; confirm load current against UPS rating.'],
+      battery:['UPS reports low battery / reduced backup time','Check the battery test/status function and, where safe, the last recorded autonomy/discharge test result.','Battery ageing, a failed cell/string, high ambient temperature or an undersized/overloaded system can reduce backup time.','Follow the OEM battery test procedure to confirm actual battery health before scheduling replacement.'],
+      noindication:['UPS shows no status/alarm indication','Verify UPS control power and the local display/communication module.','A blown fuse/failed display module, control power loss or a communication card fault can remove indication while the UPS itself may still be operating.','Confirm actual UPS output independently, then isolate the display/indication fault.'],
+      comm:['No communication with UPS monitoring system','Verify power to the UPS communication card and the network/wiring path.','A failed communication card, wiring fault or incorrect network configuration can remove remote monitoring.','Confirm local UPS status is normal, then trace the communication path before replacing the card.']
+    }
+  },
+
+  jbox: {
+    n:'Junction Box / Terminal Box',
+    s:{
+      earth:['Junction box shows an earth/ground fault','Isolate and test each circuit individually per the approved procedure to identify the faulted cable/terminal.','Moisture ingress, a damaged cable gland/seal, insulation damage or a loose/contaminated terminal can cause an earth fault.','Locate the specific faulted circuit before disturbing unaffected terminations; check gland seals and box integrity.'],
+      moisture:['Moisture or condensation found inside the box','Inspect gland seals, gasket condition and drain points, and check for breathing/condensation issues.','A damaged gasket, incorrectly fitted glands, blocked drain or thermal cycling can allow moisture ingress or condensation.','Dry and inspect terminations for corrosion before restoring, and correct the ingress path (gaskets/glands/drains).'],
+      loose:['Loose or overheated terminal found','Visually inspect for discolouration, and check torque on terminals per the approved procedure with power isolated.','Vibration, thermal cycling or an originally under-torqued connection can loosen a terminal and cause local heating.','Re-torque to the correct value and inspect for damage; replace any terminal showing heat damage.'],
+      ir:['Low insulation resistance on a circuit','Perform an insulation resistance test per the approved procedure with the circuit isolated from source and load.','Cable damage, moisture ingress at the box or along the cable route, or termination contamination can reduce insulation resistance.','Localize the fault to the box, cable or field device before opening up cable runs.']
+    }
+  },
+
+  openpathgas: {
+    n:'Open Path Gas Detector',
+    s:{
+      obstruction:['Open path detector shows an alignment/obscuration fault','Check the panel for the specific fault (alignment vs obscuration) and inspect the beam path for obstructions, fog or dirt on the optics.','Physical obstruction, misalignment from vibration/thermal movement, dirty optics or heavy weather can interrupt the beam.','Clear the beam path and clean optics per the OEM procedure, then re-verify alignment before resetting.'],
+      falsealarm:['Open path gas detector causes a nuisance or false alarm','Check the event log for the exact initiating condition and inspect the device for contamination, damage or environmental interference.','Dust/contamination, insects, condensation, physical damage, incorrect sensitivity setting or a genuine process/environmental condition can trigger a false alarm.','Confirm there is no real hazard first per site procedure, then inspect and clean/test the device before resetting.'],
+      fault:['Open path gas detector shows a fault on the panel','Read the exact loop, zone and device address reported in fault from the panel event log before going to the field.','Open/short circuits, a ground fault, isolated device, wiring fault or a failed field device can create a fault indication.','Trace the reported circuit/device using the approved procedure; do not assume the device itself has failed before checking wiring.'],
+      comm:['Open path gas detector loop or communication fault','Check the panel loop status and identify the affected device address/circuit from the event log.','Wiring faults, loose connections, ground faults, addressing errors or a failed field device can interrupt loop communication.','Trace the reported loop/address using the approved procedure and isolate the specific device or wiring segment at fault.'],
+      noresponse:['Open path detector does not respond to the functional test gas cell','Perform the OEM-approved gas-cell or test-filter functional check.','Dirty optics, misalignment, an aged/expired test filter or a failed transmitter/receiver can prevent a valid response.','Confirm the test filter/cell is within its approved service life before concluding the detector has failed.']
+    }
+  },
+
+  flamedet: {
+    n:'Flame Detector',
+    s:{
+      falsealarm:['Flame detector causes a nuisance or false alarm','Check the event log for the exact initiating condition and inspect the device for contamination, damage or environmental interference.','Dust/contamination, insects, condensation, physical damage, incorrect sensitivity setting or a genuine process/environmental condition can trigger a false alarm.','Confirm there is no real hazard first per site procedure, then inspect and clean/test the device before resetting.'],
+      fault:['Flame detector shows a fault on the panel','Read the exact loop, zone and device address reported in fault from the panel event log before going to the field.','Open/short circuits, a ground fault, isolated device, wiring fault or a failed field device can create a fault indication.','Trace the reported circuit/device using the approved procedure; do not assume the device itself has failed before checking wiring.'],
+      noresponse:['Flame detector does not respond to the functional test source','Perform the OEM-approved test lamp/source functional check at the correct distance and angle.','A dirty/damaged sensing window, incorrect field-of-view alignment, or a failed sensing element can prevent a valid response.','Clean and check the sensing window and alignment before concluding the detector has failed.'],
+      comm:['Flame detector loop or communication fault','Check the panel loop status and identify the affected device address/circuit from the event log.','Wiring faults, loose connections, ground faults, addressing errors or a failed field device can interrupt loop communication.','Trace the reported loop/address using the approved procedure and isolate the specific device or wiring segment at fault.']
+    }
+  },
+
+  mcp: {
+    n:'Manual Call Point',
+    s:{
+      noresponse:['Manual call point does not register on the panel when tested','Operate the test key/glass per the approved test procedure and confirm the panel registers the correct zone/address.','A broken glass/element not making contact, wiring fault, or incorrect addressing can prevent registration.','Confirm wiring continuity and correct address programming before replacing the call point.'],
+      falsealarm:['Manual call point activates without being operated','Check the event log for the exact time/address and inspect the unit for physical damage or moisture ingress.','Physical damage, moisture ingress, a stuck internal switch or wiring fault can cause spurious activation.','Inspect and test the physical unit before resetting and returning it to service.'],
+      fault:['Manual call point shows a fault on the panel','Read the exact loop, zone and device address reported in fault from the panel event log before going to the field.','Open/short circuits, a ground fault, isolated device, wiring fault or a failed field device can create a fault indication.','Trace the reported circuit/device using the approved procedure; do not assume the device itself has failed before checking wiring.']
+    }
+  },
+
+  beacon: {
+    n:'Beacon / Sounder (Audible-Visual Alarm)',
+    s:{
+      noresponse:['Beacon/sounder does not activate on command','Verify supply voltage at the unit and command output from the panel/logic solver.','Loss of supply, a blown fuse, failed unit or wiring fault can prevent activation.','Confirm supply and command signal reach the unit before replacing it.'],
+      weak:['Sound/light output is weak or intermittent','Check supply voltage under load and inspect for a failed lamp/LED element or partially blocked horn.','Low supply voltage, a partially failed element, or physical obstruction/contamination can reduce output.','Confirm supply voltage is correct under load before replacing the unit.'],
+      fault:['Beacon/sounder circuit shows a fault on the panel','Read the exact loop, zone and device address reported in fault from the panel event log before going to the field.','Open/short circuits, a ground fault, isolated device, wiring fault or a failed field device can create a fault indication.','Trace the reported circuit/device using the approved procedure; do not assume the device itself has failed before checking wiring.'],
+      stuck:['Beacon/sounder will not silence/reset','Check whether the panel/zone is still in an active alarm condition before assuming a field fault.','A genuine active alarm condition, a stuck relay/output, or a wiring fault can keep the unit energised.','Confirm the panel/zone status first; only inspect wiring/relay if the panel confirms the alarm has cleared.']
+    }
+  },
+
+  fglogic: {
+    n:'Fire & Gas Logic Solver / I/O Card',
+    s:{
+      iofault:['Logic solver reports an I/O card/channel fault','Identify the exact card, channel and fault type from the diagnostic display/event log before touching the card.','A failed channel, loose termination, field wiring fault or a genuine card failure can produce an I/O fault.','Isolate the fault to field wiring versus the card itself before replacing any module, following the approved change/permit procedure.'],
+      comm:['Logic solver has no communication with the panel/DCS','Check the network/bus status indication on the logic solver and the physical network wiring.','A network wiring fault, failed communication module, addressing conflict or power loss can interrupt communication.','Confirm local logic solver operation is healthy, then trace the approved communication path.'],
+      output:['Logic solver output does not energise the field device','Verify the commanded output state in software/logic against the actual field device response.','A failed output channel, blown fuse, wiring fault or an incorrect logic/cause-and-effect configuration can prevent the field device responding.','Confirm the logic solver is issuing the correct command before assuming the field device has failed; never bypass safety logic to force an output.'],
+      nodisplay:['Logic solver diagnostic display is blank','Verify power supply to the logic solver rack/module.','A power supply fault, blown fuse or failed display module can remove the local diagnostic display while logic continues to run.','Confirm the system remains in its last known safe state and check power supplies before replacing the display module.']
+    }
+  },
+
+  smokedet: {
+    n:'Smoke Detector',
+    s:{
+      falsealarm:['Smoke detector causes a nuisance or false alarm','Check the event log for the exact initiating condition and inspect the device for contamination, damage or environmental interference.','Dust/contamination, insects, condensation, physical damage, incorrect sensitivity setting or a genuine process/environmental condition can trigger a false alarm.','Confirm there is no real hazard first per site procedure, then inspect and clean/test the device before resetting.'],
+      fault:['Smoke detector shows a fault on the panel','Read the exact loop, zone and device address reported in fault from the panel event log before going to the field.','Open/short circuits, a ground fault, isolated device, wiring fault or a failed field device can create a fault indication.','Trace the reported circuit/device using the approved procedure; do not assume the device itself has failed before checking wiring.'],
+      noresponse:['Smoke detector does not respond to the approved test method','Use the OEM-approved smoke/aerosol test method or magnet test per the maintenance procedure.','Chamber contamination, an expired sensing element or a wiring/addressing fault can prevent a valid response.','Clean or replace the detector per OEM service-life guidance if it fails the approved functional test.'],
+      comm:['Smoke detector loop or communication fault','Check the panel loop status and identify the affected device address/circuit from the event log.','Wiring faults, loose connections, ground faults, addressing errors or a failed field device can interrupt loop communication.','Trace the reported loop/address using the approved procedure and isolate the specific device or wiring segment at fault.']
+    }
+  },
+
+  heatdet: {
+    n:'Heat Detector',
+    s:{
+      falsealarm:['Heat detector causes a nuisance or false alarm','Check the event log for the exact initiating condition and inspect the device for contamination, damage or environmental interference.','Dust/contamination, insects, condensation, physical damage, incorrect sensitivity setting or a genuine process/environmental condition can trigger a false alarm.','Confirm there is no real hazard first per site procedure, then inspect and clean/test the device before resetting.'],
+      fault:['Heat detector shows a fault on the panel','Read the exact loop, zone and device address reported in fault from the panel event log before going to the field.','Open/short circuits, a ground fault, isolated device, wiring fault or a failed field device can create a fault indication.','Trace the reported circuit/device using the approved procedure; do not assume the device itself has failed before checking wiring.'],
+      noresponse:['Heat detector does not respond to the approved test method','Use the OEM-approved heat-test method (heat gun/test lamp) per the maintenance procedure and manufacturer\'s rated temperature.','A failed sensing element, wiring fault, incorrect addressing, or applying insufficient test heat can prevent a valid response.','Confirm the correct test method and temperature were used before concluding the detector has failed.'],
+      comm:['Heat detector loop or communication fault','Check the panel loop status and identify the affected device address/circuit from the event log.','Wiring faults, loose connections, ground faults, addressing errors or a failed field device can interrupt loop communication.','Trace the reported loop/address using the approved procedure and isolate the specific device or wiring segment at fault.']
+    }
+  },
+
+  phanalyser: {
+    n:'pH Analyser',
+    s:{
+      low:['pH analyser reads low','Verify with a certified calibration standard/buffer and confirm the sample flow, pressure and temperature to the analyzer are within specification.','Sensor fouling/coating, an expired or contaminated standard, a sample-conditioning problem or a genuine process change can all produce a low reading.','If the calibration standard checks out, inspect the sample system and sensor condition before adjusting calibration.'],
+      high:['pH analyser reads high','Verify with a certified calibration standard/buffer and confirm the sample system is delivering a representative sample.','Sensor drift, contamination, an incorrect calibration standard or interference in the sample can cause a high reading.','If the standard confirms the analyzer is out of calibration, inspect the sensor and sample conditioning before returning to service.'],
+      drift:['pH analyser will not hold calibration / drifts','Repeat calibration at stable conditions and record how quickly the reading moves away from the calibrated value.','Sensor ageing, membrane/electrode fouling, reagent depletion or an unstable sample stream can cause the analyzer to drift off calibration.','If drift continues after a fresh calibration, inspect the sensor/electrode condition and sample-conditioning system before further recalibration attempts.'],
+      noisy:['pH analyser signal is noisy or unstable','Check sample flow stability, look for entrained gas/bubbles or debris in the sample, and inspect wiring/grounding.','An unstable sample flow, air entrainment, a fouled sensor or electrical noise/grounding problems can make the signal noisy.','Confirm the sample system is delivering a steady, representative flow before inspecting the sensor or signal wiring further.'],
+      comm:['pH analyser has no communication or output signal','Verify analyzer power and the physical communication/output wiring before checking configuration.','Loss of power, a wiring fault, incorrect address/configuration or a failed communication interface can remove the signal.','Confirm power and wiring are healthy, then verify the correct address/protocol before suspecting the sensing element.'],
+      sample:['pH analyser sample system fault','Check sample flow rate, pressure, filters/coalescers and tubing for blockage, leaks or freezing.','A plugged filter, restricted tubing, failed sample pump, or incorrect sample pressure/flow can prevent a representative sample reaching the sensor.','Restore correct sample flow and pressure first; an analyzer cannot read correctly without a valid sample.']
+    }
+  },
+
+  orpanalyser: {
+    n:'ORP Analyser',
+    s:{
+      low:['ORP analyser reads low','Verify with a certified calibration standard/buffer and confirm the sample flow, pressure and temperature to the analyzer are within specification.','Sensor fouling/coating, an expired or contaminated standard, a sample-conditioning problem or a genuine process change can all produce a low reading.','If the calibration standard checks out, inspect the sample system and sensor condition before adjusting calibration.'],
+      high:['ORP analyser reads high','Verify with a certified calibration standard/buffer and confirm the sample system is delivering a representative sample.','Sensor drift, contamination, an incorrect calibration standard or interference in the sample can cause a high reading.','If the standard confirms the analyzer is out of calibration, inspect the sensor and sample conditioning before returning to service.'],
+      drift:['ORP analyser will not hold calibration / drifts','Repeat calibration at stable conditions and record how quickly the reading moves away from the calibrated value.','Sensor ageing, membrane/electrode fouling, reagent depletion or an unstable sample stream can cause the analyzer to drift off calibration.','If drift continues after a fresh calibration, inspect the sensor/electrode condition and sample-conditioning system before further recalibration attempts.'],
+      noisy:['ORP analyser signal is noisy or unstable','Check sample flow stability, look for entrained gas/bubbles or debris in the sample, and inspect wiring/grounding.','An unstable sample flow, air entrainment, a fouled sensor or electrical noise/grounding problems can make the signal noisy.','Confirm the sample system is delivering a steady, representative flow before inspecting the sensor or signal wiring further.'],
+      comm:['ORP analyser has no communication or output signal','Verify analyzer power and the physical communication/output wiring before checking configuration.','Loss of power, a wiring fault, incorrect address/configuration or a failed communication interface can remove the signal.','Confirm power and wiring are healthy, then verify the correct address/protocol before suspecting the sensing element.'],
+      sample:['ORP analyser sample system fault','Check sample flow rate, pressure, filters/coalescers and tubing for blockage, leaks or freezing.','A plugged filter, restricted tubing, failed sample pump, or incorrect sample pressure/flow can prevent a representative sample reaching the sensor.','Restore correct sample flow and pressure first; an analyzer cannot read correctly without a valid sample.']
+    }
+  },
+
+  condanalyser: {
+    n:'Conductivity Analyser',
+    s:{
+      low:['Conductivity analyser reads low','Verify with a certified calibration standard/buffer and confirm the sample flow, pressure and temperature to the analyzer are within specification.','Sensor fouling/coating, an expired or contaminated standard, a sample-conditioning problem or a genuine process change can all produce a low reading.','If the calibration standard checks out, inspect the sample system and sensor condition before adjusting calibration.'],
+      high:['Conductivity analyser reads high','Verify with a certified calibration standard/buffer and confirm the sample system is delivering a representative sample.','Sensor drift, contamination, an incorrect calibration standard or interference in the sample can cause a high reading.','If the standard confirms the analyzer is out of calibration, inspect the sensor and sample conditioning before returning to service.'],
+      drift:['Conductivity analyser will not hold calibration / drifts','Repeat calibration at stable conditions and record how quickly the reading moves away from the calibrated value.','Sensor ageing, membrane/electrode fouling, reagent depletion or an unstable sample stream can cause the analyzer to drift off calibration.','If drift continues after a fresh calibration, inspect the sensor/electrode condition and sample-conditioning system before further recalibration attempts.'],
+      noisy:['Conductivity analyser signal is noisy or unstable','Check sample flow stability, look for entrained gas/bubbles or debris in the sample, and inspect wiring/grounding.','An unstable sample flow, air entrainment, a fouled sensor or electrical noise/grounding problems can make the signal noisy.','Confirm the sample system is delivering a steady, representative flow before inspecting the sensor or signal wiring further.'],
+      comm:['Conductivity analyser has no communication or output signal','Verify analyzer power and the physical communication/output wiring before checking configuration.','Loss of power, a wiring fault, incorrect address/configuration or a failed communication interface can remove the signal.','Confirm power and wiring are healthy, then verify the correct address/protocol before suspecting the sensing element.'],
+      sample:['Conductivity analyser sample system fault','Check sample flow rate, pressure, filters/coalescers and tubing for blockage, leaks or freezing.','A plugged filter, restricted tubing, failed sample pump, or incorrect sample pressure/flow can prevent a representative sample reaching the sensor.','Restore correct sample flow and pressure first; an analyzer cannot read correctly without a valid sample.']
+    }
+  },
+
+  o2analyser: {
+    n:'Oxygen (O2) Analyser',
+    s:{
+      low:['O2 analyser reads low','Verify with a certified calibration standard/buffer and confirm the sample flow, pressure and temperature to the analyzer are within specification.','Sensor fouling/coating, an expired or contaminated standard, a sample-conditioning problem or a genuine process change can all produce a low reading.','If the calibration standard checks out, inspect the sample system and sensor condition before adjusting calibration.'],
+      high:['O2 analyser reads high','Verify with a certified calibration standard/buffer and confirm the sample system is delivering a representative sample.','Sensor drift, contamination, an incorrect calibration standard or interference in the sample can cause a high reading.','If the standard confirms the analyzer is out of calibration, inspect the sensor and sample conditioning before returning to service.'],
+      drift:['O2 analyser will not hold calibration / drifts','Repeat calibration at stable conditions and record how quickly the reading moves away from the calibrated value.','Sensor ageing, membrane/electrode fouling, reagent depletion or an unstable sample stream can cause the analyzer to drift off calibration.','If drift continues after a fresh calibration, inspect the sensor/electrode condition and sample-conditioning system before further recalibration attempts.'],
+      noisy:['O2 analyser signal is noisy or unstable','Check sample flow stability, look for entrained gas/bubbles or debris in the sample, and inspect wiring/grounding.','An unstable sample flow, air entrainment, a fouled sensor or electrical noise/grounding problems can make the signal noisy.','Confirm the sample system is delivering a steady, representative flow before inspecting the sensor or signal wiring further.'],
+      comm:['O2 analyser has no communication or output signal','Verify analyzer power and the physical communication/output wiring before checking configuration.','Loss of power, a wiring fault, incorrect address/configuration or a failed communication interface can remove the signal.','Confirm power and wiring are healthy, then verify the correct address/protocol before suspecting the sensing element.'],
+      sample:['O2 analyser sample system fault','Check sample flow rate, pressure, filters/coalescers and tubing for blockage, leaks or freezing.','A plugged filter, restricted tubing, failed sample pump, or incorrect sample pressure/flow can prevent a representative sample reaching the sensor.','Restore correct sample flow and pressure first; an analyzer cannot read correctly without a valid sample.']
+    }
+  },
+
+  turbidity: {
+    n:'Turbidity Analyser',
+    s:{
+      low:['Turbidity analyser reads low','Verify with a certified calibration standard/buffer and confirm the sample flow, pressure and temperature to the analyzer are within specification.','Sensor fouling/coating, an expired or contaminated standard, a sample-conditioning problem or a genuine process change can all produce a low reading.','If the calibration standard checks out, inspect the sample system and sensor condition before adjusting calibration.'],
+      high:['Turbidity analyser reads high','Verify with a certified calibration standard/buffer and confirm the sample system is delivering a representative sample.','Sensor drift, contamination, an incorrect calibration standard or interference in the sample can cause a high reading.','If the standard confirms the analyzer is out of calibration, inspect the sensor and sample conditioning before returning to service.'],
+      drift:['Turbidity analyser will not hold calibration / drifts','Repeat calibration at stable conditions and record how quickly the reading moves away from the calibrated value.','Sensor ageing, membrane/electrode fouling, reagent depletion or an unstable sample stream can cause the analyzer to drift off calibration.','If drift continues after a fresh calibration, inspect the sensor/electrode condition and sample-conditioning system before further recalibration attempts.'],
+      noisy:['Turbidity analyser signal is noisy or unstable','Check sample flow stability, look for entrained gas/bubbles or debris in the sample, and inspect wiring/grounding.','An unstable sample flow, air entrainment, a fouled sensor or electrical noise/grounding problems can make the signal noisy.','Confirm the sample system is delivering a steady, representative flow before inspecting the sensor or signal wiring further.'],
+      comm:['Turbidity analyser has no communication or output signal','Verify analyzer power and the physical communication/output wiring before checking configuration.','Loss of power, a wiring fault, incorrect address/configuration or a failed communication interface can remove the signal.','Confirm power and wiring are healthy, then verify the correct address/protocol before suspecting the sensing element.'],
+      sample:['Turbidity analyser sample system fault','Check sample flow rate, pressure, filters/coalescers and tubing for blockage, leaks or freezing.','A plugged filter, restricted tubing, failed sample pump, or incorrect sample pressure/flow can prevent a representative sample reaching the sensor.','Restore correct sample flow and pressure first; an analyzer cannot read correctly without a valid sample.']
+    }
+  },
+
+  moisture: {
+    n:'Moisture Analyser',
+    s:{
+      low:['Moisture analyser reads low','Verify with a certified calibration standard/buffer and confirm the sample flow, pressure and temperature to the analyzer are within specification.','Sensor fouling/coating, an expired or contaminated standard, a sample-conditioning problem or a genuine process change can all produce a low reading.','If the calibration standard checks out, inspect the sample system and sensor condition before adjusting calibration.'],
+      high:['Moisture analyser reads high','Verify with a certified calibration standard/buffer and confirm the sample system is delivering a representative sample.','Sensor drift, contamination, an incorrect calibration standard or interference in the sample can cause a high reading.','If the standard confirms the analyzer is out of calibration, inspect the sensor and sample conditioning before returning to service.'],
+      drift:['Moisture analyser will not hold calibration / drifts','Repeat calibration at stable conditions and record how quickly the reading moves away from the calibrated value.','Sensor ageing, membrane/electrode fouling, reagent depletion or an unstable sample stream can cause the analyzer to drift off calibration.','If drift continues after a fresh calibration, inspect the sensor/electrode condition and sample-conditioning system before further recalibration attempts.'],
+      noisy:['Moisture analyser signal is noisy or unstable','Check sample flow stability, look for entrained gas/bubbles or debris in the sample, and inspect wiring/grounding.','An unstable sample flow, air entrainment, a fouled sensor or electrical noise/grounding problems can make the signal noisy.','Confirm the sample system is delivering a steady, representative flow before inspecting the sensor or signal wiring further.'],
+      comm:['Moisture analyser has no communication or output signal','Verify analyzer power and the physical communication/output wiring before checking configuration.','Loss of power, a wiring fault, incorrect address/configuration or a failed communication interface can remove the signal.','Confirm power and wiring are healthy, then verify the correct address/protocol before suspecting the sensing element.'],
+      sample:['Moisture analyser sample system fault','Check sample flow rate, pressure, filters/coalescers and tubing for blockage, leaks or freezing.','A plugged filter, restricted tubing, failed sample pump, or incorrect sample pressure/flow can prevent a representative sample reaching the sensor.','Restore correct sample flow and pressure first; an analyzer cannot read correctly without a valid sample.']
+    }
+  },
+
+  gc: {
+    n:'Gas Chromatograph Analyser',
+    s:{
+      low:['Gas chromatograph reads low','Verify with a certified calibration standard/buffer and confirm the sample flow, pressure and temperature to the analyzer are within specification.','Sensor fouling/coating, an expired or contaminated standard, a sample-conditioning problem or a genuine process change can all produce a low reading.','If the calibration standard checks out, inspect the sample system and sensor condition before adjusting calibration.'],
+      high:['Gas chromatograph reads high','Verify with a certified calibration standard/buffer and confirm the sample system is delivering a representative sample.','Sensor drift, contamination, an incorrect calibration standard or interference in the sample can cause a high reading.','If the standard confirms the analyzer is out of calibration, inspect the sensor and sample conditioning before returning to service.'],
+      drift:['Gas chromatograph will not hold calibration / drifts','Repeat calibration at stable conditions and record how quickly the reading moves away from the calibrated value.','Sensor ageing, membrane/electrode fouling, reagent depletion or an unstable sample stream can cause the analyzer to drift off calibration.','If drift continues after a fresh calibration, inspect the sensor/electrode condition and sample-conditioning system before further recalibration attempts.'],
+      noisy:['Gas chromatograph signal is noisy or unstable','Check sample flow stability, look for entrained gas/bubbles or debris in the sample, and inspect wiring/grounding.','An unstable sample flow, air entrainment, a fouled sensor or electrical noise/grounding problems can make the signal noisy.','Confirm the sample system is delivering a steady, representative flow before inspecting the sensor or signal wiring further.'],
+      comm:['Gas chromatograph has no communication or output signal','Verify analyzer power and the physical communication/output wiring before checking configuration.','Loss of power, a wiring fault, incorrect address/configuration or a failed communication interface can remove the signal.','Confirm power and wiring are healthy, then verify the correct address/protocol before suspecting the sensing element.'],
+      sample:['Gas chromatograph sample system fault','Check sample flow rate, pressure, filters/coalescers and tubing for blockage, leaks or freezing.','A plugged filter, restricted tubing, failed sample pump, or incorrect sample pressure/flow can prevent a representative sample reaching the sensor.','Restore correct sample flow and pressure first; an analyzer cannot read correctly without a valid sample.']
+    }
+  },
+
+  dewpoint: {
+    n:'Dew Point Analyser',
+    s:{
+      low:['Dew point analyser reads low','Verify with a certified calibration standard/buffer and confirm the sample flow, pressure and temperature to the analyzer are within specification.','Sensor fouling/coating, an expired or contaminated standard, a sample-conditioning problem or a genuine process change can all produce a low reading.','If the calibration standard checks out, inspect the sample system and sensor condition before adjusting calibration.'],
+      high:['Dew point analyser reads high','Verify with a certified calibration standard/buffer and confirm the sample system is delivering a representative sample.','Sensor drift, contamination, an incorrect calibration standard or interference in the sample can cause a high reading.','If the standard confirms the analyzer is out of calibration, inspect the sensor and sample conditioning before returning to service.'],
+      drift:['Dew point analyser will not hold calibration / drifts','Repeat calibration at stable conditions and record how quickly the reading moves away from the calibrated value.','Sensor ageing, membrane/electrode fouling, reagent depletion or an unstable sample stream can cause the analyzer to drift off calibration.','If drift continues after a fresh calibration, inspect the sensor/electrode condition and sample-conditioning system before further recalibration attempts.'],
+      noisy:['Dew point analyser signal is noisy or unstable','Check sample flow stability, look for entrained gas/bubbles or debris in the sample, and inspect wiring/grounding.','An unstable sample flow, air entrainment, a fouled sensor or electrical noise/grounding problems can make the signal noisy.','Confirm the sample system is delivering a steady, representative flow before inspecting the sensor or signal wiring further.'],
+      comm:['Dew point analyser has no communication or output signal','Verify analyzer power and the physical communication/output wiring before checking configuration.','Loss of power, a wiring fault, incorrect address/configuration or a failed communication interface can remove the signal.','Confirm power and wiring are healthy, then verify the correct address/protocol before suspecting the sensing element.'],
+      sample:['Dew point analyser sample system fault','Check sample flow rate, pressure, filters/coalescers and tubing for blockage, leaks or freezing.','A plugged filter, restricted tubing, failed sample pump, or incorrect sample pressure/flow can prevent a representative sample reaching the sensor.','Restore correct sample flow and pressure first; an analyzer cannot read correctly without a valid sample.']
+    }
+  },
+
+  rvp: {
+    n:'Reid Vapour Analyser',
+    s:{
+      low:['RVP analyser reads low','Verify with a certified calibration standard/buffer and confirm the sample flow, pressure and temperature to the analyzer are within specification.','Sensor fouling/coating, an expired or contaminated standard, a sample-conditioning problem or a genuine process change can all produce a low reading.','If the calibration standard checks out, inspect the sample system and sensor condition before adjusting calibration.'],
+      high:['RVP analyser reads high','Verify with a certified calibration standard/buffer and confirm the sample system is delivering a representative sample.','Sensor drift, contamination, an incorrect calibration standard or interference in the sample can cause a high reading.','If the standard confirms the analyzer is out of calibration, inspect the sensor and sample conditioning before returning to service.'],
+      drift:['RVP analyser will not hold calibration / drifts','Repeat calibration at stable conditions and record how quickly the reading moves away from the calibrated value.','Sensor ageing, membrane/electrode fouling, reagent depletion or an unstable sample stream can cause the analyzer to drift off calibration.','If drift continues after a fresh calibration, inspect the sensor/electrode condition and sample-conditioning system before further recalibration attempts.'],
+      noisy:['RVP analyser signal is noisy or unstable','Check sample flow stability, look for entrained gas/bubbles or debris in the sample, and inspect wiring/grounding.','An unstable sample flow, air entrainment, a fouled sensor or electrical noise/grounding problems can make the signal noisy.','Confirm the sample system is delivering a steady, representative flow before inspecting the sensor or signal wiring further.'],
+      comm:['RVP analyser has no communication or output signal','Verify analyzer power and the physical communication/output wiring before checking configuration.','Loss of power, a wiring fault, incorrect address/configuration or a failed communication interface can remove the signal.','Confirm power and wiring are healthy, then verify the correct address/protocol before suspecting the sensing element.'],
+      sample:['RVP analyser sample system fault','Check sample flow rate, pressure, filters/coalescers and tubing for blockage, leaks or freezing.','A plugged filter, restricted tubing, failed sample pump, or incorrect sample pressure/flow can prevent a representative sample reaching the sensor.','Restore correct sample flow and pressure first; an analyzer cannot read correctly without a valid sample.']
+    }
+  },
+
+  oilinwater: {
+    n:'Oil in Water Analyser',
+    s:{
+      low:['Oil-in-water analyser reads low','Verify with a certified calibration standard/buffer and confirm the sample flow, pressure and temperature to the analyzer are within specification.','Sensor fouling/coating, an expired or contaminated standard, a sample-conditioning problem or a genuine process change can all produce a low reading.','If the calibration standard checks out, inspect the sample system and sensor condition before adjusting calibration.'],
+      high:['Oil-in-water analyser reads high','Verify with a certified calibration standard/buffer and confirm the sample system is delivering a representative sample.','Sensor drift, contamination, an incorrect calibration standard or interference in the sample can cause a high reading.','If the standard confirms the analyzer is out of calibration, inspect the sensor and sample conditioning before returning to service.'],
+      drift:['Oil-in-water analyser will not hold calibration / drifts','Repeat calibration at stable conditions and record how quickly the reading moves away from the calibrated value.','Sensor ageing, membrane/electrode fouling, reagent depletion or an unstable sample stream can cause the analyzer to drift off calibration.','If drift continues after a fresh calibration, inspect the sensor/electrode condition and sample-conditioning system before further recalibration attempts.'],
+      noisy:['Oil-in-water analyser signal is noisy or unstable','Check sample flow stability, look for entrained gas/bubbles or debris in the sample, and inspect wiring/grounding.','An unstable sample flow, air entrainment, a fouled sensor or electrical noise/grounding problems can make the signal noisy.','Confirm the sample system is delivering a steady, representative flow before inspecting the sensor or signal wiring further.'],
+      comm:['Oil-in-water analyser has no communication or output signal','Verify analyzer power and the physical communication/output wiring before checking configuration.','Loss of power, a wiring fault, incorrect address/configuration or a failed communication interface can remove the signal.','Confirm power and wiring are healthy, then verify the correct address/protocol before suspecting the sensing element.'],
+      sample:['Oil-in-water analyser sample system fault','Check sample flow rate, pressure, filters/coalescers and tubing for blockage, leaks or freezing.','A plugged filter, restricted tubing, failed sample pump, or incorrect sample pressure/flow can prevent a representative sample reaching the sensor.','Restore correct sample flow and pressure first; an analyzer cannot read correctly without a valid sample.']
+    }
+  },
+
+  deluge: {
+    n:'Deluge Valve',
+    s:{
+      notopen:['Deluge valve fails to open/actuate on demand','Use the approved isolation/permit procedure. Verify actuating supply (air/hydraulic/electric) and the solenoid/pilot signal reach the valve before assuming a mechanical failure.','Loss of actuating supply, a failed solenoid/pilot, linkage seizure or mechanical obstruction can prevent the valve from actuating.','Confirm supply and the pilot/solenoid signal are present at the valve, then inspect the mechanism under the approved test procedure.'],
+      notclose:['Deluge valve fails to close/reseat or passes when closed','Use the approved isolation/permit procedure. With the valve commanded closed, check for through-seat leakage using the approved test method and confirm actuator supply is removed/vented correctly.','Seat wear/damage, debris on the seat, actuator venting problems or linkage wear can prevent a tight shutoff.','Confirm actual seat leakage against the acceptance criteria before deciding on seat lapping, repair or replacement.'],
+      slow:['Deluge valve is slow to actuate','Use the approved isolation/permit procedure. Measure actuation/stroke time and compare with the approved baseline.','Restricted actuating supply, a partially blocked solenoid/pilot, low pressure or mechanical friction can slow the stroke.','Verify supply pressure/flow at the valve and check the solenoid/pilot response before adjusting speed controls.'],
+      nofeedback:['Deluge valve has no position feedback/indication','Compare actual physical valve position with the indicated/reported position.','A failed or misadjusted limit switch/position sensor, broken linkage or wiring fault can remove correct indication without the valve itself being faulty.','Confirm actual position independently, then inspect the feedback device and wiring before replacing the valve.'],
+      leak:['Deluge valve shows external or body leakage','Use the approved isolation/permit procedure. Visually inspect the body, bonnet, packing and connections for leakage while the valve is in a safe, de-pressurised state where possible.','Packing wear, gasket failure, a cracked body/bonnet or a loose connection can produce external leakage.','Isolate under the approved procedure and confirm the source of leakage before tightening, repacking or repairing the valve.']
+    }
+  },
+
+  foamvalve: {
+    n:'Foam System Valve / Proportioner',
+    s:{
+      notopen:['Foam system valve/proportioner fails to open/actuate on demand','Use the approved isolation/permit procedure. Verify actuating supply (air/hydraulic/electric) and the solenoid/pilot signal reach the valve before assuming a mechanical failure.','Loss of actuating supply, a failed solenoid/pilot, linkage seizure or mechanical obstruction can prevent the valve from actuating.','Confirm supply and the pilot/solenoid signal are present at the valve, then inspect the mechanism under the approved test procedure.'],
+      notclose:['Foam system valve/proportioner fails to close/reseat or passes when closed','Use the approved isolation/permit procedure. With the valve commanded closed, check for through-seat leakage using the approved test method and confirm actuator supply is removed/vented correctly.','Seat wear/damage, debris on the seat, actuator venting problems or linkage wear can prevent a tight shutoff.','Confirm actual seat leakage against the acceptance criteria before deciding on seat lapping, repair or replacement.'],
+      slow:['Foam system valve/proportioner is slow to actuate','Use the approved isolation/permit procedure. Measure actuation/stroke time and compare with the approved baseline.','Restricted actuating supply, a partially blocked solenoid/pilot, low pressure or mechanical friction can slow the stroke.','Verify supply pressure/flow at the valve and check the solenoid/pilot response before adjusting speed controls.'],
+      nofeedback:['Foam system valve/proportioner has no position feedback/indication','Compare actual physical valve position with the indicated/reported position.','A failed or misadjusted limit switch/position sensor, broken linkage or wiring fault can remove correct indication without the valve itself being faulty.','Confirm actual position independently, then inspect the feedback device and wiring before replacing the valve.'],
+      leak:['Foam system valve/proportioner shows external or body leakage','Use the approved isolation/permit procedure. Visually inspect the body, bonnet, packing and connections for leakage while the valve is in a safe, de-pressurised state where possible.','Packing wear, gasket failure, a cracked body/bonnet or a loose connection can produce external leakage.','Isolate under the approved procedure and confirm the source of leakage before tightening, repacking or repairing the valve.']
+    }
+  },
+
+  solenoid: {
+    n:'Solenoid Valve',
+    s:{
+      notenergise:['Solenoid does not energise/actuate on command','Verify the command voltage/current reaches the solenoid coil terminals.','A blown fuse, wiring fault, failed coil or missing command signal can prevent actuation.','Confirm command voltage is present at the coil before replacing the solenoid.'],
+      stuck:['Solenoid valve sticks in one position','De-energise/energise per the approved procedure and observe whether the plunger/spool moves freely.','Debris, corrosion, varnish buildup or a worn seal can cause the plunger/spool to stick.','Isolate and inspect internals per the approved procedure; clean or replace if contaminated or worn.'],
+      leak:['Solenoid valve leaks through when de-energised','With the solenoid in its normal (de-energised) state, check for downstream leakage/pressure using the approved method.','Seat wear, debris on the seat or a damaged diaphragm/seal can allow leakage in the closed position.','Confirm leakage against acceptance criteria before deciding on seal replacement or valve change-out.'],
+      hum:['Solenoid coil hums, overheats or burns out repeatedly','Check supply voltage/frequency matches the coil rating and inspect for mechanical binding preventing full seating of the armature.','Incorrect voltage, a partially seized valve preventing armature seating, or a failing coil can cause humming/overheating.','Confirm correct supply and free mechanical movement before replacing the coil.']
+    }
+  },
+
+  fusibleloop: {
+    n:'Fusible Loop',
+    s:{
+      notrip:['Fusible loop does not trip at rated temperature','This must only be verified using the approved test method (test rig/pressure test); do not apply open flame in the field.','Loop pressure loss elsewhere, an incorrect fusible link rating, or a control-panel/pilot valve fault can prevent tripping.','Pressure-test the loop per the approved procedure and confirm the correct fusible link rating before further testing.'],
+      lowpressure:['Fusible loop shows low pressure / continuity fault','Check the loop supervisory pressure/continuity indication and inspect accessible tubing runs for damage.','A leak, damaged tubing, a corroded fitting or a fault at the pilot/control valve can cause pressure loss.','Locate and repair the leak before restoring the loop to its supervised pressure.'],
+      falsetrip:['Fusible loop trips without a genuine fire condition','Check for physical damage to the tubing/fittings and review the area for an unrelated heat source.','Mechanical damage, a fitting failure, or an unrelated heat source near the tubing run can cause an unintended trip.','Inspect the full accessible loop run before resetting and returning it to service.']
+    }
+  },
+
+  co2panel: {
+    n:'CO2 / Clean Agent Release Panel',
+    s:{
+      fault:['CO2/clean agent release panel shows a fault on the panel','Read the exact loop, zone and device address reported in fault from the panel event log before going to the field.','Open/short circuits, a ground fault, isolated device, wiring fault or a failed field device can create a fault indication.','Trace the reported circuit/device using the approved procedure; do not assume the device itself has failed before checking wiring.'],
+      nodischarge:['Panel does not initiate discharge on demand','This must only be verified using the approved test method (simulated/disconnected actuator per the release panel test procedure); never test with live cylinders connected unless the procedure specifically requires it.','A disabled/isolated zone, wiring fault, failed relay/output, or a permissive/interlock not satisfied can prevent discharge.','Confirm zone status and permissives, then verify the output stage using the approved simulated test method.'],
+      lowpressure:['Cylinder/manifold pressure is low','Check the pressure gauge/switch on the cylinder bank against the required minimum.','Leakage past a valve, a discharged cylinder, or temperature effects on agent pressure can cause low pressure.','Follow the OEM procedure to confirm cylinder condition and weight/pressure before the system is considered available.'],
+      falsealarm:['CO2/clean agent release panel causes a nuisance or false alarm','Check the event log for the exact initiating condition and inspect the device for contamination, damage or environmental interference.','Dust/contamination, insects, condensation, physical damage, incorrect sensitivity setting or a genuine process/environmental condition can trigger a false alarm.','Confirm there is no real hazard first per site procedure, then inspect and clean/test the device before resetting.']
+    }
+  },
 };
 
 window.D = D; // exposed for the AI Technician knowledge base
@@ -12264,7 +12891,49 @@ const devices = [
   ['vibprobe','Vibration probe'],
   ['gasdet','Gas detector'],
   ['firepanel','Fire alarm panel'],
-  ['genset','Generator control panel']
+  ['genset','Generator control panel'],
+  ['pressuregauge','Pressure Gauge'],
+  ['pressureswitch','Pressure Switch'],
+  ['dpswitch','Differential Pressure Switch'],
+  ['tempswitch','Temperature Switch'],
+  ['levelswitch','Level Switch'],
+  ['limitswitch','Limit Switch'],
+  ['proximity','Proximity Sensor'],
+  ['rotameter','Rotameter (Local Flow Indicator)'],
+  ['loadcell','Load Cell'],
+  ['temptx','Temperature Transmitter'],
+  ['bearingtemp','Bearing Temperature Sensor'],
+  ['ebdvalve','Emergency Blow Down Valve'],
+  ['psv','Pressure Safety Valve (PSV) / Relief Valve'],
+  ['rupturedisc','Rupture Disc'],
+  ['axialprobe','Axial Displacement Probe'],
+  ['tachtrip','Tachometer / Overspeed Trip Device'],
+  ['motorstarter','Motor Starter / MCC Feeder'],
+  ['vfd','VFD (Variable Frequency Drive)'],
+  ['ups','UPS / Battery Charger'],
+  ['jbox','Junction Box / Terminal Box'],
+  ['openpathgas','Open Path Gas Detector'],
+  ['flamedet','Flame Detector'],
+  ['mcp','Manual Call Point'],
+  ['beacon','Beacon / Sounder (Audible-Visual Alarm)'],
+  ['fglogic','Fire & Gas Logic Solver / I/O Card'],
+  ['smokedet','Smoke Detector'],
+  ['heatdet','Heat Detector'],
+  ['phanalyser','pH Analyser'],
+  ['orpanalyser','ORP Analyser'],
+  ['condanalyser','Conductivity Analyser'],
+  ['o2analyser','Oxygen (O2) Analyser'],
+  ['turbidity','Turbidity Analyser'],
+  ['moisture','Moisture Analyser'],
+  ['gc','Gas Chromatograph Analyser'],
+  ['dewpoint','Dew Point Analyser'],
+  ['rvp','Reid Vapour Analyser'],
+  ['oilinwater','Oil in Water Analyser'],
+  ['deluge','Deluge Valve'],
+  ['foamvalve','Foam System Valve / Proportioner'],
+  ['solenoid','Solenoid Valve'],
+  ['fusibleloop','Fusible Loop'],
+  ['co2panel','CO2 / Clean Agent Release Panel'],
 ];
 window.devices = devices; // exposed for the AI Technician knowledge base
 
@@ -12281,7 +12950,7 @@ function openModal(){
   $('troubleModal').setAttribute('aria-hidden','false');
   $('troubleResult').classList.remove('show');
   $('troubleDone').style.display='none';
-  $('troubleNext').style.display='block';
+  $('troubleNext').style.display='none';
   $('troubleBack').style.display='block';
 
   renderDevice();
@@ -12311,6 +12980,15 @@ function options(items){
       box.querySelectorAll('button').forEach(x=>x.classList.remove('selected'));
       b.classList.add('selected');
       $('troubleNext').disabled=false;
+      setTimeout(()=>{
+        if(state.step===1){
+          state.device=b.dataset.id;
+          renderSymptoms();
+        }else if(state.step===2){
+          state.symptom=b.dataset.id;
+          showResult();
+        }
+      },160);
     };
     box.appendChild(b);
   });
@@ -12367,7 +13045,7 @@ $('troubleBack').onclick=()=>{
   if(state.step===3){
     $('troubleResult').classList.remove('show');
     $('troubleDone').style.display='none';
-    $('troubleNext').style.display='block';
+    $('troubleNext').style.display='none';
     $('troubleBack').style.display='block';
     renderSymptoms();
     return;
