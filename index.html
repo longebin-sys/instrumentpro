@@ -4388,6 +4388,11 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 </div>
 </div><!-- /fnPanelLog -->
 <div id="fnPanelTasks" style="display:none;">
+<div id="fnSubTopTabs" style="display:flex;gap:8px;margin-bottom:10px;">
+<button class="btn-outline btn" id="fnSubTabDailyBtn" style="flex:1;justify-content:center;" type="button"><i class="fas fa-calendar-day"></i>&nbsp;Daily / Weekly</button>
+<button class="btn-outline btn" id="fnSubTabOutageBtn" style="flex:1;justify-content:center;" type="button"><i class="fas fa-industry"></i>&nbsp;Outage Checklist</button>
+</div>
+<div id="fnSubPanelDaily">
 <div class="card">
 <div class="card-header"><i class="fas fa-list-check"></i><h3 id="fnTaskPeriodLabel">Task List</h3><span id="fnTaskCount">0</span></div>
 <div class="fn-section-note" style="margin-bottom:8px;">Build your task list, then work each one through the normal Field Report flow. Status tracks automatically when a report is issued for that tag.</div>
@@ -4498,7 +4503,64 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <button class="btn-outline btn w-full" id="fnTaskFullReportBtn" style="justify-content:center;margin-top:8px;" type="button"><i class="fas fa-file-signature"></i> End-of-Week Full Report (PDF)</button>
 <button class="btn-outline btn w-full" id="fnTaskEndPeriodBtn" style="justify-content:center;margin-top:8px;color:#b45309;" type="button"><i class="fas fa-forward"></i> End Period &amp; Carry Forward Outstanding</button>
 </div>
+</div><!-- /fnSubPanelDaily -->
+<div id="fnPanelOutage">
+<div class="card">
+<div class="card-header"><i class="fas fa-industry"></i><h3>Outage Job</h3><span id="iocJobBadge">—</span></div>
+<div class="fn-section-note" style="margin-bottom:8px;">Turbine shutdown / full-service instrument checklist, scoped to your team. Progress persists across the whole outage — tap a category, work it, come back for the next whenever.</div>
+<div class="fn-form-grid">
+<div><label>Turbine Package</label><select id="iocPackage"><option>GE LM2500</option><option>Solar Turbines</option></select></div>
+<div><label>Scope</label><select id="iocScope"><option>Shutdown</option><option>Running</option><option>Full Service</option></select></div>
+<div><label>Technician</label><input id="iocTech" placeholder="Your name"/></div>
+<div><label>Work Order</label><input id="iocWO" placeholder="WO-12345"/></div>
+<div><label>Unit ID</label><input id="iocUnit" placeholder="GT-1"/></div>
+<div><label>Date</label><input id="iocDate" type="date"/></div>
+</div>
+<button class="btn-outline btn w-full" id="iocNewJobBtn" style="justify-content:center;margin-top:10px;color:#b45309;" type="button"><i class="fas fa-forward"></i> New Job (reload template, reset statuses)</button>
+<button class="btn-outline btn w-full" id="iocClearAllBtn" style="justify-content:center;margin-top:8px;color:#dc2626;" type="button"><i class="fas fa-trash"></i> Clear All Items (this job — true reset to zero)</button>
+</div>
+<div class="card" style="padding:12px;">
+<div class="fn-dashboard">
+<div class="fn-stat"><div class="fn-stat-label">ITEMS</div><strong id="iocStatTotal">0</strong></div>
+<div class="fn-stat"><div class="fn-stat-label">COMPLETE</div><strong id="iocStatComplete">0</strong></div>
+<div class="fn-stat"><div class="fn-stat-label">PENDING</div><strong id="iocStatPending">0</strong></div>
+<div class="fn-stat"><div class="fn-stat-label">MY ITEMS</div><strong id="iocStatMine">0</strong></div>
+</div>
+</div>
+<div class="card">
+<div class="fn-form-grid">
+<div><label>Show</label><select id="iocFilterMode">
+<option value="all">All Items</option>
+<option value="mine">My Items Only</option>
+<option value="pending">Status: Pending</option>
+<option value="complete">Status: Complete</option>
+</select></div>
+<div><label>Team Member Contains</label><input id="iocFilterMember" placeholder="Name filter…"/></div>
+</div>
+</div>
+<div class="card">
+<div class="card-header"><i class="fas fa-list-check"></i><h3>Task Picker</h3><span id="iocCatTotalBadge">0</span></div>
+<div class="fn-section-note" style="margin-bottom:8px;">What are you working on right now?</div>
+<select id="iocCategorySelect" style="width:100%;"></select>
+</div>
+<div id="iocCategoryDetail"></div>
+<div class="card">
+<div class="card-header"><i class="fas fa-file-signature"></i><h3>Reports</h3></div>
+<div class="fn-section-note" style="margin-bottom:8px;">Reports reuse the app's field-report style and are scoped to what you choose below.</div>
+<button class="btn-outline btn w-full" id="iocReportMineBtn" style="justify-content:center;" type="button"><i class="fas fa-file-pdf"></i> My Completed Items (PDF)</button>
+<button class="btn-outline btn w-full" id="iocReportAllBtn" style="justify-content:center;margin-top:8px;" type="button"><i class="fas fa-file-pdf"></i> All Items — Full Report (PDF)</button>
+<button class="btn-outline btn w-full" id="iocReportMemberBtn" style="justify-content:center;margin-top:8px;" type="button"><i class="fas fa-file-pdf"></i> By Team Member (PDF)</button>
+</div>
+<div class="card">
+<div class="card-header"><i class="fas fa-people-arrows"></i><h3>Team Data</h3></div>
+<div class="fn-section-note" style="margin-bottom:8px;">No live multi-device sync. Export your progress as JSON and import teammates' files to merge before a combined report — same pattern as the HART device library.</div>
+<button class="btn-outline btn w-full" id="iocExportBtn" style="justify-content:center;" type="button"><i class="fas fa-file-export"></i> Export Job JSON</button>
+<label class="btn-outline btn w-full" for="iocImportInput" style="justify-content:center;margin-top:8px;cursor:pointer;"><i class="fas fa-file-import"></i> Import &amp; Merge JSON</label>
+<input accept=".json" id="iocImportInput" style="display:none;" type="file"/>
+</div>
+</div><!-- /fnPanelOutage -->
 </div><!-- /fnPanelTasks -->
+
 </div>
 <!-- ==========================================================
              SHIFT / HANDOVER REPORT MODAL
@@ -15043,11 +15105,42 @@ document.addEventListener('DOMContentLoaded',function(){
         if(tasksPanel) tasksPanel.style.display='';
         if(tasksBtn){ tasksBtn.style.background='#1e3a5f'; tasksBtn.style.color='#fff'; }
         if(logBtn){ logBtn.style.background=''; logBtn.style.color=''; }
-        iptRender();
+        activateSubTabFromState();
     }
     if(logBtn) logBtn.addEventListener('click',activateLog);
     if(tasksBtn) tasksBtn.addEventListener('click',activateTasks);
     activateLog();
+
+    // --- Tasks sub-tabs: Daily/Weekly vs Outage Checklist ---
+    var subDailyBtn=document.getElementById('fnSubTabDailyBtn');
+    var subOutageBtn=document.getElementById('fnSubTabOutageBtn');
+    var subDailyPanel=document.getElementById('fnSubPanelDaily');
+    var subOutagePanel=document.getElementById('fnPanelOutage');
+    var IPT_SUBTAB_KEY='instrumentpro_tasks_subtab';
+    function activateSubDaily(){
+        if(subDailyPanel) subDailyPanel.style.display='';
+        if(subOutagePanel) subOutagePanel.style.display='none';
+        if(subDailyBtn){ subDailyBtn.style.background='#1e3a5f'; subDailyBtn.style.color='#fff'; }
+        if(subOutageBtn){ subOutageBtn.style.background=''; subOutageBtn.style.color=''; }
+        try{ localStorage.setItem(IPT_SUBTAB_KEY,'daily'); }catch(e){}
+        iptRender();
+    }
+    function activateSubOutage(){
+        if(subDailyPanel) subDailyPanel.style.display='none';
+        if(subOutagePanel) subOutagePanel.style.display='';
+        if(subOutageBtn){ subOutageBtn.style.background='#1e3a5f'; subOutageBtn.style.color='#fff'; }
+        if(subDailyBtn){ subDailyBtn.style.background=''; subDailyBtn.style.color=''; }
+        try{ localStorage.setItem(IPT_SUBTAB_KEY,'outage'); }catch(e){}
+        if(window.iocRender) window.iocRender();
+    }
+    function activateSubTabFromState(){
+        var last=null;
+        try{ last=localStorage.getItem(IPT_SUBTAB_KEY); }catch(e){}
+        if(last==='outage') activateSubOutage(); else activateSubDaily();
+    }
+    if(subDailyBtn) subDailyBtn.addEventListener('click',activateSubDaily);
+    if(subOutageBtn) subOutageBtn.addEventListener('click',activateSubOutage);
+    activateSubDaily();
 
     var bottomTaskBtn=document.getElementById('bottomTaskBtn');
     if(bottomTaskBtn) bottomTaskBtn.addEventListener('click',function(){
@@ -15120,5 +15213,545 @@ document.addEventListener('DOMContentLoaded',function(){
 });
 })();
 </script>
+<!-- ==========================================================
+     GE LM2500 / SOLAR TURBINES OUTAGE CHECKLIST — Tool 2
+     ========================================================== -->
+<script>
+(function(){
+'use strict';
+
+var IOC_JOB_KEY='instrumentpro_outage_job';
+var IOC_ITEMS_KEY='instrumentpro_outage_items';
+
+var IOC_CATEGORIES=[
+    {id:'pressure',name:'Pressure Transmitters',icon:'fa-gauge-high',type:'A'},
+    {id:'temperature',name:'Temperature (RTD/TC)',icon:'fa-temperature-half',type:'A'},
+    {id:'level',name:'Level',icon:'fa-water',type:'A'},
+    {id:'vibration',name:'Vibration Probes',icon:'fa-wave-square',type:'A'},
+    {id:'speed',name:'Speed Probes / Magnetic Pickup',icon:'fa-gauge',type:'A'},
+    {id:'gas',name:'Gas Detectors',icon:'fa-biohazard',type:'B'},
+    {id:'flame',name:'Flame Detectors',icon:'fa-fire',type:'B'},
+    {id:'antisurge',name:'Anti-Surge Valves',icon:'fa-sliders',type:'B'},
+    {id:'solenoid',name:'Solenoid Valves',icon:'fa-toggle-on',type:'B'},
+    {id:'firesupp',name:'Fire Suppression',icon:'fa-fire-extinguisher',type:'B'},
+    {id:'alarms',name:'Alarms / ESD',icon:'fa-bell',type:'B'}
+];
+function iocCat(id){ return IOC_CATEGORIES.find(function(c){return c.id===id;}); }
+
+var iocOpenCategory=null;
+var iocOpenItem=null;
+
+function iocEsc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function iocId(){return 'OC-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,7);}
+function iocFmt(n){ return (n==null||isNaN(n))?'—':(Math.round(n*1000)/1000).toString(); }
+function iocTodayStr(){
+    var d=new Date();
+    return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+
+// ---------------- Job ----------------
+function iocJob(){
+    try{
+        var raw=localStorage.getItem(IOC_JOB_KEY);
+        if(raw){ var j=JSON.parse(raw); if(j && j.id) return j; }
+    }catch(e){}
+    var j={id:iocId(),package:'GE LM2500',scope:'Shutdown',tech:'',workOrder:'',unitId:'',date:iocTodayStr(),createdAt:new Date().toISOString()};
+    localStorage.setItem(IOC_JOB_KEY,JSON.stringify(j));
+    return j;
+}
+function iocSaveJob(j){ localStorage.setItem(IOC_JOB_KEY,JSON.stringify(j)); }
+
+// ---------------- Items ----------------
+function iocItems(){
+    try{ var raw=localStorage.getItem(IOC_ITEMS_KEY); return raw?JSON.parse(raw):[]; }catch(e){ return []; }
+}
+function iocSaveItems(arr){ localStorage.setItem(IOC_ITEMS_KEY,JSON.stringify(arr)); }
+function iocJobItems(){
+    var jobId=iocJob().id;
+    return iocItems().filter(function(it){ return it.jobId===jobId; });
+}
+function iocCategoryItems(catId){
+    return iocJobItems().filter(function(it){ return it.category===catId; });
+}
+
+function iocMakeCheckpoints(urv,lrv){
+    var u=parseFloat(urv), l=parseFloat(lrv);
+    if(isNaN(u)) u=0; if(isNaN(l)) l=0;
+    return [0,25,50,75,100].map(function(pct){
+        return {pct:pct, expected:l+(pct/100)*(u-l), asFound:null, asLeft:null, errPct:null, pass:null};
+    });
+}
+
+function iocFilteredItems(list){
+    var job=iocJob();
+    var mode=(document.getElementById('iocFilterMode')||{}).value||'all';
+    var memberFilter=((document.getElementById('iocFilterMember')||{}).value||'').trim().toLowerCase();
+    return list.filter(function(it){
+        if(mode==='mine' && (it.assignedTo||'').trim().toLowerCase()!==(job.tech||'').trim().toLowerCase()) return false;
+        if(mode==='pending' && it.status!=='Pending') return false;
+        if(mode==='complete' && it.status!=='Complete') return false;
+        if(memberFilter && (it.assignedTo||'').toLowerCase().indexOf(memberFilter)===-1) return false;
+        return true;
+    });
+}
+
+// ---------------- Add / Remove / Compute ----------------
+function iocAddItem(catId){
+    var cat=iocCat(catId); if(!cat) return;
+    var tagEl=document.getElementById('iocNewTag_'+catId);
+    var descEl=document.getElementById('iocNewDesc_'+catId);
+    var stateEl=document.getElementById('iocNewState_'+catId);
+    var typeEl=document.getElementById('iocNewType_'+catId);
+    var assignEl=document.getElementById('iocNewAssign_'+catId);
+    var urvEl=document.getElementById('iocNewUrv_'+catId);
+    var lrvEl=document.getElementById('iocNewLrv_'+catId);
+    var tolEl=document.getElementById('iocNewTol_'+catId);
+    var tag=(tagEl&&tagEl.value||'').trim();
+    if(!tag){ alert('Enter a tag for this item.'); if(tagEl) tagEl.focus(); return; }
+    var type=(typeEl&&typeEl.value)||cat.type;
+    var job=iocJob();
+    var item={
+        id: iocId(), jobId: job.id, category: catId, tag: tag,
+        description: (descEl&&descEl.value||'').trim(),
+        applicableState: (stateEl&&stateEl.value)||'Both',
+        type: type,
+        assignedTo: (assignEl&&assignEl.value||'').trim(),
+        status:'Pending',
+        urv: type==='A' ? parseFloat(urvEl&&urvEl.value) : null,
+        lrv: type==='A' ? parseFloat(lrvEl&&lrvEl.value) : null,
+        tolerance: type==='A' ? (parseFloat(tolEl&&tolEl.value)||0.5) : null,
+        checkpoints: type==='A' ? iocMakeCheckpoints(urvEl&&urvEl.value, lrvEl&&lrvEl.value) : null,
+        resultB: null, notes:'', checkedBy:null, timestamp:null, overallResult:null,
+        addedAt:new Date().toISOString()
+    };
+    var items=iocItems(); items.push(item); iocSaveItems(items);
+    if(tagEl) tagEl.value=''; if(descEl) descEl.value=''; if(assignEl) assignEl.value='';
+    iocRender();
+}
+function iocRemoveItem(id){
+    if(!confirm('Remove this checklist item?')) return;
+    iocSaveItems(iocItems().filter(function(it){return it.id!==id;}));
+    if(iocOpenItem===id) iocOpenItem=null;
+    iocRender();
+}
+function iocToggleItem(id){
+    iocOpenItem = (iocOpenItem===id) ? null : id;
+    iocRender();
+}
+function iocToggleCategory(catId){
+    iocOpenCategory = (iocOpenCategory===catId) ? null : catId;
+    iocOpenItem=null;
+    iocRender();
+}
+function iocSelectCategory(catId){
+    iocOpenCategory = catId || null;
+    iocOpenItem=null;
+    iocRender();
+}
+
+function iocSaveItemResult(id){
+    var items=iocItems();
+    var it=items.find(function(x){return x.id===id;});
+    if(!it) return;
+    var job=iocJob();
+    if(it.type==='A'){
+        var range=(it.urv-it.lrv)||1;
+        var pass=true;
+        it.checkpoints.forEach(function(cp,idx){
+            var fEl=document.querySelector('[data-ioc-cp-found="'+idx+'"][data-ioc-item="'+id+'"]');
+            var lEl=document.querySelector('[data-ioc-cp-left="'+idx+'"][data-ioc-item="'+id+'"]');
+            var f=fEl&&fEl.value!==''?parseFloat(fEl.value):null;
+            var l=lEl&&lEl.value!==''?parseFloat(lEl.value):null;
+            cp.asFound=f; cp.asLeft=l;
+            if(l!=null){
+                var err=((l-cp.expected)/range)*100;
+                cp.errPct=err;
+                cp.pass=Math.abs(err)<=(it.tolerance||0.5);
+                if(!cp.pass) pass=false;
+            } else { cp.errPct=null; cp.pass=null; pass=false; }
+        });
+        it.overallResult = pass?'PASS':'FAIL';
+    } else {
+        var resEl=document.getElementById('iocResultB_'+id);
+        var noteEl=document.getElementById('iocNoteB_'+id);
+        it.resultB=(resEl&&resEl.value)||'N/A';
+        it.notes=(noteEl&&noteEl.value)||'';
+        it.overallResult=it.resultB;
+    }
+    var assignEl=document.getElementById('iocAssignEdit_'+id);
+    if(assignEl) it.assignedTo=assignEl.value.trim();
+    it.status='Complete';
+    it.checkedBy=job.tech||it.assignedTo||'—';
+    it.timestamp=new Date().toISOString();
+    iocSaveItems(items);
+    iocOpenItem=null;
+    iocRender();
+}
+
+// ---------------- New Job ----------------
+function iocNewJob(){
+    var job=iocJob();
+    var jobItems=iocJobItems();
+    if(jobItems.length && !confirm('Start a new job? This KEEPS every tag/description/type/range as a reusable template and resets all statuses, as-found/as-left values, and sign-offs — it does not remove items. Use "Clear All Items" below instead if you want to start completely empty. Continue?')) return;
+    var newJob={id:iocId(),package:job.package,scope:job.scope,tech:job.tech,workOrder:'',unitId:job.unitId,date:iocTodayStr(),createdAt:new Date().toISOString()};
+    var allItems=iocItems();
+    var cloned=jobItems.map(function(it){
+        return {
+            id: iocId(), jobId: newJob.id, category: it.category, tag: it.tag, description: it.description,
+            applicableState: it.applicableState, type: it.type, assignedTo: it.assignedTo, status:'Pending',
+            urv: it.urv, lrv: it.lrv, tolerance: it.tolerance,
+            checkpoints: it.type==='A' ? iocMakeCheckpoints(it.urv, it.lrv) : null,
+            resultB:null, notes:'', checkedBy:null, timestamp:null, overallResult:null, addedAt:new Date().toISOString()
+        };
+    });
+    iocSaveItems(allItems.concat(cloned));
+    iocSaveJob(newJob);
+    iocOpenCategory=null; iocOpenItem=null;
+    iocRender();
+    alert('New job started. '+cloned.length+' template item(s) reloaded with statuses reset.');
+}
+
+function iocClearAllItems(){
+    var jobItems=iocJobItems();
+    if(!jobItems.length){ alert('There are no items on this job.'); return; }
+    if(!confirm('Permanently remove all '+jobItems.length+' item(s) on this job? This is a true reset to zero — unlike "New Job," nothing is kept as a template. This cannot be undone.')) return;
+    var jobId=iocJob().id;
+    iocSaveItems(iocItems().filter(function(it){ return it.jobId!==jobId; }));
+    iocOpenCategory=null; iocOpenItem=null;
+    iocRender();
+    alert('All items cleared for this job.');
+}
+
+// ---------------- Export / Import ----------------
+function iocExport(){
+    var job=iocJob();
+    var payload={job:job, items:iocJobItems(), exportedAt:new Date().toISOString()};
+    var blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download='Outage-'+(job.unitId||'unit')+'-'+(job.tech||'tech').replace(/\s+/g,'_')+'-'+Date.now()+'.json';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+}
+function iocImport(file){
+    var reader=new FileReader();
+    reader.onload=function(){
+        try{
+            var payload=JSON.parse(reader.result);
+            var incoming=(payload && payload.items) || [];
+            if(!incoming.length){ alert('No items found in that file.'); return; }
+            var items=iocItems();
+            var byId={}; items.forEach(function(it){ byId[it.id]=it; });
+            var merged=0, added=0;
+            incoming.forEach(function(inc){
+                if(byId[inc.id]){
+                    var idx=items.findIndex(function(x){return x.id===inc.id;});
+                    // Merge: prefer the more recently completed record.
+                    var existing=items[idx];
+                    var incTime=inc.timestamp?new Date(inc.timestamp).getTime():0;
+                    var exTime=existing.timestamp?new Date(existing.timestamp).getTime():0;
+                    if(incTime>exTime){ items[idx]=inc; merged++; }
+                } else {
+                    items.push(inc); added++;
+                }
+            });
+            iocSaveItems(items);
+            iocRender();
+            alert('Import complete: '+added+' new item(s) added, '+merged+' item(s) updated with newer data.');
+        }catch(e){ alert('Could not read that file: '+e.message); }
+    };
+    reader.readAsText(file);
+}
+
+// ---------------- Rendering ----------------
+function iocStatusBadge(status,overall){
+    if(status!=='Complete') return '<span class="badge" style="background:#fff7ed;color:#b45309;">Pending</span>';
+    var ok = overall==='PASS'||overall==='Pass';
+    var fail = overall==='FAIL'||overall==='Fail';
+    var bg = ok?'#ecfdf5':(fail?'#fef2f2':'#f1f5f9');
+    var col = ok?'#059669':(fail?'#dc2626':'#475569');
+    return '<span class="badge" style="background:'+bg+';color:'+col+';">'+iocEsc(overall||'Complete')+'</span>';
+}
+
+function iocCategorySelectHTML(){
+    var options = '<option value=""'+(!iocOpenCategory?' selected':'')+'>Select a category…</option>';
+    options += IOC_CATEGORIES.map(function(cat){
+        var items=iocCategoryItems(cat.id);
+        var complete=items.filter(function(it){return it.status==='Complete';}).length;
+        var selected = iocOpenCategory===cat.id ? ' selected' : '';
+        return '<option value="'+cat.id+'"'+selected+'>'+iocEsc(cat.name)+' — '+complete+'/'+items.length+' complete</option>';
+    }).join('');
+    return options;
+}
+
+function iocAddItemFormHTML(cat){
+    var typeOptions = '<option value="A"'+(cat.type==='A'?' selected':'')+'>A — Range-based (5-pt cal)</option><option value="B"'+(cat.type==='B'?' selected':'')+'>B — Functional / Pass-Fail</option>';
+    return '<div class="card" style="margin-top:8px;">'
+        +'<div class="card-header"><i class="fas fa-plus-circle"></i><h3 style="font-size:.8rem;">Add '+iocEsc(cat.name)+' Item</h3></div>'
+        +'<div class="fn-form-grid">'
+        +'<div><label>Tag</label><input id="iocNewTag_'+cat.id+'" placeholder="e.g. PT-201"/></div>'
+        +'<div><label>Assigned To</label><input id="iocNewAssign_'+cat.id+'" placeholder="Tech name"/></div>'
+        +'<div class="fn-wide"><label>Description</label><input id="iocNewDesc_'+cat.id+'" placeholder="Location / service description"/></div>'
+        +'<div><label>Applicable State</label><select id="iocNewState_'+cat.id+'"><option>Both</option><option>Shutdown</option><option>Running</option></select></div>'
+        +'<div><label>Check Type</label><select id="iocNewType_'+cat.id+'" onchange="window.__iocToggleRangeFields(\''+cat.id+'\')">'+typeOptions+'</select></div>'
+        +'<div id="iocRangeFields_'+cat.id+'" style="display:'+(cat.type==='A'?'contents':'none')+';">'
+        +'<div><label>LRV</label><input id="iocNewLrv_'+cat.id+'" placeholder="0" step="any" type="number"/></div>'
+        +'<div><label>URV</label><input id="iocNewUrv_'+cat.id+'" placeholder="100" step="any" type="number"/></div>'
+        +'<div><label>Tolerance (%)</label><input id="iocNewTol_'+cat.id+'" placeholder="0.5" step="any" type="number" value="0.5"/></div>'
+        +'</div>'
+        +'</div>'
+        +'<button class="btn w-full fn-primary" data-ioc-add="'+cat.id+'" style="justify-content:center;margin-top:10px;" type="button"><i class="fas fa-plus-circle"></i> Add Item</button>'
+        +'</div>';
+}
+
+function iocItemRowHTML(it,cat){
+    var open = iocOpenItem===it.id;
+    var head = '<div data-ioc-toggle-item="'+it.id+'" style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #f1f5f9;cursor:pointer;">'
+        +'<div>'
+        +'<div style="font-size:.75rem;font-weight:700;">'+iocEsc(it.tag)+' <span style="font-weight:400;color:#94a3b8;font-size:.62rem;">('+it.type+')</span></div>'
+        +'<div style="font-size:.62rem;color:#64748b;">'+iocEsc(it.description||'—')+' • '+iocEsc(it.applicableState)+(it.assignedTo?(' • '+iocEsc(it.assignedTo)):'')+'</div>'
+        +'</div>'
+        +'<div style="display:flex;align-items:center;gap:8px;">'+iocStatusBadge(it.status,it.overallResult)+'<i class="fas fa-chevron-'+(open?'up':'down')+'" style="font-size:.6rem;color:#94a3b8;"></i></div>'
+        +'</div>';
+    if(!open) return head;
+
+    var body;
+    if(it.type==='A'){
+        var rows=(it.checkpoints||iocMakeCheckpoints(it.urv,it.lrv)).map(function(cp,idx){
+            var passColor = cp.pass===true?'#059669':(cp.pass===false?'#dc2626':'#94a3b8');
+            var passLabel = cp.pass===true?'PASS':(cp.pass===false?'FAIL':'—');
+            return '<tr>'
+                +'<td style="padding:4px;font-size:.62rem;">'+cp.pct+'%</td>'
+                +'<td style="padding:4px;font-size:.62rem;">'+iocFmt(cp.expected)+'</td>'
+                +'<td style="padding:2px;"><input data-ioc-cp-found="'+idx+'" data-ioc-item="'+it.id+'" step="any" style="width:100%;font-size:.62rem;padding:5px;" type="number" value="'+(cp.asFound!=null?cp.asFound:'')+'"/></td>'
+                +'<td style="padding:2px;"><input data-ioc-cp-left="'+idx+'" data-ioc-item="'+it.id+'" step="any" style="width:100%;font-size:.62rem;padding:5px;" type="number" value="'+(cp.asLeft!=null?cp.asLeft:'')+'"/></td>'
+                +'<td style="padding:4px;font-size:.6rem;">'+(cp.errPct!=null?cp.errPct.toFixed(2)+'%':'—')+'</td>'
+                +'<td style="padding:4px;font-size:.6rem;font-weight:700;color:'+passColor+';">'+passLabel+'</td>'
+                +'</tr>';
+        }).join('');
+        body='<div style="padding:8px 0;">'
+            +'<div style="font-size:.62rem;color:#64748b;margin-bottom:6px;">LRV '+iocFmt(it.lrv)+' • URV '+iocFmt(it.urv)+' • Tolerance ±'+(it.tolerance||0.5)+'%</div>'
+            +'<div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;min-width:420px;">'
+            +'<thead><tr style="color:#94a3b8;font-size:.58rem;text-align:left;"><th style="padding:4px;">%</th><th style="padding:4px;">Expected</th><th style="padding:4px;">As-Found</th><th style="padding:4px;">As-Left</th><th style="padding:4px;">Error</th><th style="padding:4px;">Result</th></tr></thead>'
+            +'<tbody>'+rows+'</tbody></table></div>'
+            +'<div class="fn-form-grid" style="margin-top:8px;"><div><label>Assigned To</label><input id="iocAssignEdit_'+it.id+'" value="'+iocEsc(it.assignedTo)+'"/></div></div>'
+            +'<div style="display:flex;gap:8px;margin-top:8px;">'
+            +'<button class="btn fn-primary" data-ioc-save="'+it.id+'" style="flex:1;justify-content:center;" type="button"><i class="fas fa-check"></i> Save Result</button>'
+            +'<button class="btn-outline btn" data-ioc-remove="'+it.id+'" style="justify-content:center;color:#dc2626;" type="button"><i class="fas fa-trash"></i></button>'
+            +'</div>'
+            +(it.checkedBy?('<div style="font-size:.6rem;color:#94a3b8;margin-top:6px;">Last checked by '+iocEsc(it.checkedBy)+' • '+new Date(it.timestamp).toLocaleString()+'</div>'):'')
+            +'</div>';
+    } else {
+        var opts=['Pass','Fail','N/A'].map(function(o){return '<option'+(it.resultB===o?' selected':'')+'>'+o+'</option>';}).join('');
+        body='<div style="padding:8px 0;">'
+            +'<div class="fn-form-grid">'
+            +'<div><label>Result</label><select id="iocResultB_'+it.id+'"><option value="">— Select —</option>'+opts+'</select></div>'
+            +'<div><label>Assigned To</label><input id="iocAssignEdit_'+it.id+'" value="'+iocEsc(it.assignedTo)+'"/></div>'
+            +'<div class="fn-wide"><label>Notes</label><textarea id="iocNoteB_'+it.id+'" placeholder="Findings, actions taken...">'+iocEsc(it.notes)+'</textarea></div>'
+            +'</div>'
+            +'<div style="display:flex;gap:8px;margin-top:8px;">'
+            +'<button class="btn fn-primary" data-ioc-save="'+it.id+'" style="flex:1;justify-content:center;" type="button"><i class="fas fa-check"></i> Save Result</button>'
+            +'<button class="btn-outline btn" data-ioc-remove="'+it.id+'" style="justify-content:center;color:#dc2626;" type="button"><i class="fas fa-trash"></i></button>'
+            +'</div>'
+            +(it.checkedBy?('<div style="font-size:.6rem;color:#94a3b8;margin-top:6px;">Last checked by '+iocEsc(it.checkedBy)+' • '+new Date(it.timestamp).toLocaleString()+'</div>'):'')
+            +'</div>';
+    }
+    return head+body;
+}
+
+function iocCategoryDetailHTML(){
+    if(!iocOpenCategory) return '';
+    var cat=iocCat(iocOpenCategory); if(!cat) return '';
+    var items=iocFilteredItems(iocCategoryItems(cat.id));
+    var listHTML = items.length
+        ? items.map(function(it){ return iocItemRowHTML(it,cat); }).join('')
+        : '<div style="font-size:0.72rem;color:#94a3b8;text-align:center;padding:14px;">No items in this category yet (or none match the current filter).</div>';
+    return '<div class="card">'
+        +'<div class="card-header"><i class="fas '+cat.icon+'"></i><h3>'+iocEsc(cat.name)+'</h3><span>'+items.length+'</span></div>'
+        +listHTML
+        +'</div>'
+        +iocAddItemFormHTML(cat);
+}
+
+function iocRender(){
+    var job=iocJob();
+    var pkgEl=document.getElementById('iocPackage'); if(pkgEl && pkgEl.value!==job.package) pkgEl.value=job.package;
+    var scopeEl=document.getElementById('iocScope'); if(scopeEl && scopeEl.value!==job.scope) scopeEl.value=job.scope;
+    var techEl=document.getElementById('iocTech'); if(techEl && document.activeElement!==techEl) techEl.value=job.tech||'';
+    var woEl=document.getElementById('iocWO'); if(woEl && document.activeElement!==woEl) woEl.value=job.workOrder||'';
+    var unitEl=document.getElementById('iocUnit'); if(unitEl && document.activeElement!==unitEl) unitEl.value=job.unitId||'';
+    var dateEl=document.getElementById('iocDate'); if(dateEl && document.activeElement!==dateEl) dateEl.value=job.date||iocTodayStr();
+
+    var badge=document.getElementById('iocJobBadge');
+    if(badge) badge.textContent=(job.package||'')+' • '+(job.unitId||'unit n/a');
+
+    var jobItems=iocJobItems();
+    var complete=jobItems.filter(function(it){return it.status==='Complete';});
+    var pending=jobItems.filter(function(it){return it.status==='Pending';});
+    var mine=jobItems.filter(function(it){return (it.assignedTo||'').trim().toLowerCase()===(job.tech||'').trim().toLowerCase() && (job.tech||'').trim();});
+
+    var elTotal=document.getElementById('iocStatTotal'); if(elTotal) elTotal.textContent=jobItems.length;
+    var elComplete=document.getElementById('iocStatComplete'); if(elComplete) elComplete.textContent=complete.length;
+    var elPending=document.getElementById('iocStatPending'); if(elPending) elPending.textContent=pending.length;
+    var elMine=document.getElementById('iocStatMine'); if(elMine) elMine.textContent=mine.length;
+    var catTotalBadge=document.getElementById('iocCatTotalBadge'); if(catTotalBadge) catTotalBadge.textContent=jobItems.length;
+
+    var select=document.getElementById('iocCategorySelect'); if(select) select.innerHTML=iocCategorySelectHTML();
+    var detail=document.getElementById('iocCategoryDetail'); if(detail) detail.innerHTML=iocCategoryDetailHTML();
+}
+
+window.__iocToggleRangeFields=function(catId){
+    var typeEl=document.getElementById('iocNewType_'+catId);
+    var fields=document.getElementById('iocRangeFields_'+catId);
+    if(!typeEl||!fields) return;
+    fields.style.display = typeEl.value==='A' ? 'contents' : 'none';
+};
+
+// ---------------- PDF ----------------
+var iocJsPdfPromise=null;
+function iocLoadJsPDF(){
+    if(window.jspdf && window.jspdf.jsPDF) return Promise.resolve(window.jspdf.jsPDF);
+    if(iocJsPdfPromise) return iocJsPdfPromise;
+    iocJsPdfPromise=new Promise(function(resolve,reject){
+        var script=document.createElement('script');
+        script.src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+        script.async=true;
+        script.onload=function(){ resolve(window.jspdf.jsPDF); };
+        script.onerror=function(){ iocJsPdfPromise=null; reject(new Error('PDF library could not be loaded')); };
+        document.head.appendChild(script);
+    });
+    return iocJsPdfPromise;
+}
+
+function iocBuildReport(items, title, scopeLabel){
+    var job=iocJob();
+    iocLoadJsPDF().then(function(jsPDF){
+        var doc=new jsPDF({unit:'pt',format:'a4'});
+        var x=40,y=50,maxW=515;
+        doc.setFont('helvetica','bold'); doc.setFontSize(15);
+        doc.text('InstrumentPro — '+title,x,y); y+=20;
+        doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(90);
+        doc.text((job.package||'')+' • '+(job.scope||'')+' • Unit '+(job.unitId||'—')+' • WO '+(job.workOrder||'—'),x,y); y+=13;
+        doc.text('Scope: '+scopeLabel+' • Generated '+new Date().toLocaleString(),x,y); y+=18;
+        doc.setDrawColor(220); doc.line(x,y,x+maxW,y); y+=16;
+
+        var complete=items.filter(function(it){return it.status==='Complete';});
+        var pending=items.filter(function(it){return it.status!=='Complete';});
+        doc.setTextColor(20); doc.setFont('helvetica','bold'); doc.setFontSize(11);
+        doc.text('Summary — Total '+items.length+'   Complete '+complete.length+'   Pending '+pending.length,x,y); y+=18;
+
+        var byCat={};
+        items.forEach(function(it){ (byCat[it.category]=byCat[it.category]||[]).push(it); });
+
+        IOC_CATEGORIES.forEach(function(cat){
+            var list=byCat[cat.id]; if(!list||!list.length) return;
+            if(y>720){ doc.addPage(); y=50; }
+            doc.setFont('helvetica','bold'); doc.setFontSize(12); doc.setTextColor(20);
+            doc.text(cat.name,x,y); y+=14;
+            doc.setFont('helvetica','normal'); doc.setFontSize(9);
+            list.forEach(function(it){
+                if(y>750){ doc.addPage(); y=50; }
+                doc.setFont('helvetica','bold');
+                doc.text(it.tag+'  ('+it.type+')  —  '+it.status+(it.overallResult?(' — '+it.overallResult):''),x,y); y+=12;
+                doc.setFont('helvetica','normal');
+                var meta='Assigned: '+(it.assignedTo||'—')+'   State: '+it.applicableState+'   Checked by: '+(it.checkedBy||'—');
+                doc.text(meta,x,y); y+=12;
+                if(it.description){ doc.text('Desc: '+it.description,x,y); y+=12; }
+                if(it.type==='A' && it.checkpoints){
+                    doc.text('LRV '+iocFmt(it.lrv)+'  URV '+iocFmt(it.urv)+'  Tol ±'+(it.tolerance||0.5)+'%',x,y); y+=12;
+                    it.checkpoints.forEach(function(cp){
+                        if(y>760){ doc.addPage(); y=50; }
+                        doc.text('  '+cp.pct+'%  Exp '+iocFmt(cp.expected)+'  Found '+iocFmt(cp.asFound)+'  Left '+iocFmt(cp.asLeft)+'  Err '+(cp.errPct!=null?cp.errPct.toFixed(2)+'%':'—')+'  '+(cp.pass===true?'PASS':cp.pass===false?'FAIL':'—'),x,y); y+=11;
+                    });
+                } else if(it.notes){
+                    doc.text('Notes: '+it.notes,x,y); y+=12;
+                }
+                y+=6;
+            });
+            y+=6;
+        });
+
+        doc.save('Outage-'+title.replace(/\s+/g,'-')+'-'+Date.now()+'.pdf');
+    }).catch(function(e){ alert(e.message); });
+}
+
+function iocReportMine(){
+    var job=iocJob();
+    if(!(job.tech||'').trim()){ alert('Enter your technician name in the job card first.'); return; }
+    var items=iocJobItems().filter(function(it){ return it.status==='Complete' && (it.assignedTo||'').trim().toLowerCase()===job.tech.trim().toLowerCase(); });
+    iocBuildReport(items,'My Completed Items','My completed items ('+job.tech+')');
+}
+function iocReportAll(){
+    iocBuildReport(iocJobItems(),'Full Outage Report','All items — all team members');
+}
+function iocReportMember(){
+    var name=prompt('Team member name to report on:');
+    if(!name) return;
+    var items=iocJobItems().filter(function(it){ return (it.assignedTo||'').trim().toLowerCase()===name.trim().toLowerCase(); });
+    iocBuildReport(items,'Team Member Report','Items assigned to '+name);
+}
+
+// ---------------- Wiring ----------------
+document.addEventListener('DOMContentLoaded',function(){
+    iocJob(); // ensure initialized
+    window.iocRender=iocRender;
+
+    ['iocPackage','iocScope','iocWO','iocUnit','iocDate'].forEach(function(id){
+        var el=document.getElementById(id);
+        if(!el) return;
+        el.addEventListener('change',function(){
+            var j=iocJob();
+            var map={iocPackage:'package',iocScope:'scope',iocWO:'workOrder',iocUnit:'unitId',iocDate:'date'};
+            j[map[id]]=el.value;
+            iocSaveJob(j); iocRender();
+        });
+    });
+    var techEl=document.getElementById('iocTech');
+    if(techEl) techEl.addEventListener('change',function(){
+        var j=iocJob(); j.tech=techEl.value.trim(); iocSaveJob(j); iocRender();
+    });
+
+    var newJobBtn=document.getElementById('iocNewJobBtn');
+    if(newJobBtn) newJobBtn.addEventListener('click',iocNewJob);
+    var clearAllBtn=document.getElementById('iocClearAllBtn');
+    if(clearAllBtn) clearAllBtn.addEventListener('click',iocClearAllItems);
+
+    var categorySelect=document.getElementById('iocCategorySelect');
+    if(categorySelect) categorySelect.addEventListener('change',function(){ iocSelectCategory(categorySelect.value); });
+
+    var filterMode=document.getElementById('iocFilterMode');
+    if(filterMode) filterMode.addEventListener('change',iocRender);
+    var filterMember=document.getElementById('iocFilterMember');
+    if(filterMember) filterMember.addEventListener('change',iocRender);
+
+    var reportMineBtn=document.getElementById('iocReportMineBtn');
+    if(reportMineBtn) reportMineBtn.addEventListener('click',iocReportMine);
+    var reportAllBtn=document.getElementById('iocReportAllBtn');
+    if(reportAllBtn) reportAllBtn.addEventListener('click',iocReportAll);
+    var reportMemberBtn=document.getElementById('iocReportMemberBtn');
+    if(reportMemberBtn) reportMemberBtn.addEventListener('click',iocReportMember);
+
+    var exportBtn=document.getElementById('iocExportBtn');
+    if(exportBtn) exportBtn.addEventListener('click',iocExport);
+    var importInput=document.getElementById('iocImportInput');
+    if(importInput) importInput.addEventListener('change',function(){
+        if(importInput.files && importInput.files[0]) iocImport(importInput.files[0]);
+        importInput.value='';
+    });
+
+    document.addEventListener('click',function(e){
+
+        var addBtn=e.target.closest && e.target.closest('[data-ioc-add]');
+        if(addBtn){ iocAddItem(addBtn.getAttribute('data-ioc-add')); return; }
+        var toggleItem=e.target.closest && e.target.closest('[data-ioc-toggle-item]');
+        if(toggleItem){ iocToggleItem(toggleItem.getAttribute('data-ioc-toggle-item')); return; }
+        var saveBtn=e.target.closest && e.target.closest('[data-ioc-save]');
+        if(saveBtn){ iocSaveItemResult(saveBtn.getAttribute('data-ioc-save')); return; }
+        var removeBtn=e.target.closest && e.target.closest('[data-ioc-remove]');
+        if(removeBtn){ iocRemoveItem(removeBtn.getAttribute('data-ioc-remove')); return; }
+    });
+});
+})();
+</script>
+
 </body>
 </html>
