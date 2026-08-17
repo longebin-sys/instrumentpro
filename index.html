@@ -4106,7 +4106,7 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <a class="nav-item" data-page="electrical"><i class="fas fa-bolt"></i> Electrical &amp; Power<i class="fas fa-star fav-star" data-page="electrical" title="Pin to Favorites"></i></a>
 <a class="nav-item" data-page="bending"><i class="fas fa-pipe-valve"></i> Tube Bending<i class="fas fa-star fav-star" data-page="bending" title="Pin to Favorites"></i></a>
 <div class="nav-section-label">FIELD &amp; DIAGNOSTICS</div>
-<a class="nav-item" data-page="hart"><i class="fas fa-satellite-dish"></i> HART Communicator<i class="fas fa-star fav-star" data-page="hart" title="Pin to Favorites"></i></a>
+<a class="nav-item" data-page="hart"><i class="fas fa-satellite-dish"></i> Field Communicator<i class="fas fa-star fav-star" data-page="hart" title="Pin to Favorites"></i></a>
 <a class="nav-item" data-page="trouble"><i class="fas fa-exclamation-triangle"></i> Troubleshooting<i class="fas fa-star fav-star" data-page="trouble" title="Pin to Favorites"></i></a>
 <a class="nav-item" data-page="ai"><i class="fas fa-robot"></i> AI Technician<i class="fas fa-star fav-star" data-page="ai" title="Pin to Favorites"></i></a>
 <div class="nav-section-label">DOCUMENTATION</div>
@@ -4256,7 +4256,7 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
         PAGE: HART COMMUNICATOR / DEVICE LIBRARY
         ========================================================== -->
 <div class="page" id="page-hart">
-<div class="page-title"><i class="fas fa-satellite-dish"></i> HART Communicator
+<div class="page-title"><i class="fas fa-satellite-dish"></i> Field Communicator
                 <span id="hcwConnDot" style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#dc2626;margin-left:8px;vertical-align:middle;"></span>
 <span id="hcwConnText" style="font-size:0.6rem;font-weight:600;color:#dc2626;vertical-align:middle;">Not connected</span>
 </div>
@@ -4265,8 +4265,8 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <div id="hcwScreen-home">
 <div class="card" style="text-align:center;padding:34px 16px;">
 <i class="fas fa-satellite-dish" style="font-size:2rem;color:#1e3a5f;margin-bottom:12px;"></i>
-<h3 style="margin-bottom:6px;">Connect to HART device</h3>
-<p style="font-size:0.72rem;color:#64748b;margin-bottom:16px;">Find a transmitter or positioner and open its device-specific controls.</p>
+<h3 style="margin-bottom:6px;">Connect to a Field Device</h3>
+<p style="font-size:0.72rem;color:#64748b;margin-bottom:16px;">HART and FOUNDATION Fieldbus H1 — find a transmitter, positioner, or FF device and open its device-specific controls.</p>
 <button class="btn w-full" id="hcwConnectBtn" style="justify-content:center;"><i class="fas fa-plug"></i> Connect</button>
 </div>
 <div class="card"><div style="font-size:0.65rem;color:#64748b;">The communicator identifies the device first, then uses its installed device description/profile to present the appropriate controls. DD/FDI files can be added from the Device Library.</div></div>
@@ -4633,7 +4633,7 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <div class="page" id="page-converter">
 <div class="page-title"><i class="fas fa-arrows-alt-h"></i> Unit Converter</div>
 <div class="card">
-<div class="sub-tabs" id="converterTabs"><div class="sub-tab active" data-tab="conv-signal-group">4-20mA</div><div class="sub-tab" data-tab="conv-pressure-group">Pressure</div><div class="sub-tab" data-tab="conv-temperature-group">Temperature</div><div class="sub-tab" data-tab="conv-speed-group">Speed</div><div class="sub-tab" data-tab="conv-vibration-group">Vibration</div><div class="sub-tab" data-tab="conv-flow-group">Flow</div><div class="sub-tab" data-tab="conv-density-group">Density / SG</div><div class="sub-tab" data-tab="conv-volume-group">Volume</div><div class="sub-tab" data-tab="conv-level-group">Level / Head</div><div class="sub-tab" data-tab="conv-concentration-group">Concentration</div></div>
+<div class="sub-tabs" id="converterTabs"><div class="sub-tab active" data-tab="conv-signal-group">4-20mA</div><div class="sub-tab" data-tab="conv-pressure-group">Pressure</div><div class="sub-tab" data-tab="conv-temperature-group">Temperature</div><div class="sub-tab" data-tab="conv-speed-group">Speed</div><div class="sub-tab" data-tab="conv-vibration-group">Vibration</div><div class="sub-tab" data-tab="conv-flow-group">Flow</div><div class="sub-tab" data-tab="conv-density-group">Density / SG</div><div class="sub-tab" data-tab="conv-volume-group">Volume</div><div class="sub-tab" data-tab="conv-level-group">Level / Head</div><div class="sub-tab" data-tab="conv-concentration-group">Concentration</div><div class="sub-tab" data-tab="conv-controls-group">Controls</div></div>
 
 
 
@@ -5009,7 +5009,131 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <div class="row"><label>To</label><select id="concConvTo"><option value="pct">%</option><option value="ppm">ppm</option><option value="ppb">ppb</option><option value="mgl">mg/L</option><option value="gl">g/L</option><option value="gt">g/t</option></select><button class="btn" id="concConvBtn">Convert</button></div>
 <div class="result-box"><span>Result</span><span id="concConvResult">—</span></div>
 <div style="font-size:0.65rem;color:#64748b;margin-top:4px;">% / ppm / ppb convert directly. mg/L, g/L and g/t require a defined density/basis for an exact conversion.</div>
-</div></div></div>
+</div></div>
+<div class="sub-panel hidden" id="conv-controls-group"><div class="sub-tabs converter-nested-tabs"><div class="sub-tab active" data-tab="conv-pid">PID Units</div><div class="sub-tab" data-tab="conv-numbase">Number / Data</div><div class="sub-tab" data-tab="conv-rawcount">Raw Count ↔ EU</div><div class="sub-tab" data-tab="conv-modbus">Modbus Registers</div><div class="sub-tab" data-tab="conv-ipsubnet">IP / Subnet</div><div class="sub-tab" data-tab="conv-deadband">Alarm Deadband</div></div>
+
+<div class="sub-panel active" id="conv-pid">
+<div class="card-header" style="margin-bottom:8px;"><i class="fas fa-sliders-h"></i><h3 style="font-size:0.85rem;">PID Tuning Units</h3><span>Gain / Reset / Rate</span></div>
+<div style="font-size:0.65rem;color:#64748b;margin-bottom:8px;">Every platform expresses the same three PID terms differently — Allen-Bradley/Siemens typically use gain and minutes/repeat, older Foxboro/DeltaV-style tuning uses proportional band % and repeats/min. Use this when moving tuning values between systems.</div>
+<div class="card-header" style="margin-top:2px;"><i class="fas fa-percent"></i><h3 style="font-size:.8rem;">Gain ↔ Proportional Band</h3></div>
+<div class="row"><label>Gain (unitless)</label><input id="pidGainInput" step="any" style="flex:0.6;" type="number" value="2"/><button class="btn btn-sm" id="pidGainToPbBtn">→ PB%</button></div>
+<div class="result-box"><span>Proportional Band</span><span id="pidPbResult">—</span></div>
+<div class="row mt-1"><label>Proportional Band</label><input id="pidPbInput" step="any" style="flex:0.6;" type="number" value="50"/><span class="chip">%</span><button class="btn btn-sm" id="pidPbToGainBtn">→ Gain</button></div>
+<div class="result-box"><span>Gain</span><span id="pidGainResult">—</span></div>
+<div class="card-header mt-1" style="border-top:1px solid rgba(148,163,184,.25);padding-top:8px;"><i class="fas fa-clock"></i><h3 style="font-size:.8rem;">Integral / Reset Time</h3></div>
+<div class="row"><label>Value</label><input id="pidResetValue" step="any" style="flex:0.5;" type="number" value="1"/>
+<select id="pidResetUnit" style="flex:0.7;"><option value="repmin">Repeats / min</option><option selected="" value="minrep">Minutes / repeat</option><option value="secrep">Seconds / repeat</option></select>
+<button class="btn btn-sm" id="pidResetBtn">Convert</button></div>
+<div class="result-box"><span>Repeats / min</span><span id="pidResetRepMin">—</span></div>
+<div class="result-box"><span>Minutes / repeat</span><span id="pidResetMinRep">—</span></div>
+<div class="result-box"><span>Seconds / repeat</span><span id="pidResetSecRep">—</span></div>
+<div class="card-header mt-1" style="border-top:1px solid rgba(148,163,184,.25);padding-top:8px;"><i class="fas fa-chart-line"></i><h3 style="font-size:.8rem;">Derivative / Rate Time</h3></div>
+<div class="row"><label>Value</label><input id="pidRateValue" step="any" style="flex:0.5;" type="number" value="0.25"/>
+<select id="pidRateUnit" style="flex:0.7;"><option selected="" value="min">Minutes</option><option value="sec">Seconds</option></select>
+<button class="btn btn-sm" id="pidRateBtn">Convert</button></div>
+<div class="result-box"><span>Minutes</span><span id="pidRateMin">—</span></div>
+<div class="result-box"><span>Seconds</span><span id="pidRateSec">—</span></div>
+<div style="font-size:0.65rem;color:#64748b;margin-top:4px;">Always confirm which convention your specific controller block uses before transferring a tuning set — a reversed gain/PB or reset/rate mismatch will make a loop unstable.</div>
+</div>
+
+<div class="sub-panel hidden" id="conv-numbase">
+<div class="card-header" style="margin-bottom:8px;"><i class="fas fa-hashtag"></i><h3 style="font-size:0.85rem;">Number Base Converter</h3><span>Dec / Hex / Bin / Oct</span></div>
+<div class="row"><label>Value</label><input id="baseConvInput" style="flex:0.6;" type="text" value="255"/>
+<select id="baseConvFrom" style="flex:0.6;"><option selected="" value="10">Decimal</option><option value="16">Hex</option><option value="2">Binary</option><option value="8">Octal</option></select>
+<button class="btn btn-sm" id="baseConvBtn">Convert</button></div>
+<div class="result-box"><span>Decimal</span><span id="baseConvDec">—</span></div>
+<div class="result-box"><span>Hex</span><span id="baseConvHex">—</span></div>
+<div class="result-box"><span>Binary</span><span id="baseConvBin">—</span></div>
+<div class="result-box"><span>Octal</span><span id="baseConvOct">—</span></div>
+
+<div class="card-header mt-1" style="border-top:1px solid rgba(148,163,184,.25);padding-top:8px;"><i class="fas fa-plus-minus"></i><h3 style="font-size:.8rem;">Signed Integer / Two's Complement</h3></div>
+<div class="row"><label>Bit Width</label><select id="twosWidth" style="flex:1;"><option value="8">8-bit</option><option selected="" value="16">16-bit</option><option value="32">32-bit</option></select></div>
+<div class="row"><label>Value</label><input id="twosInput" style="flex:0.6;" type="text" value="FFFF"/>
+<select id="twosInputBase" style="flex:0.6;"><option selected="" value="16">Hex</option><option value="10">Decimal</option><option value="2">Binary</option></select>
+<button class="btn btn-sm" id="twosBtn">Decode</button></div>
+<div class="result-box"><span>Unsigned</span><span id="twosUnsigned">—</span></div>
+<div class="result-box"><span>Signed (2's complement)</span><span id="twosSigned">—</span></div>
+<div class="result-box"><span>Hex</span><span id="twosHex">—</span></div>
+<div class="result-box"><span>Binary</span><span id="twosBin">—</span></div>
+
+<div class="card-header mt-1" style="border-top:1px solid rgba(148,163,184,.25);padding-top:8px;"><i class="fas fa-wave-square"></i><h3 style="font-size:.8rem;">IEEE-754 32-bit Float</h3></div>
+<div class="row"><label>Hex (8 digits)</label><input id="ieeeHexInput" style="flex:0.6;" type="text" value="42480000"/><button class="btn btn-sm" id="ieeeHexToFloatBtn">→ Float</button></div>
+<div class="result-box"><span>Float</span><span id="ieeeFloatResult">—</span></div>
+<div class="row mt-1"><label>Float</label><input id="ieeeFloatInput" step="any" style="flex:0.6;" type="number" value="50"/><button class="btn btn-sm" id="ieeeFloatToHexBtn">→ Hex</button></div>
+<div class="result-box"><span>Hex</span><span id="ieeeHexResult">—</span></div>
+<div style="font-size:0.65rem;color:#64748b;margin-top:4px;">Float decode assumes standard big-endian byte order within the 32-bit word. If a Modbus float looks wrong, check word/byte order in the Modbus Registers tab before assuming the value itself is bad.</div>
+</div>
+
+<div class="sub-panel hidden" id="conv-rawcount">
+<div class="card-header" style="margin-bottom:8px;"><i class="fas fa-microchip"></i><h3 style="font-size:0.85rem;">Raw Count ↔ Engineering Units</h3><span>I/O card scaling</span></div>
+<div style="font-size:0.65rem;color:#64748b;margin-bottom:8px;">For checking a PLC/DCS analog channel's raw count against its scaled engineering value — separate from the field 4-20mA scaling, since the controller-side raw range depends on the platform's A/D resolution.</div>
+<div class="row"><label>Raw Range Preset</label>
+<select id="rawRangePreset" style="flex:1;">
+<option selected="" value="0,32767">Allen-Bradley / CompactLogix (0–32767)</option>
+<option value="0,20000">Modicon / Schneider (0–20000)</option>
+<option value="0,27648">Siemens S7 (0–27648)</option>
+<option value="-32768,32767">Signed 16-bit (-32768 to 32767)</option>
+<option value="0,65535">Unsigned 16-bit (0–65535)</option>
+<option value="dcs-pct">DCS / SIS Percent-Based (Experion, Centum, Mark VIe, Foxboro/Triconex)</option>
+<option value="custom">Custom…</option>
+</select></div>
+<div class="row hidden" id="rawDcsNoteRow"><div style="font-size:0.62rem;color:#64748b;background:#f8fafc;border:1px solid #e2e8f0;border-radius:11px;padding:9px 11px;">Honeywell Experion / Safety Manager, Yokogawa Centum/ProSafe, GE Mark VIe/safety, and Schneider Foxboro/Triconex present analog values directly in engineering units (0.00–100.00%) in the engineering environment — unlike PLC I/O cards, there's no separate raw ADC count exposed to the technician. This option is a 1:1 pass-through for reference; raw and EU are the same number on these platforms.</div></div>
+<div class="row hidden" id="rawRangeCustomRow"><label>Raw Range</label><input id="rawRangeLow" style="flex:0.4;" type="number" value="0"/><span>to</span><input id="rawRangeHigh" style="flex:0.4;" type="number" value="32767"/></div>
+<div class="row"><label>Engineering Range</label><input id="rawEuLow" step="any" style="flex:0.4;" type="number" value="0"/><span>to</span><input id="rawEuHigh" step="any" style="flex:0.4;" type="number" value="100"/></div>
+<div class="row"><label>EU Unit Label</label><input id="rawEuUnitLabel" style="flex:1;" type="text" value="%"/></div>
+<div class="row mt-1"><label>Raw Count</label><input id="rawCountInput" step="any" style="flex:0.6;" type="number" value="16384"/><button class="btn btn-sm" id="rawToEuBtn">→ EU</button></div>
+<div class="result-box"><span>Engineering Value</span><span id="rawEuResult">—</span></div>
+<div class="row mt-1"><label>EU Value</label><input id="euToRawInput" step="any" style="flex:0.6;" type="number" value="50"/><button class="btn btn-sm" id="euToRawBtn">→ Raw</button></div>
+<div class="result-box"><span>Raw Count</span><span id="euRawResult">—</span></div>
+</div>
+
+<div class="sub-panel hidden" id="conv-modbus">
+<div class="card-header" style="margin-bottom:8px;"><i class="fas fa-network-wired"></i><h3 style="font-size:0.85rem;">Modbus Register / Word-Swap Helper</h3><span>2 × 16-bit → 32-bit</span></div>
+<div style="font-size:0.65rem;color:#64748b;margin-bottom:8px;">Enter each 16-bit register (hex like 0x4248 or plain decimal). Wrong word order is the single most common cause of a garbage Modbus float — if the result looks nonsensical, try another order below.</div>
+<div class="row"><label>Register 1</label><input id="modReg1" style="flex:0.6;" type="text" value="0x4248"/></div>
+<div class="row"><label>Register 2</label><input id="modReg2" style="flex:0.6;" type="text" value="0x0000"/></div>
+<div class="row"><label>Word/Byte Order</label>
+<select id="modWordOrder" style="flex:1;">
+<option selected="" value="ABCD">ABCD — big-endian (Reg1=high word)</option>
+<option value="CDAB">CDAB — word-swapped</option>
+<option value="BADC">BADC — byte-swapped within words</option>
+<option value="DCBA">DCBA — little-endian (Reg1=low word)</option>
+</select></div>
+<button class="btn w-full mt-1" id="modDecodeBtn">Decode</button>
+<div class="result-box"><span>32-bit Float</span><span id="modFloatResult">—</span></div>
+<div class="result-box"><span>Signed Int32</span><span id="modInt32Result">—</span></div>
+<div class="result-box"><span>Unsigned Int32</span><span id="modUint32Result">—</span></div>
+</div>
+
+<div class="sub-panel hidden" id="conv-ipsubnet">
+<div class="card-header" style="margin-bottom:8px;"><i class="fas fa-ethernet"></i><h3 style="font-size:0.85rem;">IP / Subnet Calculator</h3><span>Control network</span></div>
+<div class="row"><label>IP Address</label><input id="ipAddrInput" style="flex:1;" type="text" value="192.168.1.10"/></div>
+<div class="row"><label>Subnet Mask or CIDR</label><input id="ipMaskInput" style="flex:1;" type="text" value="255.255.255.0"/></div>
+<button class="btn w-full mt-1" id="ipCalcBtn">Calculate</button>
+<div class="result-box"><span>CIDR</span><span id="ipCidrResult">—</span></div>
+<div class="result-box"><span>Network Address</span><span id="ipNetResult">—</span></div>
+<div class="result-box"><span>Broadcast Address</span><span id="ipBcastResult">—</span></div>
+<div class="result-box"><span>Usable Host Range</span><span id="ipRangeResult">—</span></div>
+<div class="result-box"><span>Usable Hosts</span><span id="ipHostsResult">—</span></div>
+<div style="font-size:0.65rem;color:#64748b;margin-top:4px;">Enter the mask as dotted (255.255.255.0), a bare prefix (24), or with a slash (/24) — all three are accepted.</div>
+</div>
+
+<div class="sub-panel hidden" id="conv-deadband">
+<div class="card-header" style="margin-bottom:8px;"><i class="fas fa-bell"></i><h3 style="font-size:0.85rem;">Alarm Deadband / Hysteresis</h3><span>Trip / Reset points</span></div>
+<div class="row"><label>Alarm Type</label><select id="deadbandType" style="flex:1;"><option selected="" value="high">High Alarm</option><option value="low">Low Alarm</option></select></div>
+<div class="row"><label>Setpoint</label><input id="deadbandSetpoint" step="any" style="flex:0.6;" type="number" value="80"/></div>
+<div class="row"><label>Unit Label</label><input id="deadbandUnitLabel" style="flex:1;" type="text" value="°C"/></div>
+<div class="row"><label>Deadband</label><input id="deadbandValue" step="any" style="flex:0.5;" type="number" value="2"/>
+<select id="deadbandMode" style="flex:0.6;"><option selected="" value="abs">Absolute (EU)</option><option value="pct">% of Range</option></select></div>
+<div class="row" id="deadbandRangeRow"><label>Range (for %)</label><input id="deadbandRangeLow" step="any" style="flex:0.4;" type="number" value="0"/><span>to</span><input id="deadbandRangeHigh" step="any" style="flex:0.4;" type="number" value="100"/></div>
+<button class="btn w-full mt-1" id="deadbandCalcBtn">Calculate</button>
+<div class="result-box"><span>Trip Point</span><span id="deadbandTripResult">—</span></div>
+<div class="result-box"><span>Clear / Reset Point</span><span id="deadbandClearResult">—</span></div>
+<div style="font-size:0.65rem;color:#64748b;margin-top:4px;">For a high alarm the reset point sits below setpoint by the deadband; for a low alarm it sits above setpoint by the deadband — this stops the alarm chattering right at the trip point.</div>
+</div>
+
+</div>
+</div>
 </div>
 <!-- ==========================================================
         PAGE: CALIBRATION (short)
@@ -7800,6 +7924,215 @@ body.dark .colorpick-hexwrap input{background:#0f172a;border-color:#334155;color
                     const f=document.getElementById('concConvFrom').value,t=document.getElementById('concConvTo').value;
                     if(!concF[f] || !concF[t]) return set('concConvResult','Needs density / defined basis');
                     set('concConvResult',(v('concConvValue')*concF[f]/concF[t]).toFixed(6)+' '+document.getElementById('concConvTo').selectedOptions[0].text);
+                });
+
+                // =========================================================
+                // CONTROLS: PID UNITS
+                // =========================================================
+                on('pidGainToPbBtn',()=>{
+                    const g=v('pidGainInput');
+                    set('pidPbResult', g===0 ? 'Gain cannot be 0' : (100/g).toFixed(2)+' %');
+                });
+                on('pidPbToGainBtn',()=>{
+                    const pb=v('pidPbInput');
+                    set('pidGainResult', pb===0 ? 'PB cannot be 0' : (100/pb).toFixed(4));
+                });
+                on('pidResetBtn',()=>{
+                    const val=v('pidResetValue'), unit=document.getElementById('pidResetUnit').value;
+                    let minRep;
+                    if(unit==='repmin') minRep = val===0 ? Infinity : 1/val;
+                    else if(unit==='minrep') minRep = val;
+                    else minRep = val/60;
+                    const repMin = minRep===0 ? Infinity : 1/minRep;
+                    set('pidResetRepMin', isFinite(repMin)?repMin.toFixed(4)+' repeats/min':'—');
+                    set('pidResetMinRep', isFinite(minRep)?minRep.toFixed(4)+' min/repeat':'—');
+                    set('pidResetSecRep', isFinite(minRep)?(minRep*60).toFixed(2)+' sec/repeat':'—');
+                });
+                on('pidRateBtn',()=>{
+                    const val=v('pidRateValue'), unit=document.getElementById('pidRateUnit').value;
+                    const minutes = unit==='min' ? val : val/60;
+                    set('pidRateMin', minutes.toFixed(4)+' min');
+                    set('pidRateSec', (minutes*60).toFixed(2)+' sec');
+                });
+
+                // =========================================================
+                // CONTROLS: NUMBER BASE / DATA
+                // =========================================================
+                on('baseConvBtn',()=>{
+                    const raw=document.getElementById('baseConvInput').value.trim().replace(/^0x/i,'');
+                    const base=parseInt(document.getElementById('baseConvFrom').value,10);
+                    const dec=parseInt(raw, base);
+                    if(isNaN(dec)) { set('baseConvDec','Invalid value for base'); set('baseConvHex','—'); set('baseConvBin','—'); set('baseConvOct','—'); return; }
+                    set('baseConvDec', dec.toString(10));
+                    set('baseConvHex', '0x'+dec.toString(16).toUpperCase());
+                    set('baseConvBin', dec.toString(2));
+                    set('baseConvOct', dec.toString(8));
+                });
+                on('twosBtn',()=>{
+                    const width=parseInt(document.getElementById('twosWidth').value,10);
+                    const inBase=parseInt(document.getElementById('twosInputBase').value,10);
+                    const raw=document.getElementById('twosInput').value.trim().replace(/^0x/i,'');
+                    let unsigned=parseInt(raw, inBase);
+                    if(isNaN(unsigned)) { set('twosUnsigned','Invalid value'); set('twosSigned','—'); set('twosHex','—'); set('twosBin','—'); return; }
+                    const mask=(width>=32)?0xFFFFFFFF:((1<<width)-1);
+                    unsigned = unsigned & mask;
+                    unsigned = unsigned >>> 0;
+                    const signBit = width>=32 ? 0x80000000 : (1<<(width-1));
+                    let signed = unsigned;
+                    if((width>=32 ? (unsigned & 0x80000000)!==0 : (unsigned & signBit)!==0)) {
+                        signed = unsigned - (width>=32 ? 0x100000000 : (1<<width));
+                    }
+                    set('twosUnsigned', (unsigned>>>0).toString(10));
+                    set('twosSigned', signed.toString(10));
+                    set('twosHex', '0x'+((unsigned>>>0).toString(16).toUpperCase().padStart(width/4,'0')));
+                    set('twosBin', (unsigned>>>0).toString(2).padStart(width,'0'));
+                });
+                on('ieeeHexToFloatBtn',()=>{
+                    const hex=document.getElementById('ieeeHexInput').value.trim().replace(/^0x/i,'');
+                    if(!/^[0-9a-fA-F]{1,8}$/.test(hex)) return set('ieeeFloatResult','Enter up to 8 hex digits');
+                    const intVal = parseInt(hex.padStart(8,'0'), 16);
+                    const buf = new ArrayBuffer(4); const dv = new DataView(buf);
+                    dv.setUint32(0, intVal, false);
+                    set('ieeeFloatResult', dv.getFloat32(0,false).toString());
+                });
+                on('ieeeFloatToHexBtn',()=>{
+                    const f=v('ieeeFloatInput');
+                    const buf = new ArrayBuffer(4); const dv = new DataView(buf);
+                    dv.setFloat32(0, f, false);
+                    set('ieeeHexResult', '0x'+dv.getUint32(0,false).toString(16).toUpperCase().padStart(8,'0'));
+                });
+
+                // =========================================================
+                // CONTROLS: RAW COUNT ↔ ENGINEERING UNITS
+                // =========================================================
+                const rawRangePreset=document.getElementById('rawRangePreset');
+                const rawRangeCustomRow=document.getElementById('rawRangeCustomRow');
+                const rawDcsNoteRow=document.getElementById('rawDcsNoteRow');
+                if(rawRangePreset){
+                    rawRangePreset.addEventListener('change', function(){
+                        rawRangeCustomRow.classList.toggle('hidden', this.value!=='custom');
+                        if(rawDcsNoteRow) rawDcsNoteRow.classList.toggle('hidden', this.value!=='dcs-pct');
+                    });
+                }
+                function rawRange(){
+                    if(rawRangePreset && rawRangePreset.value==='dcs-pct'){
+                        return {lo:0, hi:100};
+                    }
+                    if(rawRangePreset && rawRangePreset.value!=='custom'){
+                        const [lo,hi]=rawRangePreset.value.split(',').map(Number);
+                        return {lo,hi};
+                    }
+                    return {lo:v('rawRangeLow'), hi:v('rawRangeHigh')};
+                }
+                on('rawToEuBtn',()=>{
+                    const {lo,hi}=rawRange(); const euLo=v('rawEuLow'), euHi=v('rawEuHigh');
+                    const raw=v('rawCountInput');
+                    const unitLabel=document.getElementById('rawEuUnitLabel').value || 'EU';
+                    if(hi===lo) return set('rawEuResult','Raw range cannot be zero span');
+                    const eu = euLo + (raw-lo)/(hi-lo)*(euHi-euLo);
+                    set('rawEuResult', eu.toFixed(4)+' '+unitLabel);
+                });
+                on('euToRawBtn',()=>{
+                    const {lo,hi}=rawRange(); const euLo=v('rawEuLow'), euHi=v('rawEuHigh');
+                    const eu=v('euToRawInput');
+                    if(euHi===euLo) return set('euRawResult','EU range cannot be zero span');
+                    const raw = lo + (eu-euLo)/(euHi-euLo)*(hi-lo);
+                    set('euRawResult', raw.toFixed(1)+' counts');
+                });
+
+                // =========================================================
+                // CONTROLS: MODBUS REGISTER / WORD-SWAP HELPER
+                // =========================================================
+                function parseReg(str){
+                    str = str.trim();
+                    let n = /^0x/i.test(str) ? parseInt(str,16) : parseInt(str,10);
+                    if(isNaN(n)) return null;
+                    return n & 0xFFFF;
+                }
+                on('modDecodeBtn',()=>{
+                    const r1=parseReg(document.getElementById('modReg1').value);
+                    const r2=parseReg(document.getElementById('modReg2').value);
+                    if(r1===null||r2===null){ set('modFloatResult','Invalid register value'); set('modInt32Result','—'); set('modUint32Result','—'); return; }
+                    const hi1=(r1>>8)&0xFF, lo1=r1&0xFF, hi2=(r2>>8)&0xFF, lo2=r2&0xFF;
+                    const order=document.getElementById('modWordOrder').value;
+                    let bytes;
+                    if(order==='ABCD') bytes=[hi1,lo1,hi2,lo2];
+                    else if(order==='CDAB') bytes=[hi2,lo2,hi1,lo1];
+                    else if(order==='BADC') bytes=[lo1,hi1,lo2,hi2];
+                    else bytes=[lo2,hi2,lo1,hi1]; // DCBA
+                    const buf=new ArrayBuffer(4); const dv=new DataView(buf);
+                    bytes.forEach((b,i)=>dv.setUint8(i,b));
+                    set('modFloatResult', dv.getFloat32(0,false).toString());
+                    set('modInt32Result', dv.getInt32(0,false).toString());
+                    set('modUint32Result', dv.getUint32(0,false).toString());
+                });
+
+                // =========================================================
+                // CONTROLS: IP / SUBNET CALCULATOR
+                // =========================================================
+                function ipToInt(ip){
+                    const parts=ip.trim().split('.').map(Number);
+                    if(parts.length!==4 || parts.some(p=>isNaN(p)||p<0||p>255)) return null;
+                    return ((parts[0]<<24)|(parts[1]<<16)|(parts[2]<<8)|parts[3])>>>0;
+                }
+                function intToIp(n){
+                    return [(n>>>24)&255,(n>>>16)&255,(n>>>8)&255,n&255].join('.');
+                }
+                function parseMaskToPrefix(str){
+                    str=str.trim();
+                    if(str.startsWith('/')) str=str.slice(1);
+                    if(/^\d{1,2}$/.test(str)) { const p=parseInt(str,10); return (p>=0&&p<=32)?p:null; }
+                    const m=ipToInt(str);
+                    if(m===null) return null;
+                    let prefix=0, x=m;
+                    for(let i=31;i>=0;i--){ if((x>>>i)&1) prefix++; else break; }
+                    return prefix;
+                }
+                on('ipCalcBtn',()=>{
+                    const ipInt=ipToInt(document.getElementById('ipAddrInput').value);
+                    const prefix=parseMaskToPrefix(document.getElementById('ipMaskInput').value);
+                    if(ipInt===null || prefix===null) {
+                        ['ipCidrResult','ipNetResult','ipBcastResult','ipRangeResult','ipHostsResult'].forEach(id=>set(id,'Check IP / mask format'));
+                        return;
+                    }
+                    const maskInt = prefix===0 ? 0 : (0xFFFFFFFF << (32-prefix))>>>0;
+                    const network = (ipInt & maskInt)>>>0;
+                    const broadcast = (network | (~maskInt>>>0))>>>0;
+                    const hostBits = 32-prefix;
+                    const totalHosts = Math.pow(2,hostBits);
+                    set('ipCidrResult', '/'+prefix+'  ('+intToIp(maskInt)+')');
+                    set('ipNetResult', intToIp(network));
+                    set('ipBcastResult', intToIp(broadcast));
+                    if(prefix>=31){
+                        set('ipRangeResult', prefix===32 ? intToIp(network)+' (host route)' : intToIp(network)+' – '+intToIp(broadcast));
+                        set('ipHostsResult', prefix===32 ? '1' : '2 (point-to-point)');
+                    } else {
+                        set('ipRangeResult', intToIp(network+1)+' – '+intToIp(broadcast-1));
+                        set('ipHostsResult', (totalHosts-2).toString());
+                    }
+                });
+
+                // =========================================================
+                // CONTROLS: ALARM DEADBAND / HYSTERESIS
+                // =========================================================
+                const deadbandMode=document.getElementById('deadbandMode');
+                const deadbandRangeRow=document.getElementById('deadbandRangeRow');
+                function refreshDeadbandRangeRow(){
+                    if(deadbandMode) deadbandRangeRow.classList.toggle('hidden', deadbandMode.value!=='pct');
+                }
+                if(deadbandMode){ deadbandMode.addEventListener('change', refreshDeadbandRangeRow); refreshDeadbandRangeRow(); }
+                on('deadbandCalcBtn',()=>{
+                    const type=document.getElementById('deadbandType').value;
+                    const sp=v('deadbandSetpoint');
+                    const unit=document.getElementById('deadbandUnitLabel').value || 'EU';
+                    let db=v('deadbandValue');
+                    if(deadbandMode && deadbandMode.value==='pct'){
+                        const rLo=v('deadbandRangeLow'), rHi=v('deadbandRangeHigh');
+                        db = db/100*(rHi-rLo);
+                    }
+                    const clear = type==='high' ? sp-db : sp+db;
+                    set('deadbandTripResult', sp.toFixed(3)+' '+unit);
+                    set('deadbandClearResult', clear.toFixed(3)+' '+unit);
                 });
             })();
 
@@ -13620,6 +13953,38 @@ async function scan(){
   }
 }
 
+// ---- FOUNDATION Fieldbus H1 (uses the same optional native host bridge as HART) ----
+async function connectFieldbus(){
+  setStatus(false,'Connecting');
+  $('hcwScanText').textContent='Connecting and discovering FOUNDATION Fieldbus H1 devices…';
+  $('hcwFound').innerHTML='';
+  if(!(window.HART_HOST&&window.HART_HOST.connectFieldbus)){
+    $('hcwScanText').textContent='FOUNDATION Fieldbus H1 needs a compatible H1 interface/gateway. This page is ready for the native adapter — it calls HART_HOST.connectFieldbus() and HART_HOST.fieldbusDiscover().';
+    return;
+  }
+  try{
+    await window.HART_HOST.connectFieldbus({protocol:'FOUNDATION_FIELD_BUS_H1'});
+    setStatus(true,'FF H1');
+    const found=await window.HART_HOST.fieldbusDiscover({protocol:'FOUNDATION_FIELD_BUS_H1'});
+    if(found&&found.length){
+      found.forEach(d=>{ d.protocol='FOUNDATION Fieldbus H1'; addFieldbusFound(d); });
+      $('hcwScanText').textContent=found.length+' device(s) found';
+    }else{
+      $('hcwScanText').textContent='No FOUNDATION Fieldbus H1 devices found.';
+    }
+  }catch(e){
+    setStatus(false);
+    $('hcwScanText').textContent=e.message;
+  }
+}
+function addFieldbusFound(d){
+  let x=document.createElement('div');
+  x.className='card';
+  x.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;"><div><b>'+(d.manufacturer||'FF Device')+'</b><div style="font-size:0.65rem;color:#64748b;">'+(d.model||'Device')+' • FOUNDATION Fieldbus H1 • Address '+(d.address!=null?d.address:'—')+'</div><span class="chip">'+(d.kind||'fieldbus')+'</span></div><button class="btn btn-sm" style="width:auto;">CONNECT</button></div>';
+  $('hcwFound').appendChild(x);
+  x.querySelector('button').onclick=()=>{ device={...d}; openDevice(); };
+}
+
 // ---- Device profile registry ----
 const DPR={
   key:'hartProfilesV2',
@@ -13662,6 +14027,8 @@ function deviceProfile(){
 }
 
 // ---- Native EDD/FDI host bridge (optional, populated by a native wrapper) ----
+// HART hooks: identify(), execute({command,data}), executeParameter({parameter,value,profile,device})
+// FF H1 hooks: connectFieldbus({protocol}), fieldbusDiscover({protocol}), fieldbusExecute({protocol,operation})
 window.HART_HOST = window.HART_HOST || null;
 async function hostIdentify(){
   if(!(window.HART_HOST&&window.HART_HOST.identify)) return null;
@@ -13672,6 +14039,11 @@ async function hostExecute(command,data){
   return await window.HART_HOST.execute({command,data:data||[]});
 }
 async function executeDeviceOperation(parameter,value){
+  if(device.protocol==='FOUNDATION Fieldbus H1'){
+    if(window.HART_HOST&&window.HART_HOST.fieldbusExecute)
+      return await window.HART_HOST.fieldbusExecute({protocol:'FOUNDATION_FIELD_BUS_H1',operation:{parameter,value,device}});
+    return {ok:false,error:'No FOUNDATION Fieldbus H1 host available for this operation'};
+  }
   const prof=deviceProfile();
   const par=prof&&prof.parameters?prof.parameters.find(x=>x.id===parameter):null;
   if(!par) return {ok:false,error:'No parameter definition'};
@@ -13692,16 +14064,28 @@ async function openDevice(){
   showScreen('device');
   const id=await hostIdentify();
   if(id) Object.assign(device,id);
+  if(device.pv!=null) $('hcwPv').textContent=device.pv;
+  if(device.input!=null) $('hcwMa').textContent=device.input;
   renderDeviceMenu();
   await refreshDevice();
 }
+const FF_PARAMS=[
+  {id:'resource',label:'Resource Block',type:'menu'},
+  {id:'transducer',label:'Transducer Block',type:'menu'},
+  {id:'function',label:'Function Blocks',type:'menu'},
+  {id:'mode',label:'Block Mode',type:'enum'},
+  {id:'status',label:'Device Status',type:'action'},
+  {id:'diagnostics',label:'Diagnostics',type:'action'},
+  {id:'calibration',label:'Calibration',type:'action'}
+];
 function renderDeviceMenu(){
-  $('hcwDeviceName').textContent=device.model||'HART Device';
-  $('hcwDeviceMeta').textContent=(device.manufacturer||'HART')+' • HART '+(device.hartRevision||device.hart||'—')+' • Address '+(device.address!=null?device.address:0);
+  const isFF=device.protocol==='FOUNDATION Fieldbus H1';
+  $('hcwDeviceName').textContent=device.model||(isFF?'Fieldbus Device':'HART Device');
+  $('hcwDeviceMeta').textContent=(device.manufacturer||(isFF?'FF':'HART'))+' • '+(isFF?'FOUNDATION Fieldbus H1':('HART '+(device.hartRevision||device.hart||'—')))+' • Address '+(device.address!=null?device.address:0);
   const prof=deviceProfile();
   const menu=$('hcwMenu');
   menu.innerHTML='';
-  const params=(prof&&prof.parameters)?prof.parameters:[];
+  const params=isFF?FF_PARAMS:((prof&&prof.parameters)?prof.parameters:[]);
   params.forEach(par=>{
     const val=device[par.id]!=null?device[par.id]:'—';
     const r=document.createElement('div');
@@ -13734,7 +14118,9 @@ function editParameter(par){
   $('hcwEditTitle').textContent=par.label;
   $('hcwEditLabel').textContent=par.label;
   $('hcwEditValue').value=device[par.id]||'';
-  $('hcwSaveNote').textContent=par.command?('HART operation mapped automatically (Command '+par.command+').'):'This parameter requires the installed device profile\'s device-specific operation.';
+  $('hcwSaveNote').textContent=device.protocol==='FOUNDATION Fieldbus H1'
+    ? 'Written via the FOUNDATION Fieldbus H1 function/transducer block (HART_HOST.fieldbusExecute).'
+    : (par.command?('HART operation mapped automatically (Command '+par.command+').'):'This parameter requires the installed device profile\'s device-specific operation.');
   showScreen('edit');
 }
 
@@ -13833,12 +14219,15 @@ $('hcwConnectBtn').onclick=()=>{
   showScreen('scan');
   const box=$('hcwTransportButtons');
   box.innerHTML='';
-  [['USB / OTG',USB],['USB Serial',Serial],['Bluetooth / BLE',null],['Wi-Fi / HART-IP',null],['Demo',Sim]].forEach(([n,C])=>{
+  [['USB / OTG',USB],['USB Serial',Serial],['Bluetooth / BLE',null],['Wi-Fi / HART-IP',null],['FOUNDATION Fieldbus H1','ff'],['Demo',Sim]].forEach(([n,C])=>{
     let b=document.createElement('button');
     b.className='btn btn-outline';
     b.style.justifyContent='center';
     b.textContent=n;
-    b.onclick=()=>C?connectTransport(C,n):($('hcwScanText').textContent='This transport needs its modem/gateway adapter configuration.');
+    b.onclick=()=>{
+      if(C==='ff') return connectFieldbus();
+      return C?connectTransport(C,n):($('hcwScanText').textContent='This transport needs its modem/gateway adapter configuration.');
+    };
     box.appendChild(b);
   });
 };
@@ -13849,8 +14238,11 @@ $('hcwBackDevice2').onclick=()=>showScreen('device');
 $('hcwRefreshBtn').onclick=refreshDevice;
 
 $('hcwSaveBtn').onclick=async()=>{
+  const isFF=device.protocol==='FOUNDATION Fieldbus H1';
   const prof=deviceProfile();
-  const par=prof&&prof.parameters?prof.parameters.find(x=>x.id===currentEdit):null;
+  const par=isFF
+    ? FF_PARAMS.find(x=>x.id===currentEdit)
+    : (prof&&prof.parameters?prof.parameters.find(x=>x.id===currentEdit):null);
   const value=$('hcwEditValue').value;
   const old=device[currentEdit];
   device[currentEdit]=value;
@@ -13860,11 +14252,11 @@ $('hcwSaveBtn').onclick=async()=>{
   try{
     const r=await executeDeviceOperation(currentEdit,value);
     if(r&&r.ok===false) throw Error(r.error||'Device rejected write');
-    setStatus(!!transport,'Saved');
+    setStatus(!!transport||isFF,'Saved');
   }catch(e){
     device[currentEdit]=old;
     renderDeviceMenu();
-    setStatus(!!transport,'Write failed');
+    setStatus(!!transport||isFF,'Write failed');
     alert('The value was not confirmed by the device. '+e.message);
   }
 };
