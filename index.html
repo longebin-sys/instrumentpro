@@ -1,3 +1,36 @@
+<!-- =====================================================================
+     INSTRUMENTPRO — DEVELOPER CODE MAP
+     =====================================================================
+     Single-file application maintenance map. This organization pass adds
+     documentation labels only; existing executable statements, DOM IDs,
+     storage keys and public function names are preserved.
+
+     SAFE TROUBLESHOOTING RULES
+       1. Start with the module label that owns the failing feature.
+       2. Search by the existing element ID or function name before editing.
+       3. Do not rename existing DOM IDs or localStorage/sessionStorage keys
+          without updating every producer and consumer.
+       4. Keep the 4–20mA ↔ Field Report handoff contract synchronized.
+       5. After JavaScript edits, run a syntax check before deployment.
+
+     TOP-TO-BOTTOM MODULE MAP
+       HTML       Document metadata and external libraries
+       CSS-01..25 Base styles + intentional cascade/override layers
+       BODY-01..15 Application pages
+       JS-01      Core draft storage helpers
+       JS-02      Main application controller, navigation, calculators, reports
+       JS-03      Report Studio / device configuration / Field Report handoff
+       JS-04      Home dashboard
+       JS-05      Troubleshooting QA
+       JS-06      HART communicator / package library
+       JS-07      Task list / scheduling
+       JS-08      Outage / instrument commissioning
+
+     4–20mA HANDOFF KEY
+       instrumentpro_ma_handoff
+       Main fields: lrv, urv, unit, points, outputPoints,
+       requiredInputPoints, testBasis, refPoints.
+     ===================================================================== -->
 <!DOCTYPE html>
 
 <html lang="en">
@@ -20,7 +53,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&amp;display=swap" rel="stylesheet"/>
 <!-- Tesseract (OCR) is loaded lazily by loadTesseract() only when the
          user scans a tag, instead of blocking here on every page load. -->
-<style>
+<!-- =================================================================
+     STYLE-01: BASE UI / RESET / THEME
+     ================================================================= -->
+<style data-ip-style="CSS-01">
         /* ===== RESET & BASE ===== */
         :root {
             --font-heading: 'Sora', -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
@@ -2479,7 +2515,10 @@ body.dark #page-converter .chip{
 }
 body.dark #page-converter hr{border-color:#374151 !important;}
 </style>
-<style id="instrumentpro-mobile-fix">
+<!-- =================================================================
+     STYLE-02: MOBILE + REPORT FIXES
+     ================================================================= -->
+<style id="instrumentpro-mobile-fix" data-ip-style="CSS-02">
 /* ===== InstrumentPro mobile/report fixes =====
    Note: intentionally NOT setting max-width:100% on body here — the base
    stylesheet caps body at 480px (the centered "card" layout). Overriding
@@ -2627,7 +2666,10 @@ body {
   .greeting { margin-left: 8px !important; margin-right: 8px !important; }
 }
 </style>
-<style id="instrumentpro-commissioning-test-fix">
+<!-- =================================================================
+     STYLE-03: FUNCTIONAL TEST RECORD SELECT FIXES
+     ================================================================= -->
+<style id="instrumentpro-commissioning-test-fix" data-ip-style="CSS-03">
 /* Functional/Test Records: prevent native selects from exceeding their grid cell. */
 #reportpanel-commissioning .comm-test-grid{
   display:grid !important;
@@ -2666,7 +2708,10 @@ body {
   }
 }
 </style>
-<style id="instrumentpro-commissioning-ui-fix">
+<!-- =================================================================
+     STYLE-04: REPORT / FORM LAYOUT OVERRIDES
+     ================================================================= -->
+<style id="instrumentpro-commissioning-ui-fix" data-ip-style="CSS-04">
 /* ==========================================================
    COMMISSIONING UI FIX — mobile clarity + glove-friendly use
    Fixes KPI text collisions, status chip, checklist hierarchy,
@@ -2800,7 +2845,10 @@ body.dark #reportpanel-commissioning .comm-check:has(input:checked) .comm-item-t
   #reportpanel-commissioning .comm-kpis{grid-template-columns:1fr 1fr!important;}
 }
 </style>
-<style id="instrumentpro-home-upgrade">
+<!-- =================================================================
+     STYLE-05: CALCULATOR / COMPONENT OVERRIDES
+     ================================================================= -->
+<style id="instrumentpro-home-upgrade" data-ip-style="CSS-05">
 /* ==========================================================
    HOME PAGE UPGRADE — dashboard, quick actions, mobile polish
    Other application pages are intentionally untouched.
@@ -2970,7 +3018,10 @@ body.dark #page-home .home-mini-title{color:#e2e8f0}
   .home-kpi-value{font-size:.92rem}
 }
 </style>
-<style id="trouble-qa-css">
+<!-- =================================================================
+     STYLE-06: TROUBLESHOOTING PAGE
+     ================================================================= -->
+<style id="trouble-qa-css" data-ip-style="CSS-06">
 #page-trouble{padding-bottom:96px;overflow-x:hidden}
 .trouble-top{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:17px;margin:0 12px 14px 12px;border-radius:28px;background:linear-gradient(135deg,var(--ui-accent,#2563eb),color-mix(in srgb,var(--ui-accent,#2563eb) 60%, #0f2744));color:#fff;box-shadow:0 12px 28px rgba(15,39,68,.18)}
 .trouble-kicker{font-size:.72rem;font-weight:900;letter-spacing:.08em;opacity:.8}
@@ -2997,7 +3048,10 @@ body.dark .trouble-dialog{background:#111827}body.dark .trouble-dialog-title,bod
 body.dark .trouble-start{background:#1e293b;color:var(--ui-accent,#60a5fa)}body.dark .trouble-workflow-note{background:#1a253a;border-color:#334155;color:#cbd5e1}body.dark .trouble-workflow-note strong{color:#e2e8f0}body.dark .trouble-workflow-note span{color:#94a3b8}body.dark .trouble-workflow-note>i{background:#0f172a;color:var(--ui-accent,#60a5fa)}
 @media(max-width:390px){.trouble-options{grid-template-columns:1fr}.trouble-dialog{padding:13px;border-radius:22px 22px 0 0}.trouble-top{padding:14px}.trouble-top-icon{display:none}}
 </style>
-<style id="shift-report-styles">
+<!-- =================================================================
+     STYLE-07: SHIFT / HANDOVER REPORT
+     ================================================================= -->
+<style id="shift-report-styles" data-ip-style="CSS-07">
 /* ===== SHIFT / HANDOVER REPORT ===== */
 .fn-shift-bar{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:16px;background:#eff6ff;border:1px solid #bfdbfe;margin-bottom:10px;}
 .fn-shift-bar i{color:#2563eb;}
@@ -3081,17 +3135,26 @@ body.dark table.rpt-table td{border-color:#334155;color:#cbd5e1;}
 .rpt-footer .rpt-share:hover{background:#047857;}
 @media(max-width:390px){.rpt-summary{grid-template-columns:repeat(2,1fr);}.rpt-field-row{grid-template-columns:1fr;}}
 </style>
-<style id="favorites-size-fix">
+<!-- =================================================================
+     STYLE-08: FAVORITES CARD SIZING
+     ================================================================= -->
+<style id="favorites-size-fix" data-ip-style="CSS-08">
 /* Favorites: larger, easier-to-tap cards */
 .favorite-item,.favorite-card,.favorite-tool{min-height:76px!important;padding:13px!important}
 </style>
-<style id="instrumentpro-nav-organization">
+<!-- =================================================================
+     STYLE-09: NAVIGATION ORGANIZATION
+     ================================================================= -->
+<style id="instrumentpro-nav-organization" data-ip-style="CSS-09">
 /* Navigation organization only. No calculator or application logic is changed. */
 .sidebar .nav-section-label{margin:13px 12px 5px;padding-top:3px;font-size:.56rem;line-height:1.2;font-weight:800;letter-spacing:.09em;color:#94a3b8;}
 body.dark .sidebar .nav-section-label{color:#64748b;}
 .sidebar .nav-section-label:first-child{margin-top:5px;}
 </style>
-<style id="advanced-field-report-glove-ui">
+<!-- =================================================================
+     STYLE-10: REPORT / DEVICE STYLING
+     ================================================================= -->
+<style id="advanced-field-report-glove-ui" data-ip-style="CSS-10">
 /* ============================================================
    FIELD REPORT — GLOVE / FIELD FRIENDLY UI
    Larger touch targets, clearer spacing, fewer accidental taps.
@@ -3405,7 +3468,10 @@ body.dark .bottom-tabs .tab-item.active{background:color-mix(in srgb,var(--ui-ac
   .sub-tab{min-height:46px;}
 }
 </style>
-<style id="advanced-report-checkbox-final-fix">
+<!-- =================================================================
+     STYLE-11: CHECKBOX VISIBILITY FINAL FIX
+     ================================================================= -->
+<style id="advanced-report-checkbox-final-fix" data-ip-style="CSS-11">
 /* FINAL CHECKBOX VISIBILITY FIX
    The Advanced Report has later theme/readability rules using !important
    which were overriding the checked-state background. These rules are
@@ -3481,7 +3547,10 @@ body.dark #reportpanel-commissioning .comm-check-item input[type="checkbox"]:che
     border-color:#2563eb !important;
 }
 </style>
-<style id="instrumentpro-report-layout-fix">
+<!-- =================================================================
+     STYLE-12: FINAL REPORT LAYOUT HARDENING
+     ================================================================= -->
+<style id="instrumentpro-report-layout-fix" data-ip-style="CSS-12">
 /* Final Report layout hardening: keep nested report modules inside the Report card. */
 #page-report > .card,#page-report .report-main-panel,#reportpanel-field,#reportpanel-commissioning,#reportpanel-loopcheck,#reportpanel-setpoints{min-width:0!important;max-width:100%!important;box-sizing:border-box!important}
 #reportpanel-loopcheck > .card{width:100%!important;max-width:100%!important;margin-left:0!important;margin-right:0!important;box-sizing:border-box!important;overflow:hidden!important}
@@ -3515,7 +3584,10 @@ body.dark #reportpanel-commissioning .comm-check-item input[type="checkbox"]:che
 }
 @media(max-width:350px){#reportpanel-loopcheck>.row:last-child{grid-template-columns:1fr!important}}
 </style>
-<style id="gc-calibration-mobile-polish">
+<!-- =================================================================
+     STYLE-13: LOOP CHECK COMPACT SPACING
+     ================================================================= -->
+<style id="gc-calibration-mobile-polish" data-ip-style="CSS-13">
 /* ==========================================================
    GC CALIBRATION — MODERN MOBILE TABLE POLISH
    Keeps the existing data/calculation logic unchanged.
@@ -3719,7 +3791,10 @@ body.dark #gcCalTable input.gc-measured {
     color: #e2e8f0 !important;
 }
 </style>
-<style id="loopcheck-spacing-fix">
+<!-- =================================================================
+     STYLE-14: LOOP CHECK IDENTIFICATION SPACING
+     ================================================================= -->
+<style id="loopcheck-spacing-fix" data-ip-style="CSS-14">
 /* Loop Check — compact mobile spacing */
 #reportpanel-loopcheck .card {
   margin-bottom: 8px !important;
@@ -3792,7 +3867,10 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
   color: #cbd5e1 !important;
 }
 </style>
-<style id="loopcheck-identification-tight-v3">
+<!-- =================================================================
+     STYLE-15: CALIBRATION RANGE ROW
+     ================================================================= -->
+<style id="loopcheck-identification-tight-v3" data-ip-style="CSS-15">
 /* LOOP CHECK V3 — remove unintended vertical gaps in the identification card */
 #reportpanel-loopcheck > .card:first-child .row {
   display: grid !important;
@@ -3865,7 +3943,10 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
   }
 }
 </style>
-<style>
+<!-- =================================================================
+     STYLE-16: MOBILE CALIBRATION RANGE ROW
+     ================================================================= -->
+<style data-ip-style="CSS-16">
 /* Calibration range row: keep the engineering-unit selector wide enough to
    display the complete unit on phone screens. */
 .cal-range-row{
@@ -3911,7 +3992,10 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
     }
 }
 </style>
-<style id="instrumentpro-range-equal-spacing">
+<!-- =================================================================
+     STYLE-17: CALIBRATION RANGE ALIGNMENT
+     ================================================================= -->
+<style id="instrumentpro-range-equal-spacing" data-ip-style="CSS-17">
 /* Mobile calibration Range row: balanced controls with room for values up to 10000. */
 .calibration-range-row {
     display: grid !important;
@@ -3954,7 +4038,10 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
     }
 }
 </style>
-<style id="instrumentpro-cal-range-final">
+<!-- =================================================================
+     STYLE-18: CALIBRATION RANGE MICRO OVERRIDE A
+     ================================================================= -->
+<style id="instrumentpro-cal-range-final" data-ip-style="CSS-18">
 /* Calibration Range row — keep LRV/URV readable and move the unit selector toward the right edge. */
 .cal-range-row {
     display: grid !important;
@@ -4018,7 +4105,10 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
     }
 }
 </style>
-<style id="instrumentpro-range-unit-wider">
+<!-- =================================================================
+     STYLE-19: CALIBRATION RANGE MICRO OVERRIDE B
+     ================================================================= -->
+<style id="instrumentpro-range-unit-wider" data-ip-style="CSS-19">
 .cal-range-row {
     grid-template-columns: 52px minmax(76px, 1fr) 16px minmax(76px, 1fr) minmax(105px, 1.35fr) 42px !important;
 }
@@ -4028,7 +4118,10 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
     }
 }
 </style>
-<style id="instrumentpro-refresh-moved">
+<!-- =================================================================
+     STYLE-20: BENDING RUN INPUT
+     ================================================================= -->
+<style id="instrumentpro-refresh-moved" data-ip-style="CSS-20">
 .cal-range-row {
     grid-template-columns: 52px minmax(76px, 1fr) 16px minmax(76px, 1fr) minmax(105px, 1.35fr) !important;
 }
@@ -4038,7 +4131,10 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 </style>
 </head>
 <body>
-<script id="ip-draft-utils">
+<!-- =================================================================
+     SCRIPT-01: CORE: LOCAL DRAFT STORAGE + BUTTON FEEDBACK
+     ================================================================= -->
+<script id="ip-draft-utils" data-ip-module="JS-01">
 (function(){
     'use strict';
     function save(key, data){
@@ -4137,6 +4233,9 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <!-- ==========================================================
         PAGE: HOME
         ========================================================== -->
+<!-- -----------------------------------------------------------------
+     BODY-01: HOME / DASHBOARD | id="page-home"
+     ----------------------------------------------------------------- -->
 <div class="page active" id="page-home">
 <!-- Technician Dashboard -->
 <div class="home-hero">
@@ -4255,6 +4354,9 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <!-- ==========================================================
         PAGE: HART COMMUNICATOR / DEVICE LIBRARY
         ========================================================== -->
+<!-- -----------------------------------------------------------------
+     BODY-02: HART COMMUNICATOR | id="page-hart"
+     ----------------------------------------------------------------- -->
 <div class="page" id="page-hart">
 <div class="page-title"><i class="fas fa-satellite-dish"></i> Field Communicator
                 <span id="hcwConnDot" style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#dc2626;margin-left:8px;vertical-align:middle;"></span>
@@ -4316,6 +4418,9 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <!-- ==========================================================
         PAGE: FIELD NOTES — ADVANCED
         ========================================================== -->
+<!-- -----------------------------------------------------------------
+     BODY-03: FIELD NOTES | id="page-notes"
+     ----------------------------------------------------------------- -->
 <div class="page" id="page-notes">
 <div class="page-title"><i class="fas fa-clipboard-list"></i> Field Notes</div>
 <div id="fnTopTabs" style="display:flex;gap:8px;margin-bottom:10px;">
@@ -4600,6 +4705,9 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <!-- ==========================================================
         PAGE: ANALYTICAL (short)
         ========================================================== -->
+<!-- -----------------------------------------------------------------
+     BODY-04: ANALYTICAL TOOLS | id="page-analytical"
+     ----------------------------------------------------------------- -->
 <div class="page" id="page-analytical">
 <div class="page-title"><i class="fas fa-flask"></i> Analytical Instruments</div>
 <div class="card">
@@ -4813,6 +4921,9 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <!-- ==========================================================
         PAGE: CONVERTER (short version)
         ========================================================== -->
+<!-- -----------------------------------------------------------------
+     BODY-05: CONVERTERS / SIGNAL SCALING | id="page-converter"
+     ----------------------------------------------------------------- -->
 <div class="page" id="page-converter">
 <div class="page-title"><i class="fas fa-arrows-alt-h"></i> Unit Converter</div>
 <div class="card">
@@ -5440,6 +5551,9 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <!-- ==========================================================
         PAGE: CALIBRATION (short)
         ========================================================== -->
+<!-- -----------------------------------------------------------------
+     BODY-06: CALIBRATION | id="page-calibration"
+     ----------------------------------------------------------------- -->
 <div class="page" id="page-calibration">
 <div class="page-title"><i class="fas fa-sliders-h"></i> Calibration</div>
 <div class="card">
@@ -5485,6 +5599,9 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <!-- ==========================================================
         PAGE: LEVEL DP (short)
         ========================================================== -->
+<!-- -----------------------------------------------------------------
+     BODY-07: DP / PRESSURE TOOLS | id="page-dp"
+     ----------------------------------------------------------------- -->
 <div class="page" id="page-dp">
 <div class="page-title"><i class="fas fa-tachometer-alt"></i> Level Measurement Tools</div>
 <div class="card">
@@ -5564,6 +5681,9 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <!-- ==========================================================
         PAGE: FLOW (short)
         ========================================================== -->
+<!-- -----------------------------------------------------------------
+     BODY-08: FLOW TOOLS | id="page-flow"
+     ----------------------------------------------------------------- -->
 <div class="page" id="page-flow">
 <div class="page-title"><i class="fas fa-water"></i> Complex Measurement Tools</div>
 <div class="card">
@@ -5685,6 +5805,9 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <!-- ==========================================================
         PAGE: ELECTRICAL (short)
         ========================================================== -->
+<!-- -----------------------------------------------------------------
+     BODY-09: ELECTRICAL | id="page-electrical"
+     ----------------------------------------------------------------- -->
 <div class="page" id="page-electrical">
 <div class="page-title"><i class="fas fa-bolt"></i> Electrical Tools</div>
 <div class="card">
@@ -5827,6 +5950,9 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <!-- ==========================================================
         PAGE: BENDING
         ========================================================== -->
+<!-- -----------------------------------------------------------------
+     BODY-10: BENDING / LOOP CHECK | id="page-bending"
+     ----------------------------------------------------------------- -->
 <div class="page" id="page-bending">
 <div class="page-title"><i class="fas fa-compress"></i> Tube Bending</div>
 <div class="card">
@@ -5871,7 +5997,10 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <!-- ==========================================================
         PAGE: REFERENCES
         ========================================================== -->
-<style id="bending-modernize">
+<!-- =================================================================
+     STYLE-21: NEUTRAL LIGHT CONTENT BOXES
+     ================================================================= -->
+<style id="bending-modernize" data-ip-style="CSS-21">
 #page-bending .bend-run-input {
   width: 64px;
   text-align: center;
@@ -5886,6 +6015,9 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 #page-bending #bendRunTable td { white-space: nowrap; }
 #page-bending .sub-tabs { margin-bottom: 12px; }
 </style>
+<!-- -----------------------------------------------------------------
+     BODY-11: REFERENCES | id="page-references"
+     ----------------------------------------------------------------- -->
 <div class="page" id="page-references">
 <div class="page-title"><i class="fas fa-book"></i> Reference Library</div>
 <div class="card">
@@ -6875,7 +7007,10 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 </div>
 </div>
 </div>
-<style id="references-modernize">
+<!-- =================================================================
+     STYLE-22: COLOR PICKER MODAL
+     ================================================================= -->
+<style id="references-modernize" data-ip-style="CSS-22">
 /* Neutral light content boxes (e.g. Fault Codes list items, badge chips) use
    inline background:#f1f5f9 with no explicit text color, so they inherited
    body.dark's light body text on a light box — unreadable. Force a dark
@@ -7016,7 +7151,10 @@ body.dark #page-references .chip {
   }
 }
 </style>
-<style id="colorpick-styles">
+<!-- =================================================================
+     STYLE-23: REPORT / FINAL OVERRIDES
+     ================================================================= -->
+<style id="colorpick-styles" data-ip-style="CSS-23">
 .colorpick-modal{display:none;position:fixed;inset:0;z-index:10050;align-items:flex-end;justify-content:center}
 .colorpick-modal.open{display:flex}
 .colorpick-backdrop{position:absolute;inset:0;background:rgba(2,8,23,.62);backdrop-filter:blur(4px)}
@@ -7052,6 +7190,9 @@ body.dark .colorpick-hexwrap input{background:#0f172a;border-color:#334155;color
 <!-- ==========================================================
         PAGE: TROUBLESHOOTING (short)
         ========================================================== -->
+<!-- -----------------------------------------------------------------
+     BODY-12: TROUBLESHOOTING | id="page-trouble"
+     ----------------------------------------------------------------- -->
 <div class="page" id="page-trouble">
 <div class="trouble-top">
 <div>
@@ -7107,6 +7248,9 @@ body.dark .colorpick-hexwrap input{background:#0f172a;border-color:#334155;color
 <!-- ==========================================================
         PAGE: AI CHAT
         ========================================================== -->
+<!-- -----------------------------------------------------------------
+     BODY-13: AI / ASSISTED TOOLS | id="page-ai"
+     ----------------------------------------------------------------- -->
 <div class="page" id="page-ai">
 <div class="page-title"><i class="fas fa-robot"></i> AI Technician</div>
 <div class="card">
@@ -7121,6 +7265,9 @@ body.dark .colorpick-hexwrap input{background:#0f172a;border-color:#334155;color
 <!-- ==========================================================
         PAGE: REPORT
         ========================================================== -->
+<!-- -----------------------------------------------------------------
+     BODY-14: FIELD REPORT / REPORT STUDIO | id="page-report"
+     ----------------------------------------------------------------- -->
 <div class="page" id="page-report">
 <div class="page-title"><i class="fas fa-file-alt"></i> Report</div>
 <div class="card">
@@ -7377,6 +7524,9 @@ body.dark .colorpick-hexwrap input{background:#0f172a;border-color:#334155;color
 <!-- ==========================================================
         PAGE: SETTINGS
         ========================================================== -->
+<!-- -----------------------------------------------------------------
+     BODY-15: SETTINGS | id="page-settings"
+     ----------------------------------------------------------------- -->
 <div class="page" id="page-settings">
 <div class="page-title"><i class="fas fa-cog"></i> Settings</div>
 <details class="card settings-accordion">
@@ -7488,7 +7638,10 @@ body.dark .colorpick-hexwrap input{background:#0f172a;border-color:#334155;color
 <!-- ============================================================
     JAVASCRIPT — Full Application
     ============================================================ -->
-<script>
+<!-- =================================================================
+     SCRIPT-02: MAIN APP: SPLASH / NAVIGATION / CALCULATORS / REPORT BUILDERS
+     ================================================================= -->
+<script data-ip-module="JS-02">
             // Safe HTML escaping used by report builders.
             // The commissioning report builder depends on this helper when rendering
             // user-entered project, tag, findings and signature fields.
@@ -8738,6 +8891,9 @@ body.dark .colorpick-hexwrap input{background:#0f172a;border-color:#334155;color
             // =============================================================
             // SIGNAL SCALING / TEST POINTS
             // =============================================================
+                        // =============================================================
+            // 4–20mA: CONFIGURATION / INPUT + OUTPUT RANGES
+            // =============================================================
             const maLRV = document.getElementById('maLRV');
             const maURV = document.getElementById('maURV');
             const maUnit = document.getElementById('maUnit');
@@ -8787,6 +8943,9 @@ body.dark .colorpick-hexwrap input{background:#0f172a;border-color:#334155;color
                 mA:{family:'current'}, mV:{family:'voltage_mv'}, V:{family:'voltage_v'}, 'Ω':{family:'resistance'}
             };
 
+                        // =============================================================
+            // 4–20mA: UNIT FAMILIES + PHYSICAL CONVERSION
+            // =============================================================
             function getMaUnitInfo(unit) { return MA_UNIT_INFO[unit] || null; }
             function isPressureUnit(unit) { return getMaUnitInfo(unit)?.family === 'pressure'; }
             function isFlowUnit(unit) { return getMaUnitInfo(unit)?.family === 'flow'; }
@@ -8809,6 +8968,9 @@ body.dark .colorpick-hexwrap input{background:#0f172a;border-color:#334155;color
                 return (value / from.factor) * to.factor;
             }
 
+                        // =============================================================
+            // 4–20mA: COMPATIBILITY / ⚠️ WARNING ENGINE
+            // =============================================================
             function maUnitsCompatible(fromUnit, toUnit, relationship) {
                 const from = getMaUnitInfo(fromUnit), to = getMaUnitInfo(toUnit);
                 if (!from || !to) return {ok:false, message:'⚠️ Unknown unit combination.'};
@@ -8917,6 +9079,10 @@ body.dark .colorpick-hexwrap input{background:#0f172a;border-color:#334155;color
                 if (!Number.isFinite(parseFloat(maOutURV.value))) maOutURV.value = out.urv;
             }
 
+                        // =============================================================
+            // 4–20mA: FIVE-POINT TEST ENGINE
+            // Output/DCS + square-root uses required INPUT/DP = (output %)².
+            // =============================================================
             function buildMaCalPoints() {
                 updateMaOutputRangeUI();
                 const inLrv = num(maLRV, 0);
@@ -9045,6 +9211,10 @@ body.dark .colorpick-hexwrap input{background:#0f172a;border-color:#334155;color
             buildMaCalPoints();
             updateMaReverse();
 
+                        // =============================================================
+            // 4–20mA: EXPORT → FIELD REPORT HANDOFF
+            // Storage key: instrumentpro_ma_handoff
+            // =============================================================
             // ---- Export to Report ----
             maExportToReportBtn.addEventListener('click', function() {
                 const lrv = num(maLRV, 0);
@@ -11914,7 +12084,10 @@ body.dark .colorpick-hexwrap input{background:#0f172a;border-color:#334155;color
         })();
     </script>
 </div>
-<style id="loopcheck-polished-mobile-ui">
+<!-- =================================================================
+     STYLE-24: LOOP CHECK MOBILE IDENTIFICATION
+     ================================================================= -->
+<style id="loopcheck-polished-mobile-ui" data-ip-style="CSS-24">
 /* ============================================================
    LOOP CHECK — POLISHED MOBILE UI
    ============================================================ */
@@ -12322,7 +12495,10 @@ body.dark #reportpanel-loopcheck .table-wrap thead th {
     color: #8ea0af !important;
 }
 </style>
-<style id="loopcheck-top-form-compact">
+<!-- =================================================================
+     STYLE-25: ADDITIONAL MOBILE OVERRIDES
+     ================================================================= -->
+<style id="loopcheck-top-form-compact" data-ip-style="CSS-25">
 /* Loop Check — compact the identification / signal section on phones. */
 @media (max-width: 520px) {
   #reportpanel-loopcheck > .card:first-child .row {
@@ -12384,7 +12560,10 @@ body.dark #reportpanel-loopcheck .table-wrap thead th {
   }
 }
 </style>
-<script>
+<!-- =================================================================
+     SCRIPT-03: REPORT STUDIO: DEVICE CONFIG / FIELD REPORT / MA HANDOFF
+     ================================================================= -->
+<script data-ip-module="JS-03">
 (function(){
 'use strict';
 
@@ -12836,7 +13015,12 @@ function updateRsMeta(){
  if(rangeInp)rangeInp.placeholder=(cfg&&cfg.range)?cfg.range:'Device-specific range or service';
  if(tolInp)tolInp.placeholder=(cfg&&cfg.tolerance)?cfg.tolerance:'±0.5%, OEM limit, approved timing...';
 }
-function importMaHandoff(cfg){
+ // =============================================================
+ // FIELD REPORT: IMPORT 4–20mA HANDOFF
+ // Output/DCS + square-root selects requiredInputPoints as the applied
+ // INPUT/PROCESS reference values.
+ // =============================================================
+ function importMaHandoff(cfg){
  var raw=null;
  try{raw=JSON.parse(localStorage.getItem(MA_HANDOFF_KEY)||'null');}catch(e){}
  if(!raw){alert('No saved 4-20mA test points found. Open the 4-20mA calculator and tap "Send to Field Report" first.');return;}
@@ -13042,7 +13226,10 @@ function deviceResultText(o,c){
  if(c.kind==='calibration')return c.entered<5?'Complete all five calibration points.':(c.pass?'Calibration passed.':'Calibration failed — investigate, adjust and repeat before return to service.');
  return c.total===0?'Complete the device-specific functional checks.':(c.pass?'All recorded functional checks passed.':'One or more functional checks remain failed/incomplete.');
 }
-function deviceReportSections(o,c){
+ // =============================================================
+ // FIELD REPORT: REFERENCE POINTS + REPORT TABLE RENDERING
+ // =============================================================
+ function deviceReportSections(o,c){
  var dd=o.deviceData||{},cfg=DEVICE_CONFIG[o.deviceType]||{};
  var fields=Object.keys(dd.fields||{}).filter(function(k){return dd.fields[k]!=='';}).map(function(k){return '<tr><td><b>'+rsEsc(k.replace(/^dc_/,'').replace(/_/g,' '))+'</b></td><td>'+rsEsc(dd.fields[k])+'</td></tr>';}).join('');
  var tests=(dd.tests||[]).map(function(t){return '<tr><td>'+rsEsc(t.name)+'</td><td style="font-weight:700;color:'+(t.passed?'#15803d':'#b91c1c')+'">'+(t.passed?'PASS':'FAIL / NOT COMPLETE')+'</td></tr>';}).join('');
@@ -13258,7 +13445,10 @@ function init(){
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
 </script>
-<script id="instrumentpro-home-upgrade-js">
+<!-- =================================================================
+     SCRIPT-04: HOME DASHBOARD
+     ================================================================= -->
+<script id="instrumentpro-home-upgrade-js" data-ip-module="JS-04">
 (function(){
   'use strict';
 
@@ -13320,7 +13510,10 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   }
 })();
 </script>
-<script id="trouble-qa-js">
+<!-- =================================================================
+     SCRIPT-05: TROUBLESHOOTING QA
+     ================================================================= -->
+<script id="trouble-qa-js" data-ip-module="JS-05">
 (function(){
 'use strict';
 
@@ -14599,7 +14792,10 @@ document.addEventListener('keydown',e=>{
 <!-- ==========================================================
         HART COMMUNICATOR / DEVICE LIBRARY
         ========================================================== -->
-<script id="hart-communicator-js">
+<!-- =================================================================
+     SCRIPT-06: HART COMMUNICATOR + PACKAGE LIBRARY
+     ================================================================= -->
+<script id="hart-communicator-js" data-ip-module="JS-06">
 (function(){
 'use strict';
 const $=id=>document.getElementById(id);
@@ -15047,7 +15243,10 @@ document.querySelectorAll('[data-page="hart"]').forEach(el=>{
 <!-- ==========================================================
      TASK LIST TOOL (Daily / Weekly Tasks) — Tool 1
      ========================================================== -->
-<script>
+<!-- =================================================================
+     SCRIPT-07: TASK LIST + SCHEDULING
+     ================================================================= -->
+<script data-ip-module="JS-07">
 (function(){
 'use strict';
 
@@ -15548,7 +15747,10 @@ document.addEventListener('DOMContentLoaded',function(){
 <!-- ==========================================================
      GE LM2500 / SOLAR TURBINES OUTAGE CHECKLIST — Tool 2
      ========================================================== -->
-<script>
+<!-- =================================================================
+     SCRIPT-08: OUTAGE / INSTRUMENT COMMISSIONING
+     ================================================================= -->
+<script data-ip-module="JS-08">
 (function(){
 'use strict';
 
