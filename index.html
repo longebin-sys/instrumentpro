@@ -4500,7 +4500,7 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 </div>
 <div class="card">
 <button class="btn-outline btn w-full" id="fnTaskQuickSummaryBtn" style="justify-content:center;" type="button"><i class="fas fa-file-pdf"></i> Quick Summary (PDF)</button>
-<button class="btn-outline btn w-full" id="fnTaskFullReportBtn" style="justify-content:center;margin-top:8px;" type="button"><i class="fas fa-file-signature"></i> End-of-Week Full Report (PDF)</button>
+<button class="btn-outline btn w-full" id="fnTaskFullReportBtn" style="justify-content:center;margin-top:8px;" type="button"><i class="fas fa-file-signature"></i> End-of-Week Field Reports (All Devices)</button>
 <button class="btn-outline btn w-full" id="fnTaskEndPeriodBtn" style="justify-content:center;margin-top:8px;color:#b45309;" type="button"><i class="fas fa-forward"></i> End Period &amp; Carry Forward Outstanding</button>
 </div>
 </div><!-- /fnSubPanelDaily -->
@@ -4547,17 +4547,16 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <div class="card">
 <div class="card-header"><i class="fas fa-file-signature"></i><h3>Reports</h3></div>
 <div class="fn-section-note" style="margin-bottom:8px;">Reports reuse the app's field-report style and are scoped to what you choose below.</div>
-<button class="btn-outline btn w-full" id="iocReportMineBtn" style="justify-content:center;" type="button"><i class="fas fa-file-pdf"></i> My Completed Items (PDF)</button>
-<button class="btn-outline btn w-full" id="iocReportAllBtn" style="justify-content:center;margin-top:8px;" type="button"><i class="fas fa-file-pdf"></i> All Items — Full Report (PDF)</button>
-<button class="btn-outline btn w-full" id="iocReportMemberBtn" style="justify-content:center;margin-top:8px;" type="button"><i class="fas fa-file-pdf"></i> By Team Member (PDF)</button>
+<div class="fn-form-grid">
+<div class="fn-wide"><label>Report</label><select id="iocReportSelect">
+<option value="mine">My Completed Items (PDF)</option>
+<option value="all">All Items — Full Report (PDF)</option>
+<option value="member">By Team Member (PDF)</option>
+</select></div>
 </div>
-<div class="card">
-<div class="card-header"><i class="fas fa-people-arrows"></i><h3>Team Data</h3></div>
-<div class="fn-section-note" style="margin-bottom:8px;">No live multi-device sync. Export your progress as JSON and import teammates' files to merge before a combined report — same pattern as the HART device library.</div>
-<button class="btn-outline btn w-full" id="iocExportBtn" style="justify-content:center;" type="button"><i class="fas fa-file-export"></i> Export Job JSON</button>
-<label class="btn-outline btn w-full" for="iocImportInput" style="justify-content:center;margin-top:8px;cursor:pointer;"><i class="fas fa-file-import"></i> Import &amp; Merge JSON</label>
-<input accept=".json" id="iocImportInput" style="display:none;" type="file"/>
+<button class="btn w-full fn-primary" id="iocReportGenerateBtn" style="justify-content:center;margin-top:10px;" type="button"><i class="fas fa-file-pdf"></i> Generate Report</button>
 </div>
+
 </div><!-- /fnPanelOutage -->
 </div><!-- /fnPanelTasks -->
 
@@ -12708,11 +12707,12 @@ function renderDeviceConfig(){
  body.innerHTML=html;
  var importBtn=body.querySelector('#rsImportMaBtn');
  if(importBtn)importBtn.addEventListener('click',function(){importMaHandoff(cfg);});
- body.querySelectorAll('input,select,textarea').forEach(function(e){e.addEventListener('input',rsRender);e.addEventListener('change',rsRender);});
+ body.querySelectorAll('input,select,textarea').forEach(function(e){e.addEventListener('input',function(){rsRender();rsScheduleTaskAutosave();});e.addEventListener('change',function(){rsRender();rsScheduleTaskAutosave();});});
  body.querySelectorAll('[data-check-action]').forEach(function(btn){btn.addEventListener('click',function(){
    var checked=this.dataset.checkAction==='all';
    body.querySelectorAll('[data-test-index]').forEach(function(cb){cb.checked=checked;});
    rsRender();
+   rsScheduleTaskAutosave();
  });});
  rsRender();
 }
@@ -12819,6 +12819,23 @@ function deviceReportSections(o,c){
  else points='<h3 style="font-size:14px;border-bottom:1px solid #ddd;padding-bottom:5px;">Functional Test Results</h3><table style="width:100%;border-collapse:collapse;font-size:11px;"><tr><th>Test</th><th>Result</th></tr>'+tests+'</table><p style="font-size:11px;margin-top:8px;"><b>Measured / observed results:</b><br>'+rsEsc(dd.fields.measured_results||'—')+'</p>';
  return '<h3 style="font-size:14px;border-bottom:1px solid #ddd;padding-bottom:5px;">Device-Specific Configuration</h3><table style="width:100%;border-collapse:collapse;font-size:11px;">'+fields+'</table>'+points;
 }
+function rsBuildReportHTML(rec){
+ var o=rec,c=rec.calculation||rsCalc(rec);
+ return '<div style="font-family:Arial,sans-serif;color:#172033;background:#fff;padding:18px;border-radius:10px;max-width:820px;margin:auto;">'+
+ '<div style="display:flex;justify-content:space-between;border-bottom:2px solid #1e3a5f;padding-bottom:10px;"><div><div style="font-size:11px;color:#64748b;letter-spacing:1px;">INSTRUMENTPRO</div><h2 style="margin:3px 0;">FIELD REPORT</h2><div style="font-size:11px;color:#64748b;">'+rsEsc(rec.id)+' • REV '+rec.rev+' • '+rsEsc(o.deviceType||'Device not selected')+'</div></div><div style="font-size:20px;font-weight:800;color:'+(c.pass?'#15803d':'#b45309')+';">'+(!o.deviceType?'PENDING':c.pass?'PASS':'PENDING')+'</div></div>'+
+ '<table style="width:100%;font-size:12px;margin:12px 0;border-collapse:collapse;"><tr><td><b>Tag</b><br>'+rsEsc(o.reportTag||'—')+'</td><td><b>Model</b><br>'+rsEsc(o.reportModel||'—')+'</td><td><b>Manufacturer</b><br>'+rsEsc(o.rsManufacturer||'—')+'</td></tr><tr><td><b>Serial</b><br>'+rsEsc(o.rsSerial||'—')+'</td><td><b>Location</b><br>'+rsEsc(o.rsLocation||'—')+'</td><td><b>Technician</b><br>'+rsEsc(o.rsTechnician||'—')+'</td></tr></table>'+
+ '<p style="font-size:11px;"><b>Test Type:</b> '+rsEsc(o.reportType||'—')+' &nbsp; <b>Range/Service:</b> '+rsEsc(o.rsRange||'—')+' &nbsp; <b>Unit:</b> '+rsEsc(o.rsUnit||'—')+'<br><b>Acceptance/Tolerance:</b> '+rsEsc(o.rsToleranceSpec||'—')+' &nbsp; <b>Reference:</b> '+rsEsc(o.rsReference||'—')+'</p>'+
+ deviceReportSections(o,c)+
+ '<div style="margin-top:12px;padding:10px;background:#f8fafc;border-left:4px solid #1e3a5f;font-size:11px;"><b>Engineering Assessment</b><br>'+rsEsc(deviceResultText(o,c))+'</div>'+
+ '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;font-size:11px;"><div><b>Observations</b><br>'+rsEsc(o.rsObservations||'—')+'<br><br><b>Root Cause</b><br>'+rsEsc(o.rsRootCause||'—')+'</div><div><b>Corrective Action</b><br>'+rsEsc(o.rsCorrective||'—')+'<br><br><b>Verification</b><br>'+rsEsc(o.rsVerification||'—')+'</div></div>'+
+ '<div style="margin-top:16px;border-top:1px solid #ddd;padding-top:10px;font-size:10px;color:#64748b;">Work order: '+rsEsc(o.rsWorkOrder||'—')+' • Technician: '+rsEsc(o.rsTechSign||'—')+' • Supervisor/Witness: '+rsEsc(o.rsSupervisor||'—')+' • Status: '+rsEsc(rec.status)+'</div></div>';
+}
+// Exposed globally so other tools (e.g. the Task List's Report hook and its
+// End-of-Period Field Reports bundle) can reach Report Studio state — this
+// script runs inside its own IIFE so rsCurrent/rsBuildReportHTML are not
+// visible to other <script> blocks otherwise.
+window.rsBuildReportHTML=rsBuildReportHTML;
+window.rsGetCurrent=function(){ return rsCurrent; };
 var rsPreviewBuilt=false;
 function rsShowPreview(){
  rsPreviewBuilt=true;
@@ -12843,21 +12860,14 @@ function rsRender(){
  var qList=document.getElementById('rsQualityList');if(qList)qList.innerHTML=q.checks.map(function(x){return (x[1]!==''&&x[1]!==false)?'🟢 '+rsEsc(x[0]):'🔴 '+rsEsc(x[0]);}).join('<br>');
  var assess=document.getElementById('rsAssessment');if(assess)assess.textContent=deviceResultText(o,c);
  rsDraw(o,c);
- var preview='<div style="font-family:Arial,sans-serif;color:#172033;background:#fff;padding:18px;border-radius:10px;max-width:820px;margin:auto;">'+
- '<div style="display:flex;justify-content:space-between;border-bottom:2px solid #1e3a5f;padding-bottom:10px;"><div><div style="font-size:11px;color:#64748b;letter-spacing:1px;">INSTRUMENTPRO</div><h2 style="margin:3px 0;">FIELD REPORT</h2><div style="font-size:11px;color:#64748b;">'+rsEsc(rsCurrent.id)+' • REV '+rsCurrent.rev+' • '+rsEsc(o.deviceType||'Device not selected')+'</div></div><div style="font-size:20px;font-weight:800;color:'+(c.pass?'#15803d':'#b45309')+';">'+(!o.deviceType?'PENDING':c.pass?'PASS':'PENDING')+'</div></div>'+
- '<table style="width:100%;font-size:12px;margin:12px 0;border-collapse:collapse;"><tr><td><b>Tag</b><br>'+rsEsc(o.reportTag||'—')+'</td><td><b>Model</b><br>'+rsEsc(o.reportModel||'—')+'</td><td><b>Manufacturer</b><br>'+rsEsc(o.rsManufacturer||'—')+'</td></tr><tr><td><b>Serial</b><br>'+rsEsc(o.rsSerial||'—')+'</td><td><b>Location</b><br>'+rsEsc(o.rsLocation||'—')+'</td><td><b>Technician</b><br>'+rsEsc(o.rsTechnician||'—')+'</td></tr></table>'+
- '<p style="font-size:11px;"><b>Test Type:</b> '+rsEsc(o.reportType||'—')+' &nbsp; <b>Range/Service:</b> '+rsEsc(o.rsRange||'—')+' &nbsp; <b>Unit:</b> '+rsEsc(o.rsUnit||'—')+'<br><b>Acceptance/Tolerance:</b> '+rsEsc(o.rsToleranceSpec||'—')+' &nbsp; <b>Reference:</b> '+rsEsc(o.rsReference||'—')+'</p>'+
- deviceReportSections(o,c)+
- '<div style="margin-top:12px;padding:10px;background:#f8fafc;border-left:4px solid #1e3a5f;font-size:11px;"><b>Engineering Assessment</b><br>'+rsEsc(deviceResultText(o,c))+'</div>'+
- '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;font-size:11px;"><div><b>Observations</b><br>'+rsEsc(o.rsObservations||'—')+'<br><br><b>Root Cause</b><br>'+rsEsc(o.rsRootCause||'—')+'</div><div><b>Corrective Action</b><br>'+rsEsc(o.rsCorrective||'—')+'<br><br><b>Verification</b><br>'+rsEsc(o.rsVerification||'—')+'</div></div>'+
- '<div style="margin-top:16px;border-top:1px solid #ddd;padding-top:10px;font-size:10px;color:#64748b;">Work order: '+rsEsc(o.rsWorkOrder||'—')+' • Technician: '+rsEsc(o.rsTechSign||'—')+' • Supervisor/Witness: '+rsEsc(o.rsSupervisor||'—')+' • Status: '+rsEsc(rsCurrent.status)+'</div></div>';
+ var preview=rsBuildReportHTML(rsCurrent);
  var prev=document.getElementById('reportPreview');if(prev)prev.innerHTML=preview;
  var previewSection=document.getElementById('rsPreviewSection');
  if(previewSection)previewSection.style.display=rsPreviewBuilt?'':'none';
 }
 function rsDownload(name,data,type){var b=new Blob([data],{type:type}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(u);}
 function rsHistory(){var arr=JSON.parse(localStorage.getItem('instrumentpro_reports')||'[]'),el=document.getElementById('rsHistory');if(!arr.length){el.textContent='No reports issued yet.';return;}el.innerHTML=arr.slice().reverse().map(function(r){return '<div class="rs-history-item"><div><b>'+rsEsc(r.id)+'</b><br><small>'+rsEsc(r.tag||'Untagged')+' • '+rsEsc(r.type||'Report')+' • '+rsEsc(r.deviceType||'Device')+'</small></div><div style="text-align:right"><b>'+rsEsc(r.result)+'</b><br><small>'+new Date(r.date).toLocaleString()+'</small></div></div>';}).join('');}
-function rsIssue(){rsRender();var o=rsCurrent;if(!o.deviceType){alert('Select a field device first.');return;}if(!o.calculation.pass){alert('Complete and pass the device-specific tests before issuing the report.');return;}if(!o.rsTechSign){alert('Enter the technician signature/name before issuing.');return;}rsCurrent.status='ISSUED';rsCurrent.issued=new Date().toISOString();var arr=JSON.parse(localStorage.getItem('instrumentpro_reports')||'[]');arr.push({id:rsCurrent.id,tag:rsCurrent.reportTag,type:rsCurrent.reportType,deviceType:rsCurrent.deviceType,result:'PASS',date:rsCurrent.issued,revision:rsCurrent.rev});localStorage.setItem('instrumentpro_reports',JSON.stringify(arr.slice(-50)));rsRender();rsHistory();alert('Report '+rsCurrent.id+' issued successfully.');}
+function rsIssue(){rsRender();var o=rsCurrent;if(!o.deviceType){alert('Select a field device first.');return;}if(!o.calculation.pass){alert('Complete and pass the device-specific tests before issuing the report.');return;}if(!o.rsTechSign){alert('Enter the technician signature/name before issuing.');return;}rsCurrent.status='ISSUED';rsCurrent.issued=new Date().toISOString();var arr=JSON.parse(localStorage.getItem('instrumentpro_reports')||'[]');var snapshot=JSON.parse(JSON.stringify(rsCurrent));arr.push({id:rsCurrent.id,tag:rsCurrent.reportTag,type:rsCurrent.reportType,deviceType:rsCurrent.deviceType,result:'PASS',date:rsCurrent.issued,revision:rsCurrent.rev,snapshot:snapshot});localStorage.setItem('instrumentpro_reports',JSON.stringify(arr.slice(-30)));rsRender();rsHistory();alert('Report '+rsCurrent.id+' issued successfully.');}
 function rsExport(){rsRender();var html='<!doctype html><html><head><meta charset="utf-8"><title>'+rsEsc(rsCurrent.id)+'</title><style>body{font-family:Arial;margin:30px}table{width:100%;border-collapse:collapse}td,th{padding:6px;border-bottom:1px solid #ddd}</style></head><body>'+document.getElementById('reportPreview').innerHTML+'</body></html>';rsDownload(rsCurrent.id+'.html',html,'text/html');}
 function rsJson(){rsRender();rsDownload(rsCurrent.id+'.json',JSON.stringify(rsCurrent,null,2),'application/json');}
 function rsCsv(){rsRender();var o=rsCurrent,c=o.calculation,rows=['Report ID,Device Type,Tag,Test,Result,Details'];(o.deviceData.tests||[]).forEach(function(t){rows.push([o.id,o.deviceType,o.reportTag,t.name,t.passed?'PASS':'FAIL',''].map(function(v){return '"'+String(v==null?'':v).replace(/"/g,'""')+'"';}).join(','));});if(c.kind==='calibration')[0,25,50,75,100].forEach(function(p){var v=o.deviceData.fields['point_'+p];rows.push([o.id,o.deviceType,o.reportTag,p+'% reference',Number.isFinite(parseFloat(v))?'Recorded':'Missing',v].map(function(v){return '"'+String(v==null?'':v).replace(/"/g,'""')+'"';}).join(','));});rsDownload(o.id+'.csv',rows.join('\n'),'text/csv');}
@@ -12893,6 +12903,25 @@ function rsApplyDraft(data){
  rsCurrent=null;
  rsRender();
 }
+// ---- Per-task field memory ----
+// Separate from the single global RS_DRAFT_KEY draft/"Clear All" flow: each
+// task started from the Task List gets its own saved snapshot of every field
+// entered while working it, keyed by task id, so re-opening that task later
+// (even after Clear All was used for something else) prepopulates its data.
+// The Task List script clears this key when a task is removed from the list.
+function rsTaskDraftKey(taskId){ return 'instrumentpro_task_field_'+taskId; }
+window.rsApplyDraft=rsApplyDraft;
+window.rsCollectDraft=rsCollectDraft;
+window.rsTaskDraftKey=rsTaskDraftKey;
+var rsTaskAutosaveTimer=null;
+function rsScheduleTaskAutosave(){
+ if(!window.__ipPendingTaskId) return;
+ var pendingId=window.__ipPendingTaskId;
+ clearTimeout(rsTaskAutosaveTimer);
+ rsTaskAutosaveTimer=setTimeout(function(){
+   if(window.ipDraft) window.ipDraft.save(rsTaskDraftKey(pendingId), rsCollectDraft());
+ },400);
+}
 function rsSaveDraft(btn){
  window.ipDraft.save(RS_DRAFT_KEY,rsCollectDraft());
  window.ipDraft.flash(btn,'Saved','check');
@@ -12911,8 +12940,8 @@ function rsClearAll(){
 }
 function init(){
  var ids=['reportTag','reportModel','rsManufacturer','rsSerial','rsLocation','rsTechnician','reportType','rsRange','rsUnit','rsToleranceSpec','rsReference','rsWorkOrder','rsObservations','rsRootCause','rsCorrective','rsVerification','rsTechSign','rsSupervisor'];
- ids.forEach(function(id){var e=document.getElementById(id);if(e)e.addEventListener('input',rsRender);e&&e.addEventListener('change',rsRender);});
- var device=document.getElementById('rsDeviceType');if(device)device.addEventListener('change',function(){rsCurrent=null;updateRsMeta();renderDeviceConfig();});
+ ids.forEach(function(id){var e=document.getElementById(id);if(e)e.addEventListener('input',function(){rsRender();rsScheduleTaskAutosave();});e&&e.addEventListener('change',function(){rsRender();rsScheduleTaskAutosave();});});
+ var device=document.getElementById('rsDeviceType');if(device)device.addEventListener('change',function(){rsCurrent=null;updateRsMeta();renderDeviceConfig();rsScheduleTaskAutosave();});
  var unitSel=document.getElementById('rsUnit');
  if(unitSel)unitSel.addEventListener('change',function(){
    if(this.value==='__other__'){
@@ -14916,6 +14945,10 @@ function iptAddTask(){
 function iptRemoveTask(id){
     var tasks=iptTasks().filter(function(t){return t.id!==id;});
     iptSaveTasks(tasks);
+    if(window.ipDraft){
+        var key=(typeof window.rsTaskDraftKey==='function')?window.rsTaskDraftKey(id):('instrumentpro_task_field_'+id);
+        window.ipDraft.clear(key);
+    }
     iptRender();
 }
 
@@ -14934,12 +14967,21 @@ function iptStartTask(id){
     setTimeout(function(){
         var modSel=document.getElementById('reportModuleSelect');
         if(modSel && modSel.value!=='field'){ modSel.value='field'; modSel.dispatchEvent(new Event('change')); }
-        var tagEl=document.getElementById('reportTag');
-        if(tagEl) tagEl.value=t.tag;
-        var devEl=document.getElementById('rsDeviceType');
-        if(devEl && t.rsDeviceType){
-            devEl.value=t.rsDeviceType;
-            devEl.dispatchEvent(new Event('change'));
+        var savedKey=(typeof window.rsTaskDraftKey==='function')?window.rsTaskDraftKey(id):('instrumentpro_task_field_'+id);
+        var saved=window.ipDraft && window.ipDraft.load(savedKey);
+        if(saved && saved.data && typeof window.rsApplyDraft==='function'){
+            // Repopulate every field exactly as it was left for this task.
+            window.rsApplyDraft(saved.data);
+            var tagEl=document.getElementById('reportTag');
+            if(tagEl && !tagEl.value) tagEl.value=t.tag;
+        } else {
+            var tagEl2=document.getElementById('reportTag');
+            if(tagEl2) tagEl2.value=t.tag;
+            var devEl=document.getElementById('rsDeviceType');
+            if(devEl && t.rsDeviceType){
+                devEl.value=t.rsDeviceType;
+                devEl.dispatchEvent(new Event('change'));
+            }
         }
     },80);
 }
@@ -14953,6 +14995,11 @@ function iptCompleteTask(id, report){
     t.reportId=report.id||null;
     t.reportResult='PASS';
     iptSaveTasks(tasks);
+    // Full data is now captured in the issued report snapshot; drop the working copy.
+    if(window.ipDraft){
+        var key=(typeof window.rsTaskDraftKey==='function')?window.rsTaskDraftKey(id):('instrumentpro_task_field_'+id);
+        window.ipDraft.clear(key);
+    }
     iptRender();
 }
 
@@ -14973,11 +15020,23 @@ function iptEndPeriod(){
         if(reason===null) reason='Not completed this period';
         t.status='Carried';
         t.note=reason;
+        var newId=iptId();
         tasks.push({
-            id: iptId(), periodId: newPeriodId, tag: t.tag, deviceType: t.deviceType, rsDeviceType: t.rsDeviceType,
+            id: newId, periodId: newPeriodId, tag: t.tag, deviceType: t.deviceType, rsDeviceType: t.rsDeviceType,
             status:'Outstanding', addedAt: new Date().toISOString(), completedAt:null, reportId:null, reportResult:null,
             note:'', carriedFrom: t.id
         });
+        // Move any in-progress field data along with the task so it's still
+        // there when the carried-forward task is started.
+        if(window.ipDraft){
+            var oldKey=(typeof window.rsTaskDraftKey==='function')?window.rsTaskDraftKey(t.id):('instrumentpro_task_field_'+t.id);
+            var newKey=(typeof window.rsTaskDraftKey==='function')?window.rsTaskDraftKey(newId):('instrumentpro_task_field_'+newId);
+            var savedDraft=window.ipDraft.load(oldKey);
+            if(savedDraft && savedDraft.data){
+                window.ipDraft.save(newKey, savedDraft.data);
+                window.ipDraft.clear(oldKey);
+            }
+        }
     });
     iptSaveTasks(tasks);
     meta.date=nextDateStr;
@@ -15038,51 +15097,60 @@ function iptQuickSummary(){
     }).catch(function(e){ alert(e.message); });
 }
 
+function iptFindReportSnapshot(reportId){
+    if(!reportId) return null;
+    try{
+        var arr=JSON.parse(localStorage.getItem('instrumentpro_reports')||'[]');
+        var rec=arr.find(function(r){return r.id===reportId;});
+        return (rec && rec.snapshot) ? rec.snapshot : null;
+    }catch(e){ return null; }
+}
+
+// Builds one combined, print-ready document containing the full Field Report
+// (same format as Report Studio) for every device completed this period,
+// followed by a short list of anything still outstanding.
 function iptFullReport(){
     var meta=iptMeta();
     var tasks=iptActiveTasks();
     var outstanding=tasks.filter(function(t){return t.status==='Outstanding';});
     var completed=tasks.filter(function(t){return t.status==='Completed';});
-    iptLoadJsPDF().then(function(jsPDF){
-        var doc=new jsPDF({unit:'pt',format:'a4'});
-        var x=40,y=50,maxW=515;
-        doc.setFont('helvetica','bold'); doc.setFontSize(16);
-        doc.text('InstrumentPro — End of Period Task Report',x,y); y+=22;
-        doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(90);
-        doc.text(iptPeriodLabel(meta.mode,meta.date)+' • Technician: '+(meta.technician||'—')+' • Generated '+new Date().toLocaleString(),x,y); y+=18;
-        doc.setDrawColor(220); doc.line(x,y,x+maxW,y); y+=16;
 
-        doc.setTextColor(20); doc.setFont('helvetica','bold'); doc.setFontSize(12);
-        doc.text('Summary',x,y); y+=15;
-        doc.setFont('helvetica','normal'); doc.setFontSize(9);
-        doc.text('Total tasks: '+tasks.length+'   Completed: '+completed.length+'   Outstanding: '+outstanding.length,x,y); y+=20;
+    var sections=completed.map(function(t){
+        var snap=iptFindReportSnapshot(t.reportId);
+        var header='<div style="max-width:820px;margin:24px auto 6px;font-size:11px;color:#94a3b8;">Task: '+iptEsc(t.tag)+' • '+iptEsc(t.deviceType)+' • Completed '+(t.completedAt?new Date(t.completedAt).toLocaleString():'—')+(t.note?' • Note: '+iptEsc(t.note):'')+'</div>';
+        var body=(typeof window.rsBuildReportHTML==='function' && snap)
+            ? window.rsBuildReportHTML(snap)
+            : '<div style="max-width:820px;margin:auto;padding:18px;border:1px dashed #cbd5e1;border-radius:10px;font-size:12px;color:#64748b;">Full report detail for '+iptEsc(t.tag)+' ('+iptEsc(t.reportId||'no report id')+') is no longer available — it may be older than the last 30 saved reports.</div>';
+        return '<div style="page-break-after:always;">'+header+body+'</div>';
+    }).join('');
 
-        doc.setFont('helvetica','bold'); doc.setFontSize(12);
-        doc.text('Completed — Device Detail',x,y); y+=15;
-        doc.setFont('helvetica','normal'); doc.setFontSize(9);
-        if(!completed.length){ doc.text('No tasks completed this period.',x,y); y+=14; }
-        completed.forEach(function(t){
-            if(y>740){ doc.addPage(); y=50; }
-            doc.setFont('helvetica','bold'); doc.text(t.tag+'  ('+t.deviceType+')',x,y); y+=12;
-            doc.setFont('helvetica','normal');
-            doc.text('Report: '+(t.reportId||'—')+'   Result: '+(t.reportResult||'—')+'   Completed: '+(t.completedAt?new Date(t.completedAt).toLocaleString():'—'),x,y); y+=12;
-            if(t.note){ doc.text('Note: '+t.note,x,y); y+=12; }
-            y+=6;
-        });
+    var outstandingRows=outstanding.map(function(t){
+        return '<tr><td style="padding:6px;border-bottom:1px solid #e2e8f0;">'+iptEsc(t.tag)+'</td><td style="padding:6px;border-bottom:1px solid #e2e8f0;">'+iptEsc(t.deviceType)+'</td><td style="padding:6px;border-bottom:1px solid #e2e8f0;">'+iptEsc(t.note||'Not stated')+'</td></tr>';
+    }).join('');
+    var outstandingBlock='<div style="max-width:820px;margin:24px auto;font-family:Arial,sans-serif;">'+
+        '<h3 style="font-size:14px;border-bottom:1px solid #ddd;padding-bottom:5px;">Outstanding ('+outstanding.length+')</h3>'+
+        (outstanding.length ? '<table style="width:100%;border-collapse:collapse;font-size:11px;"><tr><th style="text-align:left;padding:6px;">Tag</th><th style="text-align:left;padding:6px;">Device</th><th style="text-align:left;padding:6px;">Reason / Note</th></tr>'+outstandingRows+'</table>' : '<p style="font-size:11px;color:#64748b;">None — all tasks complete.</p>')+
+        '</div>';
 
-        y+=6;
-        if(y>720){ doc.addPage(); y=50; }
-        doc.setFont('helvetica','bold'); doc.setFontSize(12);
-        doc.text('Outstanding',x,y); y+=15;
-        doc.setFont('helvetica','normal'); doc.setFontSize(9);
-        if(!outstanding.length){ doc.text('None — all tasks complete.',x,y); y+=14; }
-        outstanding.forEach(function(t){
-            if(y>760){ doc.addPage(); y=50; }
-            doc.text(t.tag+' — '+t.deviceType+' — Reason: '+(t.note||'Not stated')+' — Carries forward: '+(t.carriedFrom?'from prior period':'yes'),x,y); y+=13;
-        });
+    var titleBlock='<div style="max-width:820px;margin:0 auto 6px;font-family:Arial,sans-serif;">'+
+        '<h2 style="margin:0 0 4px;">InstrumentPro — End of Period Field Reports</h2>'+
+        '<div style="font-size:11px;color:#64748b;">'+iptEsc(iptPeriodLabel(meta.mode,meta.date))+' • Technician: '+iptEsc(meta.technician||'—')+' • Generated '+new Date().toLocaleString()+
+        ' • Total tasks: '+tasks.length+' • Completed: '+completed.length+' • Outstanding: '+outstanding.length+'</div></div>';
 
-        doc.save('Task-End-of-Period-Report-'+Date.now()+'.pdf');
-    }).catch(function(e){ alert(e.message); });
+    var html='<!doctype html><html><head><meta charset="utf-8"><title>End of Period Field Reports</title>'+
+        '<style>body{background:#f1f5f9;padding:20px;} .ipt-print-bar{max-width:820px;margin:0 auto 14px;text-align:right;} .ipt-print-bar button{background:#1e3a5f;color:#fff;border:0;padding:8px 14px;border-radius:8px;font-size:12px;cursor:pointer;} @media print{body{background:#fff;padding:0;} .ipt-print-bar{display:none;} .page-break-after{page-break-after:always;}}</style>'+
+        '</head><body>'+
+        '<div class="ipt-print-bar"><button onclick="window.print()">Print / Save as PDF</button></div>'+
+        titleBlock+
+        (completed.length ? sections : '<p style="max-width:820px;margin:24px auto;font-family:Arial,sans-serif;font-size:12px;color:#64748b;">No tasks completed this period.</p>')+
+        outstandingBlock+
+        '</body></html>';
+
+    var w=window.open('','_blank');
+    if(!w){ alert('Allow pop-ups to view/print the end of period report.'); return; }
+    w.document.write(html);
+    w.document.close();
+    w.focus();
 }
 
 // ---------------- Wiring ----------------
@@ -15203,8 +15271,9 @@ document.addEventListener('DOMContentLoaded',function(){
     if(issueBtn){
         issueBtn.addEventListener('click',function(){
             setTimeout(function(){
-                if(window.__ipPendingTaskId && typeof rsCurrent!=='undefined' && rsCurrent && rsCurrent.status==='ISSUED'){
-                    iptCompleteTask(window.__ipPendingTaskId, rsCurrent);
+                var cur=(typeof window.rsGetCurrent==='function')?window.rsGetCurrent():null;
+                if(window.__ipPendingTaskId && cur && cur.status==='ISSUED'){
+                    iptCompleteTask(window.__ipPendingTaskId, cur);
                     window.__ipPendingTaskId=null;
                 }
             },50);
@@ -15423,44 +15492,7 @@ function iocClearAllItems(){
 }
 
 // ---------------- Export / Import ----------------
-function iocExport(){
-    var job=iocJob();
-    var payload={job:job, items:iocJobItems(), exportedAt:new Date().toISOString()};
-    var blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
-    var a=document.createElement('a');
-    a.href=URL.createObjectURL(blob);
-    a.download='Outage-'+(job.unitId||'unit')+'-'+(job.tech||'tech').replace(/\s+/g,'_')+'-'+Date.now()+'.json';
-    document.body.appendChild(a); a.click(); document.body.removeChild(a);
-}
-function iocImport(file){
-    var reader=new FileReader();
-    reader.onload=function(){
-        try{
-            var payload=JSON.parse(reader.result);
-            var incoming=(payload && payload.items) || [];
-            if(!incoming.length){ alert('No items found in that file.'); return; }
-            var items=iocItems();
-            var byId={}; items.forEach(function(it){ byId[it.id]=it; });
-            var merged=0, added=0;
-            incoming.forEach(function(inc){
-                if(byId[inc.id]){
-                    var idx=items.findIndex(function(x){return x.id===inc.id;});
-                    // Merge: prefer the more recently completed record.
-                    var existing=items[idx];
-                    var incTime=inc.timestamp?new Date(inc.timestamp).getTime():0;
-                    var exTime=existing.timestamp?new Date(existing.timestamp).getTime():0;
-                    if(incTime>exTime){ items[idx]=inc; merged++; }
-                } else {
-                    items.push(inc); added++;
-                }
-            });
-            iocSaveItems(items);
-            iocRender();
-            alert('Import complete: '+added+' new item(s) added, '+merged+' item(s) updated with newer data.');
-        }catch(e){ alert('Could not read that file: '+e.message); }
-    };
-    reader.readAsText(file);
-}
+// (JSON export/import for merging teammates' progress was removed — no longer used.)
 
 // ---------------- Rendering ----------------
 function iocStatusBadge(status,overall){
@@ -15723,19 +15755,13 @@ document.addEventListener('DOMContentLoaded',function(){
     var filterMember=document.getElementById('iocFilterMember');
     if(filterMember) filterMember.addEventListener('change',iocRender);
 
-    var reportMineBtn=document.getElementById('iocReportMineBtn');
-    if(reportMineBtn) reportMineBtn.addEventListener('click',iocReportMine);
-    var reportAllBtn=document.getElementById('iocReportAllBtn');
-    if(reportAllBtn) reportAllBtn.addEventListener('click',iocReportAll);
-    var reportMemberBtn=document.getElementById('iocReportMemberBtn');
-    if(reportMemberBtn) reportMemberBtn.addEventListener('click',iocReportMember);
-
-    var exportBtn=document.getElementById('iocExportBtn');
-    if(exportBtn) exportBtn.addEventListener('click',iocExport);
-    var importInput=document.getElementById('iocImportInput');
-    if(importInput) importInput.addEventListener('change',function(){
-        if(importInput.files && importInput.files[0]) iocImport(importInput.files[0]);
-        importInput.value='';
+    var reportGenerateBtn=document.getElementById('iocReportGenerateBtn');
+    if(reportGenerateBtn) reportGenerateBtn.addEventListener('click',function(){
+        var sel=document.getElementById('iocReportSelect');
+        var choice=sel?sel.value:'mine';
+        if(choice==='all') iocReportAll();
+        else if(choice==='member') iocReportMember();
+        else iocReportMine();
     });
 
     document.addEventListener('click',function(e){
