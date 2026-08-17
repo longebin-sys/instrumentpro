@@ -5057,6 +5057,12 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 </optgroup>
 </select>
 </div>
+<div class="row" id="maOutputRangeRow">
+<label>Output LRV / URV</label>
+<input id="maOutLRV" step="any" style="flex:0.4;" type="number" value="0"/>
+<span>to</span>
+<input id="maOutURV" step="any" style="flex:0.4;" type="number" value="100"/>
+</div>
 <div class="row">
 <label>Relationship</label>
 <select id="maRelationship" style="flex:0.7;">
@@ -5066,7 +5072,18 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 </select>
 </div>
 <div id="maRelationshipNote" style="display:none;font-size:0.65rem;color:#64748b;margin:-2px 0 8px;">
-                        Square-root scaling is active because the input is pressure/DP and the output is flow.
+                        Square-root scaling is active: Flow % = √(DP %). Choose the test basis below so the five points cannot be confused.
+                    </div>
+<div id="maCompatibilityWarning" style="display:none;font-size:0.66rem;margin:-2px 0 8px;padding:7px 9px;border-radius:10px;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.35);color:#b45309;"></div>
+<div class="row">
+<label>5-Point Test Basis</label>
+<select id="maTestBasis" style="flex:0.7;">
+<option selected="" value="input">Process / Input Points</option>
+<option value="output">Output / DCS Indication Points</option>
+</select>
+</div>
+<div id="maTestBasisNote" style="font-size:0.65rem;color:#64748b;margin:-2px 0 8px;">
+                        Tests 0/25/50/75/100% of the input/process range. For square root, the output is the resulting √ response.
                     </div>
 <div class="card-header mt-1" style="border-top:1px solid rgba(148,163,184,.25);padding-top:8px;"><i class="fas fa-list-check"></i><h3 style="font-size:.8rem;">5 Test Points</h3></div>
 <div class="cal-points-grid" id="maCalPointsContainer"></div>
@@ -8719,12 +8736,17 @@ body.dark .colorpick-hexwrap input{background:#0f172a;border-color:#334155;color
             convertTemp();
 
             // =============================================================
-            // SIGNAL SCALING / TEST POINTS (Input range -> selectable output)
+            // SIGNAL SCALING / TEST POINTS
             // =============================================================
             const maLRV = document.getElementById('maLRV');
             const maURV = document.getElementById('maURV');
             const maUnit = document.getElementById('maUnit');
             const maOutUnit = document.getElementById('maOutUnit');
+            const maOutLRV = document.getElementById('maOutLRV');
+            const maOutURV = document.getElementById('maOutURV');
+            const maOutputRangeRow = document.getElementById('maOutputRangeRow');
+            const maTestBasis = document.getElementById('maTestBasis');
+            const maTestBasisNote = document.getElementById('maTestBasisNote');
             const maCalPointsContainer = document.getElementById('maCalPointsContainer');
             const maExportToReportBtn = document.getElementById('maExportToReportBtn');
             const maReverseInput = document.getElementById('maReverseInput');
@@ -8736,76 +8758,167 @@ body.dark .colorpick-hexwrap input{background:#0f172a;border-color:#334155;color
             const MA_HANDOFF_KEY = 'instrumentpro_ma_handoff';
 
             function num(el, fallback) {
-                const n = parseFloat(el.value);
+                const n = parseFloat(el?.value);
                 return Number.isFinite(n) ? n : fallback;
             }
 
-            // Output ranges are now selected automatically from the chosen output type.
-            // No separate Output LRV / URV inputs are shown on the page.
             function getMaOutputRange() {
                 const u = maOutUnit.value;
                 if (u === 'mA') return { lrv: 4, urv: 20 };
                 if (u === 'mV') return { lrv: 0, urv: 1000 };
                 if (u === 'V') return { lrv: 0, urv: 10 };
-
-                // Engineering-unit output uses the same numeric span as the
-                // process range because there is intentionally no second LRV/URV.
-                return { lrv: num(maLRV, 0), urv: num(maURV, 100) };
+                return { lrv: num(maOutLRV, 0), urv: num(maOutURV, 100) };
             }
 
-            function isPressureUnit(unit) {
-                return ['kPa','MPa','bar','mbar','psi','inH2O','mmHg','atm'].includes(unit);
+            // Unit families used by the 4-20 mA scaler. The calculator can
+            // scale between different engineering units only when the physical
+            // quantity is compatible. A pressure->flow DP application is the
+            // special square-root case handled separately below.
+            const MA_UNIT_INFO = {
+                // factor = amount of this unit represented by one base unit.
+                kPa:{family:'pressure', factor:1}, MPa:{family:'pressure', factor:1000}, bar:{family:'pressure', factor:100},
+                mbar:{family:'pressure', factor:0.1}, psi:{family:'pressure', factor:6.894757293},
+                inH2O:{family:'pressure', factor:0.24908891}, mmHg:{family:'pressure', factor:0.133322368}, atm:{family:'pressure', factor:101.325},
+                '°C':{family:'temperature'}, '°F':{family:'temperature'}, K:{family:'temperature'},
+                'm³/h':{family:'flow', factor:1}, 'L/min':{family:'flow', factor:0.06}, 'L/s':{family:'flow', factor:3.6}, GPM:{family:'flow', factor:0.227124707},
+                'kg/h':{family:'massflow', factor:1},
+                mm:{family:'level', factor:1}, m:{family:'level', factor:1000}, '%':{family:'level_percent'}, in:{family:'level', factor:25.4}, ft:{family:'level', factor:304.8},
+                kg:{family:'mass', factor:1}, t:{family:'mass', factor:1000}, lb:{family:'mass', factor:0.45359237},
+                mA:{family:'current'}, mV:{family:'voltage_mv'}, V:{family:'voltage_v'}, 'Ω':{family:'resistance'}
+            };
+
+            function getMaUnitInfo(unit) { return MA_UNIT_INFO[unit] || null; }
+            function isPressureUnit(unit) { return getMaUnitInfo(unit)?.family === 'pressure'; }
+            function isFlowUnit(unit) { return getMaUnitInfo(unit)?.family === 'flow'; }
+
+            function convertMaUnitValue(value, fromUnit, toUnit) {
+                const from = getMaUnitInfo(fromUnit), to = getMaUnitInfo(toUnit);
+                if (!from || !to || from.family !== to.family) return null;
+                if (from.family === 'temperature') {
+                    let c;
+                    if (fromUnit === '°C') c = value;
+                    else if (fromUnit === '°F') c = (value - 32) * 5/9;
+                    else c = value - 273.15;
+                    if (toUnit === '°C') return c;
+                    if (toUnit === '°F') return c * 9/5 + 32;
+                    return c + 273.15;
+                }
+                if (from.family === 'level_percent') {
+                    return to.family === 'level_percent' ? value : null;
+                }
+                return (value / from.factor) * to.factor;
             }
 
-            function isFlowUnit(unit) {
-                return ['m³/h','L/min','L/s','GPM','kg/h'].includes(unit);
+            function maUnitsCompatible(fromUnit, toUnit, relationship) {
+                const from = getMaUnitInfo(fromUnit), to = getMaUnitInfo(toUnit);
+                if (!from || !to) return {ok:false, message:'⚠️ Unknown unit combination.'};
+                // A process variable -> mA/mV/V is normal signal scaling and is
+                // compatible. What is NOT a direct unit conversion is mA <-> V/mV
+                // without an interface/shunt specification.
+                const fromSignal = ['mA','mV','V'].includes(fromUnit);
+                const toSignal = ['mA','mV','V'].includes(toUnit);
+                if (fromSignal && toSignal) {
+                    if (fromUnit === toUnit) return {ok:true};
+                    return {ok:false, message:'⚠️ mA ↔ V/mV needs the actual signal interface or shunt relationship. Do not treat these as a direct unit conversion.'};
+                }
+                if (fromSignal || toSignal) return {ok:true};
+                if (from.family === to.family) return {ok:true};
+                if (relationship === 'sqrt' && from.family === 'pressure' && to.family === 'flow') return {ok:true};
+                // Different engineering quantities can still be valid SIGNAL
+                // SCALING (for example level in m -> output in %). It is not a
+                // physical unit conversion, so warn rather than silently claim
+                // that one quantity has been converted into the other.
+                return {ok:true, warning:`⚠️ ${fromUnit} → ${toUnit} are different physical quantities. This is signal scaling, not a direct unit conversion. Verify the intended output range.`};
             }
 
             function getMaRelationship() {
                 const selected = document.getElementById('maRelationship')?.value || 'auto';
                 if (selected === 'sqrt') return 'sqrt';
                 if (selected === 'linear') return 'linear';
+                return (isPressureUnit(maUnit.value) && isFlowUnit(maOutUnit.value)) ? 'sqrt' : 'linear';
+            }
 
-                // Automatic best-practice behavior for DP/pressure flow:
-                // pressure/DP input + flow output => square-root relationship.
-                return (isPressureUnit(maUnit.value) && isFlowUnit(maOutUnit.value))
-                    ? 'sqrt'
-                    : 'linear';
+            function getMaTestBasis() {
+                return maTestBasis?.value === 'output' ? 'output' : 'input';
+            }
+
+            function updateMaCompatibilityUI() {
+                const el = document.getElementById('maCompatibilityWarning');
+                if (!el) return;
+                const relationship = getMaRelationship();
+                const check = maUnitsCompatible(maUnit.value, maOutUnit.value, relationship);
+                const manualSqrt = document.getElementById('maRelationship')?.value === 'sqrt';
+                if (manualSqrt && !(isPressureUnit(maUnit.value) && isFlowUnit(maOutUnit.value))) {
+                    el.style.display = 'block';
+                    el.textContent = '⚠️ Square Root is intended here for a DP/pressure input driving a flow output. Check the selected units before using this relationship.';
+                    return;
+                }
+                if (!check.ok) {
+                    el.style.display = 'block';
+                    el.textContent = check.message;
+                    return;
+                }
+                if (check.warning) {
+                    el.style.display = 'block';
+                    el.textContent = check.warning;
+                    return;
+                }
+                el.style.display = 'none';
+                el.textContent = '';
             }
 
             function updateMaRelationshipUI() {
                 const relationship = getMaRelationship();
                 const select = document.getElementById('maRelationship');
                 const note = document.getElementById('maRelationshipNote');
-
+                const basis = getMaTestBasis();
                 if (select && select.value === 'auto') {
                     select.title = relationship === 'sqrt'
                         ? 'Automatic: pressure/DP to flow uses square-root scaling'
-                        : 'Automatic: linear scaling';
+                        : 'Automatic: compatible units use linear scaling';
                 }
                 if (note) note.style.display = relationship === 'sqrt' ? 'block' : 'none';
+                if (maTestBasisNote) {
+                    if (basis === 'output') {
+                        maTestBasisNote.textContent = relationship === 'sqrt'
+                            ? 'Tests 0/25/50/75/100% of the output/DCS indication. For square root, the required input/DP is (Flow %)². This is the correct basis when checking a DCS flow display.'
+                            : 'Tests 0/25/50/75/100% of the output range and calculates the input/process value required to produce each point.';
+                    } else {
+                        maTestBasisNote.textContent = relationship === 'sqrt'
+                            ? 'Tests 0/25/50/75/100% of the input/DP range. The output is the resulting square-root response.'
+                            : 'Tests 0/25/50/75/100% of the input/process range and shows the corresponding output.';
+                    }
+                }
+                updateMaCompatibilityUI();
             }
 
             function outputFractionFromInputFraction(p) {
                 const relationship = getMaRelationship();
-                if (relationship === 'sqrt') {
-                    // DP is proportional to Q², therefore Q is proportional to √DP.
-                    return Math.sqrt(Math.max(0, Math.min(1, p)));
-                }
+                if (relationship === 'sqrt') return Math.sqrt(Math.max(0, Math.min(1, p)));
                 return p;
             }
 
             function inputFractionFromOutputFraction(p) {
                 const relationship = getMaRelationship();
-                if (relationship === 'sqrt') {
-                    // Reverse lookup: if Q/Qmax = √(DP/DPmax),
-                    // then DP/DPmax = (Q/Qmax)².
-                    return Math.pow(Math.max(0, Math.min(1, p)), 2);
-                }
+                if (relationship === 'sqrt') return Math.pow(Math.max(0, Math.min(1, p)), 2);
                 return p;
             }
 
+            function updateMaOutputRangeUI() {
+                const electrical = ['mA','mV','V'].includes(maOutUnit.value);
+                if (maOutputRangeRow) maOutputRangeRow.style.display = electrical ? 'none' : 'flex';
+                if (electrical) return;
+
+                // If switching from a fixed electrical output to engineering units,
+                // keep a useful default but allow the technician to enter the actual
+                // flow/pressure/level output range independently of the input range.
+                const out = getMaOutputRange();
+                if (!Number.isFinite(parseFloat(maOutLRV.value))) maOutLRV.value = out.lrv;
+                if (!Number.isFinite(parseFloat(maOutURV.value))) maOutURV.value = out.urv;
+            }
+
             function buildMaCalPoints() {
+                updateMaOutputRangeUI();
                 const inLrv = num(maLRV, 0);
                 const inUrv = num(maURV, 100);
                 const out = getMaOutputRange();
@@ -8813,21 +8926,45 @@ body.dark .colorpick-hexwrap input{background:#0f172a;border-color:#334155;color
                 const outSpan = out.urv - out.lrv;
                 const inUnit = (maUnit.value || '').trim();
                 const outUnit = (maOutUnit.value || '').trim();
+                const relationship = getMaRelationship();
+                const basis = getMaTestBasis();
 
-                let html = `<div class="cal-point" style="font-weight:700;"><span>Point</span><span>Input / Process</span><span>Output</span></div>`;
-                maCalPts.forEach(p => {
-                    const inputFraction = p / 100;
-                    const inputValue = inLrv + (inSpan * inputFraction);
-                    const outputFraction = outputFractionFromInputFraction(inputFraction);
-                    const outputValue = out.lrv + (outSpan * outputFraction);
-
-                    html += `<div class="cal-point"><span>${p}%</span><span>${inputValue.toFixed(2)}${inUnit ? ' ' + inUnit : ''}</span><span>${outputValue.toFixed(2)}${outUnit ? ' ' + outUnit : ''}</span></div>`;
-                });
+                let html = '';
+                if (basis === 'output') {
+                    html = `<div class="cal-point" style="font-weight:700;"><span>Flow / Output %</span><span>Required Input</span><span>Expected Output</span></div>`;
+                    maCalPts.forEach(p => {
+                        const outputFraction = p / 100;
+                        const inputFraction = inputFractionFromOutputFraction(outputFraction);
+                        const inputValue = inLrv + (inSpan * inputFraction);
+                        const outputValue = out.lrv + (outSpan * outputFraction);
+                        // Output/DCS test basis means the requested 0/25/50/75/100%
+                        // points are the desired DCS indication. For a DP transmitter
+                        // with square-root extraction in the DCS, the transmitter itself
+                        // remains LINEAR, so its expected 4-20 mA is based on the REQUIRED
+                        // input/DP value, not on the requested output percentage.
+                        const expectedMa = 4 + (16 * inputFraction);
+                        const expected = outUnit === 'mA'
+                            ? `${expectedMa.toFixed(2)} mA`
+                            : `${outputValue.toFixed(2)}${outUnit ? ' ' + outUnit : ''} · ${expectedMa.toFixed(2)} mA`;
+                        const inputText = `${inputValue.toFixed(2)}${inUnit ? ' ' + inUnit : ''}`;
+                        html += `<div class="cal-point"><span>${p}%</span><span>${inputText}</span><span>${expected}</span></div>`;
+                    });
+                } else {
+                    html = `<div class="cal-point" style="font-weight:700;"><span>Point</span><span>Input / Process</span><span>Output</span></div>`;
+                    maCalPts.forEach(p => {
+                        const inputFraction = p / 100;
+                        const inputValue = inLrv + (inSpan * inputFraction);
+                        const outputFraction = outputFractionFromInputFraction(inputFraction);
+                        const outputValue = out.lrv + (outSpan * outputFraction);
+                        html += `<div class="cal-point"><span>${p}%</span><span>${inputValue.toFixed(2)}${inUnit ? ' ' + inUnit : ''}</span><span>${outputValue.toFixed(2)}${outUnit ? ' ' + outUnit : ''}</span></div>`;
+                    });
+                }
                 maCalPointsContainer.innerHTML = html;
                 updateMaRelationshipUI();
             }
 
             function updateMaReverse() {
+                updateMaOutputRangeUI();
                 const inLrv = num(maLRV, 0);
                 const inUrv = num(maURV, 100);
                 const out = getMaOutputRange();
@@ -8841,63 +8978,114 @@ body.dark .colorpick-hexwrap input{background:#0f172a;border-color:#334155;color
                 const outUnit = (maOutUnit.value || '').trim();
 
                 maReversePct.textContent = pct.toFixed(2) + ' %';
-                maReverseLabel.textContent = 'Input Value';
+                maReverseLabel.textContent = 'Input / Process Value';
                 maReverseResult.textContent = inputValue.toFixed(2) + (inUnit ? ' ' + inUnit : '');
                 maReverseUnitChip.textContent = outUnit || 'Output';
                 updateMaRelationshipUI();
             }
 
-            [maLRV, maURV, maUnit, maOutUnit].forEach(el => {
-                el.addEventListener('input', () => { buildMaCalPoints(); updateMaReverse(); });
-                el.addEventListener('change', () => { buildMaCalPoints(); updateMaReverse(); });
+            let maLastOutputUnit = maOutUnit.value;
+            let maAutoOutputRange = true;
+
+            function maybeAutoConvertOutputRange(previousUnit, nextUnit) {
+                if (!maOutLRV || !maOutURV || ['mA','mV','V'].includes(nextUnit)) return;
+                const rel = getMaRelationship();
+                const check = maUnitsCompatible(maUnit.value, nextUnit, rel);
+                if (!check.ok || rel === 'sqrt') return;
+                const prev = getMaUnitInfo(previousUnit), next = getMaUnitInfo(nextUnit);
+                if (!prev || !next || prev.family !== next.family) return;
+                const oldL = num(maOutLRV, 0), oldU = num(maOutURV, 100);
+                // If the previous output range was the auto-converted range, or the
+                // user has not edited it, convert the input range into the new unit.
+                const inL = num(maLRV, 0), inU = num(maURV, 100);
+                const cL = convertMaUnitValue(inL, maUnit.value, nextUnit);
+                const cU = convertMaUnitValue(inU, maUnit.value, nextUnit);
+                if (maAutoOutputRange && cL !== null && cU !== null) {
+                    maOutLRV.value = cL;
+                    maOutURV.value = cU;
+                } else if (oldL === 0 && oldU === 100 && cL !== null && cU !== null) {
+                    maOutLRV.value = cL;
+                    maOutURV.value = cU;
+                }
+            }
+
+            function syncAutoOutputRangeFromInput() {
+                if (!maAutoOutputRange || !maOutLRV || !maOutURV || ['mA','mV','V'].includes(maOutUnit.value)) return;
+                const rel = getMaRelationship();
+                const check = maUnitsCompatible(maUnit.value, maOutUnit.value, rel);
+                if (!check.ok || rel === 'sqrt') return;
+                const l = convertMaUnitValue(num(maLRV,0), maUnit.value, maOutUnit.value);
+                const u = convertMaUnitValue(num(maURV,100), maUnit.value, maOutUnit.value);
+                if (l !== null && u !== null) { maOutLRV.value=l; maOutURV.value=u; }
+            }
+
+            [maLRV, maURV].forEach(el => {
+                if (!el) return;
+                el.addEventListener('input', () => { syncAutoOutputRangeFromInput(); buildMaCalPoints(); updateMaReverse(); });
+                el.addEventListener('change', () => { syncAutoOutputRangeFromInput(); buildMaCalPoints(); updateMaReverse(); });
+            });
+            if (maUnit) {
+                maUnit.addEventListener('input', () => { syncAutoOutputRangeFromInput(); buildMaCalPoints(); updateMaReverse(); });
+                maUnit.addEventListener('change', () => { syncAutoOutputRangeFromInput(); buildMaCalPoints(); updateMaReverse(); });
+            }
+            if (maOutLRV) maOutLRV.addEventListener('input', () => { maAutoOutputRange = false; buildMaCalPoints(); updateMaReverse(); });
+            if (maOutURV) maOutURV.addEventListener('input', () => { maAutoOutputRange = false; buildMaCalPoints(); updateMaReverse(); });
+            if (maOutUnit) maOutUnit.addEventListener('change', () => {
+                const previous = maLastOutputUnit;
+                maybeAutoConvertOutputRange(previous, maOutUnit.value);
+                maLastOutputUnit = maOutUnit.value;
+                buildMaCalPoints(); updateMaReverse();
             });
 
             const maRelationship = document.getElementById('maRelationship');
-            if (maRelationship) {
-                maRelationship.addEventListener('change', () => {
-                    buildMaCalPoints();
-                    updateMaReverse();
-                });
-            }
+            if (maRelationship) maRelationship.addEventListener('change', () => { buildMaCalPoints(); updateMaReverse(); });
+            if (maTestBasis) maTestBasis.addEventListener('change', () => { buildMaCalPoints(); updateMaReverse(); });
 
             maReverseInput.addEventListener('input', updateMaReverse);
             buildMaCalPoints();
             updateMaReverse();
 
-            // ---- Export to Report: preserve the input/process calibration values and output type. ----
-            // When the relationship is square-root, the field report should reference the
-            // OUTPUT (e.g. Flow) figures, not the raw input (e.g. DP), since that's what the
-            // technician actually reads/verifies against in the field.
+            // ---- Export to Report ----
             maExportToReportBtn.addEventListener('click', function() {
                 const lrv = num(maLRV, 0);
                 const urv = num(maURV, 100);
-                const span = urv - lrv;
                 const unit = (maUnit.value || '').trim();
                 const outputRange = getMaOutputRange();
                 const outputUnit = (maOutUnit.value || '').trim();
                 const relationship = getMaRelationship();
+                const basis = getMaTestBasis();
                 const points = {};
                 const outputPoints = {};
+                const requiredInputPoints = {};
+
                 maCalPts.forEach(p => {
-                    const inputFraction = p / 100;
-                    points[p] = lrv + (span * inputFraction);
-                    outputPoints[p] = outputRange.lrv +
-                        ((outputRange.urv - outputRange.lrv) * outputFractionFromInputFraction(inputFraction));
+                    const frac = p / 100;
+                    points[p] = lrv + ((urv - lrv) * frac);
+                    outputPoints[p] = outputRange.lrv + ((outputRange.urv - outputRange.lrv) * outputFractionFromInputFraction(frac));
+                    requiredInputPoints[p] = lrv + ((urv - lrv) * inputFractionFromOutputFraction(frac));
                 });
-                const useOutputAsRef = relationship === 'sqrt';
+
+                // The Field Report must always use the FIELD INPUT/PROCESS value as
+                // its reference because that is what the technician applies/measures.
+                // For Output / DCS test basis, requiredInputPoints contains the DP/input
+                // needed to make the DCS display the requested output percentage.
+                const reportInputPoints = basis === 'output' ? requiredInputPoints : points;
                 const handoff = {
                     lrv, urv, unit,
                     outputLrv: outputRange.lrv,
                     outputUrv: outputRange.urv,
                     outputUnit,
                     relationship,
+                    testBasis: basis,
                     points,
                     outputPoints,
-                    // Reference figures the field report should actually use.
-                    refLrv: useOutputAsRef ? outputRange.lrv : lrv,
-                    refUrv: useOutputAsRef ? outputRange.urv : urv,
-                    refUnit: useOutputAsRef ? outputUnit : unit,
-                    refPoints: useOutputAsRef ? outputPoints : points,
+                    requiredInputPoints,
+                    // Report reference is ALWAYS the applied/measured input/process
+                    // range (e.g. DP in kPa), never the DCS/flow output range.
+                    refLrv: lrv,
+                    refUrv: urv,
+                    refUnit: unit,
+                    refPoints: reportInputPoints,
                     savedAt: new Date().toISOString()
                 };
                 try { localStorage.setItem(MA_HANDOFF_KEY, JSON.stringify(handoff)); } catch (e) {}
@@ -12657,11 +12845,18 @@ function importMaHandoff(cfg){
  // They must not be written into the technician's actual-reading fields.
  try{sessionStorage.setItem(MA_HANDOFF_IMPORTED_KEY,'1');}catch(e){}
 
- // Use the reference figures (output/Flow when the relationship is square-root,
- // input/process otherwise) — falls back to the raw input fields for older saved handoffs.
- var refLrv=raw.refLrv!==undefined?raw.refLrv:raw.lrv;
- var refUrv=raw.refUrv!==undefined?raw.refUrv:raw.urv;
- var refUnit=raw.refUnit!==undefined?raw.refUnit:raw.unit;
+ // The Field Report uses the actual INPUT/PROCESS values to be applied.
+ // When Output/DCS test basis is selected, refPoints contains the required
+ // input values (for example 0, 6.25, 25, 56.25, 100 kPa).
+ var refLrv=raw.lrv;
+ var refUrv=raw.urv;
+ var refUnit=raw.unit;
+ // Select the exact points that were exported for the chosen test basis.
+ // Output/DCS + square-root => required input/DP points.
+ var importedTestPoints = (raw.testBasis==='output' && raw.requiredInputPoints && typeof raw.requiredInputPoints==='object')
+   ? raw.requiredInputPoints
+   : ((raw.refPoints && typeof raw.refPoints==='object') ? raw.refPoints : raw.points);
+ raw.refPoints = importedTestPoints;
 
  var rangeInp=document.getElementById('rsRange');
  if(rangeInp)rangeInp.value=refLrv+' to '+refUrv;
@@ -12707,12 +12902,18 @@ function renderDeviceConfig(){
  if(cfg.points){
    html+='<div style="margin-top:7px;font-size:.62rem;font-weight:800;color:#475569;">Calibration points</div>';
 
-   // Reference figures: output/Flow when the relationship is square-root, input/process
-   // otherwise — falls back to the raw input fields for older saved handoffs.
-   var importedRefLrv=imported?(imported.refLrv!==undefined?imported.refLrv:imported.lrv):undefined;
-   var importedRefUrv=imported?(imported.refUrv!==undefined?imported.refUrv:imported.urv):undefined;
-   var importedRefUnit=imported?(imported.refUnit!==undefined?imported.refUnit:imported.unit):undefined;
-   var importedRefPoints=imported?(imported.refPoints!==undefined?imported.refPoints:imported.points):undefined;
+   // Field Report reference figures are always the input/process values.
+   // For Output/DCS test basis, use the required input/DP points calculated by the converter.
+   var importedRefLrv=imported?imported.lrv:undefined;
+   var importedRefUrv=imported?imported.urv:undefined;
+   var importedRefUnit=imported?imported.unit:undefined;
+   // IMPORTANT: the report must use the test-basis points exported by the
+   // converter. For Output/DCS + square-root this is the REQUIRED INPUT/DP
+   // sequence (0, 6.25, 25, 56.25, 100), not the raw 0/25/50/75/100 input points.
+   var importedRefPoints=imported ? (
+     (imported.refPoints && typeof imported.refPoints==='object') ? imported.refPoints :
+     ((imported.testBasis==='output' && imported.requiredInputPoints && typeof imported.requiredInputPoints==='object') ? imported.requiredInputPoints : imported.points)
+   ) : undefined;
 
    if(imported){
      html+='<button type="button" id="rsImportMaBtn" class="btn btn-sm" style="margin:4px 0 8px 0;"><i class="fas fa-file-import"></i> Re-import from 4-20mA Calculator ('+
@@ -12852,12 +13053,11 @@ function deviceReportSections(o,c){
      reportImported=JSON.parse(localStorage.getItem(MA_HANDOFF_KEY)||'null');
      reportImportedActive=sessionStorage.getItem(MA_HANDOFF_IMPORTED_KEY)==='1';
    }catch(e){}
-   // Reference figures: output/Flow when the relationship is square-root, input/process
-   // otherwise — falls back to the raw input fields for older saved handoffs.
-   var reportRefLrv=reportImported?(reportImported.refLrv!==undefined?reportImported.refLrv:reportImported.lrv):undefined;
-   var reportRefUrv=reportImported?(reportImported.refUrv!==undefined?reportImported.refUrv:reportImported.urv):undefined;
-   var reportRefUnit=reportImported?(reportImported.refUnit!==undefined?reportImported.refUnit:reportImported.unit):undefined;
-   var reportRefPoints=reportImported?(reportImported.refPoints!==undefined?reportImported.refPoints:reportImported.points):undefined;
+   // Field Report reference figures are always the input/process values.
+   var reportRefLrv=reportImported?reportImported.lrv:undefined;
+   var reportRefUrv=reportImported?reportImported.urv:undefined;
+   var reportRefUnit=reportImported?reportImported.unit:undefined;
+   var reportRefPoints=reportImported?((reportImported.refPoints&&typeof reportImported.refPoints==='object')?reportImported.refPoints:(reportImported.testBasis==='output'&&reportImported.requiredInputPoints?reportImported.requiredInputPoints:reportImported.points)):undefined;
    var reportRefs=[0,25,50,75,100].reduce(function(a,p){
      a[p]=(reportImportedActive&&reportRefPoints&&Number.isFinite(Number(reportRefPoints[p])))?Number(reportRefPoints[p]):p;
      return a;
