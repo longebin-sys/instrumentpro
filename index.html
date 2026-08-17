@@ -11627,6 +11627,80 @@ body.dark .colorpick-hexwrap input{background:#0f172a;border-color:#334155;color
             })();
 
             // =============================================================
+            // JS-DEV-ANALYTICS: Unique device/tester ping
+            // =============================================================
+            // Fires once per browser/device (guarded by a localStorage flag) and posts a
+            // small device fingerprint to the developer's own analytics webhook. This is
+            // separate from the user-facing report-sync webhooks above — it's for counting
+            // distinct testers of the app itself, not report data.
+            (function() {
+                const ANALYTICS_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbxVRdwTqqB8d-Brh-cgAbylzouI1Zw2nrG_XCjI418QbB4KKG2F8WTLFRlC-LsQkd2n-A/exec';
+                const DEVICE_ID_KEY = 'instrumentpro_analytics_device_id';
+                const SENT_FLAG_KEY = 'instrumentpro_analytics_pinged';
+
+                function makeDeviceId() {
+                    if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+                    return 'dev-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10);
+                }
+                function getDeviceId() {
+                    let id = localStorage.getItem(DEVICE_ID_KEY);
+                    if (!id) {
+                        id = makeDeviceId();
+                        try { localStorage.setItem(DEVICE_ID_KEY, id); } catch (e) {}
+                    }
+                    return id;
+                }
+                function classifyDevice(ua) {
+                    if (/iPad|Tablet/i.test(ua)) return 'Tablet';
+                    if (/Mobi|Android.*Mobile|iPhone/i.test(ua)) return 'Mobile';
+                    return 'Desktop';
+                }
+                function classifyOS(ua) {
+                    if (/Android/i.test(ua)) return 'Android';
+                    if (/iPhone|iPad|iPod/i.test(ua)) return 'iOS';
+                    if (/Windows/i.test(ua)) return 'Windows';
+                    if (/Mac OS X/i.test(ua)) return 'macOS';
+                    if (/Linux/i.test(ua)) return 'Linux';
+                    return 'Unknown';
+                }
+                function classifyBrowser(ua) {
+                    if (/Edg\//i.test(ua)) return 'Edge';
+                    if (/OPR\//i.test(ua)) return 'Opera';
+                    if (/Chrome\//i.test(ua) && !/Chromium/i.test(ua)) return 'Chrome';
+                    if (/Firefox\//i.test(ua)) return 'Firefox';
+                    if (/Safari\//i.test(ua) && !/Chrome\//i.test(ua)) return 'Safari';
+                    return 'Unknown';
+                }
+
+                try {
+                    if (sessionStorage.getItem(SENT_FLAG_KEY)) return; // already pinged this session
+                    const ua = navigator.userAgent || '';
+                    const payload = {
+                        source: 'InstrumentPro',
+                        type: 'DeviceVisit',
+                        deviceId: getDeviceId(),
+                        firstVisit: !localStorage.getItem(SENT_FLAG_KEY),
+                        deviceType: classifyDevice(ua),
+                        os: classifyOS(ua),
+                        browser: classifyBrowser(ua),
+                        screen: (screen.width || '?') + 'x' + (screen.height || '?'),
+                        language: navigator.language || '',
+                        referrer: document.referrer || '',
+                        url: window.location.href,
+                        timestamp: new Date().toISOString()
+                    };
+                    fetch(ANALYTICS_WEBHOOK_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'text/plain' },
+                        body: JSON.stringify(payload)
+                    }).catch(function() {});
+                    sessionStorage.setItem(SENT_FLAG_KEY, '1');
+                    try { localStorage.setItem(SENT_FLAG_KEY, '1'); } catch (e) {}
+                } catch (e) {}
+            })();
+
+            // =============================================================
             // FIELD NOTES — ADVANCED
             // =============================================================
             (function() {
