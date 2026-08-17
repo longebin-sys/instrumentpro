@@ -4104,7 +4104,7 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <div class="nav-section-label">ENGINEERING TOOLS</div>
 <a class="nav-item" data-page="converter"><i class="fas fa-arrows-alt-h"></i> Units &amp; Conversion<i class="fas fa-star fav-star" data-page="converter" title="Pin to Favorites"></i></a>
 <a class="nav-item" data-page="electrical"><i class="fas fa-bolt"></i> Electrical &amp; Power<i class="fas fa-star fav-star" data-page="electrical" title="Pin to Favorites"></i></a>
-<a class="nav-item" data-page="bending"><i class="fas fa-pipe-valve"></i> Tube Bending<i class="fas fa-star fav-star" data-page="bending" title="Pin to Favorites"></i></a>
+<a class="nav-item" data-page="bending"><i class="fas fa-compress"></i> Tube Bending<i class="fas fa-star fav-star" data-page="bending" title="Pin to Favorites"></i></a>
 <div class="nav-section-label">FIELD &amp; DIAGNOSTICS</div>
 <a class="nav-item" data-page="hart"><i class="fas fa-satellite-dish"></i> Field Communicator<i class="fas fa-star fav-star" data-page="hart" title="Pin to Favorites"></i></a>
 <a class="nav-item" data-page="trouble"><i class="fas fa-exclamation-triangle"></i> Troubleshooting<i class="fas fa-star fav-star" data-page="trouble" title="Pin to Favorites"></i></a>
@@ -4499,12 +4499,26 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <div id="fnTaskCompletedList"><div style="font-size:0.75rem;color:#94a3b8;text-align:center;padding:16px;">No completed tasks yet.</div></div>
 </div>
 <div class="card">
-<button class="btn-outline btn w-full" id="fnTaskQuickSummaryBtn" style="justify-content:center;" type="button"><i class="fas fa-file-pdf"></i> Quick Summary (PDF)</button>
-<button class="btn-outline btn w-full" id="fnTaskFullReportBtn" style="justify-content:center;margin-top:8px;" type="button"><i class="fas fa-file-signature"></i> End-of-Week Field Reports (All Devices)</button>
-<button class="btn-outline btn w-full" id="fnTaskEndPeriodBtn" style="justify-content:center;margin-top:8px;color:#b45309;" type="button"><i class="fas fa-forward"></i> End Period &amp; Carry Forward Outstanding</button>
+<div class="card-header"><i class="fas fa-file-signature"></i><h3>Reports</h3></div>
+<div class="fn-form-grid">
+<div class="fn-wide"><label>Report</label><select id="fnTaskReportSelect">
+<option value="quick">Quick Summary (PDF)</option>
+<option value="full">End-of-Week Field Reports (All Devices)</option>
+<option value="endperiod">— End Period &amp; Carry Forward Outstanding</option>
+</select></div>
+</div>
+<button class="btn w-full fn-primary" id="fnTaskReportGenerateBtn" style="justify-content:center;margin-top:10px;" type="button"><i class="fas fa-file-pdf"></i> Generate</button>
 </div>
 </div><!-- /fnSubPanelDaily -->
 <div id="fnPanelOutage">
+<div class="card" style="padding:12px;">
+<div class="fn-dashboard">
+<div class="fn-stat"><div class="fn-stat-label">ITEMS</div><strong id="iocStatTotal">0</strong></div>
+<div class="fn-stat"><div class="fn-stat-label">COMPLETE</div><strong id="iocStatComplete">0</strong></div>
+<div class="fn-stat"><div class="fn-stat-label">PENDING</div><strong id="iocStatPending">0</strong></div>
+<div class="fn-stat"><div class="fn-stat-label">MY ITEMS</div><strong id="iocStatMine">0</strong></div>
+</div>
+</div>
 <div class="card">
 <div class="card-header"><i class="fas fa-industry"></i><h3>Outage Job</h3><span id="iocJobBadge">—</span></div>
 <div class="fn-section-note" style="margin-bottom:8px;">Turbine shutdown / full-service instrument checklist, scoped to your team. Progress persists across the whole outage — tap a category, work it, come back for the next whenever.</div>
@@ -4516,16 +4530,9 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <div><label>Unit ID</label><input id="iocUnit" placeholder="GT-1"/></div>
 <div><label>Date</label><input id="iocDate" type="date"/></div>
 </div>
-<button class="btn-outline btn w-full" id="iocNewJobBtn" style="justify-content:center;margin-top:10px;color:#b45309;" type="button"><i class="fas fa-forward"></i> New Job (reload template, reset statuses)</button>
-<button class="btn-outline btn w-full" id="iocClearAllBtn" style="justify-content:center;margin-top:8px;color:#dc2626;" type="button"><i class="fas fa-trash"></i> Clear All Items (this job — true reset to zero)</button>
-</div>
-<div class="card" style="padding:12px;">
-<div class="fn-dashboard">
-<div class="fn-stat"><div class="fn-stat-label">ITEMS</div><strong id="iocStatTotal">0</strong></div>
-<div class="fn-stat"><div class="fn-stat-label">COMPLETE</div><strong id="iocStatComplete">0</strong></div>
-<div class="fn-stat"><div class="fn-stat-label">PENDING</div><strong id="iocStatPending">0</strong></div>
-<div class="fn-stat"><div class="fn-stat-label">MY ITEMS</div><strong id="iocStatMine">0</strong></div>
-</div>
+<div class="card-header" style="margin-top:14px;"><i class="fas fa-list-check"></i><h3>Task Picker</h3><span id="iocCatTotalBadge">0</span></div>
+<div class="fn-section-note" style="margin-bottom:8px;">What are you working on right now?</div>
+<select id="iocCategorySelect" style="width:100%;"></select>
 </div>
 <div class="card">
 <div class="fn-form-grid">
@@ -4538,11 +4545,6 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <div><label>Team Member Contains</label><input id="iocFilterMember" placeholder="Name filter…"/></div>
 </div>
 </div>
-<div class="card">
-<div class="card-header"><i class="fas fa-list-check"></i><h3>Task Picker</h3><span id="iocCatTotalBadge">0</span></div>
-<div class="fn-section-note" style="margin-bottom:8px;">What are you working on right now?</div>
-<select id="iocCategorySelect" style="width:100%;"></select>
-</div>
 <div id="iocCategoryDetail"></div>
 <div class="card">
 <div class="card-header"><i class="fas fa-file-signature"></i><h3>Reports</h3></div>
@@ -4552,6 +4554,8 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <option value="mine">My Completed Items (PDF)</option>
 <option value="all">All Items — Full Report (PDF)</option>
 <option value="member">By Team Member (PDF)</option>
+<option value="newjob">— New Job (reload template, reset statuses)</option>
+<option value="clearall">— Clear All Items (this job — true reset to zero)</option>
 </select></div>
 </div>
 <button class="btn w-full fn-primary" id="iocReportGenerateBtn" style="justify-content:center;margin-top:10px;" type="button"><i class="fas fa-file-pdf"></i> Generate Report</button>
@@ -5807,7 +5811,7 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
         PAGE: BENDING
         ========================================================== -->
 <div class="page" id="page-bending">
-<div class="page-title"><i class="fas fa-pipe-valve"></i> Tube Bending</div>
+<div class="page-title"><i class="fas fa-compress"></i> Tube Bending</div>
 <div class="card">
 <div class="sub-tabs" id="bendingTabs">
 <div class="sub-tab active" data-tab="bend-single">Single Bend</div>
@@ -7236,11 +7240,14 @@ body.dark .colorpick-hexwrap input{background:#0f172a;border-color:#334155;color
 <h4><i class="fas fa-signature"></i> Issue Control</h4>
 <div class="row"><label>Technician Sign</label><input id="rsTechSign" placeholder="Type name to sign" type="text"/></div>
 <div class="row"><label>Supervisor</label><input id="rsSupervisor" placeholder="Supervisor / witness" type="text"/></div>
-<div class="rs-actions">
-<button class="btn" id="generateReportBtn" type="button"><i class="fas fa-file-signature"></i> Build Report</button>
-<button class="btn btn-outline" id="rsIssueBtn"><i class="fas fa-stamp"></i> Issue</button>
-<button class="btn btn-outline" id="rsSaveDraftBtn"><i class="fas fa-save"></i> Save Draft</button>
-<button class="btn btn-outline" id="rsClearAllBtn"><i class="fas fa-eraser"></i> Clear All</button>
+<div class="rs-actions" style="grid-template-columns:1fr;gap:6px;">
+<select id="rsActionSelect" style="width:100%;">
+<option value="build">Build Report</option>
+<option value="issue">Issue</option>
+<option value="savedraft">Save Draft</option>
+<option value="clearall">— Clear All</option>
+</select>
+<button class="btn w-full" id="rsActionGoBtn" type="button"><i class="fas fa-play"></i> Go</button>
 </div>
 </div>
 <div class="rs-section rs-full" id="rsPreviewSection" style="display:none;">
@@ -7299,8 +7306,16 @@ body.dark .colorpick-hexwrap input{background:#0f172a;border-color:#334155;color
 <div class="comm-section-title"><i class="fas fa-signature"></i><span>Approval &amp; Handover</span></div>
 <div class="comm-grid"><input id="commTechnician" placeholder="Commissioning technician"/><input id="commWitness" placeholder="Witness / client representative"/><input id="commSupervisor" placeholder="Supervisor / approver"/><select id="commFinalStatus"><option>Pending Sign-off</option><option>Ready for Handover</option><option>Accepted</option><option>Accepted with Punch List</option><option>Rejected / Rework Required</option></select></div>
 </div>
-<div class="comm-actions"><button class="btn" id="commCheckBtn" type="button"><i class="fas fa-file-signature"></i> Build Report</button><button class="btn btn-outline" id="commPrintBtn"><i class="fas fa-print"></i> Print</button><button class="btn btn-outline" id="commExportBtn"><i class="fas fa-download"></i> Export</button><button class="btn btn-outline" id="commSyncBtn"><i class="fas fa-cloud-upload-alt"></i> Sync</button></div>
-<div class="comm-actions"><button class="btn btn-outline" id="commSaveDraftBtn"><i class="fas fa-save"></i> Save Draft</button><button class="btn btn-outline" id="commClearAllBtn"><i class="fas fa-eraser"></i> Clear All</button></div>
+<div class="comm-actions" style="grid-template-columns:1fr;gap:6px;">
+<select id="commActionSelect" style="width:100%;">
+<option value="build">Build Report</option>
+<option value="print">Print</option>
+<option value="export">Export</option>
+<option value="savedraft">Save Draft</option>
+<option value="clearall">— Clear All</option>
+</select>
+<button class="btn w-full" id="commActionGoBtn" type="button"><i class="fas fa-play"></i> Go</button>
+</div>
 <div class="comm-section"><div class="comm-section-title"><i class="fas fa-file-contract"></i><span>Live Commissioning Report</span></div><div class="comm-preview" id="commOutput">Build the report to generate the professional commissioning report.</div></div>
 </div>
 <div class="report-main-panel hidden" id="reportpanel-loopcheck">
@@ -7317,8 +7332,15 @@ body.dark .colorpick-hexwrap input{background:#0f172a;border-color:#334155;color
 <div class="row"><label>Alarm</label><select id="loopAlarmResult"><option>Not Tested</option><option>PASS</option><option>FAIL</option><option>N/A</option></select></div><div class="row"><label>Trip</label><select id="loopTripResult"><option>Not Tested</option><option>PASS</option><option>FAIL</option><option>N/A</option></select></div><div class="row"><label>Fail-Safe</label><select id="loopFailSafeResult"><option>Not Tested</option><option>PASS</option><option>FAIL</option><option>N/A</option></select></div><div class="row"><label>HMI / DCS</label><select id="loopHmiResult"><option>Not Tested</option><option>PASS</option><option>FAIL</option><option>N/A</option></select></div></div>
 <div class="card" style="padding:10px;margin-bottom:8px"><div class="card-header"><i class="fas fa-user-check"></i><h3>Sign-off &amp; Findings</h3></div><div class="row"><label>Technician</label><input id="loopTech" placeholder="Name"/></div><div class="row"><label>Witness</label><input id="loopWitness" placeholder="Optional"/></div><div class="row"><label>Findings</label><textarea id="loopNotes" placeholder="Observations, deviations, corrective actions..."></textarea></div><div class="row"><label>Final Status</label><select id="loopFinalStatus"><option>Pending Review</option><option>Ready for Startup</option><option>Accepted with Punch List</option><option>Failed - Retest Required</option></select></div></div>
 <button class="btn w-full" id="loopCheckGenBtn"><i class="fas fa-file-circle-check"></i> Build Advanced Loop Report</button><div class="report-preview mt-1" id="loopCheckPreview">Advanced loop report will appear here.</div>
-<div class="row mt-1" style="gap:5px"><button class="btn btn-outline" id="loopCheckExportBtn"><i class="fas fa-download"></i> Export</button><button class="btn btn-outline" id="loopCheckCsvBtn"><i class="fas fa-table"></i> CSV</button><button class="btn btn-outline" id="loopCheckSyncBtn"><i class="fas fa-cloud-upload-alt"></i> Sync</button></div>
-<div class="row mt-1" style="gap:5px"><button class="btn btn-outline" id="loopCheckSaveDraftBtn"><i class="fas fa-save"></i> Save Draft</button><button class="btn btn-outline" id="loopCheckClearAllBtn"><i class="fas fa-eraser"></i> Clear All</button></div>
+<div class="row mt-1" style="gap:6px;flex-direction:column;">
+<select id="loopActionSelect" style="width:100%;">
+<option value="export">Export</option>
+<option value="csv">CSV</option>
+<option value="savedraft">Save Draft</option>
+<option value="clearall">— Clear All</option>
+</select>
+<button class="btn w-full" id="loopActionGoBtn" type="button"><i class="fas fa-play"></i> Go</button>
+</div>
 </div>
 <div class="report-main-panel hidden" id="reportpanel-setpoints">
 <div style="font-size:0.65rem;color:#64748b;margin-bottom:8px;">Document alarm/trip setpoints for a tag — useful for handover packages and change records.</div>
@@ -7332,7 +7354,6 @@ body.dark .colorpick-hexwrap input{background:#0f172a;border-color:#334155;color
 <button class="btn" id="spGenBtn"><i class="fas fa-file-alt"></i> Generate</button>
 <div class="report-preview mt-1" id="spPreview">Setpoint record will appear here.</div>
 <button class="btn btn-outline mt-1" id="spExportBtn"><i class="fas fa-download"></i> Export</button>
-<button class="btn btn-outline mt-1" id="spSyncBtn"><i class="fas fa-cloud-upload-alt"></i> Sync</button>
 </div>
 </div>
 </div>
@@ -7362,7 +7383,7 @@ body.dark .colorpick-hexwrap input{background:#0f172a;border-color:#334155;color
 <button class="btn-outline btn w-full mt-1" id="excelTestBtn" style="justify-content:center;"><i class="fas fa-paper-plane"></i> Send Test Row</button>
 </div>
 <div class="card">
-<div style="font-size:0.65rem;color:#64748b;">Once a webhook is saved here, a "Sync" button appears next to Export on Field Notes, Field Report, Commissioning, Loop Check, and Setpoints — tapping it sends that record to whichever webhook(s) you've linked. Browser security means this app can't confirm the row actually landed (the response can't be read back) — check your sheet/workbook directly the first time to confirm it's working, using Send Test Row above.</div>
+<div style="font-size:0.65rem;color:#64748b;">Once a webhook is saved here, syncing is fully automatic — no button to tap, nothing to remember. Every field note, field report, commissioning report, loop check, setpoint record, and outage checklist item is sent to whichever webhook(s) you've linked the moment it's saved. Clearing data inside the app never removes what's already been sent — the sheet/workbook only ever receives additions. Browser security means this app can't confirm a row actually landed (the response can't be read back) — check your sheet/workbook directly the first time to confirm it's working, using Send Test Row above.</div>
 </div>
 </div>
 </details>
@@ -9846,10 +9867,9 @@ body.dark .colorpick-hexwrap input{background:#0f172a;border-color:#334155;color
                     document.getElementById('commStatusChip').textContent=status;
                     document.getElementById('commOutput').innerHTML=`<div class="cert-head"><div><small>INSTRUMENTPRO · COMMISSIONING CONTROL</small><h2>COMMISSIONING REPORT</h2><p>${escapeHtml(project)} · ${escapeHtml(tag)}</p></div><div class="cert-result ${failed?'fail':status==='READY FOR HANDOVER'?'pass':''}">${status}</div></div><div class="cert-meta"><div><small>REPORT ID</small><b>${id}</b></div><div><small>TYPE</small><b>${escapeHtml(document.getElementById('commType').value)}</b></div><div><small>DATE</small><b>${document.getElementById('commDate').value||'—'}</b></div><div><small>COMPLETION</small><b>${score}%</b></div></div><div class="cert-block"><h4>Scope & Equipment</h4><p><b>System:</b> ${escapeHtml(document.getElementById('commSystem').value||'N/A')} &nbsp; <b>Location:</b> ${escapeHtml(document.getElementById('commLocation').value||'N/A')}<br><b>Manufacturer:</b> ${escapeHtml(document.getElementById('commManufacturer').value||'N/A')} &nbsp; <b>Model/Serial:</b> ${escapeHtml(document.getElementById('commModel').value||'N/A')}</p></div><div class="cert-block"><h4>Verification Summary</h4><table class="rs-table"><tr><th>Area</th><th>Completed</th><th>Result</th></tr>${['PRE-COMMISSIONING','INSTALLATION','WIRING & I/O','CONFIGURATION','FUNCTIONAL TEST','HANDOVER'].map(g=>{const arr=checklist.map((x,i)=>({g:x[0],ok:checks[i].checked})).filter(x=>x.g===g);return `<tr><td>${g}</td><td>${arr.filter(x=>x.ok).length}/${arr.length}</td><td>${arr.every(x=>x.ok)?'PASS':'PENDING'}</td></tr>`}).join('')}</table></div><div class="cert-block"><h4>Test Records</h4><p>${tests.map(x=>escapeHtml(x)).join(' · ')}</p></div><div class="cert-block"><h4>Punch List</h4>${punches.length?punches.map(p=>`<p>• <b>${p.priority}</b> ${escapeHtml(p.text)}</p>`).join(''):'<p>No open punch items.</p>'}</div><div class="cert-block"><h4>Findings & Handover Notes</h4><p>${escapeHtml(document.getElementById('commFindings').value||'No additional findings recorded.')}</p></div><div class="cert-sign"><div><small>COMMISSIONING TECHNICIAN</small><b>${escapeHtml(document.getElementById('commTechnician').value||'Pending')}</b></div><div><small>WITNESS / CLIENT</small><b>${escapeHtml(document.getElementById('commWitness').value||'Pending')}</b></div><div><small>SUPERVISOR / APPROVER</small><b>${escapeHtml(document.getElementById('commSupervisor').value||'Pending')}</b></div></div>`; update(); return {id,project,tag,status,score,tests,punches};
                 }
-                document.getElementById('commCheckBtn').addEventListener('click',function(){ try { build(); } catch (err) { console.error('Commissioning report build failed:', err); alert('Unable to build the report: ' + (err && err.message ? err.message : err)); } });
-                document.getElementById('commPrintBtn').addEventListener('click',function(){build();const w=window.open('','_blank');w.document.write('<html><head><title>Commissioning Report</title><style>body{font-family:Arial;padding:28px;color:#172033}table{width:100%;border-collapse:collapse}td,th{padding:8px;border:1px solid #ddd;text-align:left}</style></head><body>'+document.getElementById('commOutput').innerHTML+'</body></html>');w.document.close();w.print();});
-                document.getElementById('commExportBtn').addEventListener('click',function(){const r=build();const blob=new Blob([document.getElementById('commOutput').innerText],{type:'text/plain'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=r.id+'.txt';a.click();});
-                document.getElementById('commSyncBtn').addEventListener('click',function(){const r=build();window.syncReportToWebhooks({source:'InstrumentPro',type:'Commissioning',reportId:r.id,project:r.project,tag:r.tag,status:r.status,completion:r.score,tests:r.tests,punchList:r.punches,timestamp:new Date().toISOString()});});
+                function commBuildAndSync(){ const r=build(); window.syncReportToWebhooks({source:'InstrumentPro',type:'Commissioning',reportId:r.id,project:r.project,tag:r.tag,status:r.status,completion:r.score,tests:r.tests,punchList:r.punches,timestamp:new Date().toISOString()}); return r; }
+                function commPrint(){ build(); const w=window.open('','_blank'); w.document.write('<html><head><title>Commissioning Report</title><style>body{font-family:Arial;padding:28px;color:#172033}table{width:100%;border-collapse:collapse}td,th{padding:8px;border:1px solid #ddd;text-align:left}</style></head><body>'+document.getElementById('commOutput').innerHTML+'</body></html>'); w.document.close(); w.print(); }
+                function commExport(){ const r=build(); const blob=new Blob([document.getElementById('commOutput').innerText],{type:'text/plain'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=r.id+'.txt'; a.click(); }
                 const COMM_DRAFT_KEY='instrumentpro_commissioning_draft';
                 const commStaticIds=['commProject','commTag','commSystem','commLocation','commManufacturer','commModel','commDate','commType','commPower','commCalibration','commLoop','commFunction','commAlarm','commHandover','commFindings','commTechnician','commWitness','commSupervisor','commFinalStatus'];
                 function commCollectDraft(){
@@ -9886,8 +9906,16 @@ body.dark .colorpick-hexwrap input{background:#0f172a;border-color:#334155;color
                     window.ipDraft.clear(COMM_DRAFT_KEY);
                     update();
                 }
-                document.getElementById('commSaveDraftBtn').addEventListener('click',function(){commSaveDraft(this);});
-                document.getElementById('commClearAllBtn').addEventListener('click',commClearAll);
+                document.getElementById('commActionGoBtn').addEventListener('click',function(){
+                    var choice=document.getElementById('commActionSelect').value;
+                    try {
+                        if(choice==='print') commPrint();
+                        else if(choice==='export') commExport();
+                        else if(choice==='savedraft') commSaveDraft(this);
+                        else if(choice==='clearall') commClearAll();
+                        else commBuildAndSync();
+                    } catch (err) { console.error('Commissioning action failed:', err); alert('Unable to complete that action: ' + (err && err.message ? err.message : err)); }
+                });
                 const savedCommDraft=window.ipDraft&&window.ipDraft.load(COMM_DRAFT_KEY);
                 if(savedCommDraft)commApplyDraft(savedCommDraft.data);
                 update();
@@ -9909,10 +9937,10 @@ body.dark .colorpick-hexwrap input{background:#0f172a;border-color:#334155;color
                     const labels=[];for(let i=1;i<=10;i++)labels.push((checks[i-1]?'PASS':'OPEN')+' | '+document.getElementById('loopChk'+i).parentElement.textContent.trim());
                     const content=['INSTRUMENTPRO — ADVANCED LOOP CHECK REPORT','Report ID: IP-LOOP-'+Date.now(),'Date: '+new Date().toLocaleString(),'Status: '+result,'','Tag: '+tag,'Service: '+desc,'System: '+document.getElementById('loopSystem').value,'Signal: '+document.getElementById('loopSignalType').value,'Range: '+document.getElementById('loopLRV').value+' to '+document.getElementById('loopURV').value+' '+document.getElementById('loopUnits').value,'','SIGNAL VERIFICATION','Maximum Error: '+document.getElementById('loopMaxError').textContent,'Tolerance: '+tol+'%','','FUNCTIONAL TESTS','Alarm: '+tests[0],'Trip: '+tests[1],'Fail-Safe: '+tests[2],'HMI/DCS: '+tests[3],'','CHECKLIST'].concat(labels,['','Findings: '+(document.getElementById('loopNotes').value.trim()||'None'),'Technician: '+(document.getElementById('loopTech').value.trim()||'N/A'),'Witness: '+(document.getElementById('loopWitness').value.trim()||'—'),'Final Status: '+document.getElementById('loopFinalStatus').value,'','ENGINEERING ASSESSMENT',result==='PASS'?'All recorded loop checks passed. Complete site acceptance requirements before startup.':result==='FAIL'?'One or more checks failed. Correct the issue and perform a complete retest.':'Testing remains incomplete. Complete all required checks before acceptance.']).join('\n');
                     document.getElementById('loopCheckPreview').textContent=content;const chip=document.getElementById('loopOverallStatusChip');chip.textContent=result;chip.style.background=result==='PASS'?'#dcfce7':result==='FAIL'?'#fee2e2':'#fef3c7';chip.style.color=result==='PASS'?'#166534':result==='FAIL'?'#991b1b':'#92400e';
+                    window.syncReportToWebhooks({source:'InstrumentPro',type:'AdvancedLoopCheck',timestamp:new Date().toISOString(),tag:tag,status:result,report:content});
                 });
-                document.getElementById('loopCheckExportBtn').addEventListener('click',function(){const c=document.getElementById('loopCheckPreview').textContent;if(c.startsWith('Advanced loop report'))return alert('Build the loop report first.');const b=new Blob([c],{type:'text/plain'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='LoopCheck_'+(document.getElementById('loopTag').value.trim()||'tag')+'_'+new Date().toISOString().slice(0,10)+'.txt';a.click();URL.revokeObjectURL(a.href);});
-                document.getElementById('loopCheckCsvBtn').addEventListener('click',function(){const rows=[['Point','Expected','Measured','Error','Status']];table.querySelectorAll('tr').forEach(tr=>rows.push(Array.from(tr.querySelectorAll('td')).map(td=>{let x=td.querySelector('input');return x?x.value:td.textContent.trim();})));const csv=rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n'),b=new Blob([csv],{type:'text/csv'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='LoopCheck_measurements.csv';a.click();URL.revokeObjectURL(a.href);});
-                document.getElementById('loopCheckSyncBtn').addEventListener('click',function(){const c=document.getElementById('loopCheckPreview').textContent;if(c.startsWith('Advanced loop report'))return alert('Build the loop report first.');window.syncReportToWebhooks({source:'InstrumentPro',type:'AdvancedLoopCheck',timestamp:new Date().toISOString(),tag:document.getElementById('loopTag').value.trim(),report:c});});
+                function loopExport(){const c=document.getElementById('loopCheckPreview').textContent;if(c.startsWith('Advanced loop report'))return alert('Build the loop report first.');const b=new Blob([c],{type:'text/plain'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='LoopCheck_'+(document.getElementById('loopTag').value.trim()||'tag')+'_'+new Date().toISOString().slice(0,10)+'.txt';a.click();URL.revokeObjectURL(a.href);}
+                function loopCsv(){const rows=[['Point','Expected','Measured','Error','Status']];table.querySelectorAll('tr').forEach(tr=>rows.push(Array.from(tr.querySelectorAll('td')).map(td=>{let x=td.querySelector('input');return x?x.value:td.textContent.trim();})));const csv=rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n'),b=new Blob([csv],{type:'text/csv'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='LoopCheck_measurements.csv';a.click();URL.revokeObjectURL(a.href);}
                 const LOOP_DRAFT_KEY='instrumentpro_loopcheck_draft';
                 const loopStaticIds=['loopTag','loopDesc','loopSystem','loopSignalType','loopLRV','loopURV','loopUnits','loopTolerance','loopAlarmResult','loopTripResult','loopFailSafeResult','loopHmiResult','loopTech','loopWitness','loopNotes','loopFinalStatus'];
                 function loopCollectDraft(){
@@ -9954,8 +9982,13 @@ body.dark .colorpick-hexwrap input{background:#0f172a;border-color:#334155;color
                     const chip=document.getElementById('loopOverallStatusChip');chip.textContent='NOT STARTED';chip.style.background='';chip.style.color='';
                     window.ipDraft.clear(LOOP_DRAFT_KEY);
                 }
-                document.getElementById('loopCheckSaveDraftBtn').addEventListener('click',function(){loopSaveDraft(this);});
-                document.getElementById('loopCheckClearAllBtn').addEventListener('click',loopClearAll);
+                document.getElementById('loopActionGoBtn').addEventListener('click',function(){
+                    var choice=document.getElementById('loopActionSelect').value;
+                    if(choice==='csv') loopCsv();
+                    else if(choice==='savedraft') loopSaveDraft(this);
+                    else if(choice==='clearall') loopClearAll();
+                    else loopExport();
+                });
                 const savedLoopDraft=window.ipDraft&&window.ipDraft.load(LOOP_DRAFT_KEY);
                 if(savedLoopDraft)loopApplyDraft(savedLoopDraft.data);
             })();
@@ -9981,6 +10014,7 @@ body.dark .colorpick-hexwrap input{background:#0f172a;border-color:#334155;color
                     row('LO-LO', 'spLoLo', 'spLoLoAction') +
                     `----------------------------------------\nNotes: ${notes}\n========================================`;
                 document.getElementById('spPreview').textContent = content;
+                window.syncReportToWebhooks({source:'InstrumentPro',type:'Setpoints',timestamp:new Date().toISOString(),tag:tag,record:content});
             });
             document.getElementById('spExportBtn').addEventListener('click', function() {
                 const content = document.getElementById('spPreview').textContent;
@@ -9991,17 +10025,6 @@ body.dark .colorpick-hexwrap input{background:#0f172a;border-color:#334155;color
                 a.download = 'Setpoints_' + (document.getElementById('spTag').value.trim() || 'tag') + '_' + new Date().toISOString().slice(0, 10) + '.txt';
                 a.click();
                 URL.revokeObjectURL(a.href);
-            });
-            document.getElementById('spSyncBtn').addEventListener('click', function() {
-                const content = document.getElementById('spPreview').textContent;
-                if (content === 'Setpoint record will appear here.') { alert('Generate the setpoint record first.'); return; }
-                window.syncReportToWebhooks({
-                    source: 'InstrumentPro',
-                    type: 'Setpoints',
-                    timestamp: new Date().toISOString(),
-                    tag: document.getElementById('spTag').value.trim(),
-                    record: content
-                });
             });
 
             // =============================================================
@@ -11220,17 +11243,16 @@ body.dark .colorpick-hexwrap input{background:#0f172a;border-color:#334155;color
                     alert('Test row sent — check your Excel workbook to confirm it arrived (the app can\'t read the response back, so this can\'t confirm success on its own).');
                 });
 
-                // Exposed globally so every report tool's "Sync" button can call this directly
+                // Exposed globally — called automatically by every save/build/issue action across
+                // the app (Field Notes, Field Reports, Commissioning, Loop Check, Setpoints, Outage
+                // Checklist). Silent by design: no alerts, no UI, nothing for the user to do. If no
+                // webhook is linked yet it just no-ops.
                 window.syncReportToWebhooks = function(payload) {
                     const sUrl = getStorage('sheetsWebhookUrl', '');
                     const eUrl = getStorage('excelWebhookUrl', '');
-                    if (!sUrl && !eUrl) {
-                        alert('No Google Sheets or Excel webhook linked yet. Add one in Settings → Report Sync first.');
-                        return;
-                    }
+                    if (!sUrl && !eUrl) return;
                     if (sUrl) sendToWebhook(sUrl, payload);
                     if (eUrl) sendToWebhook(eUrl, payload);
-                    alert('Sent to linked webhook(s). Check your sheet/workbook to confirm — the app can\'t read the response back to verify automatically.');
                 };
 
                 loadUrls();
@@ -11345,6 +11367,7 @@ body.dark .colorpick-hexwrap input{background:#0f172a;border-color:#334155;color
                     const text=document.getElementById('fnText').value.trim(); if(!text){alert('Enter a field observation first.');return;}
                     const n={id:Date.now(),ts:Date.now(),category:document.getElementById('fnCategory').value,priority:document.getElementById('fnPriority').value,status:document.getElementById('fnStatus').value,discipline:document.getElementById('fnDiscipline').value,tag:document.getElementById('fnTag').value.trim(),location:document.getElementById('fnLocation').value.trim(),dueDate:document.getElementById('fnDue').value,keywords:document.getElementById('fnKeywords').value.trim(),text:text};
                     const a=notes(); a.push(n); save(a);
+                    window.syncReportToWebhooks({source:'InstrumentPro',type:'FieldNote',timestamp:new Date().toISOString(),id:n.id,category:n.category,priority:n.priority,status:n.status,discipline:n.discipline,tag:n.tag,location:n.location,dueDate:n.dueDate,keywords:n.keywords,text:n.text});
                     ['fnTag','fnLocation','fnDue','fnKeywords','fnText'].forEach(id=>document.getElementById(id).value='');
                     document.getElementById('fnStatus').value='Open'; document.getElementById('fnPriority').value='Normal'; render();
                 }
@@ -11843,6 +11866,10 @@ body.dark .colorpick-hexwrap input{background:#0f172a;border-color:#334155;color
 #reportpanel-loopcheck .loop-check-item input[type="checkbox"]:checked {
     background-color: var(--loop-accent) !important;
     border-color: var(--loop-accent) !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill='white' d='M7.5 13.3 4.7 10.5 3.3 11.9 7.5 16.1 16.7 6.9 15.3 5.5z'/%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    background-size: 15px 15px !important;
 }
 
 /* Signal verification table */
@@ -12867,7 +12894,7 @@ function rsRender(){
 }
 function rsDownload(name,data,type){var b=new Blob([data],{type:type}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(u);}
 function rsHistory(){var arr=JSON.parse(localStorage.getItem('instrumentpro_reports')||'[]'),el=document.getElementById('rsHistory');if(!arr.length){el.textContent='No reports issued yet.';return;}el.innerHTML=arr.slice().reverse().map(function(r){return '<div class="rs-history-item"><div><b>'+rsEsc(r.id)+'</b><br><small>'+rsEsc(r.tag||'Untagged')+' • '+rsEsc(r.type||'Report')+' • '+rsEsc(r.deviceType||'Device')+'</small></div><div style="text-align:right"><b>'+rsEsc(r.result)+'</b><br><small>'+new Date(r.date).toLocaleString()+'</small></div></div>';}).join('');}
-function rsIssue(){rsRender();var o=rsCurrent;if(!o.deviceType){alert('Select a field device first.');return;}if(!o.calculation.pass){alert('Complete and pass the device-specific tests before issuing the report.');return;}if(!o.rsTechSign){alert('Enter the technician signature/name before issuing.');return;}rsCurrent.status='ISSUED';rsCurrent.issued=new Date().toISOString();var arr=JSON.parse(localStorage.getItem('instrumentpro_reports')||'[]');var snapshot=JSON.parse(JSON.stringify(rsCurrent));arr.push({id:rsCurrent.id,tag:rsCurrent.reportTag,type:rsCurrent.reportType,deviceType:rsCurrent.deviceType,result:'PASS',date:rsCurrent.issued,revision:rsCurrent.rev,snapshot:snapshot});localStorage.setItem('instrumentpro_reports',JSON.stringify(arr.slice(-30)));rsRender();rsHistory();alert('Report '+rsCurrent.id+' issued successfully.');}
+function rsIssue(){rsRender();var o=rsCurrent;if(!o.deviceType){alert('Select a field device first.');return;}if(!o.calculation.pass){alert('Complete and pass the device-specific tests before issuing the report.');return;}if(!o.rsTechSign){alert('Enter the technician signature/name before issuing.');return;}rsCurrent.status='ISSUED';rsCurrent.issued=new Date().toISOString();var arr=JSON.parse(localStorage.getItem('instrumentpro_reports')||'[]');var snapshot=JSON.parse(JSON.stringify(rsCurrent));arr.push({id:rsCurrent.id,tag:rsCurrent.reportTag,type:rsCurrent.reportType,deviceType:rsCurrent.deviceType,result:'PASS',date:rsCurrent.issued,revision:rsCurrent.rev,snapshot:snapshot});localStorage.setItem('instrumentpro_reports',JSON.stringify(arr.slice(-30)));window.syncReportToWebhooks({source:'InstrumentPro',type:'FieldReport',reportId:rsCurrent.id,tag:rsCurrent.reportTag,reportType:rsCurrent.reportType,deviceType:rsCurrent.deviceType,result:'PASS',technician:rsCurrent.rsTechSign,timestamp:rsCurrent.issued,snapshot:snapshot});rsRender();rsHistory();alert('Report '+rsCurrent.id+' issued successfully.');}
 function rsExport(){rsRender();var html='<!doctype html><html><head><meta charset="utf-8"><title>'+rsEsc(rsCurrent.id)+'</title><style>body{font-family:Arial;margin:30px}table{width:100%;border-collapse:collapse}td,th{padding:6px;border-bottom:1px solid #ddd}</style></head><body>'+document.getElementById('reportPreview').innerHTML+'</body></html>';rsDownload(rsCurrent.id+'.html',html,'text/html');}
 function rsJson(){rsRender();rsDownload(rsCurrent.id+'.json',JSON.stringify(rsCurrent,null,2),'application/json');}
 function rsCsv(){rsRender();var o=rsCurrent,c=o.calculation,rows=['Report ID,Device Type,Tag,Test,Result,Details'];(o.deviceData.tests||[]).forEach(function(t){rows.push([o.id,o.deviceType,o.reportTag,t.name,t.passed?'PASS':'FAIL',''].map(function(v){return '"'+String(v==null?'':v).replace(/"/g,'""')+'"';}).join(','));});if(c.kind==='calibration')[0,25,50,75,100].forEach(function(p){var v=o.deviceData.fields['point_'+p];rows.push([o.id,o.deviceType,o.reportTag,p+'% reference',Number.isFinite(parseFloat(v))?'Recorded':'Missing',v].map(function(v){return '"'+String(v==null?'':v).replace(/"/g,'""')+'"';}).join(','));});rsDownload(o.id+'.csv',rows.join('\n'),'text/csv');}
@@ -12958,10 +12985,15 @@ function init(){
    }
  });
  var bind=function(id,fn){var e=document.getElementById(id);if(e)e.addEventListener('click',fn);};
- bind('generateReportBtn',rsShowPreview);bind('rsIssueBtn',rsIssue);bind('rsPrintBtn',function(){rsRender();var w=window.open('','_blank');if(!w){alert('Allow pop-ups to print the report.');return;}w.document.write('<html><head><title>'+rsEsc(rsCurrent.id)+'</title></head><body>'+document.getElementById('reportPreview').innerHTML+'</body></html>');w.document.close();w.focus();w.print();});
+ bind('rsPrintBtn',function(){rsRender();var w=window.open('','_blank');if(!w){alert('Allow pop-ups to print the report.');return;}w.document.write('<html><head><title>'+rsEsc(rsCurrent.id)+'</title></head><body>'+document.getElementById('reportPreview').innerHTML+'</body></html>');w.document.close();w.focus();w.print();});
  bind('exportReportBtn',rsExport);
- bind('rsSaveDraftBtn',function(){rsSaveDraft(document.getElementById('rsSaveDraftBtn'));});
- bind('rsClearAllBtn',rsClearAll);
+ bind('rsActionGoBtn',function(){
+   var choice=document.getElementById('rsActionSelect').value;
+   if(choice==='issue') rsIssue();
+   else if(choice==='savedraft') rsSaveDraft(document.getElementById('rsActionGoBtn'));
+   else if(choice==='clearall') rsClearAll();
+   else rsShowPreview();
+ });
  updateRsMeta();
  rsHistory();rsRender();
  var savedFieldDraft=window.ipDraft&&window.ipDraft.load(RS_DRAFT_KEY);
@@ -15165,13 +15197,13 @@ document.addEventListener('DOMContentLoaded',function(){
     function activateLog(){
         if(logPanel) logPanel.style.display='';
         if(tasksPanel) tasksPanel.style.display='none';
-        if(logBtn){ logBtn.style.background='#1e3a5f'; logBtn.style.color='#fff'; }
+        if(logBtn){ logBtn.style.background='var(--accent)'; logBtn.style.color='#fff'; }
         if(tasksBtn){ tasksBtn.style.background=''; tasksBtn.style.color=''; }
     }
     function activateTasks(){
         if(logPanel) logPanel.style.display='none';
         if(tasksPanel) tasksPanel.style.display='';
-        if(tasksBtn){ tasksBtn.style.background='#1e3a5f'; tasksBtn.style.color='#fff'; }
+        if(tasksBtn){ tasksBtn.style.background='var(--accent)'; tasksBtn.style.color='#fff'; }
         if(logBtn){ logBtn.style.background=''; logBtn.style.color=''; }
         activateSubTabFromState();
     }
@@ -15188,7 +15220,7 @@ document.addEventListener('DOMContentLoaded',function(){
     function activateSubDaily(){
         if(subDailyPanel) subDailyPanel.style.display='';
         if(subOutagePanel) subOutagePanel.style.display='none';
-        if(subDailyBtn){ subDailyBtn.style.background='#1e3a5f'; subDailyBtn.style.color='#fff'; }
+        if(subDailyBtn){ subDailyBtn.style.background='var(--accent)'; subDailyBtn.style.color='#fff'; }
         if(subOutageBtn){ subOutageBtn.style.background=''; subOutageBtn.style.color=''; }
         try{ localStorage.setItem(IPT_SUBTAB_KEY,'daily'); }catch(e){}
         iptRender();
@@ -15196,7 +15228,7 @@ document.addEventListener('DOMContentLoaded',function(){
     function activateSubOutage(){
         if(subDailyPanel) subDailyPanel.style.display='none';
         if(subOutagePanel) subOutagePanel.style.display='';
-        if(subOutageBtn){ subOutageBtn.style.background='#1e3a5f'; subOutageBtn.style.color='#fff'; }
+        if(subOutageBtn){ subOutageBtn.style.background='var(--accent)'; subOutageBtn.style.color='#fff'; }
         if(subDailyBtn){ subDailyBtn.style.background=''; subDailyBtn.style.color=''; }
         try{ localStorage.setItem(IPT_SUBTAB_KEY,'outage'); }catch(e){}
         if(window.iocRender) window.iocRender();
@@ -15247,12 +15279,14 @@ document.addEventListener('DOMContentLoaded',function(){
         var m=iptMeta(); m.technician=techInput.value.trim(); iptSaveMeta(m);
     });
 
-    var quickBtn=document.getElementById('fnTaskQuickSummaryBtn');
-    if(quickBtn) quickBtn.addEventListener('click',iptQuickSummary);
-    var fullBtn=document.getElementById('fnTaskFullReportBtn');
-    if(fullBtn) fullBtn.addEventListener('click',iptFullReport);
-    var endBtn=document.getElementById('fnTaskEndPeriodBtn');
-    if(endBtn) endBtn.addEventListener('click',iptEndPeriod);
+    var taskReportGenBtn=document.getElementById('fnTaskReportGenerateBtn');
+    if(taskReportGenBtn) taskReportGenBtn.addEventListener('click',function(){
+        var sel=document.getElementById('fnTaskReportSelect');
+        var choice=sel?sel.value:'quick';
+        if(choice==='full') iptFullReport();
+        else if(choice==='endperiod') iptEndPeriod();
+        else iptQuickSummary();
+    });
 
     document.addEventListener('click',function(e){
         var startId=e.target.closest && e.target.closest('[data-ipt-start]');
@@ -15453,6 +15487,7 @@ function iocSaveItemResult(id){
     it.checkedBy=job.tech||it.assignedTo||'—';
     it.timestamp=new Date().toISOString();
     iocSaveItems(items);
+    window.syncReportToWebhooks({source:'InstrumentPro',type:'OutageChecklistItem',timestamp:it.timestamp,category:it.category,tag:it.tag,description:it.description,result:it.overallResult,notes:it.notes||'',assignedTo:it.assignedTo,checkedBy:it.checkedBy});
     iocOpenItem=null;
     iocRender();
 }
@@ -15742,10 +15777,7 @@ document.addEventListener('DOMContentLoaded',function(){
         var j=iocJob(); j.tech=techEl.value.trim(); iocSaveJob(j); iocRender();
     });
 
-    var newJobBtn=document.getElementById('iocNewJobBtn');
-    if(newJobBtn) newJobBtn.addEventListener('click',iocNewJob);
-    var clearAllBtn=document.getElementById('iocClearAllBtn');
-    if(clearAllBtn) clearAllBtn.addEventListener('click',iocClearAllItems);
+
 
     var categorySelect=document.getElementById('iocCategorySelect');
     if(categorySelect) categorySelect.addEventListener('change',function(){ iocSelectCategory(categorySelect.value); });
@@ -15759,6 +15791,8 @@ document.addEventListener('DOMContentLoaded',function(){
     if(reportGenerateBtn) reportGenerateBtn.addEventListener('click',function(){
         var sel=document.getElementById('iocReportSelect');
         var choice=sel?sel.value:'mine';
+        if(choice==='newjob'){ iocNewJob(); return; }
+        if(choice==='clearall'){ iocClearAllItems(); return; }
         if(choice==='all') iocReportAll();
         else if(choice==='member') iocReportMember();
         else iocReportMine();
