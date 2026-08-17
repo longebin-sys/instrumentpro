@@ -4318,6 +4318,11 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
         ========================================================== -->
 <div class="page" id="page-notes">
 <div class="page-title"><i class="fas fa-clipboard-list"></i> Field Notes</div>
+<div id="fnTopTabs" style="display:flex;gap:8px;margin-bottom:10px;">
+<button class="btn-outline btn" id="fnTabLogBtn" style="flex:1;justify-content:center;" type="button"><i class="fas fa-layer-group"></i>&nbsp;Field Log</button>
+<button class="btn-outline btn" id="fnTabTasksBtn" style="flex:1;justify-content:center;" type="button"><i class="fas fa-list-check"></i>&nbsp;Tasks</button>
+</div>
+<div id="fnPanelLog">
 <div class="card" style="padding:12px;">
 <div class="fn-dashboard">
 <div class="fn-stat"><div class="fn-stat-label">TOTAL</div><strong id="fnTotal">0</strong></div>
@@ -4381,6 +4386,119 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <div class="card">
 <button class="btn-outline btn w-full" id="noteClearBtn" style="color:#dc2626;justify-content:center;"><i class="fas fa-trash"></i> Clear All Notes</button>
 </div>
+</div><!-- /fnPanelLog -->
+<div id="fnPanelTasks" style="display:none;">
+<div class="card">
+<div class="card-header"><i class="fas fa-list-check"></i><h3 id="fnTaskPeriodLabel">Task List</h3><span id="fnTaskCount">0</span></div>
+<div class="fn-section-note" style="margin-bottom:8px;">Build your task list, then work each one through the normal Field Report flow. Status tracks automatically when a report is issued for that tag.</div>
+<div class="fn-form-grid">
+<div><label>View</label><select id="fnTaskModeSelect">
+<option value="day">Day</option>
+<option value="week" selected="">Week</option>
+</select></div>
+<div><label>Date</label><input id="fnTaskDateInput" type="date"/></div>
+</div>
+<div style="display:flex;gap:6px;margin-top:8px;">
+<button class="btn-outline btn" id="fnTaskPrevBtn" style="flex:1;justify-content:center;min-height:34px;" type="button"><i class="fas fa-chevron-left"></i></button>
+<button class="btn-outline btn" id="fnTaskTodayBtn" style="flex:2;justify-content:center;min-height:34px;font-size:.65rem;" type="button">Today</button>
+<button class="btn-outline btn" id="fnTaskNextBtn" style="flex:1;justify-content:center;min-height:34px;" type="button"><i class="fas fa-chevron-right"></i></button>
+</div>
+<div class="fn-form-grid" style="margin-top:8px;">
+<div class="fn-wide"><label>Technician</label><input id="fnTaskTech" placeholder="Your name"/></div>
+</div>
+<div class="fn-form-grid" style="margin-top:8px;">
+<div><label>Device Type</label><select id="fnTaskDeviceType">
+<option value="|">Select field device...</option>
+<optgroup label="Pressure">
+<option value="Pressure Transmitter|Pressure Transmitter">Pressure Transmitter</option>
+<option value="Pressure Gauge|Pressure Gauge">Pressure Gauge</option>
+<option value="Pressure Switch|Pressure Switch">Pressure Switch</option>
+<option value="Differential Pressure Switch|Differential Pressure Switch">Differential Pressure Switch</option>
+</optgroup>
+<optgroup label="Flow / Level">
+<option value="Flow Transmitter|Flow Transmitter">Flow Transmitter</option>
+<option value="Rotameter|Rotameter (Local Flow Indicator)">Rotameter (Local Flow Indicator)</option>
+<option value="Level Transmitter|Level Transmitter">Level Transmitter</option>
+<option value="Load Cell|Load Cell">Load Cell</option>
+<option value="Level Switch|Level Switch">Level Switch</option>
+</optgroup>
+<optgroup label="Temperature">
+<option value="Temperature Transmitter|Temperature Transmitter">Temperature Transmitter</option>
+<option value="Temperature Switch|Temperature Switch">Temperature Switch</option>
+<option value="Bearing Temperature Sensor|Bearing Temperature Sensor">Bearing Temperature Sensor</option>
+</optgroup>
+<optgroup label="Valves">
+<option value="Emergency Shut Down Valve|Emergency Shut Down Valve">Emergency Shut Down Valve</option>
+<option value="Emergency Blow Down Valve|Emergency Blow Down Valve">Emergency Blow Down Valve</option>
+<option value="Pressure Safety Valve|Pressure Safety Valve (PSV) / Relief Valve">Pressure Safety Valve (PSV) / Relief Valve</option>
+<option value="Rupture Disc|Rupture Disc">Rupture Disc</option>
+<option value="Control Valve|Control Valve">Control Valve</option>
+<option value="Shut-off Valve|Shut-off / On-off Valve">Shut-off / On-off Valve</option>
+<option value="Solenoid Valve|Solenoid Valve">Solenoid Valve</option>
+</optgroup>
+<optgroup label="Rotating / Vibration">
+<option value="Vibration Probe|Vibration Probe">Vibration Probe</option>
+<option value="Axial Displacement Probe|Axial Displacement Probe">Axial Displacement Probe</option>
+<option value="Speed Probe|Speed Probe">Speed Probe</option>
+<option value="Tachometer|Tachometer / Overspeed Trip Device">Tachometer / Overspeed Trip Device</option>
+</optgroup>
+<optgroup label="Electrical">
+<option value="Motor Starter|Motor Starter / MCC Feeder">Motor Starter / MCC Feeder</option>
+<option value="VFD|VFD (Variable Frequency Drive)">VFD (Variable Frequency Drive)</option>
+<option value="UPS|UPS / Battery Charger">UPS / Battery Charger</option>
+<option value="Junction Box|Junction Box / Terminal Box">Junction Box / Terminal Box</option>
+<option value="Proximity Sensor|Proximity Sensor">Proximity Sensor</option>
+<option value="Limit Switch|Limit Switch">Limit Switch</option>
+</optgroup>
+<optgroup label="Fire &amp; Gas">
+<option value="Gas Detector|Gas Detector">Gas Detector</option>
+<option value="Open Path Gas Detector|Open Path Gas Detector">Open Path Gas Detector</option>
+<option value="Flame Detector|Flame Detector">Flame Detector</option>
+<option value="Manual Call Point|Manual Call Point">Manual Call Point</option>
+<option value="Beacon Sounder|Beacon / Sounder (Audible-Visual Alarm)">Beacon / Sounder (Audible-Visual Alarm)</option>
+<option value="Fire Control Panel|Fire Control Panel">Fire Control Panel</option>
+<option value="Fire Gas Logic Solver|Fire &amp; Gas Logic Solver / I/O Card">Fire &amp; Gas Logic Solver / I/O Card</option>
+<option value="Smoke Detector|Smoke Detector">Smoke Detector</option>
+<option value="Heat Detector|Heat Detector">Heat Detector</option>
+<option value="Deluge Valve|Deluge Valve">Deluge Valve</option>
+<option value="Fusible Loop|Fusible Loop">Fusible Loop</option>
+<option value="Foam System Valve|Foam System Valve / Proportioner">Foam System Valve / Proportioner</option>
+<option value="CO2 Release Panel|CO2 / Clean Agent Release Panel">CO2 / Clean Agent Release Panel</option>
+</optgroup>
+<optgroup label="Analytical">
+<option value="pH Analyser|pH Analyser">pH Analyser</option>
+<option value="ORP Analyser|ORP Analyser">ORP Analyser</option>
+<option value="Conductivity Analyser|Conductivity Analyser">Conductivity Analyser</option>
+<option value="Oxygen Analyser|Oxygen (O2) Analyser">Oxygen (O2) Analyser</option>
+<option value="Turbidity Analyser|Turbidity Analyser">Turbidity Analyser</option>
+<option value="Moisture Analyser|Moisture Analyser">Moisture Analyser</option>
+<option value="Gas Chromatograph Analyser|Gas Chromatograph Analyser">Gas Chromatograph Analyser</option>
+<option value="Dew Point Analyser|Dew Point Analyser">Dew Point Analyser</option>
+<option value="Reid Vapour Analyser|Reid Vapour Analyser">Reid Vapour Analyser</option>
+<option value="Oil in Water Analyser|Oil in Water Analyser">Oil in Water Analyser</option>
+</optgroup>
+<optgroup label="Other">
+<option value="Other types|Other types">Other types</option>
+</optgroup>
+</select></div>
+<div><label>Tag</label><input id="fnTaskTagInput" placeholder="PT-101"/></div>
+</div>
+<button class="btn w-full fn-primary" id="fnTaskAddBtn" style="justify-content:center;margin-top:10px;" type="button"><i class="fas fa-plus-circle"></i> Add Task</button>
+</div>
+<div class="card">
+<div class="card-header"><i class="fas fa-hourglass-half"></i><h3>Outstanding</h3><span id="fnTaskOutstandingCount">0</span></div>
+<div id="fnTaskOutstandingList"><div style="font-size:0.75rem;color:#94a3b8;text-align:center;padding:16px;">No outstanding tasks.</div></div>
+</div>
+<div class="card">
+<div class="card-header"><i class="fas fa-circle-check"></i><h3>Completed</h3><span id="fnTaskCompletedCount">0</span></div>
+<div id="fnTaskCompletedList"><div style="font-size:0.75rem;color:#94a3b8;text-align:center;padding:16px;">No completed tasks yet.</div></div>
+</div>
+<div class="card">
+<button class="btn-outline btn w-full" id="fnTaskQuickSummaryBtn" style="justify-content:center;" type="button"><i class="fas fa-file-pdf"></i> Quick Summary (PDF)</button>
+<button class="btn-outline btn w-full" id="fnTaskFullReportBtn" style="justify-content:center;margin-top:8px;" type="button"><i class="fas fa-file-signature"></i> End-of-Week Full Report (PDF)</button>
+<button class="btn-outline btn w-full" id="fnTaskEndPeriodBtn" style="justify-content:center;margin-top:8px;color:#b45309;" type="button"><i class="fas fa-forward"></i> End Period &amp; Carry Forward Outstanding</button>
+</div>
+</div><!-- /fnPanelTasks -->
 </div>
 <!-- ==========================================================
              SHIFT / HANDOVER REPORT MODAL
@@ -7264,9 +7382,9 @@ body.dark .colorpick-hexwrap input{background:#0f172a;border-color:#334155;color
 <div class="bottom-tabs" id="bottomTabs">
 <button class="tab-item active" data-page="home"><i class="fas fa-home"></i> Home</button>
 <button class="tab-item" data-page="converter"><i class="fas fa-calculator"></i> Converter</button>
-<button class="tab-item" data-page="electrical"><i class="fas fa-bolt"></i> Electrical</button>
+<button class="tab-item" data-page="notes" id="bottomTaskBtn"><i class="fas fa-list-check"></i> Task</button>
 <button class="tab-item" data-page="report"><i class="fas fa-file-alt"></i> Report</button>
-<button class="tab-item" data-page="settings"><i class="fas fa-cog"></i> Settings</button>
+<button class="tab-item" data-page="electrical"><i class="fas fa-bolt"></i> Electrical</button>
 </div>
 <!-- ============================================================
     JAVASCRIPT — Full Application
@@ -14571,6 +14689,434 @@ $('hcwPkgInput').onchange=async(e)=>{
 
 document.querySelectorAll('[data-page="hart"]').forEach(el=>{
   el.addEventListener('click',()=>setStatus(!!transport, transport?undefined:'Not connected'));
+});
+})();
+</script>
+<!-- ==========================================================
+     TASK LIST TOOL (Daily / Weekly Tasks) — Tool 1
+     ========================================================== -->
+<script>
+(function(){
+'use strict';
+
+var IPT_TASKS_KEY='instrumentpro_tasks';
+var IPT_META_KEY='instrumentpro_tasks_meta';
+
+function iptEsc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function iptId(){return 'TASK-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,7);}
+
+function iptTodayStr(){
+    var d=new Date();
+    return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function iptParseDate(str){
+    var p=(str||iptTodayStr()).split('-');
+    return new Date(parseInt(p[0],10),parseInt(p[1],10)-1,parseInt(p[2],10));
+}
+function iptDateStr(d){
+    return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function iptMondayOf(d){
+    var day=d.getDay(); // 0 Sun..6 Sat
+    var diffToMon=(day===0?-6:1-day);
+    var mon=new Date(d); mon.setDate(d.getDate()+diffToMon);
+    return mon;
+}
+function iptPeriodId(mode,dateStr){
+    if(mode==='day') return 'D-'+dateStr;
+    var mon=iptMondayOf(iptParseDate(dateStr));
+    return 'W-'+iptDateStr(mon);
+}
+function iptPeriodLabel(mode,dateStr){
+    var d=iptParseDate(dateStr);
+    function fmt(x){return x.toLocaleDateString(undefined,{weekday:'short',day:'numeric',month:'short',year:'numeric'});}
+    function fmtShort(x){return x.toLocaleDateString(undefined,{day:'numeric',month:'short'});}
+    if(mode==='day') return fmt(d);
+    var mon=iptMondayOf(d), sun=new Date(mon); sun.setDate(mon.getDate()+6);
+    return 'Week of '+fmtShort(mon)+' – '+fmtShort(sun)+', '+sun.getFullYear();
+}
+
+function iptMeta(){
+    try{
+        var raw=localStorage.getItem(IPT_META_KEY);
+        if(raw){
+            var m=JSON.parse(raw);
+            if(m && m.mode && m.date) return m;
+        }
+    }catch(e){}
+    var m={mode:'week',date:iptTodayStr(),technician:''};
+    localStorage.setItem(IPT_META_KEY,JSON.stringify(m));
+    return m;
+}
+function iptSaveMeta(m){ localStorage.setItem(IPT_META_KEY,JSON.stringify(m)); }
+function iptActivePeriodId(){ var m=iptMeta(); return iptPeriodId(m.mode,m.date); }
+
+function iptTasks(){
+    try{ var raw=localStorage.getItem(IPT_TASKS_KEY); return raw?JSON.parse(raw):[]; }catch(e){ return []; }
+}
+function iptSaveTasks(arr){ localStorage.setItem(IPT_TASKS_KEY,JSON.stringify(arr)); }
+
+function iptActiveTasks(){
+    var pid=iptActivePeriodId();
+    return iptTasks().filter(function(t){ return t.periodId===pid; });
+}
+
+// ---------------- Rendering ----------------
+function iptTaskRow(t,isCompleted){
+    var badgeColor = isCompleted ? '#059669' : '#b45309';
+    var badgeBg = isCompleted ? '#ecfdf5' : '#fff7ed';
+    var resultBit = t.reportResult ? (' • <b style="color:'+(t.reportResult==='PASS'?'#059669':'#dc2626')+'">'+iptEsc(t.reportResult)+'</b>') : '';
+    var metaLine = isCompleted
+        ? 'Completed '+(t.completedAt?new Date(t.completedAt).toLocaleString():'')+resultBit+(t.reportId?' • '+iptEsc(t.reportId):'')
+        : 'Added '+(t.addedAt?new Date(t.addedAt).toLocaleDateString():'');
+    var actionBtn = isCompleted
+        ? ''
+        : '<button class="btn-outline btn" data-ipt-start="'+iptEsc(t.id)+'" type="button" style="min-height:30px;padding:0 10px;font-size:.62rem;"><i class="fas fa-play"></i> Start</button>';
+    return '<div class="fn-item" style="border:1px solid #e2e8f0;border-radius:10px;padding:10px;margin-bottom:8px;">'+
+        '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">'+
+        '<div><div style="font-weight:700;font-size:.8rem;">'+iptEsc(t.tag||'Untagged')+'</div>'+
+        '<span style="display:inline-block;margin-top:3px;font-size:.6rem;font-weight:700;color:'+badgeColor+';background:'+badgeBg+';padding:2px 7px;border-radius:6px;">'+iptEsc(t.deviceType)+'</span>'+
+        '<div style="font-size:.6rem;color:#94a3b8;margin-top:4px;">'+metaLine+'</div></div>'+
+        '<div style="display:flex;gap:6px;">'+actionBtn+
+        '<button class="btn-outline btn" data-ipt-remove="'+iptEsc(t.id)+'" type="button" style="min-height:30px;padding:0 8px;font-size:.62rem;color:#dc2626;"><i class="fas fa-times"></i></button>'+
+        '</div></div>'+
+        '<input data-ipt-note="'+iptEsc(t.id)+'" placeholder="Note / carry-forward reason..." style="margin-top:6px;font-size:.65rem;padding:6px 8px;" type="text" value="'+iptEsc(t.note||'')+'"/>'+
+        '</div>';
+}
+
+function iptRender(){
+    var meta=iptMeta();
+    var labelEl=document.getElementById('fnTaskPeriodLabel');
+    var modeEl=document.getElementById('fnTaskModeSelect');
+    var dateEl=document.getElementById('fnTaskDateInput');
+    var techEl=document.getElementById('fnTaskTech');
+    if(labelEl) labelEl.textContent=iptPeriodLabel(meta.mode,meta.date);
+    if(modeEl && document.activeElement!==modeEl) modeEl.value=meta.mode;
+    if(dateEl && document.activeElement!==dateEl) dateEl.value=meta.date;
+    if(techEl && document.activeElement!==techEl) techEl.value=meta.technician||'';
+
+    var tasks=iptActiveTasks();
+    var outstanding=tasks.filter(function(t){return t.status==='Outstanding';});
+    var completed=tasks.filter(function(t){return t.status==='Completed';});
+
+    var countEl=document.getElementById('fnTaskCount');
+    if(countEl) countEl.textContent=String(tasks.length);
+    var outCountEl=document.getElementById('fnTaskOutstandingCount');
+    if(outCountEl) outCountEl.textContent=String(outstanding.length);
+    var compCountEl=document.getElementById('fnTaskCompletedCount');
+    if(compCountEl) compCountEl.textContent=String(completed.length);
+
+    var outList=document.getElementById('fnTaskOutstandingList');
+    if(outList){
+        outList.innerHTML = outstanding.length
+            ? outstanding.map(function(t){return iptTaskRow(t,false);}).join('')
+            : '<div style="font-size:0.75rem;color:#94a3b8;text-align:center;padding:16px;">No outstanding tasks.</div>';
+    }
+    var compList=document.getElementById('fnTaskCompletedList');
+    if(compList){
+        compList.innerHTML = completed.length
+            ? completed.map(function(t){return iptTaskRow(t,true);}).join('')
+            : '<div style="font-size:0.75rem;color:#94a3b8;text-align:center;padding:16px;">No completed tasks yet.</div>';
+    }
+}
+
+// ---------------- Actions ----------------
+function iptAddTask(){
+    var devSel=document.getElementById('fnTaskDeviceType');
+    var tagInput=document.getElementById('fnTaskTagInput');
+    if(!devSel||!tagInput) return;
+    var tag=tagInput.value.trim();
+    var parts=devSel.value.split('|');
+    var category=parts[0], rsDeviceType=parts[1]||'';
+    if(!category){ alert('Select a field device type.'); devSel.focus(); return; }
+    if(!tag){ alert('Enter a tag for this task.'); tagInput.focus(); return; }
+    var meta=iptMeta();
+    var tasks=iptTasks();
+    tasks.push({
+        id: iptId(),
+        periodId: iptActivePeriodId(),
+        tag: tag,
+        deviceType: category,
+        rsDeviceType: rsDeviceType,
+        status: 'Outstanding',
+        addedAt: new Date().toISOString(),
+        completedAt: null,
+        reportId: null,
+        reportResult: null,
+        note: ''
+    });
+    iptSaveTasks(tasks);
+    tagInput.value='';
+    tagInput.focus();
+    iptRender();
+}
+
+function iptRemoveTask(id){
+    var tasks=iptTasks().filter(function(t){return t.id!==id;});
+    iptSaveTasks(tasks);
+    iptRender();
+}
+
+function iptSetNote(id,note){
+    var tasks=iptTasks();
+    var t=tasks.find(function(x){return x.id===id;});
+    if(t){ t.note=note; iptSaveTasks(tasks); }
+}
+
+function iptStartTask(id){
+    var t=iptTasks().find(function(x){return x.id===id;});
+    if(!t) return;
+    window.__ipPendingTaskId=id;
+    var nav=document.querySelector('.nav-item[data-page="report"]');
+    if(nav) nav.click();
+    setTimeout(function(){
+        var modSel=document.getElementById('reportModuleSelect');
+        if(modSel && modSel.value!=='field'){ modSel.value='field'; modSel.dispatchEvent(new Event('change')); }
+        var tagEl=document.getElementById('reportTag');
+        if(tagEl) tagEl.value=t.tag;
+        var devEl=document.getElementById('rsDeviceType');
+        if(devEl && t.rsDeviceType){
+            devEl.value=t.rsDeviceType;
+            devEl.dispatchEvent(new Event('change'));
+        }
+    },80);
+}
+
+function iptCompleteTask(id, report){
+    var tasks=iptTasks();
+    var t=tasks.find(function(x){return x.id===id;});
+    if(!t) return;
+    t.status='Completed';
+    t.completedAt=report.issued||new Date().toISOString();
+    t.reportId=report.id||null;
+    t.reportResult='PASS';
+    iptSaveTasks(tasks);
+    iptRender();
+}
+
+function iptEndPeriod(){
+    var meta=iptMeta();
+    var curPeriodId=iptActivePeriodId();
+    var tasks=iptTasks();
+    var outstanding=tasks.filter(function(t){return t.periodId===curPeriodId && t.status==='Outstanding';});
+    if(outstanding.length){
+        if(!confirm(outstanding.length+' outstanding task(s) — you\'ll be asked for a reason on each, then they carry forward into the next period. Continue?')) return;
+    }
+    var nextDate=iptParseDate(meta.date);
+    nextDate.setDate(nextDate.getDate()+(meta.mode==='day'?1:7));
+    var nextDateStr=iptDateStr(nextDate);
+    var newPeriodId=iptPeriodId(meta.mode,nextDateStr);
+    outstanding.forEach(function(t){
+        var reason=prompt('Reason outstanding — '+t.tag+' ('+t.deviceType+'):', t.note||'Not completed this period');
+        if(reason===null) reason='Not completed this period';
+        t.status='Carried';
+        t.note=reason;
+        tasks.push({
+            id: iptId(), periodId: newPeriodId, tag: t.tag, deviceType: t.deviceType, rsDeviceType: t.rsDeviceType,
+            status:'Outstanding', addedAt: new Date().toISOString(), completedAt:null, reportId:null, reportResult:null,
+            note:'', carriedFrom: t.id
+        });
+    });
+    iptSaveTasks(tasks);
+    meta.date=nextDateStr;
+    iptSaveMeta(meta);
+    iptRender();
+    alert('Moved to '+iptPeriodLabel(meta.mode,meta.date)+'.'+(outstanding.length?(' '+outstanding.length+' item(s) carried forward.'):''));
+}
+
+// ---------------- PDF ----------------
+var iptJsPdfPromise=null;
+function iptLoadJsPDF(){
+    if(window.jspdf && window.jspdf.jsPDF) return Promise.resolve(window.jspdf.jsPDF);
+    if(iptJsPdfPromise) return iptJsPdfPromise;
+    iptJsPdfPromise=new Promise(function(resolve,reject){
+        var script=document.createElement('script');
+        script.src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+        script.async=true;
+        script.onload=function(){ resolve(window.jspdf.jsPDF); };
+        script.onerror=function(){ iptJsPdfPromise=null; reject(new Error('PDF library could not be loaded')); };
+        document.head.appendChild(script);
+    });
+    return iptJsPdfPromise;
+}
+
+function iptQuickSummary(){
+    var meta=iptMeta();
+    var tasks=iptActiveTasks();
+    var outstanding=tasks.filter(function(t){return t.status==='Outstanding';});
+    var completed=tasks.filter(function(t){return t.status==='Completed';});
+    iptLoadJsPDF().then(function(jsPDF){
+        var doc=new jsPDF({unit:'pt',format:'a4'});
+        var x=40,y=50,maxW=515;
+        doc.setFont('helvetica','bold'); doc.setFontSize(15);
+        doc.text('InstrumentPro — Task Quick Summary',x,y); y+=20;
+        doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(90);
+        doc.text(iptPeriodLabel(meta.mode,meta.date)+' • Technician: '+(meta.technician||'—')+' • Generated '+new Date().toLocaleString(),x,y); y+=20;
+        doc.setDrawColor(220); doc.line(x,y,x+maxW,y); y+=16;
+        doc.setTextColor(20); doc.setFont('helvetica','bold'); doc.setFontSize(11);
+        doc.text('Completed ('+completed.length+')',x,y); y+=14;
+        doc.setFont('helvetica','normal'); doc.setFontSize(9);
+        if(!completed.length){ doc.text('None yet.',x,y); y+=14; }
+        completed.forEach(function(t){
+            var line=t.tag+' — '+t.deviceType+(t.reportResult?(' — '+t.reportResult):'')+(t.reportId?(' — '+t.reportId):'');
+            doc.text(line,x,y); y+=13;
+            if(y>760){ doc.addPage(); y=50; }
+        });
+        y+=10;
+        doc.setFont('helvetica','bold'); doc.setFontSize(11);
+        doc.text('Outstanding ('+outstanding.length+')',x,y); y+=14;
+        doc.setFont('helvetica','normal'); doc.setFontSize(9);
+        if(!outstanding.length){ doc.text('None — all tasks complete.',x,y); y+=14; }
+        outstanding.forEach(function(t){
+            var line=t.tag+' — '+t.deviceType+(t.note?(' — '+t.note):'');
+            doc.text(line,x,y); y+=13;
+            if(y>760){ doc.addPage(); y=50; }
+        });
+        doc.save('Task-Quick-Summary-'+Date.now()+'.pdf');
+    }).catch(function(e){ alert(e.message); });
+}
+
+function iptFullReport(){
+    var meta=iptMeta();
+    var tasks=iptActiveTasks();
+    var outstanding=tasks.filter(function(t){return t.status==='Outstanding';});
+    var completed=tasks.filter(function(t){return t.status==='Completed';});
+    iptLoadJsPDF().then(function(jsPDF){
+        var doc=new jsPDF({unit:'pt',format:'a4'});
+        var x=40,y=50,maxW=515;
+        doc.setFont('helvetica','bold'); doc.setFontSize(16);
+        doc.text('InstrumentPro — End of Period Task Report',x,y); y+=22;
+        doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(90);
+        doc.text(iptPeriodLabel(meta.mode,meta.date)+' • Technician: '+(meta.technician||'—')+' • Generated '+new Date().toLocaleString(),x,y); y+=18;
+        doc.setDrawColor(220); doc.line(x,y,x+maxW,y); y+=16;
+
+        doc.setTextColor(20); doc.setFont('helvetica','bold'); doc.setFontSize(12);
+        doc.text('Summary',x,y); y+=15;
+        doc.setFont('helvetica','normal'); doc.setFontSize(9);
+        doc.text('Total tasks: '+tasks.length+'   Completed: '+completed.length+'   Outstanding: '+outstanding.length,x,y); y+=20;
+
+        doc.setFont('helvetica','bold'); doc.setFontSize(12);
+        doc.text('Completed — Device Detail',x,y); y+=15;
+        doc.setFont('helvetica','normal'); doc.setFontSize(9);
+        if(!completed.length){ doc.text('No tasks completed this period.',x,y); y+=14; }
+        completed.forEach(function(t){
+            if(y>740){ doc.addPage(); y=50; }
+            doc.setFont('helvetica','bold'); doc.text(t.tag+'  ('+t.deviceType+')',x,y); y+=12;
+            doc.setFont('helvetica','normal');
+            doc.text('Report: '+(t.reportId||'—')+'   Result: '+(t.reportResult||'—')+'   Completed: '+(t.completedAt?new Date(t.completedAt).toLocaleString():'—'),x,y); y+=12;
+            if(t.note){ doc.text('Note: '+t.note,x,y); y+=12; }
+            y+=6;
+        });
+
+        y+=6;
+        if(y>720){ doc.addPage(); y=50; }
+        doc.setFont('helvetica','bold'); doc.setFontSize(12);
+        doc.text('Outstanding',x,y); y+=15;
+        doc.setFont('helvetica','normal'); doc.setFontSize(9);
+        if(!outstanding.length){ doc.text('None — all tasks complete.',x,y); y+=14; }
+        outstanding.forEach(function(t){
+            if(y>760){ doc.addPage(); y=50; }
+            doc.text(t.tag+' — '+t.deviceType+' — Reason: '+(t.note||'Not stated')+' — Carries forward: '+(t.carriedFrom?'from prior period':'yes'),x,y); y+=13;
+        });
+
+        doc.save('Task-End-of-Period-Report-'+Date.now()+'.pdf');
+    }).catch(function(e){ alert(e.message); });
+}
+
+// ---------------- Wiring ----------------
+document.addEventListener('DOMContentLoaded',function(){
+    iptMeta(); // ensure initialized
+    iptRender();
+
+    var logBtn=document.getElementById('fnTabLogBtn');
+    var tasksBtn=document.getElementById('fnTabTasksBtn');
+    var logPanel=document.getElementById('fnPanelLog');
+    var tasksPanel=document.getElementById('fnPanelTasks');
+    function activateLog(){
+        if(logPanel) logPanel.style.display='';
+        if(tasksPanel) tasksPanel.style.display='none';
+        if(logBtn){ logBtn.style.background='#1e3a5f'; logBtn.style.color='#fff'; }
+        if(tasksBtn){ tasksBtn.style.background=''; tasksBtn.style.color=''; }
+    }
+    function activateTasks(){
+        if(logPanel) logPanel.style.display='none';
+        if(tasksPanel) tasksPanel.style.display='';
+        if(tasksBtn){ tasksBtn.style.background='#1e3a5f'; tasksBtn.style.color='#fff'; }
+        if(logBtn){ logBtn.style.background=''; logBtn.style.color=''; }
+        iptRender();
+    }
+    if(logBtn) logBtn.addEventListener('click',activateLog);
+    if(tasksBtn) tasksBtn.addEventListener('click',activateTasks);
+    activateLog();
+
+    var bottomTaskBtn=document.getElementById('bottomTaskBtn');
+    if(bottomTaskBtn) bottomTaskBtn.addEventListener('click',function(){
+        setTimeout(activateTasks,60);
+    });
+
+    var addBtn=document.getElementById('fnTaskAddBtn');
+    if(addBtn) addBtn.addEventListener('click',iptAddTask);
+    var tagInput=document.getElementById('fnTaskTagInput');
+    if(tagInput) tagInput.addEventListener('keydown',function(e){ if(e.key==='Enter'){ e.preventDefault(); iptAddTask(); } });
+
+    var modeSelect=document.getElementById('fnTaskModeSelect');
+    if(modeSelect) modeSelect.addEventListener('change',function(){
+        var m=iptMeta(); m.mode=modeSelect.value; iptSaveMeta(m); iptRender();
+    });
+    var dateInput=document.getElementById('fnTaskDateInput');
+    if(dateInput) dateInput.addEventListener('change',function(){
+        var m=iptMeta(); m.date=dateInput.value||iptTodayStr(); iptSaveMeta(m); iptRender();
+    });
+    var prevBtn=document.getElementById('fnTaskPrevBtn');
+    if(prevBtn) prevBtn.addEventListener('click',function(){
+        var m=iptMeta(); var d=iptParseDate(m.date); d.setDate(d.getDate()-(m.mode==='day'?1:7));
+        m.date=iptDateStr(d); iptSaveMeta(m); iptRender();
+    });
+    var nextBtn=document.getElementById('fnTaskNextBtn');
+    if(nextBtn) nextBtn.addEventListener('click',function(){
+        var m=iptMeta(); var d=iptParseDate(m.date); d.setDate(d.getDate()+(m.mode==='day'?1:7));
+        m.date=iptDateStr(d); iptSaveMeta(m); iptRender();
+    });
+    var todayBtn=document.getElementById('fnTaskTodayBtn');
+    if(todayBtn) todayBtn.addEventListener('click',function(){
+        var m=iptMeta(); m.date=iptTodayStr(); iptSaveMeta(m); iptRender();
+    });
+    var techInput=document.getElementById('fnTaskTech');
+    if(techInput) techInput.addEventListener('change',function(){
+        var m=iptMeta(); m.technician=techInput.value.trim(); iptSaveMeta(m);
+    });
+
+    var quickBtn=document.getElementById('fnTaskQuickSummaryBtn');
+    if(quickBtn) quickBtn.addEventListener('click',iptQuickSummary);
+    var fullBtn=document.getElementById('fnTaskFullReportBtn');
+    if(fullBtn) fullBtn.addEventListener('click',iptFullReport);
+    var endBtn=document.getElementById('fnTaskEndPeriodBtn');
+    if(endBtn) endBtn.addEventListener('click',iptEndPeriod);
+
+    document.addEventListener('click',function(e){
+        var startId=e.target.closest && e.target.closest('[data-ipt-start]');
+        if(startId){ iptStartTask(startId.getAttribute('data-ipt-start')); return; }
+        var removeId=e.target.closest && e.target.closest('[data-ipt-remove]');
+        if(removeId){ iptRemoveTask(removeId.getAttribute('data-ipt-remove')); return; }
+    });
+    document.addEventListener('change',function(e){
+        if(e.target && e.target.matches && e.target.matches('[data-ipt-note]')){
+            iptSetNote(e.target.getAttribute('data-ipt-note'), e.target.value);
+        }
+    });
+
+    // Hook: when a report is issued via Report Studio, mark the pending task complete.
+    var issueBtn=document.getElementById('rsIssueBtn');
+    if(issueBtn){
+        issueBtn.addEventListener('click',function(){
+            setTimeout(function(){
+                if(window.__ipPendingTaskId && typeof rsCurrent!=='undefined' && rsCurrent && rsCurrent.status==='ISSUED'){
+                    iptCompleteTask(window.__ipPendingTaskId, rsCurrent);
+                    window.__ipPendingTaskId=null;
+                }
+            },50);
+        });
+    }
 });
 })();
 </script>
