@@ -4633,7 +4633,7 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <div class="page" id="page-converter">
 <div class="page-title"><i class="fas fa-arrows-alt-h"></i> Unit Converter</div>
 <div class="card">
-<div class="sub-tabs" id="converterTabs"><div class="sub-tab active" data-tab="conv-signal-group">4-20mA</div><div class="sub-tab" data-tab="conv-pressure-group">Pressure</div><div class="sub-tab" data-tab="conv-temperature-group">Temperature</div><div class="sub-tab" data-tab="conv-speed-group">Speed</div><div class="sub-tab" data-tab="conv-vibration-group">Vibration</div><div class="sub-tab" data-tab="conv-flow-group">Flow</div><div class="sub-tab" data-tab="conv-density-group">Density / SG</div><div class="sub-tab" data-tab="conv-volume-group">Volume</div><div class="sub-tab" data-tab="conv-level-group">Level / Head</div><div class="sub-tab" data-tab="conv-concentration-group">Concentration</div><div class="sub-tab" data-tab="conv-controls-group">Controls</div></div>
+<div class="sub-tabs" id="converterTabs"><div class="sub-tab active" data-tab="conv-signal-group">4-20mA</div><div class="sub-tab" data-tab="conv-pressure-group">Pressure</div><div class="sub-tab" data-tab="conv-temperature-group">Temperature</div><div class="sub-tab" data-tab="conv-speed-group">Speed</div><div class="sub-tab" data-tab="conv-vibration-group">Vibration</div><div class="sub-tab" data-tab="conv-flow-group">Flow</div><div class="sub-tab" data-tab="conv-density-group">Density / SG</div><div class="sub-tab" data-tab="conv-volume-group">Volume</div><div class="sub-tab" data-tab="conv-level-group">Level / Head</div><div class="sub-tab" data-tab="conv-concentration-group">Concentration</div><div class="sub-tab" data-tab="conv-controls-group">Controls</div><div class="sub-tab" data-tab="conv-custody-group">Custody Transfer</div></div>
 
 
 
@@ -5130,6 +5130,108 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <div class="result-box"><span>Trip Point</span><span id="deadbandTripResult">—</span></div>
 <div class="result-box"><span>Clear / Reset Point</span><span id="deadbandClearResult">—</span></div>
 <div style="font-size:0.65rem;color:#64748b;margin-top:4px;">For a high alarm the reset point sits below setpoint by the deadband; for a low alarm it sits above setpoint by the deadband — this stops the alarm chattering right at the trip point.</div>
+</div>
+
+</div>
+<div class="sub-panel hidden" id="conv-custody-group"><div class="sub-tabs converter-nested-tabs"><div class="sub-tab active" data-tab="conv-apigravity">API Gravity</div><div class="sub-tab" data-tab="conv-vcf">VCF / CTL</div><div class="sub-tab" data-tab="conv-meterfactor">Meter Factor / K-Factor</div><div class="sub-tab" data-tab="conv-orifice">Orifice Beta & DP Flow</div><div class="sub-tab" data-tab="conv-lng">LNG Mass / Energy</div></div>
+
+<div class="sub-panel active" id="conv-apigravity">
+<div class="card-header" style="margin-bottom:8px;"><i class="fas fa-tint"></i><h3 style="font-size:0.85rem;">API Gravity ↔ Specific Gravity ↔ Density</h3><span>60°F basis</span></div>
+<div style="font-size:0.65rem;color:#64748b;margin-bottom:8px;">Reference basis 60°F/15.56°C. Water density at 60°F taken as 999.016 kg/m³ — a standard textbook value; check your site's agreed reference density for exact custody transfer accounting.</div>
+<div class="row"><label>Input Type</label><select id="apiInputType" style="flex:1;"><option selected="" value="api">API Gravity</option><option value="sg">Specific Gravity (60°F)</option></select></div>
+<div class="row"><label>Value</label><input id="apiInputValue" step="any" style="flex:0.6;" type="number" value="35"/><button class="btn btn-sm" id="apiConvertBtn">Convert</button></div>
+<div class="result-box"><span>API Gravity</span><span id="apiApiResult">—</span></div>
+<div class="result-box"><span>Specific Gravity (60°F)</span><span id="apiSgResult">—</span></div>
+<div class="result-box"><span>Density</span><span id="apiDensityResult">—</span></div>
+<div class="result-box"><span>Density (US units)</span><span id="apiDensityLbResult">—</span></div>
+</div>
+
+<div class="sub-panel hidden" id="conv-vcf">
+<div class="card-header" style="margin-bottom:8px;"><i class="fas fa-thermometer-half"></i><h3 style="font-size:0.85rem;">Volume Correction Factor (VCF / CTL)</h3><span>Correct to 60°F</span></div>
+<div style="font-size:0.65rem;color:#64748b;margin-bottom:8px;">Uses the API MPMS Chapter 11.1 (2004) generalized correlation: α₆₀ = K₀/ρ₆₀² + K₁/ρ₆₀ + K₂, VCF = exp[−α₆₀·ΔT·(1+0.8·α₆₀·ΔT)]. This closely matches the official tables but is not a substitute for certified custody-transfer software or the licensed API/ASTM/IP tables where an exact table value is contractually required. Base conditions: 60°F, 0 psig.</div>
+<div class="row"><label>Commodity / Table</label>
+<select id="vcfCommodity" style="flex:1;">
+<option selected="" value="341.0957,0,0">Crude Oil (Table 6A/24A)</option>
+<option value="103.8720,0.2701,0">Refined Products — Fuel Oils, API ≤37.1</option>
+<option value="330.3010,0,0">Refined Products — Light Gas Oils, API 37.1–48.0</option>
+<option value="1489.0670,0,-0.00186840">Refined Products — Transition Zone, API 48.0–52.0</option>
+<option value="192.4571,0.2438,0">Refined Products — Very Light Gas Oils, API ≥52.0</option>
+<option value="0,0.34878,0">Lubricating Oils</option>
+<option value="custom">Custom α (known thermal expansion coefficient)</option>
+</select></div>
+<div class="row" id="vcfApiRow"><label>API Gravity @ 60°F</label><input id="vcfApi" step="any" style="flex:0.6;" type="number" value="35"/></div>
+<div class="row hidden" id="vcfCustomAlphaRow"><label>Known α (per °F)</label><input id="vcfCustomAlpha" step="any" style="flex:0.6;" type="number" value="0.00035"/></div>
+<div class="row"><label>Observed Temperature</label><input id="vcfTempF" step="any" style="flex:0.6;" type="number" value="80"/><span class="chip">°F</span></div>
+<div class="row mt-1"><label>Observed Volume</label><input id="vcfObsVolume" step="any" style="flex:0.6;" type="number" value="1000"/></div>
+<button class="btn w-full mt-1" id="vcfCalcBtn">Calculate</button>
+<div class="result-box"><span>Density @ 60°F</span><span id="vcfDensityResult">—</span></div>
+<div class="result-box"><span>Thermal Expansion Coeff. (α₆₀)</span><span id="vcfAlphaResult">—</span></div>
+<div class="result-box"><span>VCF / CTL</span><span id="vcfResult">—</span></div>
+<div class="result-box"><span>Corrected Volume (to 60°F)</span><span id="vcfCorrectedVolResult">—</span></div>
+</div>
+
+<div class="sub-panel hidden" id="conv-meterfactor">
+<div class="card-header" style="margin-bottom:8px;"><i class="fas fa-balance-scale"></i><h3 style="font-size:0.85rem;">Meter Factor / K-Factor</h3><span>Proving reference</span></div>
+<div class="card-header mt-1" style="border-top:1px solid rgba(148,163,184,.25);padding-top:8px;"><h3 style="font-size:.8rem;">Meter Factor (from a Proving Run)</h3></div>
+<div class="row"><label>Prover Corrected Volume</label><input id="mfProverVol" step="any" style="flex:0.6;" type="number" value="500.125"/></div>
+<div class="row"><label>Meter Indicated Volume</label><input id="mfMeterVol" step="any" style="flex:0.6;" type="number" value="500.00"/></div>
+<button class="btn w-full mt-1" id="mfCalcBtn">Calculate Meter Factor</button>
+<div class="result-box"><span>Meter Factor</span><span id="mfResult">—</span></div>
+<div style="font-size:0.65rem;color:#64748b;margin-top:4px;">MF = Prover Corrected Volume ÷ Meter Indicated Volume for one run. Average the accepted runs per your site's proving procedure before applying a new meter factor.</div>
+<div class="card-header mt-1" style="border-top:1px solid rgba(148,163,184,.25);padding-top:8px;"><h3 style="font-size:.8rem;">K-Factor (Pulses per Unit Volume)</h3></div>
+<div class="row"><label>Pulses Collected</label><input id="kfPulses" step="any" style="flex:0.6;" type="number" value="10000"/></div>
+<div class="row"><label>Corrected Volume</label><input id="kfVolume" step="any" style="flex:0.6;" type="number" value="500.125"/></div>
+<div class="row"><label>Volume Unit Label</label><input id="kfUnitLabel" style="flex:1;" type="text" value="bbl"/></div>
+<button class="btn w-full mt-1" id="kfCalcBtn">Calculate K-Factor</button>
+<div class="result-box"><span>K-Factor</span><span id="kfResult">—</span></div>
+<div class="card-header mt-1" style="border-top:1px solid rgba(148,163,184,.25);padding-top:8px;"><h3 style="font-size:.8rem;">Apply to a New Run</h3></div>
+<div class="row"><label>Mode</label><select id="applyMode" style="flex:1;"><option selected="" value="pulses">Pulses (use K-Factor)</option><option value="volume">Indicated Volume (use Meter Factor)</option></select></div>
+<div class="row" id="applyPulsesRow"><label>Pulses Collected</label><input id="applyPulses" step="any" style="flex:0.6;" type="number" value="9950"/></div>
+<div class="row hidden" id="applyVolumeRow"><label>Indicated Volume</label><input id="applyVolume" step="any" style="flex:0.6;" type="number" value="497.60"/></div>
+<div class="row" id="applyKfRow"><label>K-Factor</label><input id="applyKf" step="any" style="flex:0.6;" type="number" value="19.995"/></div>
+<div class="row hidden" id="applyMfRow"><label>Meter Factor</label><input id="applyMf" step="any" style="flex:0.6;" type="number" value="1.00025"/></div>
+<button class="btn w-full mt-1" id="applyCalcBtn">Calculate Corrected Volume</button>
+<div class="result-box"><span>Corrected Volume</span><span id="applyResult">—</span></div>
+</div>
+
+<div class="sub-panel hidden" id="conv-orifice">
+<div class="card-header" style="margin-bottom:8px;"><i class="fas fa-circle-notch"></i><h3 style="font-size:0.85rem;">Orifice Beta Ratio & DP Flow</h3><span>Reference estimate</span></div>
+<div class="row"><label>Orifice Bore Diameter (d)</label><input id="betaBore" step="any" style="flex:0.6;" type="number" value="2.000"/><span class="chip">in</span></div>
+<div class="row"><label>Pipe Internal Diameter (D)</label><input id="betaPipe" step="any" style="flex:0.6;" type="number" value="4.026"/><span class="chip">in</span></div>
+<button class="btn w-full mt-1" id="betaCalcBtn">Calculate Beta Ratio</button>
+<div class="result-box"><span>Beta Ratio (β = d/D)</span><span id="betaResult">—</span></div>
+<div class="result-box"><span>Area Ratio (β²)</span><span id="betaAreaResult">—</span></div>
+<div style="font-size:0.65rem;color:#64748b;margin-top:4px;">Typical fiscal orifice designs target β between about 0.2 and 0.6 for good accuracy and turndown — check your meter run's design basis.</div>
+<div class="card-header mt-1" style="border-top:1px solid rgba(148,163,184,.25);padding-top:8px;"><h3 style="font-size:.8rem;">Simplified DP Flow (uses d and β above)</h3></div>
+<div class="row"><label>Discharge Coefficient (Cd)</label><input id="dpCd" step="any" style="flex:0.6;" type="number" value="0.61"/></div>
+<div class="row"><label>Differential Pressure</label><input id="dpDeltaP" step="any" style="flex:0.5;" type="number" value="100"/>
+<select id="dpDpUnit" style="flex:0.6;"><option selected="" value="inh2o">in H₂O</option><option value="psi">psi</option><option value="kpa">kPa</option><option value="bar">bar</option></select></div>
+<div class="row"><label>Fluid Density (flowing)</label><input id="dpDensity" step="any" style="flex:0.5;" type="number" value="0.045"/>
+<select id="dpDensityUnit" style="flex:0.6;"><option selected="" value="lbft3">lb/ft³</option><option value="kgm3">kg/m³</option></select></div>
+<button class="btn w-full mt-1" id="dpCalcBtn">Calculate Flow</button>
+<div class="result-box"><span>Volumetric Flow (actual)</span><span id="dpFlowResult">—</span></div>
+<div style="font-size:0.65rem;color:#64748b;margin-top:4px;">Simplified single-phase orifice equation (Bernoulli-derived) for field reference/sanity-checking only — this is actual flow at the entered flowing density, not standard conditions. Fiscal/custody transfer orifice metering must use the full AGA3 (Reader-Harris/Gallagher) discharge coefficient with Reynolds-number iteration, expansibility factor, and thermal/pressure expansion of the plate and pipe — this tool does not replace that calculation.</div>
+</div>
+
+<div class="sub-panel hidden" id="conv-lng">
+<div class="card-header" style="margin-bottom:8px;"><i class="fas fa-snowflake"></i><h3 style="font-size:0.85rem;">LNG Mass / Energy</h3><span>Custody transfer</span></div>
+<div style="font-size:0.65rem;color:#64748b;margin-bottom:8px;">LNG custody transfer isn't a volume-correction problem like petroleum liquids — API MPMS 11.1 explicitly excludes LNG/NGLs. Real terminals derive density from composition (ISO 6578 Klosek-McKinley) and energy from a GC-measured GCV. This tool takes your density and GCV as known inputs from that lab/analyzer data and does the volume → mass → energy chain — it does not derive density or GCV for you.</div>
+<div class="card-header" style="margin-top:2px;"><i class="fas fa-cube"></i><h3 style="font-size:.8rem;">Volume → Mass</h3></div>
+<div class="row"><label>Volume</label><input id="lngVolume" step="any" style="flex:0.6;" type="number" value="1000"/><span class="chip">m³</span></div>
+<div class="row"><label>LNG Density</label><input id="lngDensity" step="any" style="flex:0.6;" type="number" value="450"/><span class="chip">kg/m³</span></div>
+<button class="btn w-full mt-1" id="lngMassBtn">Calculate Mass</button>
+<div class="result-box"><span>Mass</span><span id="lngMassResult">—</span></div>
+<div class="card-header mt-1" style="border-top:1px solid rgba(148,163,184,.25);padding-top:8px;"><i class="fas fa-bolt"></i><h3 style="font-size:.8rem;">Mass → Energy</h3></div>
+<div class="row"><label>Mass</label><input id="lngEnergyMass" step="any" style="flex:0.6;" type="number" value="450"/><span class="chip">tonnes</span></div>
+<div class="row"><label>GCV (Gross Calorific Value)</label><input id="lngGcv" step="any" style="flex:0.6;" type="number" value="54.5"/><span class="chip">MJ/kg</span></div>
+<button class="btn w-full mt-1" id="lngEnergyBtn">Calculate Energy</button>
+<div class="result-box"><span>Energy (GJ)</span><span id="lngEnergyGjResult">—</span></div>
+<div class="result-box"><span>Energy (MMBtu)</span><span id="lngEnergyBtuResult">—</span></div>
+<div class="card-header mt-1" style="border-top:1px solid rgba(148,163,184,.25);padding-top:8px;"><i class="fas fa-exchange-alt"></i><h3 style="font-size:.8rem;">Net Transferred Volume (Loaded − Vapor Return)</h3></div>
+<div class="row"><label>Loaded Volume</label><input id="lngLoaded" step="any" style="flex:0.6;" type="number" value="1000"/><span class="chip">m³</span></div>
+<div class="row"><label>Vapor Return Volume (LNG-equivalent)</label><input id="lngVaporReturn" step="any" style="flex:0.6;" type="number" value="5"/><span class="chip">m³</span></div>
+<button class="btn w-full mt-1" id="lngNetVolBtn">Calculate Net Volume</button>
+<div class="result-box"><span>Net Transferred Volume</span><span id="lngNetVolResult">—</span></div>
 </div>
 
 </div>
@@ -8134,6 +8236,153 @@ body.dark .colorpick-hexwrap input{background:#0f172a;border-color:#334155;color
                     set('deadbandTripResult', sp.toFixed(3)+' '+unit);
                     set('deadbandClearResult', clear.toFixed(3)+' '+unit);
                 });
+
+                // =========================================================
+                // CUSTODY TRANSFER: API GRAVITY ↔ SG ↔ DENSITY
+                // =========================================================
+                const WATER_DENSITY_60F_KGM3 = 999.016;
+                on('apiConvertBtn',()=>{
+                    const type=document.getElementById('apiInputType').value;
+                    const val=v('apiInputValue');
+                    let api, sg;
+                    if(type==='api'){ api=val; sg=141.5/(api+131.5); }
+                    else { sg=val; api=(141.5/sg)-131.5; }
+                    const densityKgM3 = sg*WATER_DENSITY_60F_KGM3;
+                    const densityLbFt3 = densityKgM3/16.0185;
+                    const densityLbGal = densityKgM3/119.826;
+                    set('apiApiResult', api.toFixed(2)+' °API');
+                    set('apiSgResult', sg.toFixed(5));
+                    set('apiDensityResult', densityKgM3.toFixed(2)+' kg/m³');
+                    set('apiDensityLbResult', densityLbFt3.toFixed(3)+' lb/ft³  •  '+densityLbGal.toFixed(3)+' lb/gal (US)');
+                });
+
+                // =========================================================
+                // CUSTODY TRANSFER: VOLUME CORRECTION FACTOR (VCF/CTL)
+                // =========================================================
+                const vcfCommodity=document.getElementById('vcfCommodity');
+                const vcfApiRow=document.getElementById('vcfApiRow');
+                const vcfCustomAlphaRow=document.getElementById('vcfCustomAlphaRow');
+                if(vcfCommodity){
+                    vcfCommodity.addEventListener('change', function(){
+                        const isCustom = this.value==='custom';
+                        vcfApiRow.classList.toggle('hidden', isCustom);
+                        vcfCustomAlphaRow.classList.toggle('hidden', !isCustom);
+                    });
+                }
+                on('vcfCalcBtn',()=>{
+                    const commodityVal=vcfCommodity.value;
+                    const tempF=v('vcfTempF');
+                    const obsVol=v('vcfObsVolume');
+                    let alpha, densityKgM3=null;
+                    if(commodityVal==='custom'){
+                        alpha=v('vcfCustomAlpha');
+                        set('vcfDensityResult','— (custom α)');
+                    }else{
+                        const api=v('vcfApi');
+                        const sg=141.5/(api+131.5);
+                        densityKgM3=sg*WATER_DENSITY_60F_KGM3;
+                        const [k0,k1,k2]=commodityVal.split(',').map(Number);
+                        alpha=(k0/(densityKgM3*densityKgM3))+(k1/densityKgM3)+k2;
+                        set('vcfDensityResult', densityKgM3.toFixed(2)+' kg/m³');
+                    }
+                    const dT=tempF-60;
+                    const vcf=Math.exp(-alpha*dT*(1+0.8*alpha*dT));
+                    const correctedVol=obsVol*vcf;
+                    set('vcfAlphaResult', alpha.toFixed(7)+' per °F');
+                    set('vcfResult', vcf.toFixed(5));
+                    set('vcfCorrectedVolResult', correctedVol.toFixed(3));
+                });
+
+                // =========================================================
+                // CUSTODY TRANSFER: METER FACTOR / K-FACTOR
+                // =========================================================
+                on('mfCalcBtn',()=>{
+                    const proverVol=v('mfProverVol'), meterVol=v('mfMeterVol');
+                    if(meterVol===0) return set('mfResult','Meter volume cannot be 0');
+                    set('mfResult', (proverVol/meterVol).toFixed(5));
+                });
+                on('kfCalcBtn',()=>{
+                    const pulses=v('kfPulses'), vol=v('kfVolume');
+                    const unit=document.getElementById('kfUnitLabel').value || 'unit';
+                    if(vol===0) return set('kfResult','Volume cannot be 0');
+                    set('kfResult', (pulses/vol).toFixed(4)+' pulses/'+unit);
+                });
+                const applyMode=document.getElementById('applyMode');
+                const applyPulsesRow=document.getElementById('applyPulsesRow');
+                const applyVolumeRow=document.getElementById('applyVolumeRow');
+                const applyKfRow=document.getElementById('applyKfRow');
+                const applyMfRow=document.getElementById('applyMfRow');
+                if(applyMode){
+                    applyMode.addEventListener('change', function(){
+                        const usePulses=this.value==='pulses';
+                        applyPulsesRow.classList.toggle('hidden', !usePulses);
+                        applyKfRow.classList.toggle('hidden', !usePulses);
+                        applyVolumeRow.classList.toggle('hidden', usePulses);
+                        applyMfRow.classList.toggle('hidden', usePulses);
+                    });
+                }
+                on('applyCalcBtn',()=>{
+                    if(applyMode.value==='pulses'){
+                        const pulses=v('applyPulses'), kf=v('applyKf');
+                        if(kf===0) return set('applyResult','K-Factor cannot be 0');
+                        set('applyResult', (pulses/kf).toFixed(3));
+                    }else{
+                        const vol=v('applyVolume'), mf=v('applyMf');
+                        set('applyResult', (vol*mf).toFixed(3));
+                    }
+                });
+
+                // =========================================================
+                // CUSTODY TRANSFER: ORIFICE BETA RATIO & DP FLOW
+                // =========================================================
+                on('betaCalcBtn',()=>{
+                    const d=v('betaBore'), D=v('betaPipe');
+                    if(D===0) return set('betaResult','Pipe ID cannot be 0');
+                    const beta=d/D;
+                    set('betaResult', beta.toFixed(4));
+                    set('betaAreaResult', (beta*beta).toFixed(4));
+                });
+                on('dpCalcBtn',()=>{
+                    const d=v('betaBore'), D=v('betaPipe');
+                    if(D===0) return set('dpFlowResult','Pipe ID cannot be 0');
+                    const beta=d/D;
+                    const Cd=v('dpCd');
+                    let dP=v('dpDeltaP');
+                    const dpUnit=document.getElementById('dpDpUnit').value;
+                    const dpToPa={inh2o:249.089, psi:6894.76, kpa:1000, bar:100000};
+                    const dPPa=dP*dpToPa[dpUnit];
+                    let rho=v('dpDensity');
+                    const densityUnit=document.getElementById('dpDensityUnit').value;
+                    const rhoKgM3 = densityUnit==='lbft3' ? rho*16.0185 : rho;
+                    const dM=d*0.0254;
+                    const A2=Math.PI/4*dM*dM;
+                    const beta4=Math.pow(beta,4);
+                    if(beta4>=1 || rhoKgM3<=0) return set('dpFlowResult','Check beta ratio and density');
+                    const Q_m3s=Cd*A2*Math.sqrt((2*dPPa)/(rhoKgM3*(1-beta4)));
+                    const Q_m3hr=Q_m3s*3600;
+                    const Q_ft3hr=Q_m3hr*35.3147;
+                    set('dpFlowResult', Q_m3hr.toFixed(3)+' m³/hr  •  '+Q_ft3hr.toFixed(2)+' ft³/hr');
+                });
+
+                // =========================================================
+                // CUSTODY TRANSFER: LNG MASS / ENERGY
+                // =========================================================
+                on('lngMassBtn',()=>{
+                    const vol=v('lngVolume'), density=v('lngDensity');
+                    const massKg=vol*density;
+                    set('lngMassResult', massKg.toFixed(1)+' kg  •  '+(massKg/1000).toFixed(3)+' tonnes');
+                });
+                on('lngEnergyBtn',()=>{
+                    const massTonnes=v('lngEnergyMass'), gcv=v('lngGcv');
+                    const energyGJ=massTonnes*1000*gcv/1000; // tonnes*1000=kg; kg*MJ/kg=MJ; MJ/1000=GJ
+                    const energyMMBtu=energyGJ*0.947817;
+                    set('lngEnergyGjResult', energyGJ.toFixed(2)+' GJ');
+                    set('lngEnergyBtuResult', energyMMBtu.toFixed(3)+' MMBtu');
+                });
+                on('lngNetVolBtn',()=>{
+                    const loaded=v('lngLoaded'), vaporReturn=v('lngVaporReturn');
+                    set('lngNetVolResult', (loaded-vaporReturn).toFixed(3)+' m³');
+                });
             })();
 
 
@@ -10235,7 +10484,8 @@ body.dark .colorpick-hexwrap input{background:#0f172a;border-color:#334155;color
                 controllercpu: ['plc','dcs controller','cpu fault','processor fault','controller fault','redundant controller'],
                 controlpower: ['rack power supply','io power supply','controller power supply','24vdc supply','power supply fault'],
                 hmiscada: ['hmi','scada','opc server','historian','operator station'],
-                alarmforce: ['nuisance alarm','alarm flooding','forced io','stuck force','shelved alarm','alarm management']
+                alarmforce: ['nuisance alarm','alarm flooding','forced io','stuck force','shelved alarm','alarm management'],
+                flowcomputer: ['flow computer','custody transfer','roc','floboss','totalflow','gas measurement','meter proving','meter factor','k-factor','aga calculation','lng','lng tank gauge','boil-off gas','bog','lng custody transfer']
             };
             const AI_SYMPTOM_SYNONYMS = {
                 low: ['reads low','low reading','low signal','stuck low','stuck at 4ma','4ma','low'],
@@ -13607,6 +13857,56 @@ const D = {
         'Confirm whether the original reason for shelving/suppression still applies before unshelving, and follow the site\'s alarm management procedure either way.']
     }
   },
+
+  flowcomputer: {
+    n:'Flow Computer / Custody Transfer',
+    s:{
+      commloss:['Communication lost with the flow computer/RTU',
+        'Check the flow computer\'s own power/status indication first, then check the specific link (serial/Modbus, radio, cellular, or site network) between it and the host/SCADA.',
+        'Loss of power to a remote/solar-powered unit, a radio or cellular link outage, a wiring/termination fault, a configuration mismatch (address, baud, protocol) after a device swap, or a failed communication port can all remove communication while the flow computer keeps measuring and totalizing locally.',
+        'Confirm the flow computer is still measuring/totalizing locally (its own display/log) before assuming a metering problem — a comm loss alone does not mean custody transfer measurement has stopped, but it does mean the record needs to be reconciled once comms are restored.'],
+      totalsfault:['Totals not incrementing, incrementing incorrectly, or an unexplained totalizer change',
+        'Compare the live instantaneous flow rate against the totalizer\'s actual accumulation over a known time period, and check the event/alarm log for a totalizer reset, rollover, or configuration change around the time in question.',
+        'A stopped or frozen input (transducer/meter signal not reaching the flow computer), an incorrect meter factor or pulse scaling after a configuration change, a totalizer rollover at its register limit, or an unauthorized/undocumented reset can all cause totals to look wrong.',
+        'Any unexplained total change on a custody transfer point is a measurement-integrity event — document the log entry, timestamp and probable cause before adjusting anything, since this may need to be reported per the custody transfer/measurement agreement.'],
+      compensationfault:['Pressure/temperature compensation fault feeding the flow calculation',
+        'Compare the live pressure and temperature values the flow computer is using against an independent field reading at the same point, not just against the flow computer\'s own display.',
+        'A failed or drifting pressure/temperature transmitter, a transmitter left in a fixed/simulated value, a wiring fault, or a live input that silently reverted to a fixed default (fail-safe or configuration default) can all feed a bad compensation value into the AGA/API flow calculation without the flow rate itself looking obviously wrong.',
+        'Verify the transmitter is live and tracking (not a frozen value) before assuming the flow computer\'s calculation engine is at fault — a compensation input problem is far more common than a calculation engine failure.'],
+      meterfactor:['Meter factor / K-factor mismatch after a meter change or linearization',
+        'Compare the meter factor/K-factor currently configured in the flow computer against the value on the meter\'s current calibration certificate or the last accepted proving report.',
+        'A meter factor left at its old value after a meter/element swap, a K-factor entered with a units or decimal error, or a meter that has genuinely shifted since its last proving (wear, fouling, damage) can all cause a real but hidden measurement bias.',
+        'Never adjust a meter factor in the field without a current, accepted proving result or calibration certificate to support the change — an unsupported meter factor change is itself a custody transfer integrity issue.'],
+      provingfailure:['Proving run failure — repeat runs not agreeing within tolerance',
+        'Review the individual proving run results (not just the average) and check for a clear trend, a single outlier run, or genuine run-to-run scatter.',
+        'Prover volume/temperature/pressure instability, air or vapor in the prover loop, a meter that is genuinely out of tolerance, leaking prover valves, or unstable process conditions during proving can all cause runs to fail to repeat within the required tolerance.',
+        'Do not accept a meter factor from a failed proving — identify and correct the actual cause (prover condition, valve leakage, process stability, or meter condition) and reprove, per the site\'s proving procedure/standard.'],
+      denswater:['Density or BS&W (basic sediment & water) measurement fault on a liquid stream',
+        'Compare the online density/BS&W reading against a manual sample result taken at the same time, using the site\'s approved sampling procedure.',
+        'A fouled or coated density meter/probe, air or gas entrainment in the liquid stream, a sample system not representative of the actual stream, or a failed/drifting online analyzer can all cause the online density or BS&W value to disagree with a manual check.',
+        'A custody transfer density/BS&W discrepancy needs a representative manual sample to resolve — don\'t adjust the online analyzer\'s calibration based on a single suspect reading without confirming the sample itself is representative.'],
+      powerfault:['Battery/solar power fault on a remote flow computer',
+        'Check battery voltage/state of charge, solar panel output (in daylight), and charge controller status against the manufacturer\'s normal operating range.',
+        'A failing battery (age, deep-discharge damage, cold-weather capacity loss), a fouled/shaded/damaged solar panel, a failed charge controller, or higher-than-expected power draw (added radio/comm equipment) can all cause intermittent shutdowns or brownouts at a remote site.',
+        'Confirm actual load current draw against the site\'s power budget before assuming the battery/panel themselves have failed — an added or misconfigured load is a common cause of a system that "used to run fine."'],
+      auditfault:['Unexpected configuration change or audit-trail alarm',
+        'Review the flow computer\'s configuration audit trail/event log for exactly what changed, when, and under which user/access level — this log is required to be present and intact on a custody transfer device.',
+        'An unauthorized or undocumented configuration change, a change made without following the site\'s management-of-change process, or a genuine device fault reporting a false audit event can all trigger this alarm.',
+        'Any configuration change on a custody transfer flow computer needs to be reconciled against an approved change record — an unexplained entry in the audit trail is treated as a measurement-integrity finding, not routine housekeeping, regardless of whether the new value looks reasonable.'],
+      lngtankgauge:['LNG tank gauge or densitometer reading fault',
+        'Compare the tank level/density instrument reading against a redundant gauge (independent servo/radar gauge) or a manual strapping-table check, per the terminal\'s approved procedure.',
+        'Cryogenic-service instruments have their own failure modes on top of the usual ones — icing or condensation affecting a component not rated for the cold, a servo gauge float or tape mechanism sticking, a radar gauge reading affected by vapor conditions in the tank space, or a fouled/drifting densitometer can all give a wrong reading while appearing to function normally.',
+        'Confirm the instrument is genuinely rated and functioning for cryogenic service, and cross-check against the redundant gauge or strapping table, before adjusting any tank table or accepting the reading for a custody transfer calculation.'],
+      bogaccounting:['Boil-off gas (BOG) accounting discrepancy during transfer',
+        'Compare the measured BOG flow/composition against the expected boil-off rate for the transfer conditions (tank pressure, ambient heat leak, transfer rate), and check the BOG compressor/recovery or flare/vent metering independently.',
+        'A BOG compressor or recovery system fault, higher-than-expected heat leak (insulation issue), a flare/vent metering fault, or a genuine mass-balance/composition drift between the loaded and received LNG can all show up as a BOG accounting discrepancy.',
+        'Reconcile the BOG metering path on its own before adjusting the overall custody transfer mass balance — a BOG discrepancy affecting the net transferred quantity is a measurement-integrity finding, not a rounding error.'],
+      gcenergyfault:['Gas chromatograph / energy content (GCV) fault feeding the LNG mass-energy calculation',
+        'Compare the GC\'s live composition/GCV output against its most recent calibration or validation-gas result, and confirm the sample system is actually delivering a representative vapor sample.',
+        'GC calibration drift, a sample-system fault (moisture or freezing in sample lines is a real risk on LNG vapor sampling), a carrier gas problem, or a stale/held composition value silently being used in the energy calculation can all feed a wrong GCV into a custody transfer quantity that is fundamentally mass-and-energy based, not volume-based.',
+        'Confirm the GC is currently validating against a known reference gas before trusting an energy-content-based custody transfer result — an LNG quantity is only as good as the GCV behind it.']
+    }
+  },
 };
 
 window.D = D; // exposed for the AI Technician knowledge base
@@ -13673,6 +13973,7 @@ const devices = [
   ['controlpower','Control System Power Supply'],
   ['hmiscada','HMI / SCADA'],
   ['alarmforce','Alarms & Forces/Overrides'],
+  ['flowcomputer','Flow Computer / Custody Transfer'],
 ];
 window.devices = devices; // exposed for the AI Technician knowledge base
 
