@@ -4132,6 +4132,246 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 </head>
 <body>
 <!-- =================================================================
+     SCRIPT-00: SHARED PDF REPORT KIT (professional layout: header band,
+     info bar, stat tiles, narrative, AutoTable tables, footer w/ page #s)
+     Used by: Field Notes/Shift-Handover, Daily/Weekly Task, Outage Checklist.
+     NOT used by: Field Report, Commissioning, Loop Check, Setpoint Check
+     (those keep their existing certificate-style report format).
+     Exposed on window.* so every module's IIFE can call it regardless of scope.
+     ================================================================= -->
+<script id="ip-report-kit" data-ip-module="JS-00">
+(function(){
+    'use strict';
+    var IPR_COLOR = {
+        navy:[23,32,51], navy2:[34,48,74], accent:[232,121,44],
+        grey:[100,116,139], line:[223,228,234], bgTint:[247,248,250],
+        pass:[26,143,94], passBg:[228,246,238],
+        fail:[194,52,52], failBg:[251,233,233],
+        pend:[184,134,11], pendBg:[251,243,222],
+        high:[184,96,10], highBg:[253,240,226],
+        crit:[194,52,52], critBg:[251,233,233],
+        normal:[13,107,166], normalBg:[227,242,251],
+        low:[100,116,139], lowBg:[238,241,246]
+    };
+
+    var libsPromise=null;
+    function loadScriptTag(src){
+        return new Promise(function(resolve,reject){
+            var s=document.createElement('script');
+            s.src=src; s.async=true;
+            s.onload=function(){ resolve(); };
+            s.onerror=function(){ reject(new Error('Failed to load '+src)); };
+            document.head.appendChild(s);
+        });
+    }
+    function iprLoadPdfLibs(){
+        if(window.jspdf && window.jspdf.jsPDF && window.jspdf.jsPDF.API && window.jspdf.jsPDF.API.autoTable) return Promise.resolve(window.jspdf.jsPDF);
+        if(libsPromise) return libsPromise;
+        var needCore=!(window.jspdf && window.jspdf.jsPDF);
+        var chain=needCore ? loadScriptTag('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js') : Promise.resolve();
+        libsPromise=chain.then(function(){
+            if(window.jspdf.jsPDF.API && window.jspdf.jsPDF.API.autoTable) return Promise.resolve();
+            return loadScriptTag('https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js');
+        }).then(function(){ return window.jspdf.jsPDF; }).catch(function(err){ libsPromise=null; throw err; });
+        return libsPromise;
+    }
+
+    function iprBadgeColor(label){
+        var l=(label==null?'':String(label)).toLowerCase();
+        if(l==='pass'||l==='complete'||l==='resolved'||l==='ok'||l==='yes') return {fg:IPR_COLOR.pass,bg:IPR_COLOR.passBg};
+        if(l==='fail'||l==='failed'||l==='critical') return {fg:IPR_COLOR.fail,bg:IPR_COLOR.failBg};
+        if(l==='pending'||l==='open'||l==='in progress') return {fg:IPR_COLOR.pend,bg:IPR_COLOR.pendBg};
+        if(l==='high') return {fg:IPR_COLOR.high,bg:IPR_COLOR.highBg};
+        if(l==='normal') return {fg:IPR_COLOR.normal,bg:IPR_COLOR.normalBg};
+        if(l==='low') return {fg:IPR_COLOR.low,bg:IPR_COLOR.lowBg};
+        return {fg:IPR_COLOR.grey,bg:IPR_COLOR.bgTint};
+    }
+
+    function iprNewDoc(){
+        return new window.jspdf.jsPDF({unit:'pt',format:'a4'});
+    }
+
+    // opts: {title, subtitle, reportId, generated}
+    function iprHeader(doc, opts){
+        opts=opts||{};
+        var pageW=doc.internal.pageSize.getWidth();
+        var h=88;
+        doc.setFillColor.apply(doc, IPR_COLOR.navy);
+        doc.rect(0,0,pageW,h,'F');
+        doc.setFillColor.apply(doc, IPR_COLOR.accent);
+        doc.roundedRect(40,20,26,26,5,5,'F');
+        doc.setTextColor(255,255,255); doc.setFont('helvetica','bold'); doc.setFontSize(11);
+        doc.text('IP',53,37,{align:'center'});
+        doc.setFontSize(10);
+        doc.text('INSTRUMENTPRO',74,38);
+        doc.setFontSize(17);
+        doc.text(opts.title||'Report', 40, 63);
+        doc.setFontSize(9.5); doc.setFont('helvetica','normal'); doc.setTextColor(220,225,235);
+        doc.text(opts.subtitle||'', 40, 77);
+        doc.setFontSize(8.5); doc.setTextColor(210,216,228);
+        doc.text('Report ID: '+(opts.reportId||'—'), pageW-40, 34, {align:'right'});
+        doc.text('Generated: '+(opts.generated||new Date().toLocaleString()), pageW-40, 46, {align:'right'});
+        doc.setTextColor(20,20,20);
+        return h+18;
+    }
+
+    // fields: [{label, value}]
+    function iprInfoBar(doc, y, fields){
+        if(!fields || !fields.length) return y;
+        var pageW=doc.internal.pageSize.getWidth(); var marginX=40; var usableW=pageW-marginX*2;
+        var cols=fields.length; var colW=usableW/cols; var barH=34;
+        doc.setDrawColor.apply(doc, IPR_COLOR.line); doc.setLineWidth(0.6);
+        doc.line(marginX, y, marginX+usableW, y);
+        fields.forEach(function(f,i){
+            var x=marginX+i*colW;
+            doc.setFontSize(6.8); doc.setTextColor.apply(doc, IPR_COLOR.grey); doc.setFont('helvetica','bold');
+            doc.text((f.label||'').toUpperCase(), x, y+13);
+            doc.setFontSize(10.3); doc.setTextColor(30,38,53);
+            doc.text(String(f.value==null||f.value===''?'—':f.value), x, y+26);
+            if(i<cols-1){ doc.setDrawColor.apply(doc, IPR_COLOR.line); doc.line(x+colW-8, y+5, x+colW-8, y+barH-5); }
+        });
+        y+=barH;
+        doc.setDrawColor.apply(doc, IPR_COLOR.line);
+        doc.line(marginX, y, marginX+usableW, y);
+        doc.setTextColor(20,20,20);
+        return y+18;
+    }
+
+    function iprSectionTitle(doc, y, text, count){
+        var pageW=doc.internal.pageSize.getWidth(); var marginX=40; var usableW=pageW-marginX*2;
+        doc.setFont('helvetica','bold'); doc.setFontSize(10.3); doc.setTextColor.apply(doc, IPR_COLOR.navy);
+        doc.text((text||'').toUpperCase(), marginX, y);
+        if(count!=null){
+            doc.setFontSize(8); doc.setTextColor.apply(doc, IPR_COLOR.grey); doc.setFont('helvetica','normal');
+            doc.text(String(count), marginX+usableW, y, {align:'right'});
+        }
+        doc.setDrawColor.apply(doc, IPR_COLOR.accent); doc.setLineWidth(1.4);
+        doc.line(marginX, y+5, marginX+usableW, y+5);
+        doc.setLineWidth(0.6); doc.setTextColor(20,20,20);
+        return y+18;
+    }
+
+    // stats: [{label, value, tone}] tone: 'pass'|'fail'|'pend'|null
+    function iprStats(doc, y, stats){
+        if(!stats || !stats.length) return y;
+        var pageW=doc.internal.pageSize.getWidth(); var marginX=40; var usableW=pageW-marginX*2;
+        var gap=8; var n=stats.length; var tileW=(usableW-gap*(n-1))/n; var tileH=42;
+        stats.forEach(function(s,i){
+            var x=marginX+i*(tileW+gap);
+            doc.setDrawColor.apply(doc, IPR_COLOR.line); doc.setFillColor(250,251,252);
+            doc.roundedRect(x,y,tileW,tileH,4,4,'FD');
+            var toneColor = s.tone==='pass'?IPR_COLOR.pass : s.tone==='fail'?IPR_COLOR.fail : s.tone==='pend'?IPR_COLOR.pend : IPR_COLOR.navy;
+            doc.setFont('helvetica','bold'); doc.setFontSize(15); doc.setTextColor.apply(doc, toneColor);
+            doc.text(String(s.value), x+tileW/2, y+21, {align:'center'});
+            doc.setFont('helvetica','normal'); doc.setFontSize(6.3); doc.setTextColor.apply(doc, IPR_COLOR.grey);
+            doc.text((s.label||'').toUpperCase(), x+tileW/2, y+33, {align:'center'});
+        });
+        doc.setTextColor(20,20,20);
+        return y+tileH+16;
+    }
+
+    function iprNarrative(doc, y, text){
+        if(!text) return y;
+        var pageW=doc.internal.pageSize.getWidth(); var marginX=40; var usableW=pageW-marginX*2;
+        doc.setFont('helvetica','normal'); doc.setFontSize(8.6);
+        var lines=doc.splitTextToSize(text, usableW-22);
+        var boxH=lines.length*11+14;
+        doc.setFillColor.apply(doc, IPR_COLOR.bgTint); doc.rect(marginX,y,usableW,boxH,'F');
+        doc.setFillColor.apply(doc, IPR_COLOR.accent); doc.rect(marginX,y,2.5,boxH,'F');
+        doc.setTextColor(58,66,86);
+        lines.forEach(function(l,i){ doc.text(l, marginX+14, y+16+i*11); });
+        doc.setTextColor(20,20,20);
+        return y+boxH+16;
+    }
+
+    // columns: [{header, dataKey, cellWidth?}], rows: array of plain objects
+    // opts: {badgeCols:[dataKey,...]}
+    function iprTable(doc, y, columns, rows, opts){
+        opts=opts||{};
+        var marginX=40;
+        doc.autoTable({
+            startY:y,
+            margin:{left:marginX, right:marginX, bottom:44},
+            head:[columns.map(function(c){ return c.header; })],
+            body:rows.map(function(r){ return columns.map(function(c){ var v=r[c.dataKey]; return v==null?'—':v; }); }),
+            styles:{font:'helvetica', fontSize:8.2, cellPadding:5, textColor:[40,46,58], lineColor:IPR_COLOR.line, lineWidth:0.5, overflow:'linebreak', valign:'top'},
+            headStyles:{fillColor:IPR_COLOR.navy, textColor:[255,255,255], fontStyle:'bold', fontSize:7.4},
+            alternateRowStyles:{fillColor:[247,248,250]},
+            columnStyles: columns.reduce(function(acc,c,i){ if(c.cellWidth) acc[i]={cellWidth:c.cellWidth}; return acc; },{}),
+            didParseCell: function(data){
+                if(data.section==='body' && opts.badgeCols && opts.badgeCols.indexOf(columns[data.column.index].dataKey)!==-1){
+                    data.cell.styles.fontStyle='bold';
+                    var col=iprBadgeColor(data.cell.raw);
+                    data.cell.styles.textColor=col.fg;
+                }
+            }
+        });
+        return doc.lastAutoTable.finalY+16;
+    }
+
+    // entries: [{title, tone, badgeLabel, lines:[...], meta}]
+    function iprEntryCards(doc, y, entries){
+        if(!entries || !entries.length) return y;
+        var pageW=doc.internal.pageSize.getWidth(); var marginX=40; var usableW=pageW-marginX*2;
+        var pageH=doc.internal.pageSize.getHeight();
+        entries.forEach(function(e){
+            doc.setFont('helvetica','normal'); doc.setFontSize(8.6);
+            var bodyLines=[];
+            (e.lines||[]).forEach(function(t){ bodyLines=bodyLines.concat(doc.splitTextToSize(t, usableW-28)); });
+            var cardH=18 + bodyLines.length*10.5 + (e.meta?12:0) + 10;
+            if(y+cardH>pageH-56){ doc.addPage(); y=40; }
+            doc.setDrawColor.apply(doc, IPR_COLOR.line); doc.setFillColor(255,255,255);
+            doc.roundedRect(marginX, y, usableW, cardH, 3, 3, 'FD');
+            doc.setFillColor.apply(doc, IPR_COLOR.accent); doc.rect(marginX, y, 2.5, cardH, 'F');
+            doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor.apply(doc, IPR_COLOR.navy2);
+            doc.text(e.title||'', marginX+12, y+13);
+            if(e.badgeLabel){
+                var col=iprBadgeColor(e.badgeLabel);
+                doc.setFontSize(7); doc.setTextColor.apply(doc, col.fg);
+                doc.text(String(e.badgeLabel).toUpperCase(), marginX+usableW-10, y+13, {align:'right'});
+            }
+            doc.setFont('helvetica','normal'); doc.setFontSize(8.6); doc.setTextColor(50,58,74);
+            var ly=y+25;
+            bodyLines.forEach(function(l){ doc.text(l, marginX+12, ly); ly+=10.5; });
+            if(e.meta){
+                doc.setFontSize(7); doc.setTextColor.apply(doc, IPR_COLOR.grey);
+                doc.text(e.meta, marginX+12, ly+4);
+            }
+            doc.setTextColor(20,20,20);
+            y+=cardH+8;
+        });
+        return y;
+    }
+
+    function iprFooter(doc, footerLabel){
+        var pageCount=doc.internal.getNumberOfPages();
+        var pageW=doc.internal.pageSize.getWidth(); var pageH=doc.internal.pageSize.getHeight(); var marginX=40;
+        for(var i=1;i<=pageCount;i++){
+            doc.setPage(i);
+            doc.setDrawColor.apply(doc, IPR_COLOR.line); doc.setLineWidth(0.5);
+            doc.line(marginX, pageH-34, pageW-marginX, pageH-34);
+            doc.setFont('helvetica','normal'); doc.setFontSize(7.3); doc.setTextColor.apply(doc, IPR_COLOR.grey);
+            doc.text(footerLabel||'InstrumentPro', marginX, pageH-20);
+            doc.text('Page '+i+' of '+pageCount, pageW-marginX, pageH-20, {align:'right'});
+        }
+        doc.setTextColor(20,20,20);
+    }
+
+    window.iprLoadPdfLibs=iprLoadPdfLibs;
+    window.iprNewDoc=iprNewDoc;
+    window.iprHeader=iprHeader;
+    window.iprInfoBar=iprInfoBar;
+    window.iprSectionTitle=iprSectionTitle;
+    window.iprStats=iprStats;
+    window.iprNarrative=iprNarrative;
+    window.iprTable=iprTable;
+    window.iprEntryCards=iprEntryCards;
+    window.iprFooter=iprFooter;
+    window.iprBadgeColor=iprBadgeColor;
+})();
+</script>
+
+<!-- =================================================================
      SCRIPT-01: CORE: LOCAL DRAFT STORAGE + BUTTON FEEDBACK
      ================================================================= -->
 <script id="ip-draft-utils" data-ip-module="JS-01">
@@ -11984,121 +12224,70 @@ body.dark .colorpick-hexwrap input{background:#0f172a;border-color:#334155;color
                     document.body.style.overflow='';
                 });
 
-                // ---- jsPDF lazy loader ----
-                let jspdfPromise=null;
-                function loadJsPDF(){
-                    if(window.jspdf && window.jspdf.jsPDF) return Promise.resolve(window.jspdf.jsPDF);
-                    if(jspdfPromise) return jspdfPromise;
-                    jspdfPromise=new Promise((resolve,reject)=>{
-                        const script=document.createElement('script');
-                        script.src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
-                        script.async=true;
-                        script.onload=()=>resolve(window.jspdf.jsPDF);
-                        script.onerror=()=>{ jspdfPromise=null; reject(new Error('PDF library could not be loaded')); };
-                        document.head.appendChild(script);
-                    });
-                    return jspdfPromise;
+                // ---- PDF build (shared professional report kit) ----
+                function shiftReportNarrative(d){
+                    if(!d.items.length) return '';
+                    var parts=[d.items.length+' note'+(d.items.length===1?'':'s')+' recorded'+(d.label?' for '+d.label.replace(/^Shift:\s*/,''):'')+'.'];
+                    if(d.openItems.length) parts.push(d.openItems.length+' remain open at handover'+(d.highItems.length?', including '+d.highItems.length+' high/critical priority item(s)':'')+'.');
+                    else parts.push('No items remain open — all clear.');
+                    if(d.overdueItems.length) parts.push(d.overdueItems.length+' follow-up(s) are overdue and should be prioritized by the incoming shift.');
+                    return parts.join(' ');
                 }
                 function buildPdfBlob(d){
-                    return loadJsPDF().then(jsPDF=>{
-                        const doc=new jsPDF({unit:'pt',format:'a4'});
-                        const marginX=40; let y=50; const pageH=doc.internal.pageSize.getHeight(); const maxW=515;
-                        function ensureSpace(lines){ if(y+lines*13>pageH-40){ doc.addPage(); y=50; } }
-                        doc.setFont('helvetica','bold'); doc.setFontSize(15);
-                        doc.text('InstrumentPro — Shift / Handover Report', marginX, y); y+=22;
-                        doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(90);
-                        doc.text('Generated: '+new Date().toLocaleString(), marginX, y); y+=13;
-                        doc.text('Range: '+d.label, marginX, y); y+=13;
-                        if(d.reportedBy){ doc.text('Reported by: '+d.reportedBy, marginX, y); y+=13; }
-                        if(d.handoverTo){ doc.text('Handed over to: '+d.handoverTo, marginX, y); y+=13; }
-                        y+=6; doc.setDrawColor(220); doc.line(marginX,y,marginX+maxW,y); y+=18;
-                        doc.setTextColor(20); doc.setFont('helvetica','bold'); doc.setFontSize(11);
-                        doc.text('Summary', marginX, y); y+=16;
-                        doc.setFont('helvetica','normal'); doc.setFontSize(9.5);
-                        doc.text('Total: '+d.items.length+'   Open: '+d.openItems.length+'   High/Critical: '+d.highItems.length+'   Overdue: '+d.overdueItems.length+'   Resolved: '+d.resolvedItems.length, marginX, y);
-                        y+=22;
-                        // ---- Summary table ----
-                        const priorityRgb = {
-                            Critical:{bg:[254,226,226], fg:[153,27,27]},
-                            High:{bg:[255,237,213], fg:[154,52,18]},
-                            Normal:{bg:[224,242,254], fg:[7,89,133]},
-                            Low:{bg:[241,245,249], fg:[71,85,105]}
-                        };
-                        const tableCols=[
-                            {key:'time', label:'Time', w:48},
-                            {key:'tag', label:'Tag', w:70},
-                            {key:'priority', label:'Priority', w:56},
-                            {key:'status', label:'Status', w:62},
-                            {key:'location', label:'Location', w:75},
-                            {key:'obs', label:'Observation', w:0} // fills remaining
-                        ];
-                        tableCols[tableCols.length-1].w = maxW - tableCols.slice(0,-1).reduce((s,c)=>s+c.w,0);
-                        function drawTableHeader(){
-                            ensureSpace(2);
-                            doc.setFont('helvetica','bold'); doc.setFontSize(11); doc.setTextColor(37,99,235);
-                            doc.text('Summary Table', marginX, y); y+=14;
-                            let x=marginX;
-                            doc.setFillColor(241,245,249);
-                            doc.rect(marginX, y-9, maxW, 16, 'F');
-                            doc.setFont('helvetica','bold'); doc.setFontSize(7.5); doc.setTextColor(71,85,105);
-                            tableCols.forEach(c=>{ doc.text(c.label.toUpperCase(), x+4, y+1); x+=c.w; });
-                            y+=10;
-                            doc.setDrawColor(226,232,240); doc.line(marginX, y, marginX+maxW, y); y+=10;
-                            doc.setTextColor(20);
-                        }
-                        drawTableHeader();
-                        doc.setFont('helvetica','normal'); doc.setFontSize(7.8);
-                        d.items.forEach(n=>{
-                            const obsLines=doc.splitTextToSize(n.text||'', tableCols[5].w-8);
-                            const rowLines=Math.max(1, obsLines.length);
-                            if(y+rowLines*10+4>pageH-40){ doc.addPage(); y=50; drawTableHeader(); doc.setFont('helvetica','normal'); doc.setFontSize(7.8); }
-                            let x=marginX;
-                            const rowVals=[
-                                new Date(n.ts).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}),
-                                n.tag||'—', null, n.status, n.location||'—', null
-                            ];
-                            doc.setTextColor(40);
-                            doc.text(rowVals[0], x+4, y+7); x+=tableCols[0].w;
-                            doc.text(doc.splitTextToSize(rowVals[1], tableCols[1].w-8)[0]||'', x+4, y+7); x+=tableCols[1].w;
-                            const pc=priorityRgb[n.priority]||priorityRgb.Normal;
-                            doc.setFillColor(pc.bg[0],pc.bg[1],pc.bg[2]);
-                            doc.roundedRect(x+2, y-1, tableCols[2].w-6, 11, 2, 2, 'F');
-                            doc.setTextColor(pc.fg[0],pc.fg[1],pc.fg[2]); doc.setFont('helvetica','bold'); doc.setFontSize(7);
-                            doc.text(n.priority, x+5, y+7); doc.setFont('helvetica','normal'); doc.setFontSize(7.8); doc.setTextColor(40);
-                            x+=tableCols[2].w;
-                            doc.text(rowVals[3], x+4, y+7); x+=tableCols[3].w;
-                            doc.text(doc.splitTextToSize(rowVals[4], tableCols[4].w-8)[0]||'', x+4, y+7); x+=tableCols[4].w;
-                            doc.setTextColor(90);
-                            obsLines.forEach((line,i)=>doc.text(line, x+4, y+7+i*10));
-                            doc.setTextColor(20);
-                            y+=rowLines*10+4;
-                            doc.setDrawColor(240); doc.line(marginX, y-2, marginX+maxW, y-2);
+                    return window.iprLoadPdfLibs().then(function(){
+                        const doc=window.iprNewDoc();
+                        let y=window.iprHeader(doc,{
+                            title:'Shift / Handover Report',
+                            subtitle:d.label||'',
+                            reportId:'FN-'+Date.now(),
+                            generated:new Date().toLocaleString()
                         });
-                        y+=16;
-                        function writeSection(title, arr){
-                            if(!arr.length) return;
-                            ensureSpace(2);
-                            doc.setFont('helvetica','bold'); doc.setFontSize(11); doc.setTextColor(37,99,235);
-                            doc.text(title, marginX, y); y+=15;
-                            doc.setTextColor(20);
-                            arr.forEach(n=>{
-                                ensureSpace(3);
-                                doc.setFont('helvetica','bold'); doc.setFontSize(9.5);
-                                doc.text((n.tag||'Unassigned')+'  ·  '+n.priority+'  ·  '+n.status+(n.location?'  ·  '+n.location:''), marginX, y); y+=12;
-                                doc.setFont('helvetica','normal'); doc.setFontSize(9);
-                                const bodyLines=doc.splitTextToSize(n.text||'', maxW-10);
-                                bodyLines.forEach(line=>{ ensureSpace(1); doc.text(line, marginX+10, y); y+=11; });
-                                doc.setFontSize(8); doc.setTextColor(120);
-                                doc.text(fmt(n.ts)+(n.dueDate?'  ·  Follow-up due '+n.dueDate:''), marginX+10, y); y+=14;
-                                doc.setTextColor(20);
-                            });
-                            y+=4;
+                        y=window.iprInfoBar(doc,y,[
+                            {label:'Reported By', value:d.reportedBy||'—'},
+                            {label:'Handed Over To', value:d.handoverTo||'—'},
+                            {label:'Range', value:d.label||'—'},
+                            {label:'Total Notes', value:d.items.length}
+                        ]);
+                        y=window.iprSectionTitle(doc,y,'Summary');
+                        y=window.iprStats(doc,y,[
+                            {label:'Total Notes', value:d.items.length},
+                            {label:'Open', value:d.openItems.length, tone:d.openItems.length?'fail':'pass'},
+                            {label:'High/Critical', value:d.highItems.length, tone:d.highItems.length?'fail':'pass'},
+                            {label:'Overdue', value:d.overdueItems.length, tone:d.overdueItems.length?'fail':'pass'},
+                            {label:'Resolved', value:d.resolvedItems.length, tone:'pass'}
+                        ]);
+                        y=window.iprNarrative(doc,y,shiftReportNarrative(d));
+                        if(d.items.length){
+                            y=window.iprSectionTitle(doc,y,'Summary Table',d.items.length+' entries');
+                            y=window.iprTable(doc,y,
+                                [{header:'Time',dataKey:'time',cellWidth:42},
+                                 {header:'Tag',dataKey:'tag',cellWidth:56},
+                                 {header:'Priority',dataKey:'priority',cellWidth:52},
+                                 {header:'Status',dataKey:'status',cellWidth:56},
+                                 {header:'Location',dataKey:'location',cellWidth:70},
+                                 {header:'Observation',dataKey:'obs'}],
+                                d.items.map(function(n){ return {
+                                    time:new Date(n.ts).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}),
+                                    tag:n.tag||'—', priority:n.priority, status:n.status,
+                                    location:n.location||'—', obs:n.text||''
+                                }; }),
+                                {badgeCols:['priority','status']}
+                            );
                         }
-                        writeSection('Overdue Follow-ups — Detail', d.overdueItems);
-                        writeSection('High / Critical Priority — Detail', d.highItems);
-                        writeSection('Outstanding (Open / In Progress) — Detail', d.openItems);
-                        writeSection('Resolved — Detail', d.resolvedItems);
-                        writeSection('Full Log — Detail', d.items);
+                        function detailSection(title, arr){
+                            if(!arr.length) return;
+                            y=window.iprSectionTitle(doc,y,title,arr.length);
+                            y=window.iprEntryCards(doc,y,arr.map(function(n){ return {
+                                title:(n.tag||'Unassigned')+(n.location?' — '+n.location:''),
+                                badgeLabel:n.priority,
+                                lines:[n.text||''],
+                                meta:fmt(n.ts)+(n.dueDate?' · Follow-up due '+n.dueDate:'')
+                            }; }));
+                        }
+                        detailSection('Overdue Follow-ups', d.overdueItems);
+                        detailSection('High / Critical Priority', d.highItems);
+                        detailSection('Outstanding (Open / In Progress)', d.openItems);
+                        window.iprFooter(doc,'InstrumentPro — Shift / Handover Report');
                         return doc.output('blob');
                     });
                 }
@@ -15580,54 +15769,55 @@ function iptEndPeriod(){
     alert('Moved to '+iptPeriodLabel(meta.mode,meta.date)+'.'+(outstanding.length?(' '+outstanding.length+' item(s) carried forward.'):''));
 }
 
-// ---------------- PDF ----------------
-var iptJsPdfPromise=null;
-function iptLoadJsPDF(){
-    if(window.jspdf && window.jspdf.jsPDF) return Promise.resolve(window.jspdf.jsPDF);
-    if(iptJsPdfPromise) return iptJsPdfPromise;
-    iptJsPdfPromise=new Promise(function(resolve,reject){
-        var script=document.createElement('script');
-        script.src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
-        script.async=true;
-        script.onload=function(){ resolve(window.jspdf.jsPDF); };
-        script.onerror=function(){ iptJsPdfPromise=null; reject(new Error('PDF library could not be loaded')); };
-        document.head.appendChild(script);
-    });
-    return iptJsPdfPromise;
-}
-
+// ---------------- PDF (shared professional report kit) ----------------
 function iptQuickSummary(){
     var meta=iptMeta();
     var tasks=iptActiveTasks();
     var outstanding=tasks.filter(function(t){return t.status==='Outstanding';});
     var completed=tasks.filter(function(t){return t.status==='Completed';});
-    iptLoadJsPDF().then(function(jsPDF){
-        var doc=new jsPDF({unit:'pt',format:'a4'});
-        var x=40,y=50,maxW=515;
-        doc.setFont('helvetica','bold'); doc.setFontSize(15);
-        doc.text('InstrumentPro — Task Quick Summary',x,y); y+=20;
-        doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(90);
-        doc.text(iptPeriodLabel(meta.mode,meta.date)+' • Technician: '+(meta.technician||'—')+' • Generated '+new Date().toLocaleString(),x,y); y+=20;
-        doc.setDrawColor(220); doc.line(x,y,x+maxW,y); y+=16;
-        doc.setTextColor(20); doc.setFont('helvetica','bold'); doc.setFontSize(11);
-        doc.text('Completed ('+completed.length+')',x,y); y+=14;
-        doc.setFont('helvetica','normal'); doc.setFontSize(9);
-        if(!completed.length){ doc.text('None yet.',x,y); y+=14; }
-        completed.forEach(function(t){
-            var line=t.tag+' — '+t.deviceType+(t.reportResult?(' — '+t.reportResult):'')+(t.reportId?(' — '+t.reportId):'');
-            doc.text(line,x,y); y+=13;
-            if(y>760){ doc.addPage(); y=50; }
+    var pct=tasks.length?Math.round(completed.length/tasks.length*100):0;
+    window.iprLoadPdfLibs().then(function(){
+        var doc=window.iprNewDoc();
+        var y=window.iprHeader(doc,{
+            title:(meta.mode==='day'?'Daily':'Weekly')+' Task Quick Summary',
+            subtitle:'Mid-period status check — '+iptPeriodLabel(meta.mode,meta.date),
+            reportId:'TQS-'+Date.now(),
+            generated:new Date().toLocaleString()
         });
-        y+=10;
-        doc.setFont('helvetica','bold'); doc.setFontSize(11);
-        doc.text('Outstanding ('+outstanding.length+')',x,y); y+=14;
-        doc.setFont('helvetica','normal'); doc.setFontSize(9);
-        if(!outstanding.length){ doc.text('None — all tasks complete.',x,y); y+=14; }
-        outstanding.forEach(function(t){
-            var line=t.tag+' — '+t.deviceType+(t.note?(' — '+t.note):'');
-            doc.text(line,x,y); y+=13;
-            if(y>760){ doc.addPage(); y=50; }
-        });
+        y=window.iprInfoBar(doc,y,[
+            {label:'Technician', value:meta.technician||'—'},
+            {label:'Period', value:meta.mode==='day'?'Today':'This Week'},
+            {label:'Tasks Scheduled', value:tasks.length},
+            {label:'Time Checked', value:new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}
+        ]);
+        y=window.iprSectionTitle(doc,y,'Summary');
+        y=window.iprStats(doc,y,[
+            {label:'Scheduled', value:tasks.length},
+            {label:'Completed', value:completed.length, tone:'pass'},
+            {label:'Outstanding', value:outstanding.length, tone:outstanding.length?'fail':'pass'},
+            {label:'Progress', value:pct+'%'},
+            {label:'Carried Over', value:tasks.filter(function(t){return t.carriedFrom;}).length}
+        ]);
+        y=window.iprNarrative(doc,y, completed.length+' of '+tasks.length+' tasks completed as of '+new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})+'.'+(outstanding.length?' '+outstanding.length+' remaining.':' All tasks complete.'));
+        if(completed.length){
+            y=window.iprSectionTitle(doc,y,'Completed So Far',completed.length);
+            y=window.iprTable(doc,y,
+                [{header:'Device',dataKey:'device'},{header:'Tag',dataKey:'tag',cellWidth:80},
+                 {header:'Result',dataKey:'result',cellWidth:70},{header:'Report ID',dataKey:'reportId',cellWidth:90}],
+                completed.map(function(t){ return {device:t.deviceType, tag:t.tag, result:t.reportResult||'—', reportId:t.reportId||'—'}; }),
+                {badgeCols:['result']}
+            );
+        }
+        if(outstanding.length){
+            y=window.iprSectionTitle(doc,y,'Outstanding',outstanding.length);
+            y=window.iprTable(doc,y,
+                [{header:'Device',dataKey:'device'},{header:'Tag',dataKey:'tag',cellWidth:80},
+                 {header:'Status',dataKey:'status',cellWidth:70},{header:'Note',dataKey:'note'}],
+                outstanding.map(function(t){ return {device:t.deviceType, tag:t.tag, status:'Pending', note:t.note||'—'}; }),
+                {badgeCols:['status']}
+            );
+        }
+        window.iprFooter(doc,'InstrumentPro — Task Quick Summary');
         doc.save('Task-Quick-Summary-'+Date.now()+'.pdf');
     }).catch(function(e){ alert(e.message); });
 }
@@ -16192,70 +16382,85 @@ window.__iocToggleRangeFields=function(catId){
     fields.style.display = typeEl.value==='A' ? 'contents' : 'none';
 };
 
-// ---------------- PDF ----------------
-var iocJsPdfPromise=null;
-function iocLoadJsPDF(){
-    if(window.jspdf && window.jspdf.jsPDF) return Promise.resolve(window.jspdf.jsPDF);
-    if(iocJsPdfPromise) return iocJsPdfPromise;
-    iocJsPdfPromise=new Promise(function(resolve,reject){
-        var script=document.createElement('script');
-        script.src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
-        script.async=true;
-        script.onload=function(){ resolve(window.jspdf.jsPDF); };
-        script.onerror=function(){ iocJsPdfPromise=null; reject(new Error('PDF library could not be loaded')); };
-        document.head.appendChild(script);
-    });
-    return iocJsPdfPromise;
-}
-
+// ---------------- PDF (shared professional report kit) ----------------
 function iocBuildReport(items, title, scopeLabel){
     var job=iocJob();
-    iocLoadJsPDF().then(function(jsPDF){
-        var doc=new jsPDF({unit:'pt',format:'a4'});
-        var x=40,y=50,maxW=515;
-        doc.setFont('helvetica','bold'); doc.setFontSize(15);
-        doc.text('InstrumentPro — '+title,x,y); y+=20;
-        doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(90);
-        doc.text((job.package||'')+' • '+(job.scope||'')+' • Unit '+(job.unitId||'—')+' • WO '+(job.workOrder||'—'),x,y); y+=13;
-        doc.text('Scope: '+scopeLabel+' • Generated '+new Date().toLocaleString(),x,y); y+=18;
-        doc.setDrawColor(220); doc.line(x,y,x+maxW,y); y+=16;
-
+    window.iprLoadPdfLibs().then(function(){
+        var doc=window.iprNewDoc();
         var complete=items.filter(function(it){return it.status==='Complete';});
         var pending=items.filter(function(it){return it.status!=='Complete';});
-        doc.setTextColor(20); doc.setFont('helvetica','bold'); doc.setFontSize(11);
-        doc.text('Summary — Total '+items.length+'   Complete '+complete.length+'   Pending '+pending.length,x,y); y+=18;
+        var passed=items.filter(function(it){return it.overallResult==='PASS';});
+        var failed=items.filter(function(it){return it.overallResult==='FAIL';});
+
+        var y=window.iprHeader(doc,{
+            title:title,
+            subtitle:'Outage Checklist Report — '+scopeLabel,
+            reportId:'OUT-'+Date.now(),
+            generated:new Date().toLocaleString()
+        });
+        y=window.iprInfoBar(doc,y,[
+            {label:'Package / Outage', value:job.package||'—'},
+            {label:'Scope', value:job.scope||'—'},
+            {label:'Unit ID', value:job.unitId||'—'},
+            {label:'Work Order', value:job.workOrder||'—'}
+        ]);
+        y=window.iprSectionTitle(doc,y,'Summary');
+        y=window.iprStats(doc,y,[
+            {label:'Total Items', value:items.length},
+            {label:'Complete', value:complete.length, tone:'pass'},
+            {label:'Pending', value:pending.length, tone:pending.length?'pend':'pass'},
+            {label:'Passed', value:passed.length, tone:'pass'},
+            {label:'Failed', value:failed.length, tone:failed.length?'fail':'pass'}
+        ]);
+        var narrative=complete.length+' of '+items.length+' checklist items complete'+(items.length?(' ('+Math.round(complete.length/items.length*100)+'%)'):'')+'.'+
+            (failed.length ? ' '+failed.length+' item(s) failed and require attention: '+failed.slice(0,4).map(function(it){return it.tag;}).join(', ')+(failed.length>4?', +'+(failed.length-4)+' more':'')+'.' : '')+
+            (pending.length ? ' '+pending.length+' item(s) remain pending.' : '');
+        y=window.iprNarrative(doc,y,narrative);
 
         var byCat={};
         items.forEach(function(it){ (byCat[it.category]=byCat[it.category]||[]).push(it); });
 
         IOC_CATEGORIES.forEach(function(cat){
             var list=byCat[cat.id]; if(!list||!list.length) return;
-            if(y>720){ doc.addPage(); y=50; }
-            doc.setFont('helvetica','bold'); doc.setFontSize(12); doc.setTextColor(20);
-            doc.text(cat.name,x,y); y+=14;
-            doc.setFont('helvetica','normal'); doc.setFontSize(9);
-            list.forEach(function(it){
-                if(y>750){ doc.addPage(); y=50; }
-                doc.setFont('helvetica','bold');
-                doc.text(it.tag+'  ('+it.type+')  —  '+it.status+(it.overallResult?(' — '+it.overallResult):''),x,y); y+=12;
-                doc.setFont('helvetica','normal');
-                var meta='Assigned: '+(it.assignedTo||'—')+'   State: '+it.applicableState+'   Checked by: '+(it.checkedBy||'—');
-                doc.text(meta,x,y); y+=12;
-                if(it.description){ doc.text('Desc: '+it.description,x,y); y+=12; }
-                if(it.type==='A' && it.checkpoints){
-                    doc.text('LRV '+iocFmt(it.lrv)+'  URV '+iocFmt(it.urv)+'  Tol ±'+(it.tolerance||0.5)+'%',x,y); y+=12;
-                    it.checkpoints.forEach(function(cp){
-                        if(y>760){ doc.addPage(); y=50; }
-                        doc.text('  '+cp.pct+'%  Exp '+iocFmt(cp.expected)+'  Found '+iocFmt(cp.asFound)+'  Left '+iocFmt(cp.asLeft)+'  Err '+(cp.errPct!=null?cp.errPct.toFixed(2)+'%':'—')+'  '+(cp.pass===true?'PASS':cp.pass===false?'FAIL':'—'),x,y); y+=11;
+            y=window.iprSectionTitle(doc,y,cat.name,list.length+' items');
+            y=window.iprTable(doc,y,
+                [{header:'Tag',dataKey:'tag',cellWidth:60},{header:'Type',dataKey:'type',cellWidth:40},
+                 {header:'Assigned',dataKey:'assigned',cellWidth:60},{header:'Status',dataKey:'status',cellWidth:55},
+                 {header:'Result',dataKey:'result',cellWidth:45},{header:'Notes / Description',dataKey:'notes'}],
+                list.map(function(it){ return {
+                    tag:it.tag, type:it.type==='A'?'Range':'Func.', assigned:it.assignedTo||'—',
+                    status:it.status, result:it.overallResult||'—',
+                    notes:it.notes||it.description||'—'
+                }; }),
+                {badgeCols:['status','result']}
+            );
+
+            var calItems=list.filter(function(it){ return it.type==='A' && it.checkpoints; });
+            if(calItems.length){
+                y=window.iprSectionTitle(doc,y,cat.name+' — Calibration Points');
+                var calRows=[];
+                calItems.forEach(function(it){
+                    (it.checkpoints||[]).forEach(function(cp){
+                        calRows.push({
+                            tag:it.tag, point:cp.pct+'%', expected:iocFmt(cp.expected),
+                            asFound:iocFmt(cp.asFound), asLeft:iocFmt(cp.asLeft),
+                            error:cp.errPct!=null?cp.errPct.toFixed(2)+'%':'—',
+                            result:cp.pass===true?'PASS':cp.pass===false?'FAIL':'—'
+                        });
                     });
-                } else if(it.notes){
-                    doc.text('Notes: '+it.notes,x,y); y+=12;
-                }
-                y+=6;
-            });
-            y+=6;
+                });
+                y=window.iprTable(doc,y,
+                    [{header:'Tag',dataKey:'tag',cellWidth:55},{header:'Point',dataKey:'point',cellWidth:45},
+                     {header:'Expected',dataKey:'expected',cellWidth:65},{header:'As-Found',dataKey:'asFound',cellWidth:65},
+                     {header:'As-Left',dataKey:'asLeft',cellWidth:65},{header:'Error',dataKey:'error',cellWidth:50},
+                     {header:'Result',dataKey:'result',cellWidth:45}],
+                    calRows,
+                    {badgeCols:['result']}
+                );
+            }
         });
 
+        window.iprFooter(doc,'InstrumentPro — '+title);
         doc.save('Outage-'+title.replace(/\s+/g,'-')+'-'+Date.now()+'.pdf');
     }).catch(function(e){ alert(e.message); });
 }
