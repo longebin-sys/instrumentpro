@@ -15464,6 +15464,89 @@ const D = {
   }
 };
 
+
+/* ================================================================
+   TROUBLESHOOTING EXPANSION PACK — field-focused additions
+   Added without changing existing device/symptom entries.
+   ================================================================ */
+Object.assign(D, {
+  dptx:{n:'Differential Pressure Transmitter',s:{
+    low:['DP transmitter reads low','Verify both HP and LP sides against the actual process condition, then compare the DP with a calibrated reference/test source.','Blocked impulse piping, trapped gas/liquid, unequal temperature effects, manifold configuration or an incorrect zero/elevation can reduce measured DP.','Prove the impulse path and manifold condition before changing zero/span; for flow applications also verify square-root configuration.'],
+    high:['DP transmitter reads high','Compare measured DP with an independent reference and verify both impulse legs and manifold valves are in the expected operating condition.','A partially blocked leg, trapped phase, incorrect equalization, leakage or wrong range can create a false high DP.','Restore the correct manifold/impulse condition and recheck zero before recalibration.'],
+    erratic:['DP signal fluctuates unexpectedly','Compare the transmitter trend with process DP and inspect both impulse legs for pulsation, condensation or restriction.','Process pulsation, partially blocked lines, unstable two-phase conditions, vibration or electrical noise can produce an unstable signal.','Separate process fluctuation from sensing-path fluctuation before adjusting damping or calibration.'],
+    zero:['DP transmitter does not return to zero','With the process safely isolated and the manifold correctly equalized, verify the transmitter output at zero differential pressure.','Residual pressure, incorrect manifold sequencing, trapped pressure, sensor zero shift or installation stress can prevent a true zero.','Prove true zero differential pressure first, then perform zero trim only if the approved procedure permits it.'],
+    flowroot:['DP flow calculation is wrong even though DP looks correct','Compare the transmitter DP, mA output and DCS flow value at several known operating points.','Wrong square-root extraction location, incorrect primary-element range, density compensation or duplicated square-root extraction can create a wrong flow value.','Verify where square root is performed and ensure it is applied exactly once in the intended signal path.'],
+    comm:['HART communication is lost with DP transmitter','Verify loop current, transmitter terminal voltage, loop resistance/load and communicator connection before changing configuration.','Low loop voltage, insufficient HART load, isolator incompatibility, wiring/address problems or transmitter electronics can prevent communication.','Prove the analog loop first, then isolate the digital communication path.']
+  }},
+  radarlevel:{n:'Radar Level Transmitter',s:{
+    falseecho:['Radar level locks onto a false echo','Review the echo curve/echo map and compare the reported level with an independent level indication.','Tank internals, nozzles, agitators, buildup, multiple echoes or a stored false-echo map can cause the instrument to track the wrong reflector.','Confirm the true surface echo before changing calibration; correct antenna installation and false-echo handling according to the OEM procedure.'],
+    weak:['Radar echo is weak or lost','Check antenna condition, process buildup, vapour/foam conditions and the transmitter diagnostic/echo strength.','Condensation, product coating, heavy foam, turbulence, unsuitable antenna installation or low signal margin can weaken the return.','Clean/inspect the antenna and evaluate the actual echo conditions before replacing the electronics.'],
+    blocked:['Radar level appears frozen','Check whether the displayed level, echo curve and signal quality are changing while the real process level moves.','A lost echo, false-echo lock, blocked configuration/update state or an invalid echo can leave the reported level apparently frozen.','Prove actual level movement independently and inspect echo tracking before changing damping.'],
+    wrongrange:['Radar level is consistently offset','Compare transmitter level, tank reference and configured tank height/zero reference.','Incorrect reference height, tank geometry, probe/antenna datum or configuration can create a consistent offset without an electronics fault.','Verify the measurement reference/datum before performing a level trim.'],
+    noise:['Radar level is noisy around agitator/foam','Trend level against agitator speed, filling rate and foam conditions and inspect the echo quality.','Turbulence, foam, multiple surface reflections and process vapour can make the detected surface unstable.','Use the OEM-approved echo filtering/damping strategy only after proving the process is the source of the variation.']
+  }},
+  ultrasoniclevel:{n:'Ultrasonic Level Transmitter',s:{
+    noecho:['Ultrasonic transmitter has no valid echo','Check sensor face, mounting, dead zone, tank obstruction and diagnostic echo status.','Foam, vapour, dust, condensation, excessive range, a target inside the dead zone or poor mounting can eliminate the usable echo.','Confirm the sensor is installed within its specified range and inspect the acoustic path before recalibrating.'],
+    falseecho:['Ultrasonic level follows a false target','Review the echo profile and compare the reported distance with the known tank geometry.','Internal structures, ladders, nozzles, agitators or foam can reflect ultrasound more strongly than the actual surface.','Identify the true surface echo and apply only approved false-target handling/configuration.'],
+    erratic:['Ultrasonic level fluctuates badly','Compare the level trend with filling/emptying, foam and vapour conditions and inspect sensor mounting.','Turbulence, foam, vapour, condensation and unstable acoustic reflections can cause intermittent distance measurements.','Prove whether the process surface is genuinely unstable before changing damping.'],
+    offset:['Ultrasonic level has a consistent offset','Verify tank reference distance, sensor datum and configured empty/full distance against the installation drawing.','Incorrect reference dimension or configuration can create a repeatable offset.','Correct the measurement reference/configuration under approved procedure before calibration.']
+  }},
+  rtd:{n:'RTD Temperature Sensor',s:{
+    open:['RTD shows open circuit / extreme value','Measure sensor resistance and continuity with the circuit isolated and compare with the expected resistance for the RTD type.','Broken element, damaged extension wire, loose terminal or moisture-corroded connection can create an open circuit.','Prove the sensor and cable separately before replacing the transmitter.'],
+    highres:['RTD resistance is higher than expected','Measure resistance at the sensor and again at the transmitter end to identify where the extra resistance is introduced.','Long/incorrect cable, high-resistance terminals, partial conductor damage or the wrong RTD type can create a high resistance reading.','Compare the measured resistance with the expected temperature curve and inspect terminals before changing calibration.'],
+    wrongtype:['RTD reading is wrong after replacement','Verify the configured RTD type, wiring arrangement and linearization against the installed sensor.','PT100 vs PT1000 mismatch, 2/3/4-wire configuration error or incorrect curve/alpha coefficient can create a large but believable error.','Correct the sensor type and wiring configuration before performing transmitter trim.'],
+    intermittent:['RTD reading changes when the cable is moved','Monitor resistance while gently checking the accessible cable/termination for an intermittent change.','Loose terminals, broken strands, moisture ingress or vibration damage can create an intermittent resistance path.','Repair the physical connection and repeat the resistance test before replacing the RTD.']
+  }},
+  thermocouple:{n:'Thermocouple Temperature Sensor',s:{
+    open:['Thermocouple reads underrange/open','Check continuity of the thermocouple circuit and verify the correct extension/compensating cable is installed.','Broken junction, incorrect extension wire, loose terminal or a failed connection head can create an open circuit.','Prove continuity and polarity first; do not substitute ordinary copper wire in a thermocouple circuit.'],
+    polarity:['Thermocouple polarity appears reversed','Verify sensor polarity and extension/compensating cable type from the sensor to the transmitter.','Reversed thermocouple polarity causes the indicated temperature to move in the wrong direction relative to process changes.','Correct polarity and repeat a controlled temperature check before recalibrating.'],
+    coldjunction:['Thermocouple temperature is consistently offset','Compare against a reference and verify the configured thermocouple type and cold-junction compensation.','Wrong TC type, cold-junction compensation error or an incorrect connection-head configuration can create a persistent offset.','Verify sensor type and compensation before performing transmitter adjustment.'],
+    noise:['Thermocouple signal is noisy','Inspect extension cable routing, shielding, junctions and nearby electrical noise sources.','Thermocouples produce small millivolt signals and are particularly susceptible to EMI, bad shielding and poor connections.','Separate the signal path from high-energy conductors and verify the thermocouple circuit before replacing the sensor.']
+  }},
+  magmeter:{n:'Magnetic Flowmeter',s:{
+    emptypipe:['Magmeter reports empty pipe or zero flow unexpectedly','Confirm the pipe is actually full, inspect grounding/reference electrodes and check the meter diagnostic status.','An empty/partially full pipe, incorrect grounding, coating or an invalid empty-pipe detection setting can suppress the flow reading.','Prove pipe-full condition and grounding before changing zero or range.'],
+    noflow:['Magmeter shows no flow while process is flowing','Verify process flow independently and check excitation/electrode condition, grounding and output configuration.','Coated electrodes, poor grounding, incorrect sensor wiring, failed excitation or a real low-flow condition can produce no-flow indication.','Confirm the sensor is correctly grounded and the pipe is full before replacing electronics.'],
+    noisy:['Magmeter flow signal is noisy','Check grounding/reference electrodes, cable shielding and nearby VFD/high-current equipment.','Poor grounding, electrical interference, electrode contamination or process bubbles can destabilize the signal.','Separate electrical noise from process effects by comparing the meter output with an independent flow reference.'],
+    scaling:['Magmeter output is correct but DCS flow is wrong','Compare meter display, measured mA and DCS engineering units at the same instant.','Wrong meter range, DCS scaling or output mapping can create a downstream error even when the sensor measures correctly.','Prove the signal at field, I/O and DCS before changing the flowmeter configuration.']
+  }},
+  vortex:{n:'Vortex Flowmeter',s:{
+    lowflow:['Vortex meter reads low or drops out at low flow','Compare actual flow with the meter minimum measurable velocity/range and inspect process conditions.','Vortex meters need sufficient velocity; low Reynolds number, excessive damping or poor installation can reduce vortex shedding and signal strength.','Confirm the meter is operating within its specified range before recalibrating.'],
+    noisy:['Vortex signal is noisy','Check upstream/downstream piping, pulsation, vibration and nearby machinery.','Insufficient straight run, swirl, mechanical vibration or pulsating flow can disturb vortex shedding and create unstable readings.','Verify installation and process stability before changing signal filtering.'],
+    high:['Vortex reads high','Verify actual flow and check configured K-factor, pipe size and engineering units.','Wrong K-factor, incorrect pipe size/configuration or a mismatched meter range can create a systematic high reading.','Confirm configuration against the meter data sheet before calibration.'],
+    noflow:['Vortex indicates flow with the line stopped','Confirm the line is actually static and inspect vibration, pipe movement and diagnostic frequency.','Mechanical vibration, electrical noise or an incorrectly configured low-flow cutoff can be interpreted as vortex pulses.','Remove vibration/noise sources and verify the configured cutoff before replacing the meter.']
+  }},
+  coriolis:{n:'Coriolis Flowmeter',s:{
+    zero:['Coriolis meter zero is unstable','Zero the meter only under the manufacturer-approved no-flow, full-pipe conditions and verify the process is genuinely static.','Residual flow, two-phase conditions, vibration or incorrect zeroing conditions can create an unstable zero.','Establish a stable no-flow condition before performing zero calibration.'],
+    density:['Coriolis density reading is wrong','Compare density with an independent sample/reference and verify process temperature and phase condition.','Gas entrainment, multiphase flow, temperature compensation or sensor coating can affect density measurement.','Confirm a stable single-phase condition before changing density calibration.'],
+    twophase:['Coriolis meter faults or loses accuracy during two-phase flow','Review diagnostics for drive gain, density/phase alarms and compare with process conditions.','Gas entrainment, flashing, cavitation or unstable phase conditions can reduce measurement quality and cause drive/phase diagnostics.','Correct the process phase condition first; do not assume electronics failure.'],
+    totalizer:['Coriolis totalizer does not match expected quantity','Compare instantaneous flow, totalizer scaling, units and totalizer reset/history over a known period.','Wrong units, scaling, pulse factor, totalizer reset or a biased flow measurement can create a quantity mismatch.','Prove instantaneous flow and configuration before changing the totalizer.']
+  }},
+  orifice:{n:'Orifice / DP Flow Primary Element',s:{
+    low:['Orifice DP flow reads low','Inspect impulse lines, manifold condition and compare the measured DP with expected process conditions.','Plugged impulse lines, damaged/wrong plate, incorrect tap orientation or density assumptions can reduce calculated flow.','Verify primary-element installation and impulse path before changing transmitter range.'],
+    high:['Orifice DP flow reads high','Compare DP and calculated flow against the expected process condition and verify plate/bore data.','Incorrect bore, wrong density, wrong tap geometry or a configuration error can produce high calculated flow.','Verify primary-element data and square-root location before calibration.'],
+    root:['Flow is wrong even though DP transmitter is calibrated','Compare raw DP, square-rooted output and DCS flow calculation separately.','Square root may be missing, duplicated or applied at the wrong point; incorrect zero suppression can also distort low flow.','Identify exactly where the square-root calculation is performed and ensure it occurs once.'],
+    impulse:['Impulse lines cause unstable or slow flow response','Check both lines for equal routing, liquid/gas trapping, condensation, blockage and temperature effects.','Unequal restriction, trapped phase or condensation can create differential errors and slow response.','Restore correct impulse-line condition before adjusting transmitter damping.']
+  }},
+  instrumentair:{n:'Instrument Air System / Regulator',s:{
+    low:['Instrument air pressure is low at a field device','Measure pressure at the header, local regulator inlet and device supply port while the device is operating.','Header pressure drop, clogged filter/regulator, undersized tubing, leaks or high simultaneous demand can reduce local pressure.','Find where the pressure drops under load rather than adjusting the positioner first.'],
+    wet:['Instrument air contains water/oil contamination','Inspect filter drains, dryer condition and local regulator/filter bowls and check for contamination at a device.','Dryer failure, saturated filters, poor condensate drainage or compressor carryover can contaminate pneumatic instruments.','Correct the air-quality source and drain/replace filters per the site procedure before servicing sensitive positioners/I-Ps.'],
+    leak:['Instrument air leak is causing repeated pressure loss','Listen/inspect for leaks and compare header pressure drop with demand; use approved leak-detection methods.','Loose fittings, damaged tubing, actuator diaphragms, positioner exhaust leakage or solenoid leakage can consume excessive air.','Isolate the leak location by sections before replacing components.'],
+    regulator:['Local regulator output is unstable','Measure inlet and outlet pressure while the connected device changes demand.','Blocked filter, damaged regulator diaphragm, incorrect adjustment or insufficient upstream pressure can cause unstable outlet pressure.','Verify upstream pressure and filter condition before replacing the regulator.']
+  }},
+  barrierisolator:{n:'Signal Isolator / Intrinsic Safety Barrier',s:{
+    lowloop:['Signal is lower after passing through the barrier/isolator','Measure the signal at the field side and safe-area side under the same process condition.','Incorrect barrier type, power limitation, wiring/terminal resistance or a failed isolator can alter or interrupt the signal.','Prove the signal on both sides before replacing the transmitter.'],
+    nocomm:['HART works at the transmitter but not through the isolator','Verify the isolator is HART-transparent and that the loop load/communication path meets the installed device requirements.','Some isolators/repeaters block or alter HART communication unless specifically designed for it.','Prove HART directly at the field device, then test through the installed barrier/isolator.'],
+    trip:['Barrier/isolator channel trips or faults','Check channel status, loop load and field wiring for short/open conditions according to the barrier type.','A short circuit, overload, wrong channel configuration or failed barrier can cause protection to trip.','Locate the field-side fault before repeatedly resetting the barrier.'],
+    intermittent:['Signal becomes intermittent through the barrier','Trend field-side and safe-area-side signals simultaneously and inspect terminals/connector seating.','Loose terminals, marginal power, vibration, thermal effects or a failing isolator can cause intermittent transmission.','Prove whether the fault follows the isolator channel or the field circuit before replacing hardware.']
+  }},
+  marshalling:{n:'Marshalling / Terminal / Interface Circuit',s:{
+    wrong:['Field signal is correct but wrong at DCS after marshalling','Measure the same signal at field terminal, marshalling terminal and I/O terminal.','Crossed cores, wrong terminal assignment, failed isolator, loose termination or incorrect channel mapping can shift the signal to the wrong destination.','Trace the loop end-to-end against the latest approved drawing and point list.'],
+    intermittent:['Signal becomes intermittent at marshalling','Trend the signal while inspecting termination condition and vibration/thermal effects where permitted.','Loose terminals, corroded contacts, damaged wire strands or marshalling relay/isolator problems can create intermittent faults.','Identify the exact point where the signal changes before disturbing the entire loop.'],
+    ground:['Analog loop develops a ground fault at cabinet','Isolate the circuit per approved procedure and identify whether the ground is on field cable, barrier/isolator or cabinet wiring.','Cable insulation damage, moisture, shield termination errors or failed interface equipment can create a ground fault.','Localize the ground before restoring the circuit.'],
+    label:['Loop appears connected to the wrong tag/channel','Compare field tag, cable/core number, terminal number and DCS point against the approved loop drawing.','Mislabeled cables, swapped cores or an incorrect database/point mapping can create a believable but wrong signal.','Perform an end-to-end point-to-point verification before changing configuration.']
+  }}
+});
+
 window.D = D; // exposed for the AI Technician knowledge base
 
 const devices = [
@@ -15533,6 +15616,18 @@ const devices = [
   ['hmiscada','HMI / SCADA'],
   ['alarmforce','Alarms & Forces/Overrides'],
   ['flowcomputer','Flow Computer / Custody Transfer'],
+  ['dptx','Differential Pressure Transmitter'],
+  ['radarlevel','Radar Level Transmitter'],
+  ['ultrasoniclevel','Ultrasonic Level Transmitter'],
+  ['rtd','RTD Temperature Sensor'],
+  ['thermocouple','Thermocouple Temperature Sensor'],
+  ['magmeter','Magnetic Flowmeter'],
+  ['vortex','Vortex Flowmeter'],
+  ['coriolis','Coriolis Flowmeter'],
+  ['orifice','Orifice / DP Flow Primary Element'],
+  ['instrumentair','Instrument Air System / Regulator'],
+  ['barrierisolator','Signal Isolator / Intrinsic Safety Barrier'],
+  ['marshalling','Marshalling / Terminal / Interface Circuit'],
 ];
 window.devices = devices; // exposed for the AI Technician knowledge base
 
@@ -15749,6 +15844,90 @@ const ADV = {
     ]
   }
 };
+
+
+/* ----------------------------------------------------------------
+   Deep-diagnostic coverage: every existing symptom gets additional
+   decision points where the original ADV map has fewer than six.
+   The questions deliberately separate PROCESS / SENSOR / LOOP / I-O /
+   CONFIGURATION / FINAL-ELEMENT causes rather than simply saying
+   "check wiring".
+   ---------------------------------------------------------------- */
+(function expandAllTroubleshooting(){
+  const extra = {
+    signal:[
+      ['Does the local/device value agree with an independent reference?', [['Yes','Measurement is probably credible; trace the signal path.'],['No','Treat the sensing/installation side as the primary suspect.']]],
+      ['Does the measured output current agree with the value the device says it is producing?', [['Yes','The output stage is internally consistent; continue downstream.'],['No','Investigate output trim, configuration, sensor input or electronics.']]],
+      ['Does a known-good simulated signal produce the correct value at the control-system input?', [['Yes','Downstream I/O/scaling is proven; focus upstream.'],['No','Focus on wiring, isolator/barrier, I/O channel or scaling.']]],
+      ['Does the fault remain when the process is stable?', [['Yes','Instrument/signal-path fault is more likely.'],['No','Process dynamics may be the cause.']]],
+      ['Did the symptom begin after maintenance, replacement or configuration work?', [['Yes','Check changed wiring, range, units, address and configuration first.'],['No','Continue physical fault isolation.']]],
+      ['Can the fault be reproduced at more than one operating point?', [['Yes','A systematic range/configuration problem is more likely.'],['No','Look for intermittent, installation or process-dependent causes.']]]
+    ],
+    valve:[
+      ['Is the commanded 4–20 mA/current actually present at the field positioner input?', [['Yes','The electrical command path is proven to the positioner.'],['No','Focus on DCS/AO, marshalling, cable, barrier or termination.']]],
+      ['Is the required instrument air present at the positioner/actuator while the valve is commanded?', [['Yes','Continue to pilot/positioner/actuator mechanics.'],['No','Fix supply, regulator, filter, tubing or isolation condition.']]],
+      ['Does the positioner output pressure change when the command changes?', [['Yes','Positioner is producing a pneumatic response; inspect actuator/valve.'],['No','Focus on positioner pilot/relay/I-P stage or configuration.']]],
+      ['Does the valve move freely through the full mechanical stroke?', [['Yes','Focus on feedback/characterization/tuning.'],['No','Stiction, packing, actuator force or mechanical obstruction is likely.']]],
+      ['Does feedback match actual stem/shaft travel at 0/25/50/75/100%?', [['Yes','Feedback path is credible.'],['No','Investigate linkage, sensor, calibration or feedback scaling.']]],
+      ['Is there evidence of air leakage at actuator, tubing, positioner or exhaust?', [['No','Pneumatic leakage is less likely.'],['Yes','Locate the leak before changing tuning/calibration.']]]
+    ],
+    switch:[
+      ['Does the applied test source actually reach the sensing element?', [['Yes','Continue to switching/contact checks.'],['No','Focus on test setup, isolation or sensing path.']]],
+      ['Does the physical mechanism change state at the expected point?', [['Yes','Check contacts and wiring.'],['No','Focus on setpoint, mechanism or sensing element.']]],
+      ['Does the electrical contact state change at the device terminals?', [['Yes','Device is switching; trace wiring/input.'],['No','Contact/mechanism fault is likely.']]],
+      ['Does the control-system input change when the contact is operated locally?', [['Yes','Input path is proven.'],['No','Focus on cable, terminal, fuse or I/O channel.']]],
+      ['Is the trip/reset differential or deadband within the approved setting?', [['Yes','Continue with process and wiring checks.'],['No','Correct the setting under approved procedure.']]]
+    ],
+    analyser:[
+      ['Does the sample system deliver a stable, representative sample?', [['Yes','Continue sensor/analyzer checks.'],['No','Fix sample flow/conditioning before calibration.']]],
+      ['Does a fresh, valid certified reference/standard produce the expected analyzer response?', [['Yes','Measurement path is likely healthy.'],['No','Focus on sensor/analyzer calibration condition.']]],
+      ['Does the sensor respond correctly to a controlled change in sample/reference?', [['Yes','Dynamic response is credible.'],['No','Suspect sensor, fouling or analyzer electronics.']]],
+      ['Are sample pressure, temperature and flow within the analyzer specification?', [['Yes','Continue with sensor/configuration checks.'],['No','Correct sample conditions first.']]],
+      ['Does the analyzer output agree with its local display/internal PV?', [['Yes','Trace the downstream output/communication path.'],['No','Focus on analyzer configuration/output stage.']]],
+      ['Did the fault follow sensor replacement, cleaning or calibration?', [['Yes','Review sensor condition, calibration procedure and configuration changes.'],['No','Continue with sample/process isolation.']]]
+    ],
+    control:[
+      ['Does the controller/PLC/DCS raw I/O value agree with the field signal?', [['Yes','Focus on scaling/HMI/database.'],['No','Focus on I/O, wiring or field signal.']]],
+      ['Is the channel configured for the correct input/output type and range?', [['Yes','Continue to hardware and scaling checks.'],['No','Correct configuration under approved change control.']]],
+      ['Does a known-good simulator produce the expected raw value?', [['Yes','Field circuit is implicated.'],['No','I/O hardware/configuration is implicated.']]],
+      ['Is the point forced, simulated, bypassed or manually overridden?', [['No','Continue normal signal tracing.'],['Yes','Review who/why/when and restore only under procedure.']]],
+      ['Do other channels on the same card/rack behave normally?', [['Yes','The affected channel/device is more likely.'],['No','Investigate common power, rack, card or network causes.']]],
+      ['Did the issue appear after a download, point-list change or module replacement?', [['No','Continue physical troubleshooting.'],['Yes','Compare configuration/version and channel mapping before replacing hardware.']]]
+    ],
+    power:[
+      ['Is supply voltage correct at the source and at the load under operating conditions?', [['Yes','Continue downstream.'],['No','Investigate supply, fuse, cable drop or connection.']]],
+      ['Does voltage collapse when the device/load is connected?', [['No','Supply capacity is likely adequate.'],['Yes','Suspect excessive load, short circuit, high resistance or failing supply.']]],
+      ['Is the protective device/fuse repeatedly operating?', [['No','Continue.'],['Yes','Locate the downstream fault before replacing the protection again.']]],
+      ['Is the fault temperature/vibration/time dependent?', [['No','Continue electrical isolation.'],['Yes','Trend the supply and inspect connections/environmental effects.']]]
+    ],
+    mechanical:[
+      ['Does the indication/feedback change when the mechanism is moved through its physical range?', [['Yes','Mechanical response exists; inspect feedback/signal path.'],['No','Mechanical obstruction or failed actuator/sensor is likely.']]],
+      ['Is there evidence of binding, excessive friction, wear or loose linkage?', [['No','Continue signal/feedback checks.'],['Yes','Correct the mechanical condition before calibration.']]],
+      ['Does the fault occur only at one travel/operating point?', [['No','Continue general isolation.'],['Yes','Inspect end-stop, linkage, seating or range-specific mechanical issues.']]]
+    ]
+  };
+  const keyGroup = key => {
+    if(['controlvalve','positioner','shutdownvalve','onoff','motorizedvalve','ebdvalve','deluge','foamvalve'].includes(key)) return 'valve';
+    if(['pressureswitch','dpswitch','tempswitch','levelswitch','limitswitch','proximity','fusibleloop'].includes(key)) return 'switch';
+    if(['phanalyser','orpanalyser','condanalyser','o2analyser','turbidity','moisture','gc','dewpoint','rvp','oilinwater'].includes(key)) return 'analyser';
+    if(['iomodule','fieldnetwork','controllercpu','hmiscada','alarmforce','flowcomputer'].includes(key)) return 'control';
+    if(['controlpower','ups','instrumentair','barrierisolator','marshalling'].includes(key)) return 'power';
+    if(['motorstarter','vfd','genset','speedprobe','vibprobe','axialprobe','tachtrip','loadcell'].includes(key)) return 'mechanical';
+    return 'signal';
+  };
+  Object.keys(D).forEach(key=>{
+    const group=keyGroup(key);
+    const pool=extra[group];
+    if(!ADV[key]) ADV[key]={};
+    Object.keys(D[key].s||{}).forEach(sym=>{
+      if(!Array.isArray(ADV[key][sym])) ADV[key][sym]=[];
+      const have=ADV[key][sym].map(q=>q[0]);
+      pool.forEach(q=>{
+        if(ADV[key][sym].length<6 && !have.includes(q[0])) ADV[key][sym].push(q);
+      });
+    });
+  });
+})();
 
 function $(x){ return document.getElementById(x); }
 
