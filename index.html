@@ -14500,35 +14500,98 @@ const D = {
   },
 
   motorizedvalve: {
-    n:'Motorized valve',
+    n:'Electric Motor-Operated Valve (MOV) — Rotork / AUMA / Limitorque type',
     s:{
-      command:['Valve does not respond to local/remote command',
-        'Verify the command at the source (local pushbutton or DCS/PLC), then check the local/remote/off selector position and supply voltage to the actuator.',
-        'Selector left in the wrong mode, loss of control power, wiring fault, tripped thermal overload or a failed actuator control board can prevent movement.',
-        'Prove the control mode and supply first, then perform the approved functional stroke test in both local and remote.'],
-      torque:['Valve trips on torque before reaching end position',
-        'Check the torque switch setting against the approved value and inspect for mechanical obstruction or seat binding.',
-        'Torque switch set too low, valve seat/stem binding, debris in the line or an over-tight packing gland can cause a premature torque trip.',
-        'Verify torque settings against the datasheet and confirm free mechanical movement before adjusting.'],
-      feedback:['Valve moves but position feedback is incorrect or missing',
-        'Compare the physical valve position with the OPEN/CLOSED feedback at the same time, both locally and at the DCS/PLC.',
-        'Limit switch/torque switch cam misadjustment, feedback wiring fault or a failed potentiometer/transmitter can give incorrect status.',
-        'Verify the physical end position and inspect the limit switch cams and feedback wiring before replacing the actuator.'],
-      stroke:['Valve stroke is slow or incomplete',
-        'Measure the opening/closing time and compare it with the approved baseline; check motor current during the stroke.',
-        'Low supply voltage, a failing motor, gearbox wear, mechanical resistance or an incorrect torque setting can slow or limit travel.',
-        'Check supply voltage, motor current and mechanical travel under the approved procedure.'],
-      nofeedback:['No OPEN/CLOSED indication at DCS/PLC',
-        'Check the limit switches and the input channel receiving their status; confirm the actuator is not in local/off mode.',
-        'A failed limit switch, misadjusted cam, broken linkage or wiring/input fault can remove position indication.',
-        'Prove the physical valve position independently, then test each feedback channel and the control mode selector.'],
-      overload:['Motor overload trips or actuator overheats',
-        'Check supply voltage/phase balance and measure running current against the actuator nameplate rating.',
-        'Undervoltage, single-phasing, an obstructed valve, seized gearbox or a failing motor winding can cause overload trips.',
-        'Confirm supply quality and free mechanical movement before returning the actuator to service.']
+      identify:['Before troubleshooting an MOV, identify the actuator model, valve type, supply arrangement and control/feedback interface',
+        'Confirm whether the actuator is Rotork IQ/IQT, AUMA, Limitorque or another electric actuator; record the nameplate voltage, phase, frequency, duty and actuator/valve model.',
+        'Do not assume the MOV uses instrument air or a 4–20 mA command. Electric MOVs are motor-driven and may use 3-phase or, on applicable models, single-phase/DC power. Control may be conventional electrical or an installed network/analogue option.',
+        'Establish the actual site architecture first: electrical power → actuator motor/control electronics → gearbox/drive → valve, plus the installed command and feedback method. Troubleshoot the fitted interface, not an assumed one.'],
+      command:['MOV does not respond to OPEN/CLOSE command',
+        'First determine whether the command is coming through conventional hardwired controls, Modbus/another fieldbus, an analogue positioning option, or another configured interface.',
+        'Then check actuator control mode (LOCAL/REMOTE/STOP), permissives/interlocks, ESD/Motor Enable where fitted, control power and the actuator diagnostic/status display.',
+        'Trace the actual command path to the actuator before testing the motor. Do not look for instrument air unless the valve assembly has a separate pneumatic system that is explicitly part of the installation.'],
+      power:['MOV has no power or will not start',
+        'Check the actuator nameplate and approved electrical drawings, then verify the required supply at the appropriate upstream point using the site electrical isolation and test procedure.',
+        'Possible causes include open isolator/breaker, blown fuse, missing phase, incorrect voltage, loose termination, cable fault or an upstream protection trip.',
+        'Do not assume every MOV is three-phase: many IQ3 installations are three-phase, while applicable Rotork ranges also include single-phase/DC variants. Confirm the actual model and supply before testing.'],
+      local:['MOV will not run from LOCAL control',
+        'Select the approved LOCAL mode and check the local OPEN/CLOSE controls, display/status and active alarms or inhibits.',
+        'A local selector fault, control-board problem, active protection, configuration inhibit or loss of control power can block local operation.',
+        'If the actuator has healthy supply but local controls do not operate, isolate the local control/interface path before investigating the valve mechanically.'],
+      remote:['MOV runs locally but will not run from DCS/PLC',
+        'Confirm the actuator is in the correct REMOTE mode and identify the installed remote interface before checking the DCS/PLC command.',
+        'For hardwired control, trace digital command/permissive circuits through marshalling/interface relays. For fieldbus control, verify the actuator is communicating and accepting the required command. For analogue positioning, verify the configured positioning interface only if that option is actually fitted.',
+        'Check ESD, Motor Enable, process permissives and remote/local selection. A healthy motor and valve can still refuse a remote command because of the control architecture.'],
+      modbus:['MOV is fitted with Modbus but DCS/PLC cannot communicate with it',
+        'Confirm that a Modbus module is actually fitted and identify whether the installation uses Modbus RTU/RS-485 or Modbus TCP. Do not assume Modbus just because the actuator is intelligent.',
+        'For RS-485, check the approved network wiring, polarity, shielding/termination arrangement, actuator address, baud rate, parity and other site-approved communication settings. For TCP, check network link/addressing and the configured device mapping.',
+        'Use the actuator/network diagnostics or approved Modbus test equipment to establish whether the fault is the actuator interface, physical network, configuration or DCS/PLC mapping. Rotork provides dedicated Modbus modules and diagnostic/test tooling for applicable actuators.'],
+      fieldbus:['MOV fieldbus command/status is unavailable or incorrect',
+        'Identify the installed protocol before troubleshooting: Modbus, Profibus, Foundation Fieldbus, DeviceNet, Ethernet/IP, PROFINET, Pakscan or another approved interface may be used depending on the actuator/system.',
+        'Check physical network health, device/node configuration, addressing, termination where applicable, device files/profile and PLC/DCS mapping against the installed system documentation.',
+        'Separate communication failure from actuator failure: if the actuator local controls work and local diagnostics are healthy, concentrate on the network/interface path first.'],
+      analogue:['MOV uses analogue positioning but the valve does not follow the requested position',
+        'Only investigate an analogue command if the actuator is specifically fitted/configured for analogue positioning. Compare the commanded position, configured input range and actual actuator position.',
+        'Incorrect input scaling, configuration, signal wiring, analogue interface fault, position feedback error or an actuator not configured for modulating duty can cause tracking problems.',
+        'Do not assume every MOV has a 4–20 mA control loop. Treat analogue control as an installed option/application and verify the actual wiring and configuration first.'],
+      motor:['Command is accepted but motor does not turn the valve',
+        'Confirm the actuator has the correct motor supply and that the actuator diagnostics show a valid run command. Follow the approved electrical test procedure for any live/high-voltage measurement.',
+        'Possible causes include missing phase, failed switching/control electronics, motor fault, protection trip, brake fault where fitted, engaged manual drive, gearbox fault or a mechanically jammed valve.',
+        'Separate electrical from mechanical causes before intervention: prove supply/control status first, then investigate the actuator drive and valve under the site isolation procedure.'],
+      hums:['Motor energises or hums but the valve does not move',
+        'Stop repeated operation and check for torque/jam protection, abnormal motor current, phase problems and actuator diagnostic indications.',
+        'A mechanically jammed valve, excessive seating torque, gearbox/drive problem, motor fault, single-phasing or an incorrectly engaged drive can produce this symptom.',
+        'Do not bypass torque/jam protection or repeatedly force the valve. Determine whether the restriction is in the power system, motor/gear train or valve.'],
+      trip:['Breaker, fuse or motor protection trips when the MOV starts',
+        'Record whether the protection operates immediately at start or after the valve has travelled. Check actuator diagnostics and perform approved supply/phase tests.',
+        'Possible causes include short circuit, phase fault, motor winding fault, damaged cable, excessive starting/load current or a mechanically overloaded valve.',
+        'Do not repeatedly reset the protection. Escalate electrical faults under the site electrical procedure and investigate abnormal mechanical load before returning the MOV to service.'],
+      torque:['MOV trips on torque before reaching the required position',
+        'Read the actuator torque/trip indication and compare the event with valve position and the approved actuator/valve torque settings.',
+        'Valve binding, debris, excessive differential pressure, packing friction, gearbox problems, incorrect setup or an obstruction can increase required torque.',
+        'Never simply increase the torque setting to force a stuck valve. Establish why torque increased and stay within the OEM/valve-maker approved limits. Rotork documentation specifically provides torque protection and configurable torque settings.'],
+      limit:['MOV stops before OPEN or CLOSED position',
+        'Compare physical valve position, actuator position indication and configured travel/limit settings.',
+        'Incorrect travel/limit setup, lost configuration, mechanical stop, incorrect actuator-to-valve mounting, drive problems or a valve that is not actually reaching its end position can cause premature stopping.',
+        'Verify physical position first and reset travel only according to the actuator OEM procedure. Do not assume the problem is a DCS scaling issue.'],
+      feedback:['MOV moves but position/OPEN/CLOSED feedback is wrong',
+        'Compare the actual valve position, actuator local indication and control-system indication at the same time.',
+        'Depending on the installation, feedback may be hardwired contacts, an analogue position signal, fieldbus data or actuator diagnostics. Possible faults include limit/position sensing, configuration, feedback wiring, interface module or DCS/PLC mapping.',
+        'Prove physical position first, then isolate the feedback path actually installed on that actuator. Do not automatically troubleshoot it as a 4–20 mA loop.'],
+      thermal:['MOV reports motor over-temperature or thermal protection',
+        'Check actuator duty history, number of starts, running time, motor current/load and the recorded protection/diagnostic indication.',
+        'Excessive cycling, stalled/jammed valve, high mechanical load, incorrect duty application, supply problems or motor deterioration can cause thermal protection to operate.',
+        'Allow cooling according to the OEM/site procedure and find the reason for the thermal event. Never bypass thermal protection simply to regain operation.'],
+      current:['MOV motor current is higher than normal',
+        'Measure/trend current only with approved electrical test equipment and procedures, and compare it with the actuator motor data and the normal baseline for the valve.',
+        'Increased valve torque, packing friction, gearbox wear, bearing/drive problems, low or imbalanced supply or motor deterioration can increase current.',
+        'Compare current with valve position: a repeatable spike at one travel point suggests a mechanical load; abnormal current throughout travel can indicate supply, motor or drive problems.'],
+      slow:['MOV takes longer than normal to stroke',
+        'Measure opening/closing time and compare it with the approved stroke-time requirement; check supply quality and actuator diagnostics.',
+        'Low/unstable electrical supply, motor deterioration, gearbox wear, increased valve torque, incorrect actuator configuration or mechanical restriction can slow travel.',
+        'Do not troubleshoot this as a pneumatic speed-control problem. An electric MOV has no instrument-air flow adjustment; investigate electrical supply, motor/gear train, configuration and valve load.'],
+      direction:['MOV runs in the wrong direction',
+        'Stop operation and verify the commanded direction against the actuator local indication and the physical valve position.',
+        'Incorrect phase sequence on applicable three-phase installations, incorrect control wiring/configuration or actuator/valve mounting can produce unexpected direction.',
+        'Correct the cause only under the approved electrical/OEM procedure and verify OPEN/CLOSE limits afterward.'],
+      manual:['Motor/actuator operates but valve does not move because manual operation is engaged',
+        'Check the actuator handwheel/manual clutch or local manual mechanism and verify the drive is correctly engaged for powered operation.',
+        'An incorrectly engaged manual mechanism or drive coupling can prevent motor torque from being transmitted to the valve.',
+        'Follow the specific OEM procedure for returning to motor operation. Never force a clutch/handwheel while the motor is energised.'],
+      interlock:['DCS/PLC command is present but MOV remains inhibited',
+        'Check process permissives, ESD status, Motor Enable where fitted, local/remote selection, actuator alarms and all approved interlocks.',
+        'An active safety trip, process interlock, remote inhibit, local selector, torque/limit condition or actuator configuration can block movement without a motor failure.',
+        'Identify and restore the approved permissive chain; do not bypass an ESD or safety interlock simply to make the valve move.'],
+      alarm:['Rotork/AUMA/Limitorque actuator shows an alarm or diagnostic fault',
+        'Record the exact alarm/fault text or code, actuator model and operating condition when it occurred.',
+        'Electric actuators have model-specific diagnostics for torque, position/travel, motor temperature, power/control faults, communications and other conditions.',
+        'Use the exact OEM manual for that model rather than guessing from a generic alarm label. Record the diagnostic before resetting so intermittent faults are not lost.'],
+      powerloss:['MOV loses operation after an electrical supply interruption',
+        'Confirm the incoming supply has returned and determine whether the actuator control electronics, motor supply and remote-control interface have all recovered.',
+        'Depending on model/configuration, the actuator may retain diagnostics/position information but still require the correct control mode, permissives or reset condition before movement.',
+        'Check the post-power-loss actuator status and control-system permissives before issuing a new command; verify valve position independently if the process state is critical.']
     }
   },
-
   whcp: {
     n:'Wellhead control panel',
     s:{
@@ -15863,6 +15926,16 @@ const ADV = {
       ['Did the symptom begin after maintenance, replacement or configuration work?', [['Yes','Check changed wiring, range, units, address and configuration first.'],['No','Continue physical fault isolation.']]],
       ['Can the fault be reproduced at more than one operating point?', [['Yes','A systematic range/configuration problem is more likely.'],['No','Look for intermittent, installation or process-dependent causes.']]]
     ],
+    mov:[
+      ['Is the actuator receiving the correct electrical supply for its model?', [['Yes','Continue with control/interface checks.'],['No','Trace the approved power path, protection and terminations.']]],
+      ['Is the actuator in REMOTE control and free of active interlocks/inhibits?', [['Yes','Continue with the command/interface path.'],['No','Correct the approved control mode/permissive condition.']]],
+      ['Does the installed command interface actually match the site design (hardwired, Modbus/fieldbus, or analogue option)?', [['Yes','Troubleshoot that interface specifically.'],['No','Verify drawings, actuator configuration and installed option.']]],
+      ['If Modbus/RS-485 is fitted, is the actuator visible and communicating with the control system?', [['Yes','Continue with command mapping/register/configuration checks.'],['No','Check physical network, addressing, serial settings and interface module.']]],
+      ['Does the actuator report a torque, limit, thermal, power or other diagnostic condition?', [['No','Continue with motor/drive and valve mechanics.'],['Yes','Follow the OEM diagnostic for the reported condition before forcing operation.']]],
+      ['Does the valve position reported by the actuator agree with the actual valve position?', [['Yes','Feedback is credible; continue with command/motor/load checks.'],['No','Investigate travel/limit/position sensing and feedback configuration.']]],
+      ['Does motor current remain within the expected range throughout travel?', [['Yes','Continue with valve/gearbox and control checks.'],['No','Investigate abnormal mechanical load, supply imbalance or motor/drive condition.']]],
+      ['Does the valve move freely without an abnormal torque increase at a particular travel point?', [['Yes','Mechanical binding is less likely.'],['No','Investigate valve/packing/gearbox/mechanical restriction; do not simply raise torque limits.']]]
+    ],
     valve:[
       ['Is the commanded 4–20 mA/current actually present at the field positioner input?', [['Yes','The electrical command path is proven to the positioner.'],['No','Focus on DCS/AO, marshalling, cable, barrier or termination.']]],
       ['Is the required instrument air present at the positioner/actuator while the valve is commanded?', [['Yes','Continue to pilot/positioner/actuator mechanics.'],['No','Fix supply, regulator, filter, tubing or isolation condition.']]],
@@ -15907,7 +15980,10 @@ const ADV = {
     ]
   };
   const keyGroup = key => {
-    if(['controlvalve','positioner','shutdownvalve','onoff','motorizedvalve','ebdvalve','deluge','foamvalve'].includes(key)) return 'valve';
+    // Electric MOVs are deliberately NOT grouped with pneumatic control valves.
+    // The generic valve pool contains instrument-air/I-P/4-20 mA positioner questions.
+    if(['motorizedvalve'].includes(key)) return 'mov';
+    if(['controlvalve','positioner','shutdownvalve','onoff','ebdvalve','deluge','foamvalve'].includes(key)) return 'valve';
     if(['pressureswitch','dpswitch','tempswitch','levelswitch','limitswitch','proximity','fusibleloop'].includes(key)) return 'switch';
     if(['phanalyser','orpanalyser','condanalyser','o2analyser','turbidity','moisture','gc','dewpoint','rvp','oilinwater'].includes(key)) return 'analyser';
     if(['iomodule','fieldnetwork','controllercpu','hmiscada','alarmforce','flowcomputer'].includes(key)) return 'control';
@@ -15927,6 +16003,14 @@ const ADV = {
       });
     });
   });
+
+  // Safety/accuracy guard: never allow pneumatic control-valve questions to leak into an electric MOV.
+  if(ADV.motorizedvalve){
+    const forbidden = /instrument\s+air|positioner|I\/?P|pilot\/relay|pneumatic|air\s+leak|commanded 4[–-]20\s*mA|4[–-]20\s*mA\/current.*field positioner/i;
+    Object.keys(ADV.motorizedvalve).forEach(sym=>{
+      ADV.motorizedvalve[sym] = (ADV.motorizedvalve[sym] || []).filter(q => !forbidden.test(String(q[0]||'')));
+    });
+  }
 })();
 
 function $(x){ return document.getElementById(x); }
@@ -16077,76 +16161,57 @@ document.querySelectorAll('[data-close-trouble]').forEach(x=>{
   x.onclick=closeModal;
 });
 
+// Troubleshooting navigation — single handler so Back works at every level.
 $('troubleBack').onclick=()=>{
-  if(state.step>=3){
+  // If we're viewing the conclusion, go back to the last diagnostic question.
+  if($('troubleResult').classList.contains('show')){
     $('troubleResult').classList.remove('show');
     $('troubleDone').style.display='none';
     $('troubleNext').style.display='none';
-    if(state.questions.length && state.step>3){
-      state.answers.pop();
-      state.step=Math.max(3,state.step-1);
+    $('troubleBack').style.display='inline-flex';
+
+    if(state.questions && state.questions.length){
+      state.step=Math.max(3, 3 + state.questions.length - 1);
+      state.answers=state.answers.slice(0, Math.max(0,state.questions.length-1));
       renderAdvancedQuestion();
     }else{
+      state.step=2;
       renderSymptoms();
     }
     return;
   }
+
+  // Back from an advanced diagnostic question.
+  if(state.step>=3){
+    if(state.step>3) state.answers.pop();
+    state.step--;
+    if(state.step>=3){
+      renderAdvancedQuestion();
+    }else{
+      state.step=2;
+      state.answers=[];
+      renderSymptoms();
+    }
+    return;
+  }
+
+  // Back from symptom selection to device selection.
   if(state.step===2){
     state.device=null;
     state.symptom=null;
+    state.questions=[];
+    state.answers=[];
     renderDevice();
+    return;
+  }
+
+  // Back on the first screen closes the troubleshooting window.
+  if(state.step===1){
+    closeModal();
   }
 };
 
 $('troubleNext').onclick=()=>advanceFromSelection();
-$('troubleDone').onclick=closeModal;
-
-document.addEventListener('keydown',e=>{
-  if(e.key==='Escape' && $('troubleModal').classList.contains('open')) closeModal();
-  if(e.key==='Escape'){
-    const rm=document.getElementById('rptModal');
-    if(rm && rm.classList.contains('open')){
-      rm.classList.remove('open'); rm.setAttribute('aria-hidden','true'); document.body.style.overflow='';
-    }
-  }
-});
-
-$('troubleStartBtn').onclick=()=>openModal();
-
-document.querySelectorAll('[data-close-trouble]').forEach(x=>{
-  x.onclick=closeModal;
-});
-
-$('troubleBack').onclick=()=>{
-  if(state.step===3){
-    $('troubleResult').classList.remove('show');
-    $('troubleDone').style.display='none';
-    $('troubleNext').style.display='none';
-    $('troubleBack').style.display='block';
-    renderSymptoms();
-    return;
-  }
-
-  if(state.step===2){
-    state.device=null;
-    state.symptom=null;
-    renderDevice();
-  }
-};
-
-$('troubleNext').onclick=()=>{
-  const selected=$('troubleOptions').querySelector('.selected');
-  if(!selected) return;
-
-  if(state.step===1){
-    state.device=selected.dataset.id;
-    renderSymptoms();
-  } else if(state.step===2){
-    state.symptom=selected.dataset.id;
-    showResult();
-  }
-};
-
 $('troubleDone').onclick=closeModal;
 
 document.addEventListener('keydown',e=>{
