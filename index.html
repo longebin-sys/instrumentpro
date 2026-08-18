@@ -11862,15 +11862,21 @@ body.dark .colorpick-hexwrap input{background:#0f172a;border-color:#334155;color
             });
 
             clearDataBtn.addEventListener('click', function() {
-                if (confirm('Delete all data?')) {
-                    localStorage.clear();
+                if (confirm('Delete all data? Your app settings (theme, text size) will be kept.')) {
+                    // Only wipe actual app data, not settings. Everything in
+                    // localStorage is cleared EXCEPT the keys below, so this
+                    // stays correct even as new data keys get added later.
+                    const keepKeys = ['instrumentpro_theme', 'instrumentpro_themeColor', 'instrumentpro_textSize'];
+                    Object.keys(localStorage).forEach(function(k) {
+                        if (keepKeys.indexOf(k) === -1) localStorage.removeItem(k);
+                    });
                     uploadedFiles = [];
                     savedTags = [];
                     recentTools = [];
                     renderFiles();
                     renderTags();
                     renderRecent();
-                    alert('Data cleared.');
+                    alert('Data cleared. Your settings were kept.');
                 }
             });
 
