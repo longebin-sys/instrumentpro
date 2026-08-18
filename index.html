@@ -4628,8 +4628,9 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <div class="card-header"><i class="fas fa-industry"></i><h3>Outage Job</h3><span id="iocJobBadge">—</span></div>
 <div class="fn-section-note" style="margin-bottom:8px;">Turbine shutdown / full-service instrument checklist, scoped to your team. Progress persists across the whole outage — tap a category, work it, come back for the next whenever.</div>
 <div class="fn-form-grid">
-<div><label>Turbine Package</label><select id="iocPackage"><option>GE LM2500</option><option>Solar Turbines</option></select></div>
+<div><label>Package / Outage</label><select id="iocPackage"><option>GE LM2500</option><option>Solar Turbines</option><option value="__other__">Other (specify)…</option></select></div>
 <div><label>Scope</label><select id="iocScope"><option>Shutdown</option><option>Running</option><option>Full Service</option></select></div>
+<div class="fn-wide" id="iocPackageOtherWrap" style="display:none;"><label>Outage / Package Name</label><input id="iocPackageOther" placeholder="e.g. Compressor Train 2 Outage"/></div>
 <div><label>Technician</label><input id="iocTech" placeholder="Your name"/></div>
 <div><label>Work Order</label><input id="iocWO" placeholder="WO-12345"/></div>
 <div><label>Unit ID</label><input id="iocUnit" placeholder="GT-1"/></div>
@@ -16146,7 +16147,20 @@ function iocCategoryDetailHTML(){
 
 function iocRender(){
     var job=iocJob();
-    var pkgEl=document.getElementById('iocPackage'); if(pkgEl && pkgEl.value!==job.package) pkgEl.value=job.package;
+    var pkgEl=document.getElementById('iocPackage');
+    var pkgOtherWrap=document.getElementById('iocPackageOtherWrap');
+    var pkgOtherEl=document.getElementById('iocPackageOther');
+    var knownPackages=['GE LM2500','Solar Turbines'];
+    if(pkgEl){
+        if(knownPackages.indexOf(job.package)!==-1){
+            if(pkgEl.value!==job.package) pkgEl.value=job.package;
+            if(pkgOtherWrap) pkgOtherWrap.style.display='none';
+        } else {
+            if(pkgEl.value!=='__other__') pkgEl.value='__other__';
+            if(pkgOtherWrap) pkgOtherWrap.style.display='';
+            if(pkgOtherEl && document.activeElement!==pkgOtherEl) pkgOtherEl.value=job.package||'';
+        }
+    }
     var scopeEl=document.getElementById('iocScope'); if(scopeEl && scopeEl.value!==job.scope) scopeEl.value=job.scope;
     var techEl=document.getElementById('iocTech'); if(techEl && document.activeElement!==techEl) techEl.value=job.tech||'';
     var woEl=document.getElementById('iocWO'); if(woEl && document.activeElement!==woEl) woEl.value=job.workOrder||'';
@@ -16267,15 +16281,32 @@ document.addEventListener('DOMContentLoaded',function(){
     iocJob(); // ensure initialized
     window.iocRender=iocRender;
 
-    ['iocPackage','iocScope','iocWO','iocUnit','iocDate'].forEach(function(id){
+    ['iocScope','iocWO','iocUnit','iocDate'].forEach(function(id){
         var el=document.getElementById(id);
         if(!el) return;
         el.addEventListener('change',function(){
             var j=iocJob();
-            var map={iocPackage:'package',iocScope:'scope',iocWO:'workOrder',iocUnit:'unitId',iocDate:'date'};
+            var map={iocScope:'scope',iocWO:'workOrder',iocUnit:'unitId',iocDate:'date'};
             j[map[id]]=el.value;
             iocSaveJob(j); iocRender();
         });
+    });
+    var pkgSelEl=document.getElementById('iocPackage');
+    if(pkgSelEl) pkgSelEl.addEventListener('change',function(){
+        var j=iocJob();
+        if(pkgSelEl.value==='__other__'){
+            var otherEl=document.getElementById('iocPackageOther');
+            j.package=otherEl?otherEl.value.trim():'';
+            iocSaveJob(j); iocRender();
+            if(otherEl) otherEl.focus();
+        } else {
+            j.package=pkgSelEl.value;
+            iocSaveJob(j); iocRender();
+        }
+    });
+    var pkgOtherInputEl=document.getElementById('iocPackageOther');
+    if(pkgOtherInputEl) pkgOtherInputEl.addEventListener('change',function(){
+        var j=iocJob(); j.package=pkgOtherInputEl.value.trim(); iocSaveJob(j); iocRender();
     });
     var techEl=document.getElementById('iocTech');
     if(techEl) techEl.addEventListener('change',function(){
