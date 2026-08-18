@@ -6287,6 +6287,245 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <div class="tab" data-ref="grounding">Grounding &amp; Bonding</div>
 <div class="tab" data-ref="orifice">Orifice Sizing</div>
 <div class="tab" data-ref="torque">Torque Specs</div>
+<div class="tab" data-ref="report-samples">Report Samples</div>
+</div>
+<style id="report-samples-ref-styles">
+#ref-report-samples .rptx-intro{font-size:0.75rem;color:#64748b;margin:2px 0 12px 0;}
+#ref-report-samples .rptx-subtabs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;}
+#ref-report-samples .rptx-subtab{font-size:0.65rem;font-weight:700;padding:7px 11px;border-radius:9px;background:#f1f5f9;border:1px solid #e2e8f0;color:#64748b;cursor:pointer;}
+#ref-report-samples .rptx-subtab.active{background:#1e3a5f;color:#fff;border-color:#1e3a5f;}
+#ref-report-samples .rptx-doc{display:none;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 6px 18px rgba(15,23,42,.10);border:1px solid #e2e8f0;margin-bottom:10px;}
+#ref-report-samples .rptx-doc.active{display:block;}
+#ref-report-samples .rptx-head{background:linear-gradient(135deg,#14253d,#1e3a5f);color:#fff;padding:16px 16px;}
+#ref-report-samples .rptx-head .rptx-badge{display:inline-block;font-size:0.56rem;font-weight:800;letter-spacing:0.04em;background:rgba(255,255,255,.14);padding:3px 8px;border-radius:99px;margin-bottom:6px;}
+#ref-report-samples .rptx-head h4{margin:0 0 3px;font-size:0.9rem;color:#fff;}
+#ref-report-samples .rptx-head .rptx-sub{font-size:0.62rem;opacity:.85;}
+#ref-report-samples .rptx-head .rptx-meta{display:flex;justify-content:space-between;margin-top:9px;font-size:0.55rem;opacity:.75;}
+#ref-report-samples .rptx-infobar{display:grid;grid-template-columns:repeat(2,1fr);border-bottom:1px solid #e2e8f0;}
+#ref-report-samples .rptx-infobar div{padding:8px 10px;border-right:1px solid #e2e8f0;border-bottom:1px solid #e2e8f0;}
+#ref-report-samples .rptx-infobar div:nth-child(2n){border-right:0;}
+#ref-report-samples .rptx-infobar label{display:block;font-size:0.5rem;text-transform:uppercase;color:#64748b;font-weight:700;margin-bottom:1px;}
+#ref-report-samples .rptx-infobar span{font-size:0.66rem;font-weight:700;color:#1e293b;}
+#ref-report-samples .rptx-sec{padding:12px 14px;}
+#ref-report-samples .rptx-sec-title{font-size:0.7rem;font-weight:800;color:#1e3a5f;border-bottom:2px solid #e2e8f0;padding-bottom:5px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:baseline;}
+#ref-report-samples .rptx-sec-title small{font-weight:600;color:#64748b;font-size:0.56rem;}
+#ref-report-samples .rptx-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:6px;}
+#ref-report-samples .rptx-stat{background:#f8fafc;border:1px solid #e2e8f0;border-radius:9px;padding:7px 4px;text-align:center;}
+#ref-report-samples .rptx-stat b{display:block;font-size:0.85rem;color:#1e293b;}
+#ref-report-samples .rptx-stat span{font-size:0.5rem;color:#64748b;text-transform:uppercase;font-weight:700;}
+#ref-report-samples .rptx-stat.pass b{color:#16a34a;}
+#ref-report-samples .rptx-stat.fail b{color:#dc2626;}
+#ref-report-samples .rptx-stat.pend b{color:#d97706;}
+#ref-report-samples .rptx-narrative{background:#f8fafc;border-left:3px solid #1e3a5f;padding:8px 10px;border-radius:7px;font-size:0.64rem;line-height:1.45;color:#334155;margin:8px 0 0;}
+#ref-report-samples table.rptx-table{width:100%;border-collapse:collapse;font-size:0.6rem;}
+#ref-report-samples table.rptx-table th{text-align:left;background:#f8fafc;color:#64748b;font-size:0.52rem;text-transform:uppercase;padding:5px 6px;border-bottom:1px solid #e2e8f0;}
+#ref-report-samples table.rptx-table td{padding:6px 6px;border-bottom:1px solid #e2e8f0;color:#1e293b;}
+#ref-report-samples table.rptx-table tr:last-child td{border-bottom:0;}
+#ref-report-samples .rptx-pill{display:inline-block;font-size:0.54rem;font-weight:800;padding:2px 7px;border-radius:99px;}
+#ref-report-samples .rptx-pass{background:#dcfce7;color:#16a34a;}
+#ref-report-samples .rptx-fail{background:#fee2e2;color:#dc2626;}
+#ref-report-samples .rptx-pend{background:#fef3c7;color:#d97706;}
+#ref-report-samples .rptx-neutral{background:#eef2ff;color:#3730a3;}
+#ref-report-samples .rptx-entry{border-bottom:1px solid #e2e8f0;padding:7px 0;font-size:0.63rem;color:#1e293b;}
+#ref-report-samples .rptx-entry:last-child{border-bottom:0;}
+#ref-report-samples .rptx-entry b{font-size:0.65rem;}
+#ref-report-samples .rptx-entry .rptx-obs{color:#334155;margin-top:2px;}
+#ref-report-samples .rptx-foot{padding:8px 14px 12px;font-size:0.54rem;color:#64748b;display:flex;justify-content:space-between;border-top:1px solid #e2e8f0;}
+#ref-report-samples .rptx-src{font-size:0.56rem;color:#94a3b8;margin:0 0 8px 0;}
+#ref-report-samples .rptx-src code{background:#e2e8f0;padding:1px 4px;border-radius:4px;color:#334155;}
+@media(max-width:600px){#ref-report-samples .rptx-stats{grid-template-columns:repeat(2,1fr)!important;}}
+</style>
+<div class="ref-panel hidden" id="ref-report-samples">
+<div class="ref-section-head"><strong>Example Report Output</strong></div>
+<div class="rptx-intro">Mock samples of every report this app can generate, so you know what to expect before you build one. These are the reports outside the Report Studio itself (Field Notes → Log / Tasks / Outage).</div>
+<div class="rptx-subtabs" id="rptxSubTabs">
+<div class="rptx-subtab active" data-rptx="shift">Shift / Handover</div>
+<div class="rptx-subtab" data-rptx="task">Task Quick Summary</div>
+<div class="rptx-subtab" data-rptx="endperiod">End-of-Period</div>
+<div class="rptx-subtab" data-rptx="outage">Outage / Commissioning</div>
+</div>
+
+<div class="rptx-doc active" id="rptx-shift">
+<div class="rptx-src">Generated from Field Notes → Log tab → Build Report. Source: <code>rptModal</code></div>
+<div class="rptx-head">
+<span class="rptx-badge">FN-REPORT</span>
+<h4>Shift / Handover Report</h4>
+<div class="rptx-sub">Shift: Aug 18, 2026, 06:00 → Aug 18, 2026, 14:00</div>
+<div class="rptx-meta"><span>Report ID: FN-20260818140212</span><span>Generated: 8/18/2026, 2:02 PM</span></div>
+</div>
+<div class="rptx-infobar">
+<div><label>Reported By</label><span>M. Alvarez</span></div>
+<div><label>Handed Over To</label><span>R. Nakamura</span></div>
+<div><label>Range</label><span>This Shift</span></div>
+<div><label>Total Notes</label><span>7</span></div>
+</div>
+<div class="rptx-sec">
+<div class="rptx-sec-title">Summary</div>
+<div class="rptx-stats">
+<div class="rptx-stat"><b>7</b><span>Total</span></div>
+<div class="rptx-stat fail"><b>3</b><span>Open</span></div>
+<div class="rptx-stat fail"><b>1</b><span>High/Crit.</span></div>
+<div class="rptx-stat fail"><b>1</b><span>Overdue</span></div>
+<div class="rptx-stat pass"><b>4</b><span>Resolved</span></div>
+</div>
+<div class="rptx-narrative">7 notes recorded for this shift. 3 remain open at handover, including 1 high/critical priority item. 1 follow-up is overdue and should be prioritized by the incoming shift.</div>
+</div>
+<div class="rptx-sec">
+<div class="rptx-sec-title">Summary Table</div>
+<table class="rptx-table">
+<thead><tr><th>Time</th><th>Tag</th><th>Priority</th><th>Status</th><th>Observation</th></tr></thead>
+<tbody>
+<tr><td>06:14</td><td>PT-101</td><td><span class="rptx-pill rptx-fail">Critical</span></td><td>Open</td><td>Erratic reading on startup, suspect loose wiring</td></tr>
+<tr><td>07:40</td><td>TT-204</td><td><span class="rptx-pill rptx-neutral">Medium</span></td><td>In Progress</td><td>Thermowell corrosion, scheduled for replacement</td></tr>
+<tr><td>09:02</td><td>FT-310</td><td><span class="rptx-pill rptx-neutral">Low</span></td><td>Resolved</td><td>Re-zeroed after routine calibration check</td></tr>
+</tbody>
+</table>
+</div>
+<div class="rptx-sec">
+<div class="rptx-sec-title">Outstanding</div>
+<div class="rptx-entry"><b>PT-101</b> <span class="rptx-pill rptx-fail">Critical</span> · Open<div class="rptx-obs">Erratic reading on startup, suspect loose wiring at terminal block</div></div>
+<div class="rptx-entry"><b>TT-204</b> <span class="rptx-pill rptx-neutral">Medium</span> · In Progress<div class="rptx-obs">Thermowell showing corrosion, scheduled for replacement next outage</div></div>
+</div>
+<div class="rptx-foot"><span>InstrumentPro — Shift / Handover Report</span><span>Copy / Email / TXT / PDF / Share</span></div>
+</div>
+
+<div class="rptx-doc" id="rptx-task">
+<div class="rptx-src">Generated from Field Notes → Tasks tab → Generate (Quick Summary). Source: <code>iptQuickSummary()</code></div>
+<div class="rptx-head">
+<span class="rptx-badge">TQS</span>
+<h4>Daily Task Quick Summary</h4>
+<div class="rptx-sub">Mid-period status check — Tue, Aug 18 2026</div>
+<div class="rptx-meta"><span>Report ID: TQS-20260818093015</span><span>Generated: 8/18/2026, 9:30 AM</span></div>
+</div>
+<div class="rptx-infobar">
+<div><label>Technician</label><span>M. Alvarez</span></div>
+<div><label>Period</label><span>Today</span></div>
+<div><label>Tasks Scheduled</label><span>9</span></div>
+<div><label>Time Checked</label><span>9:30 AM</span></div>
+</div>
+<div class="rptx-sec">
+<div class="rptx-sec-title">Summary</div>
+<div class="rptx-stats">
+<div class="rptx-stat"><b>9</b><span>Scheduled</span></div>
+<div class="rptx-stat pass"><b>5</b><span>Completed</span></div>
+<div class="rptx-stat fail"><b>4</b><span>Outstanding</span></div>
+</div>
+<div class="rptx-narrative">5 of 9 tasks completed as of 9:30 AM. 4 remaining.</div>
+</div>
+<div class="rptx-sec">
+<div class="rptx-sec-title">Completed So Far <small>5</small></div>
+<table class="rptx-table">
+<thead><tr><th>Device</th><th>Tag</th><th>Result</th><th>Report ID</th></tr></thead>
+<tbody>
+<tr><td>Pressure Transmitter</td><td>PT-101</td><td><span class="rptx-pill rptx-pass">Pass</span></td><td>RS-88213</td></tr>
+<tr><td>Level Transmitter</td><td>LT-115</td><td><span class="rptx-pill rptx-fail">Fail</span></td><td>RS-88216</td></tr>
+</tbody>
+</table>
+</div>
+<div class="rptx-sec">
+<div class="rptx-sec-title">Outstanding <small>4</small></div>
+<table class="rptx-table">
+<thead><tr><th>Device</th><th>Tag</th><th>Status</th><th>Note</th></tr></thead>
+<tbody>
+<tr><td>Flame Detector</td><td>FD-012</td><td><span class="rptx-pill rptx-pend">Pending</span></td><td>Waiting on purge cart</td></tr>
+<tr><td>Solenoid Valve</td><td>SV-071</td><td><span class="rptx-pill rptx-pend">Pending</span></td><td>Carried from yesterday</td></tr>
+</tbody>
+</table>
+</div>
+<div class="rptx-foot"><span>InstrumentPro — Task Quick Summary</span><span>Downloads as PDF</span></div>
+</div>
+
+<div class="rptx-doc" id="rptx-endperiod">
+<div class="rptx-src">Generated from Field Notes → Tasks tab → Generate (End-of-Week Field Reports). Source: <code>iptFullReport()</code></div>
+<div class="rptx-head">
+<span class="rptx-badge">END-OF-PERIOD</span>
+<h4>End of Period Field Reports</h4>
+<div class="rptx-sub">Week of Aug 12–18, 2026</div>
+<div class="rptx-meta"><span>Report ID: EOP-20260818164500</span><span>Generated: 8/18/2026, 4:45 PM</span></div>
+</div>
+<div class="rptx-infobar">
+<div><label>Technician</label><span>M. Alvarez</span></div>
+<div><label>Period</label><span>This Week</span></div>
+<div><label>Total Tasks</label><span>12</span></div>
+<div><label>Time Checked</label><span>4:45 PM</span></div>
+</div>
+<div class="rptx-sec">
+<div class="rptx-sec-title">Summary</div>
+<div class="rptx-stats">
+<div class="rptx-stat"><b>12</b><span>Scheduled</span></div>
+<div class="rptx-stat pass"><b>9</b><span>Completed</span></div>
+<div class="rptx-stat fail"><b>3</b><span>Outstanding</span></div>
+</div>
+<div class="rptx-narrative">9 of 12 tasks completed for the week of Aug 12–18, 2026. 3 remaining, listed below with reasons.</div>
+</div>
+<div class="rptx-sec">
+<div class="rptx-sec-title">Bundled Full Field Reports <small>9, one per completed device</small></div>
+<table class="rptx-table">
+<thead><tr><th>Device</th><th>Tag</th><th>Completed</th></tr></thead>
+<tbody>
+<tr><td>Pressure Transmitter</td><td>PT-101</td><td>8/12, 8:14 AM</td></tr>
+<tr><td>Temperature Transmitter</td><td>TT-204</td><td>8/13, 10:02 AM</td></tr>
+</tbody>
+</table>
+</div>
+<div class="rptx-sec">
+<div class="rptx-sec-title">Outstanding <small>3</small></div>
+<table class="rptx-table">
+<thead><tr><th>Tag</th><th>Device</th><th>Reason</th></tr></thead>
+<tbody>
+<tr><td>FD-012</td><td>Flame Detector</td><td>Waiting on nitrogen purge cart</td></tr>
+<tr><td>SP-004</td><td>Speed Probe</td><td>Access permit needed</td></tr>
+</tbody>
+</table>
+</div>
+<div class="rptx-foot"><span>InstrumentPro — End of Period Field Reports</span><span>Opens print-ready in a new tab</span></div>
+</div>
+
+<div class="rptx-doc" id="rptx-outage">
+<div class="rptx-src">Generated from Field Notes → Tasks tab → Outage panel → Generate Report. Source: <code>iocBuildReport()</code></div>
+<div class="rptx-head">
+<span class="rptx-badge">OUTAGE</span>
+<h4>Full Outage Report</h4>
+<div class="rptx-sub">All items — all team members</div>
+<div class="rptx-meta"><span>Report ID: OC-lz3k9-a7f2q</span><span>Generated: 8/18/2026, 5:10 PM</span></div>
+</div>
+<div class="rptx-infobar">
+<div><label>Package / Outage</label><span>GE LM2500</span></div>
+<div><label>Scope</label><span>Shutdown</span></div>
+<div><label>Unit ID</label><span>GT-1</span></div>
+<div><label>Work Order</label><span>WO-48213</span></div>
+</div>
+<div class="rptx-sec">
+<div class="rptx-sec-title">Summary</div>
+<div class="rptx-stats">
+<div class="rptx-stat"><b>42</b><span>Total</span></div>
+<div class="rptx-stat pass"><b>31</b><span>Complete</span></div>
+<div class="rptx-stat pend"><b>11</b><span>Pending</span></div>
+</div>
+<div class="rptx-narrative">31 of 42 checklist items complete (74%). 4 item(s) failed and require attention. 11 item(s) remain pending.</div>
+</div>
+<div class="rptx-sec">
+<div class="rptx-sec-title">Pressure Transmitters <small>9 items</small></div>
+<table class="rptx-table">
+<thead><tr><th>Tag</th><th>Assigned</th><th>Status</th><th>Result</th></tr></thead>
+<tbody>
+<tr><td>PT-101</td><td>M. Alvarez</td><td><span class="rptx-pill rptx-pass">Complete</span></td><td><span class="rptx-pill rptx-pass">Pass</span></td></tr>
+<tr><td>PT-118</td><td>R. Nakamura</td><td><span class="rptx-pill rptx-pend">Pending</span></td><td>—</td></tr>
+</tbody>
+</table>
+</div>
+<div class="rptx-sec">
+<div class="rptx-sec-title">Pressure Transmitters — Calibration Points</div>
+<table class="rptx-table">
+<thead><tr><th>Tag</th><th>Point</th><th>Expected</th><th>As-Found</th><th>Result</th></tr></thead>
+<tbody>
+<tr><td>PT-101</td><td>50%</td><td>75.000</td><td>75.310</td><td><span class="rptx-pill rptx-pass">PASS</span></td></tr>
+</tbody>
+</table>
+</div>
+<div class="rptx-foot"><span>InstrumentPro — Full Outage Report</span><span>Also available as "Mine" or "By Team Member"</span></div>
+</div>
+
 </div>
 <div class="ref-panel hidden" id="ref-formulas">
 <div class="ref-section-head"><strong>Pressure</strong></div>
@@ -11258,6 +11497,18 @@ body.dark .colorpick-hexwrap input{background:#0f172a;border-color:#334155;color
                 });
             });
 
+            // Report Samples sub-tabs (nested inside the References tab)
+            document.querySelectorAll('#rptxSubTabs .rptx-subtab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    document.querySelectorAll('#rptxSubTabs .rptx-subtab').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    const key = this.dataset.rptx;
+                    document.querySelectorAll('#ref-report-samples .rptx-doc').forEach(d => d.classList.remove('active'));
+                    const doc = document.getElementById('rptx-' + key);
+                    if (doc) doc.classList.add('active');
+                });
+            });
+
             // Troubleshooting now runs entirely through the device/failure-mode
             // modal wizard (see troubleModal / troubleStartBtn at the bottom of
             // this file) — the old select/button based flow was removed.
@@ -15849,26 +16100,91 @@ function iptFullReport(){
         return '<div style="page-break-after:always;">'+header+body+'</div>';
     }).join('');
 
+    var pct=tasks.length?Math.round(completed.length/tasks.length*100):0;
+
     var outstandingRows=outstanding.map(function(t){
-        return '<tr><td style="padding:6px;border-bottom:1px solid #e2e8f0;">'+iptEsc(t.tag)+'</td><td style="padding:6px;border-bottom:1px solid #e2e8f0;">'+iptEsc(t.deviceType)+'</td><td style="padding:6px;border-bottom:1px solid #e2e8f0;">'+iptEsc(t.note||'Not stated')+'</td></tr>';
+        return '<tr><td>'+iptEsc(t.tag)+'</td><td>'+iptEsc(t.deviceType)+'</td><td><span class="badge-pill b-pend">Pending</span></td><td>'+iptEsc(t.note||'Not stated')+'</td></tr>';
     }).join('');
-    var outstandingBlock='<div style="max-width:820px;margin:24px auto;font-family:Arial,sans-serif;">'+
-        '<h3 style="font-size:14px;border-bottom:1px solid #ddd;padding-bottom:5px;">Outstanding ('+outstanding.length+')</h3>'+
-        (outstanding.length ? '<table style="width:100%;border-collapse:collapse;font-size:11px;"><tr><th style="text-align:left;padding:6px;">Tag</th><th style="text-align:left;padding:6px;">Device</th><th style="text-align:left;padding:6px;">Reason / Note</th></tr>'+outstandingRows+'</table>' : '<p style="font-size:11px;color:#64748b;">None — all tasks complete.</p>')+
+    var outstandingBlock='<div class="sec">'+
+        '<div class="sec-title">Outstanding <small>'+outstanding.length+'</small></div>'+
+        (outstanding.length ? '<table class="rtable"><thead><tr><th>Tag</th><th>Device</th><th>Status</th><th>Reason / Note</th></tr></thead><tbody>'+outstandingRows+'</tbody></table>' : '<p style="font-size:.72rem;color:var(--muted);">None — all tasks complete.</p>')+
         '</div>';
 
-    var titleBlock='<div style="max-width:820px;margin:0 auto 6px;font-family:Arial,sans-serif;">'+
-        '<h2 style="margin:0 0 4px;">InstrumentPro — End of Period Field Reports</h2>'+
-        '<div style="font-size:11px;color:#64748b;">'+iptEsc(iptPeriodLabel(meta.mode,meta.date))+' • Technician: '+iptEsc(meta.technician||'—')+' • Generated '+new Date().toLocaleString()+
-        ' • Total tasks: '+tasks.length+' • Completed: '+completed.length+' • Outstanding: '+outstanding.length+'</div></div>';
+    var completedRows=completed.map(function(t){
+        return '<tr><td>'+iptEsc(t.deviceType)+'</td><td>'+iptEsc(t.tag)+'</td><td>'+(t.completedAt?new Date(t.completedAt).toLocaleString():'—')+'</td><td>'+iptEsc(t.note||'—')+'</td></tr>';
+    }).join('');
+    var completedTable=completed.length ? '<div class="sec"><div class="sec-title">Bundled Full Field Reports <small>'+completed.length+', one per completed device, page-broken</small></div>'+
+        '<table class="rtable"><thead><tr><th>Device</th><th>Tag</th><th>Completed</th><th>Note</th></tr></thead><tbody>'+completedRows+'</tbody></table></div>' : '';
+
+    var titleBlock='<div class="rhead">'+
+        '<span class="badge">END-OF-PERIOD</span>'+
+        '<h2>End of Period Field Reports</h2>'+
+        '<div class="sub">'+iptEsc(iptPeriodLabel(meta.mode,meta.date))+'</div>'+
+        '<div class="meta"><span>Report ID: EOP-'+Date.now()+'</span><span>Generated: '+new Date().toLocaleString()+'</span></div>'+
+        '</div>'+
+        '<div class="infobar">'+
+        '<div><label>Technician</label><span>'+iptEsc(meta.technician||'—')+'</span></div>'+
+        '<div><label>Period</label><span>'+(meta.mode==='day'?'Today':'This Week')+'</span></div>'+
+        '<div><label>Total Tasks</label><span>'+tasks.length+'</span></div>'+
+        '<div><label>Time Checked</label><span>'+new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})+'</span></div>'+
+        '</div>'+
+        '<div class="sec">'+
+        '<div class="sec-title">Summary</div>'+
+        '<div class="stats">'+
+        '<div class="stat"><b>'+tasks.length+'</b><span>Scheduled</span></div>'+
+        '<div class="stat pass"><b>'+completed.length+'</b><span>Completed</span></div>'+
+        '<div class="stat '+(outstanding.length?'fail':'')+'"><b>'+outstanding.length+'</b><span>Outstanding</span></div>'+
+        '<div class="stat"><b>'+pct+'%</b><span>Progress</span></div>'+
+        '<div class="stat"><b>'+tasks.filter(function(t){return t.carriedFrom;}).length+'</b><span>Carried Over</span></div>'+
+        '</div>'+
+        '<div class="narrative">'+completed.length+' of '+tasks.length+' tasks completed for '+iptEsc(iptPeriodLabel(meta.mode,meta.date))+'.'+(outstanding.length?' '+outstanding.length+' remaining, listed below with reasons.':' All tasks complete.')+'</div>'+
+        '</div>';
+
+    var footer='<div class="footer"><span>InstrumentPro — End of Period Field Reports</span><span>Print view</span></div>';
+
+    var style='body{background:#f1f5f9;padding:20px;font-family:Arial,Helvetica,sans-serif;color:#1e293b;}'+
+        '.doc{max-width:820px;margin:0 auto;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 8px 24px rgba(15,23,42,.08);}'+
+        '.rhead{background:linear-gradient(135deg,#14253d,#1e3a5f);color:#fff;padding:20px 22px;}'+
+        '.rhead .badge{display:inline-block;font-size:.6rem;font-weight:800;letter-spacing:.04em;background:rgba(255,255,255,.14);padding:3px 9px;border-radius:99px;margin-bottom:8px;}'+
+        '.rhead h2{margin:0 0 3px;font-size:1.15rem;}'+
+        '.rhead .sub{font-size:.72rem;opacity:.85;}'+
+        '.rhead .meta{display:flex;justify-content:space-between;margin-top:12px;font-size:.62rem;opacity:.75;}'+
+        '.infobar{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid #e2e8f0;}'+
+        '.infobar div{padding:10px 12px;border-right:1px solid #e2e8f0;}'+
+        '.infobar div:last-child{border-right:0;}'+
+        '.infobar label{display:block;font-size:.55rem;text-transform:uppercase;color:#64748b;font-weight:700;margin-bottom:2px;}'+
+        '.infobar span{font-size:.72rem;font-weight:700;}'+
+        '.sec{padding:16px 20px;}'+
+        '.sec-title{font-size:.78rem;font-weight:800;color:#1e3a5f;border-bottom:2px solid #e2e8f0;padding-bottom:6px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:baseline;}'+
+        '.sec-title small{font-weight:600;color:#64748b;font-size:.62rem;}'+
+        '.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:6px;}'+
+        '.stat{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:9px 6px;text-align:center;}'+
+        '.stat b{display:block;font-size:1rem;}'+
+        '.stat span{font-size:.55rem;color:#64748b;text-transform:uppercase;font-weight:700;}'+
+        '.stat.pass b{color:#16a34a;} .stat.fail b{color:#dc2626;}'+
+        '.narrative{background:#f8fafc;border-left:3px solid #1e3a5f;padding:9px 12px;border-radius:8px;font-size:.72rem;line-height:1.5;color:#334155;margin:10px 0 0;}'+
+        'table.rtable{width:100%;border-collapse:collapse;font-size:.68rem;}'+
+        'table.rtable th{text-align:left;background:#f8fafc;color:#64748b;font-size:.58rem;text-transform:uppercase;padding:6px 8px;border-bottom:1px solid #e2e8f0;}'+
+        'table.rtable td{padding:7px 8px;border-bottom:1px solid #e2e8f0;}'+
+        'table.rtable tr:last-child td{border-bottom:0;}'+
+        '.badge-pill{display:inline-block;font-size:.6rem;font-weight:800;padding:2px 8px;border-radius:99px;}'+
+        '.b-pend{background:#fef3c7;color:#d97706;}'+
+        '.footer{padding:10px 20px 16px;font-size:.6rem;color:#64748b;display:flex;justify-content:space-between;border-top:1px solid #e2e8f0;}'+
+        '.ipt-print-bar{max-width:820px;margin:0 auto 14px;text-align:right;}'+
+        '.ipt-print-bar button{background:#1e3a5f;color:#fff;border:0;padding:8px 14px;border-radius:8px;font-size:12px;cursor:pointer;}'+
+        '@media print{body{background:#fff;padding:0;} .ipt-print-bar{display:none;} .page-break-after{page-break-after:always;} .doc{box-shadow:none;border-radius:0;}}';
 
     var html='<!doctype html><html><head><meta charset="utf-8"><title>End of Period Field Reports</title>'+
-        '<style>body{background:#f1f5f9;padding:20px;} .ipt-print-bar{max-width:820px;margin:0 auto 14px;text-align:right;} .ipt-print-bar button{background:#1e3a5f;color:#fff;border:0;padding:8px 14px;border-radius:8px;font-size:12px;cursor:pointer;} @media print{body{background:#fff;padding:0;} .ipt-print-bar{display:none;} .page-break-after{page-break-after:always;}}</style>'+
+        '<style>'+style+'</style>'+
         '</head><body>'+
         '<div class="ipt-print-bar"><button onclick="window.print()">Print / Save as PDF</button></div>'+
+        '<div class="doc">'+
         titleBlock+
+        completedTable+
         (completed.length ? sections : '<p style="max-width:820px;margin:24px auto;font-family:Arial,sans-serif;font-size:12px;color:#64748b;">No tasks completed this period.</p>')+
         outstandingBlock+
+        footer+
+        '</div>'+
         '</body></html>';
 
     var w=window.open('','_blank');
