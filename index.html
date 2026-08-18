@@ -7814,6 +7814,7 @@ body.dark .colorpick-hexwrap input{background:#0f172a;border-color:#334155;color
 <option>Rupture Disc</option>
 <option>Control Valve</option>
 <option>Shut-off / On-off Valve</option>
+<option>Motorized Valve</option>
 <option>Vibration Probe</option>
 <option>Axial Displacement Probe</option>
 <option>Speed Probe</option>
@@ -13240,6 +13241,13 @@ var DEVICE_CONFIG={
     ['Valve action','select','Normally Closed,Normally Open'],['Actuator','select','Pneumatic,Electric,Hydraulic,Manual'],['Supply pressure','text','bar / psi'],['Solenoid','text','Solenoid tag / model'],['Open/close feedback','select','Open & Closed verified,Not fitted'],['Required stroke time','text','If specified']
    ], tests:['Supply pressure','Command OPEN','Open position feedback','Command CLOSE','Closed position feedback','Solenoid operation','Stroke time','Return to service']
  },
+ 'Motorized Valve':{
+   icon:'fa-gear', mode:'mov', description:'Motorized (electric actuator) valve verification of local/remote control, torque/limit switch settings, stroke time and position feedback.',
+   units:'s,%,Nm,A', range:'Stroke time / travel, e.g. 0-100% travel', tolerance:'Approved stroke time limit (OEM/process spec)',
+   fields:[
+    ['Actuator make/model','text','e.g. Rotork / AUMA / Limitorque + model'],['Valve action','select','Normally Closed,Normally Open,Modulating'],['Control mode','select','Local,Remote,Off (isolated)'],['Supply voltage','text','VAC/VDC'],['Torque switch setting','text','Open / Close torque values'],['Limit switch setting','text','Open / Close limit values'],['Open/close feedback','select','Open & Closed verified,Not fitted'],['Required stroke time','text','If specified']
+   ], tests:['Supply voltage / power','Local control — OPEN','Local control — CLOSE','Remote control — OPEN','Remote control — CLOSE','Torque switch trip (Open/Close)','Limit switch position feedback','Stroke time','Motor current draw','Return to service']
+ },
  'Vibration Probe':{
    icon:'fa-wave-square', mode:'probe', description:'Vibration probe field test: simulated signal, gap/installation and signal supply/voltage verification.',
    units:'mm/s,g,µm,mils', range:'e.g. 0-25 mm/s (alarm/trip range)', tolerance:'API 670 / OEM alarm-trip tolerance',
@@ -14264,6 +14272,36 @@ const D = {
     }
   },
 
+  motorizedvalve: {
+    n:'Motorized valve',
+    s:{
+      command:['Valve does not respond to local/remote command',
+        'Verify the command at the source (local pushbutton or DCS/PLC), then check the local/remote/off selector position and supply voltage to the actuator.',
+        'Selector left in the wrong mode, loss of control power, wiring fault, tripped thermal overload or a failed actuator control board can prevent movement.',
+        'Prove the control mode and supply first, then perform the approved functional stroke test in both local and remote.'],
+      torque:['Valve trips on torque before reaching end position',
+        'Check the torque switch setting against the approved value and inspect for mechanical obstruction or seat binding.',
+        'Torque switch set too low, valve seat/stem binding, debris in the line or an over-tight packing gland can cause a premature torque trip.',
+        'Verify torque settings against the datasheet and confirm free mechanical movement before adjusting.'],
+      feedback:['Valve moves but position feedback is incorrect or missing',
+        'Compare the physical valve position with the OPEN/CLOSED feedback at the same time, both locally and at the DCS/PLC.',
+        'Limit switch/torque switch cam misadjustment, feedback wiring fault or a failed potentiometer/transmitter can give incorrect status.',
+        'Verify the physical end position and inspect the limit switch cams and feedback wiring before replacing the actuator.'],
+      stroke:['Valve stroke is slow or incomplete',
+        'Measure the opening/closing time and compare it with the approved baseline; check motor current during the stroke.',
+        'Low supply voltage, a failing motor, gearbox wear, mechanical resistance or an incorrect torque setting can slow or limit travel.',
+        'Check supply voltage, motor current and mechanical travel under the approved procedure.'],
+      nofeedback:['No OPEN/CLOSED indication at DCS/PLC',
+        'Check the limit switches and the input channel receiving their status; confirm the actuator is not in local/off mode.',
+        'A failed limit switch, misadjusted cam, broken linkage or wiring/input fault can remove position indication.',
+        'Prove the physical valve position independently, then test each feedback channel and the control mode selector.'],
+      overload:['Motor overload trips or actuator overheats',
+        'Check supply voltage/phase balance and measure running current against the actuator nameplate rating.',
+        'Undervoltage, single-phasing, an obstructed valve, seized gearbox or a failing motor winding can cause overload trips.',
+        'Confirm supply quality and free mechanical movement before returning the actuator to service.']
+    }
+  },
+
   speedprobe: {
     n:'Speed probe',
     s:{
@@ -15111,6 +15149,7 @@ const devices = [
   ['positioner','Valve Positioner'],
   ['shutdownvalve','Shutdown / ESD valve'],
   ['onoff','Shut-off / On-off valve'],
+  ['motorizedvalve','Motorized valve'],
   ['speedprobe','Speed probe'],
   ['vibprobe','Vibration probe'],
   ['gasdet','Gas detector'],
