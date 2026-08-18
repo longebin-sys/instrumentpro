@@ -7698,7 +7698,7 @@ body.dark .colorpick-hexwrap input{background:#0f172a;border-color:#334155;color
 <i class="fas fa-route"></i>
 <div>
 <strong>Device-specific workflow</strong>
-<span>Device → failure mode → first field check</span>
+<span>Device → failure mode → guided field questions → diagnostic direction</span>
 </div>
 </div>
 <div aria-hidden="true" class="trouble-modal" id="troubleModal">
@@ -7722,6 +7722,7 @@ body.dark .colorpick-hexwrap input{background:#0f172a;border-color:#334155;color
 <div><b><i class="fas fa-search"></i> Check first</b><p id="troubleCheck"></p></div>
 <div><b><i class="fas fa-microscope"></i> Possible cause</b><p id="troubleCause"></p></div>
 <div><b><i class="fas fa-vial"></i> Verify</b><p id="troubleVerify"></p></div>
+<div><b><i class="fas fa-route"></i> Decision path</b><p id="troubleDecision"></p></div>
 </div>
 <div class="trouble-safety"><i class="fas fa-shield-alt"></i><span>Use the approved isolation, permit, ESD/FGS and OEM procedures before intrusive testing. Never bypass a safety function to prove a fault.</span></div>
 </div>
@@ -7815,6 +7816,7 @@ body.dark .colorpick-hexwrap input{background:#0f172a;border-color:#334155;color
 <option>Control Valve</option>
 <option>Shut-off / On-off Valve</option>
 <option>Motorized Valve</option>
+<option>Wellhead Control Panel</option>
 <option>Vibration Probe</option>
 <option>Axial Displacement Probe</option>
 <option>Speed Probe</option>
@@ -13248,6 +13250,13 @@ var DEVICE_CONFIG={
     ['Actuator make/model','text','e.g. Rotork / AUMA / Limitorque + model'],['Valve action','select','Normally Closed,Normally Open,Modulating'],['Control mode','select','Local,Remote,Off (isolated)'],['Supply voltage','text','VAC/VDC'],['Torque switch setting','text','Open / Close torque values'],['Limit switch setting','text','Open / Close limit values'],['Open/close feedback','select','Open & Closed verified,Not fitted'],['Required stroke time','text','If specified']
    ], tests:['Supply voltage / power','Local control — OPEN','Local control — CLOSE','Remote control — OPEN','Remote control — CLOSE','Torque switch trip (Open/Close)','Limit switch position feedback','Stroke time','Motor current draw','Return to service']
  },
+ 'Wellhead Control Panel':{
+   icon:'fa-oil-well', mode:'whcp', description:'Wellhead control panel verification covering hydraulic/pneumatic supply, SSV/SCSSV response, ESD reset logic, local/remote control and backup supply.',
+   units:'bar,psi,s,%', range:'Panel supply / SCSSV opening pressure, e.g. 0-3000 psi', tolerance:'OEM / approved setpoint tolerance',
+   fields:[
+    ['Panel type / make','text','e.g. hydraulic, pneumatic, electro-hydraulic + make/model'],['Supply pressure','text','Accumulator / header pressure bar / psi'],['SCSSV control line pressure','text','Opening pressure at panel'],['Control mode','select','Local,Remote,Off (isolated)'],['N2 / backup supply pressure','text','Bottle bank pressure'],['Chemical injection pump','select','Running,Not running,N/A'],['ESD status prior to test','select','Reset / Normal,Latched / Tripped']
+   ], tests:['Supply pressure / accumulator check','SSV open/close','SCSSV open/close','ESD trip function','ESD reset function','Local/Remote control changeover','Choke position feedback','Chemical injection rate','N2/backup supply changeover','Return to service']
+ },
  'Vibration Probe':{
    icon:'fa-wave-square', mode:'probe', description:'Vibration probe field test: simulated signal, gap/installation and signal supply/voltage verification.',
    units:'mm/s,g,µm,mils', range:'e.g. 0-25 mm/s (alarm/trip range)', tolerance:'API 670 / OEM alarm-trip tolerance',
@@ -14302,6 +14311,52 @@ const D = {
     }
   },
 
+  whcp: {
+    n:'Wellhead control panel',
+    s:{
+      nosupply:['No hydraulic/pneumatic supply pressure to panel',
+        'Check accumulator pre-charge, supply pump/compressor status, and the panel inlet isolation valve.',
+        'Failed pump/compressor, empty accumulator bottles, a closed isolation valve, or a major leak in the supply header can remove panel supply.',
+        'Confirm supply pressure at the panel gauge matches the accumulator bank before troubleshooting downstream.'],
+      scssv:['SCSSV (downhole safety valve) fails to open',
+        'Check control line pressure at the panel against the required opening pressure and confirm pilot valve position.',
+        'A leak in the long control line to the downhole valve, a stuck pilot, or valve spring/seal failure downhole can prevent opening.',
+        'Pressure-test the control line and confirm the pilot shifts fully before assuming a downhole valve fault.'],
+      ssv:['SSV (surface safety valve) fails to open or won\'t hold',
+        'Check actuator supply pressure and pilot valve at the panel, then do a local visual on the valve itself.',
+        'A pilot valve fault, actuator seal leak, or an ESD trip still latched can cause this.',
+        'Confirm ESD reset status first — a latched trip looks identical to a valve fault.'],
+      noreset:['Panel won\'t reset after ESD trip',
+        'Check the status of all ESD inputs (PSHH/PSLL, fire & gas, manual pull stations) and the panel\'s reset pilot.',
+        'An input that hasn\'t actually cleared, a second panel/master ESD still latched, or a faulty reset pilot can block the reset.',
+        'Walk down every trip input before resetting — resetting with an active trip present is a safety violation.'],
+      sluggish:['Erratic or sluggish valve response (SSV/SCSSV/wing/master)',
+        'Check hydraulic fluid condition for water/debris contamination and time the pilot valve response.',
+        'Contaminated fluid, a partially blocked control line, or a sticking/worn pilot valve can cause this.',
+        'Sample the fluid and time the stroke against baseline before replacing components.'],
+      localremote:['Local/Remote control mismatch',
+        'Check the selector switch position at the panel and the signal/tubing path from remote (SCADA/RTU or master ESD panel).',
+        'Selector left in the wrong mode, a broken pneumatic/electric signal line, or an RTU output fault can cause this.',
+        'Confirm the selector position physically, then trace the remote signal path end-to-end.'],
+      chemsupply:['Chemical injection pump not delivering / low rate',
+        'Check the suction supply, pump stroke rate/setting, and discharge check valve.',
+        'An empty chemical tank, an air lock, worn pump packing, or a stuck/leaking check valve can cause this.',
+        'Confirm tank level and re-prime before adjusting the stroke rate.'],
+      chokefb:['Choke valve position feedback incorrect',
+        'Compare the physical choke position with the panel/SCADA indication.',
+        'A feedback potentiometer/transmitter fault, linkage slip, or wiring fault can cause this.',
+        'Verify the physical position independently before trusting the indicated reading.'],
+      pttx:['Pressure transmitter (WHP/CHP/FLP) reading suspect',
+        'Compare the reading against a local gauge at the same tap point.',
+        'A blocked impulse line, transmitter drift, or a wiring/loop fault can cause this.',
+        'Isolate and blow down the impulse line before recalibrating or replacing the transmitter.'],
+      n2backup:['Nitrogen/gas backup system low or not cutting in',
+        'Check the N2 bottle bank pressure and the automatic changeover regulator.',
+        'Depleted bottles, a failed regulator, or a stuck changeover valve can cause this.',
+        'Confirm the changeover setpoint and bottle pressure before relying on the backup supply during work.']
+    }
+  },
+
   speedprobe: {
     n:'Speed probe',
     s:{
@@ -15137,6 +15192,58 @@ const D = {
         'Confirm the GC is currently validating against a known reference gas before trusting an energy-content-based custody transfer result — an LNG quantity is only as good as the GCV behind it.']
     }
   },
+
+  loop420: {
+    n:'4–20 mA Loop / Analog Signal',
+    s:{
+      dead:['Loop is dead / near 0 mA',
+        'Measure loop supply at the transmitter terminals, then verify polarity and continuity through the complete loop before replacing the instrument.',
+        'Loss of 24 VDC, open circuit, reversed polarity, blown fuse/isolator, excessive loop burden, or a failed transmitter can produce a dead loop.',
+        'Prove supply, continuity and transmitter terminal voltage in that order; only then isolate the transmitter as the fault.'],
+      fixed:['Loop is stuck at a fixed current (for example 4, 12 or 20 mA)',
+        'Compare the measured loop current with the transmitter PV, sensor input and any active simulation/fixed-output mode.',
+        'A forced output, saturated input, sensor fault, incorrect range, loop card configuration or a transmitter failure can hold the current at a fixed value.',
+        'Check device status/diagnostics and HART configuration before recalibrating; a fixed output may be intentional.'],
+      wrong:['PLC/DCS value does not match the measured loop current',
+        'Measure current at the field end and compare it with the value at the I/O terminal and the controller tag at the same instant.',
+        'Wrong input range, scaling, card configuration, isolator/repeater error, grounding/noise or a channel fault can create a mismatch even when the transmitter is correct.',
+        'Prove the signal at three points—field, I/O terminal and controller tag—to locate where the error begins.'],
+      overrange:['Loop is above 20 mA or below the normal 4 mA range',
+        'Check the transmitter diagnostics/failure-current setting and compare the actual process value with LRV/URV.',
+        'NAMUR-style fault current, sensor failure, over-range process conditions, wrong scaling or a configuration error can push the loop outside normal measurement range.',
+        'Determine whether the current is a configured fault signal or a genuine process over-range before changing calibration.'],
+      noisy:['4–20 mA signal is noisy or jumps',
+        'Trend the current and compare it with process movement; inspect shielding, grounding, cable routing and nearby VFD/motor equipment.',
+        'Electrical interference, ground loops, damaged shielding, unstable power or genuine process pulsation can create a noisy analog signal.',
+        'Separate electrical noise from process instability by checking the field current against an independent process reference.'],
+      hart:['4–20 mA works but HART will not communicate',
+        'Verify loop power, total loop load/resistance, communicator connections and device address before changing the transmitter configuration.',
+        'Insufficient loop resistance, low loop voltage, incorrect wiring/addressing or an unsuitable isolator/I/O path can prevent the HART digital signal from being detected.',
+        'Confirm the analog loop is healthy first, then verify the HART communication path and required load according to the installed device/system.']
+    }
+  },
+
+  ipconverter: {
+    n:'I/P Converter',
+    s:{
+      nooutput:['I/P has 4–20 mA input but no pneumatic output',
+        'Measure the actual input current at the I/P and the instrument-air pressure at its supply port, then check output pressure.',
+        'Missing/incorrect air supply, blocked nozzle, contaminated pilot stage, failed coil/electronics or incorrect input signal can prevent output.',
+        'Prove input current and clean/dry air first, then verify output pressure against the I/P range before replacing it.'],
+      wrongoutput:['I/P output pressure is wrong for the input current',
+        'Check 4 mA and 20 mA points and compare measured output pressure with the I/P nameplate/range.',
+        'Incorrect calibration, restricted air, nozzle/flapper contamination, supply-pressure variation or an incorrect I/P range can shift the output.',
+        'Verify both endpoints and supply pressure before adjusting zero/span.'],
+      unstable:['I/P output pressure fluctuates',
+        'Hold the input current steady and trend output pressure while checking air quality, supply stability and tubing leaks.',
+        'Wet/dirty instrument air, unstable supply, contamination or loose electrical connections can cause fluctuating output.',
+        'Prove stable air and input current first; then isolate the I/P from downstream actuator effects.'],
+      slow:['I/P response is slow',
+        'Apply a controlled input step and compare response time with the expected baseline while checking supply pressure and downstream restrictions.',
+        'Restricted tubing, clogged filters/nozzles, low supply pressure or a sluggish internal stage can slow response.',
+        'Check the complete pneumatic path before replacing the I/P.']
+    }
+  }
 };
 
 window.D = D; // exposed for the AI Technician knowledge base
@@ -15144,12 +15251,15 @@ window.D = D; // exposed for the AI Technician knowledge base
 const devices = [
   ['level','Level transmitter'],
   ['pressure','Pressure transmitter'],
+  ['loop420','4–20 mA Loop / Analog Signal'],
+  ['ipconverter','I/P Converter'],
   ['flow','Flow meter'],
   ['controlvalve','Control valve'],
   ['positioner','Valve Positioner'],
   ['shutdownvalve','Shutdown / ESD valve'],
   ['onoff','Shut-off / On-off valve'],
   ['motorizedvalve','Motorized valve'],
+  ['whcp','Wellhead control panel'],
   ['speedprobe','Speed probe'],
   ['vibprobe','Vibration probe'],
   ['gasdet','Gas detector'],
@@ -15208,7 +15318,219 @@ const devices = [
 ];
 window.devices = devices; // exposed for the AI Technician knowledge base
 
-const state = {device:null, symptom:null, step:1};
+const state = {device:null, symptom:null, step:1, answers:[], questions:[]};
+
+/*
+ * Advanced field decision questions.
+ * These are deliberately practical: prove the process/reference first,
+ * then separate process, sensing, loop, configuration and final-element faults.
+ * The templates are reused across the existing device database so every
+ * troubleshooting item can become deeper without duplicating the core D[] data.
+ */
+const ADV = {
+  loop420: {
+    dead: [
+      ['Is there the expected DC supply at the transmitter terminals?', [['Yes','Supply is present — move to loop continuity/polarity.'],['No','Focus on power supply, fuse, isolator, polarity or field wiring.']]],
+      ['Is the loop physically continuous from field to I/O and back to supply?', [['Yes','Continuity is proven — check device burden/input requirements.'],['No','Focus on open circuit, loose terminal, blown fuse or broken cable.']]],
+      ['Is transmitter terminal voltage within the manufacturer minimum under load?', [['Yes','Power compliance is likely — test transmitter/sensor.'],['No','Focus on excessive loop burden, weak supply or wiring resistance.']]],
+      ['Does a calibrated loop source make the PLC/DCS read correctly?', [['Yes','Downstream loop is proven — focus on transmitter/sensor.'],['No','Focus on isolator, I/O channel, scaling or wiring between field and controller.']]]
+    ],
+    fixed: [
+      ['Does the transmitter PV change when the real process changes?', [['Yes','The sensor/PV is alive — inspect output forcing, scaling or loop path.'],['No','Focus on sensor failure, input saturation, configuration or frozen PV.']]],
+      ['Is the transmitter in simulation, fixed-output, loop-test or multidrop mode?', [['Yes','A commanded/fixed output is likely intentional — exit the test mode per procedure.'],['No','Continue to the sensor, range and output diagnostics.']]],
+      ['Does HART/device status show a sensor or process diagnostic?', [['Yes','Follow the device diagnostic before recalibration.'],['No','Focus on range, damping, output trim and loop hardware.']]],
+      ['Does the measured current change when a calibrated current source replaces the transmitter?', [['Yes','Downstream loop is functional — transmitter/configuration is the likely area.'],['No','Focus on I/O, isolator, wiring or scaling.']]]
+    ],
+    wrong: [
+      ['Does measured field current agree with the transmitter display/PV?', [['Yes','The transmitter is likely correct — trace the downstream loop.'],['No','Focus on transmitter output configuration, sensor input or output trim.']]],
+      ['Does the current at the I/O terminal match the field-end current?', [['Yes','Wiring path is likely intact — inspect I/O configuration/scaling.'],['No','Focus on cable, barrier, isolator, marshalling or terminal connections.']]],
+      ['Does the controller tag use the correct 0/4–20 mA range and engineering units?', [['Yes','Scaling is likely correct — test the channel.'],['No','Correct the configured input range/scaling under approved change control.']]],
+      ['Does a loop calibrator injected at the I/O input produce the expected controller value?', [['Yes','The I/O channel is proven — fault is upstream.'],['No','Focus on I/O channel configuration, card health or controller scaling.']]]
+    ],
+    overrange: [
+      ['Is the actual process value genuinely outside the configured LRV/URV?', [['Yes','Treat as a real process over-range first.'],['No','Focus on sensor/configuration/failure-current causes.']]],
+      ['Does device status identify sensor failure or an active diagnostic?', [['Yes','Follow the device diagnostic and sensor wiring.'],['No','Continue to range/output configuration checks.']]],
+      ['Is the configured failure-current direction/high-low setting known?', [['Yes','Compare the measured current with that configured fault value.'],['No','Verify the transmitter failure-current setting before recalibration.']]],
+      ['Does the output return to normal when the sensor/input is correctly simulated?', [['Yes','The sensing path/configuration is implicated.'],['No','Focus on transmitter output stage or loop hardware.']]]
+    ],
+    noisy: [
+      ['Does the process itself fluctuate at the same time as the mA signal?', [['Yes','Investigate real process pulsation/instability.'],['No','Focus on electrical noise, grounding or instrument faults.']]],
+      ['Is the shield/grounding arrangement correct for the site design?', [['Yes','Continue to cable routing and power-quality checks.'],['No','Correct shielding/grounding under the approved electrical procedure.']]],
+      ['Does the noise change when nearby VFD/motor equipment changes state?', [['Yes','EMI/cable routing/grounding is strongly implicated.'],['No','Continue with supply and transmitter checks.']]],
+      ['Is loop power stable when the signal jumps?', [['Yes','Focus on signal wiring/transmitter.'],['No','Investigate supply/isolator/power-quality issues.']]]
+    ],
+    hart: [
+      ['Is the analog 4–20 mA loop stable and within normal range?', [['Yes','The analog loop is healthy — focus on HART path.'],['No','Fix the analog loop first; HART troubleshooting can be misleading.']]],
+      ['Is there adequate loop resistance/load for the installed HART device and system?', [['Yes','Continue to communicator wiring/address checks.'],['No','Focus on loop load/resistance and isolator/I/O compatibility.']]],
+      ['Is the communicator connected at a valid point in the loop with correct polarity?', [['Yes','Continue to address/protocol checks.'],['No','Correct the connection/polarity and retry.']]],
+      ['Can another known-good HART communicator or interface see the device?', [['Yes','Focus on the original communicator/interface configuration.'],['No','Focus on device loop path, address, load or transmitter electronics.']]]
+    ]
+  },
+  pressure: {
+    low: [
+      ['Does a calibrated reference at the same pressure point agree with the transmitter?', [['Yes','The process/reference agrees — inspect the transmitter signal path only if the control system disagrees.'],['No','Focus on the transmitter, impulse path or installation.']]],
+      ['Is the impulse line/remote seal path open, correctly isolated and free of trapped gas/liquid?', [['Yes','Continue to configuration and zero checks.'],['No','Focus on blockage, trapped phase, isolation or seal condition.']]],
+      ['Does the measured loop current match the expected value for the actual pressure and configured range?', [['Yes','Analog output is consistent — inspect DCS scaling/indication.'],['No','Focus on transmitter configuration, trim or output stage.']]],
+      ['Does HART PV match the local display and the independent pressure reference?', [['Yes','Device measurement is internally consistent.'],['No','Focus on sensor/configuration or device diagnostics.']]],
+      ['Is the transmitter range/LRV/URV correct for the installed service?', [['Yes','Configuration is likely correct.'],['No','Correct configuration under approved procedure before calibration.']]]
+    ],
+    high: [
+      ['Does an independent calibrated pressure reference confirm the high reading?', [['Yes','Treat as a real process pressure condition first.'],['No','Focus on sensing path, zero, range or transmitter fault.']]],
+      ['Are both process isolation valves and the impulse path in the expected condition?', [['Yes','Continue with trapped pressure/zero checks.'],['No','Correct the process connection condition under the approved procedure.']]],
+      ['Is there trapped pressure or a temperature/density effect on the sensing path?', [['Yes','Resolve the sensing-path condition before recalibration.'],['No','Continue with transmitter configuration/trim.']]],
+      ['Does the loop current correspond to the transmitter PV?', [['Yes','The transmitter output is internally consistent.'],['No','Investigate output trim, wiring or I/O.']]]
+    ],
+    erratic: [
+      ['Does the reference gauge also fluctuate?', [['Yes','The process may genuinely be pulsating/unstable.'],['No','Focus on impulse line, transmitter or electrical noise.']]],
+      ['Is the impulse line restricted, partially plugged or experiencing condensation/trapped gas?', [['Yes','Sensing-path restriction/phase condition is likely.'],['No','Continue with wiring/noise and transmitter diagnostics.']]],
+      ['Does the signal become stable when the process is held steady?', [['Yes','Process dynamics are implicated.'],['No','Focus on instrument/signal path.']]],
+      ['Does the mA signal remain stable while the displayed value jumps?', [['Yes','Focus on DCS/HMI scaling or data path.'],['No','Focus on transmitter/loop noise.']]]
+    ],
+    comm: [
+      ['Is the transmitter powered with a valid loop current?', [['Yes','Focus on HART communication path.'],['No','Fix loop power/current first.']]],
+      ['Is the loop load/resistance suitable for HART communication?', [['Yes','Continue to wiring/address checks.'],['No','Correct the load/isolator path.']]],
+      ['Is the communicator using the correct device address/protocol and connected correctly?', [['Yes','Continue with device/interface checks.'],['No','Correct connection/address/protocol.']]],
+      ['Can another communicator/interface connect to the same loop?', [['Yes','Focus on the original communicator/configuration.'],['No','Focus on loop/device/interface.']]]
+    ]
+  },
+  temptx: {
+    low: [
+      ['Does a calibrated reference sensor at the same point confirm the low temperature?', [['Yes','Treat as a real process condition.'],['No','Focus on RTD/TC, wiring or transmitter configuration.']]],
+      ['Is the configured sensor type and wiring (2/3/4-wire RTD or correct TC type) correct?', [['Yes','Continue with sensor resistance/continuity.'],['No','Correct sensor type/wiring configuration.']]],
+      ['Does the sensor resistance/thermocouple signal agree with the actual temperature?', [['Yes','Sensor is likely healthy — inspect transmitter configuration.'],['No','Focus on sensor, thermowell contact or wiring.']]],
+      ['Does HART/device PV agree with the transmitter display and measured mA?', [['Yes','Device is internally consistent.'],['No','Focus on output configuration or device diagnostics.']]]
+    ],
+    high: [
+      ['Does an independent reference confirm the high temperature?', [['Yes','Treat as a real process condition.'],['No','Focus on sensor/configuration.']]],
+      ['Is the correct RTD/TC type, range and linearization selected?', [['Yes','Continue to sensor/wiring checks.'],['No','Correct the configuration before calibration.']]],
+      ['Is the sensor wiring intact and free of high-resistance/loose connections?', [['Yes','Continue with sensor condition and transmitter checks.'],['No','Repair wiring/terminals first.']]],
+      ['Is the output at a configured sensor-failure current rather than true process value?', [['Yes','Treat as a diagnostic/failure indication.'],['No','Continue with measurement verification.']]]
+    ],
+    erratic: [
+      ['Does the reference temperature fluctuate too?', [['Yes','Investigate the process/thermal dynamics.'],['No','Focus on sensor/wiring/electrical noise.']]],
+      ['Does moving the sensor cable/terminal affect the reading?', [['Yes','Loose/damaged wiring is likely.'],['No','Continue to sensor/EMI checks.']]],
+      ['Is the thermowell/sensor mechanically secure and making the expected thermal contact?', [['Yes','Continue with configuration and sensor condition.'],['No','Correct installation/contact issue.']]],
+      ['Does the mA output fluctuate with the PV?', [['Yes','Field measurement is fluctuating.'],['No','Focus on DCS/HMI signal path.']]]
+    ]
+  },
+  flow: {
+    low: [
+      ['Does an independent flow indication confirm low flow?', [['Yes','Treat as real process flow first.'],['No','Focus on meter, primary element or configuration.']]],
+      ['Is the pipe full and is the meter operating within its minimum/maximum flow range?', [['Yes','Continue meter-specific checks.'],['No','Correct process/installation conditions first.']]],
+      ['For DP flow, are both impulse lines clear and correctly configured?', [['Yes','Continue with range/scaling.'],['No','Focus on impulse-path restriction or trapped phase.']]],
+      ['For mag/vortex/ultrasonic, are grounding, electrode/liner, straight-run and signal conditions acceptable?', [['Yes','Continue with configuration.'],['No','Correct the meter-specific installation issue.']]],
+      ['Does the measured mA match the meter PV?', [['Yes','Focus on PLC/DCS scaling if indication is wrong.'],['No','Focus on meter output/configuration.']]]
+    ],
+    erratic: [
+      ['Does the process flow itself fluctuate?', [['Yes','Investigate process/pulsation first.'],['No','Focus on meter/signal path.']]],
+      ['Is the pipe full and free of entrained gas/two-phase flow?', [['Yes','Continue meter-specific checks.'],['No','Correct process/installation condition.']]],
+      ['Is grounding/shielding correct for the meter technology?', [['Yes','Continue to sensing-path checks.'],['No','Correct grounding/shielding.']]],
+      ['Does the instability disappear when the signal is simulated into the I/O?', [['Yes','Field meter/loop is implicated.'],['No','Focus on I/O/scaling/data path.']]]
+    ]
+  },
+  positioner: {
+    notmoving: [
+      ['Is the positioner receiving the commanded input current/bus command?', [['Yes','Focus on air/pilot/actuator.'],['No','Focus on DCS output, wiring or input channel.']]],
+      ['Is regulated instrument air present at the positioner supply port?', [['Yes','Continue to output/pilot checks.'],['No','Fix supply pressure/filter/regulator path.']]],
+      ['Does the positioner change output pressure when the command changes?', [['Yes','Pilot/positioner is responding — inspect actuator/linkage/valve.'],['No','Focus on pilot/relay/I-P/nozzle stage.']]],
+      ['Does the actuator move freely when operated under the approved test?', [['Yes','Focus on feedback/calibration.'],['No','Focus on mechanical binding, packing or actuator condition.']]],
+      ['Does actual valve travel match positioner feedback?', [['Yes','Feedback is likely correct.'],['No','Focus on linkage/magnet/feedback calibration.']]]
+    ],
+    hunting: [
+      ['Does the valve hunt while the command is steady?', [['Yes','Focus on stiction, feedback, air stability or positioner tuning.'],['No','Focus on controller/process dynamics.']]],
+      ['Is supply air pressure stable at the positioner?', [['Yes','Continue to feedback/mechanics.'],['No','Fix air supply/regulator/filter issue.']]],
+      ['Does a slow manual step test still oscillate?', [['Yes','Mechanical/feedback issue is more likely.'],['No','Fast-loop tuning/dynamic response is more likely.']]],
+      ['Does actual travel agree with reported feedback throughout the stroke?', [['Yes','Focus on tuning/air.'],['No','Focus on feedback linkage/sensor.']]]
+    ],
+    calibration: [
+      ['Does the valve physically reach both true mechanical end stops?', [['Yes','Continue feedback calibration.'],['No','Focus on actuator force, travel stop or mechanical restriction.']]],
+      ['Is the feedback linkage/magnet correctly aligned and secure?', [['Yes','Continue with positioner configuration.'],['No','Correct feedback coupling first.']]],
+      ['Does the positioner complete auto-stroke without timing out?', [['Yes','Calibration is likely accepted.'],['No','Focus on travel limits, friction, feedback or air supply.']]],
+      ['Do 0/25/50/75/100% command points produce proportional actual travel?', [['Yes','Travel scaling is likely correct.'],['No','Investigate calibration, characterization or mechanical travel.']]]
+    ],
+    feedback: [
+      ['Does the physical valve position move smoothly while feedback jumps?', [['Yes','Feedback mechanism/sensor is implicated.'],['No','Investigate mechanical valve movement too.']]],
+      ['Is linkage/magnet coupling secure through full travel?', [['Yes','Continue sensor/wiring checks.'],['No','Correct the coupling.']]],
+      ['Does feedback remain stable with the valve held at a fixed position?', [['Yes','Continue travel-point comparison.'],['No','Focus on sensor, wiring or magnetic interference.']]],
+      ['Does the feedback signal match actual travel at several points?', [['Yes','Feedback is likely healthy.'],['No','Recalibration/repair of feedback path is indicated.']]]
+    ],
+    comm: [
+      ['Is the positioner still responding to the analog/bus command?', [['Yes','Communication fault is likely separate from control function.'],['No','Check power/input/positioner health first.']]],
+      ['Is loop/bus power and termination/wiring correct?', [['Yes','Continue address/protocol checks.'],['No','Correct physical communication path.']]],
+      ['Is the device address/tag unique and correct?', [['Yes','Continue interface checks.'],['No','Correct addressing under approved procedure.']]],
+      ['Can another interface communicate with the device?', [['Yes','Original communicator/interface issue.'],['No','Device/path issue remains.']]]
+    ]
+  },
+  controlvalve: {
+    travel: [
+      ['Does the DCS/PLC output actually change when the command changes?', [['Yes','Focus downstream of the controller.'],['No','Focus controller output, mode, interlock or AO channel.']]],
+      ['Is the same current measured at the positioner input?', [['Yes','Electrical command path is proven.'],['No','Focus wiring, barrier, isolator or AO path.']]],
+      ['Is instrument air correct at the positioner/actuator?', [['Yes','Continue to positioner/valve mechanics.'],['No','Fix air supply/regulator/filter/leak.']]],
+      ['Does positioner feedback agree with actual stem/shaft travel?', [['Yes','Focus on actuator/valve force or stiction.'],['No','Focus on feedback calibration/linkage.']]],
+      ['Does the valve travel freely through the full stroke?', [['Yes','Focus on characterization/controller interaction.'],['No','Mechanical binding/stiction is likely.']]]
+    ],
+    hunting: [
+      ['Is the controller output stable while the valve position oscillates?', [['Yes','Focus positioner/valve mechanics.'],['No','Focus controller tuning/process dynamics.']]],
+      ['Does the valve stick then jump?', [['Yes','Stiction/packing/mechanical friction is likely.'],['No','Continue air/positioner checks.']]],
+      ['Is air supply stable and free of leaks?', [['Yes','Continue feedback/tuning checks.'],['No','Fix pneumatic supply first.']]],
+      ['Does the positioner feedback match actual travel?', [['Yes','Focus tuning/mechanical response.'],['No','Feedback issue is implicated.']]]
+    ]
+  },
+  iomodule: {
+    badreading: [
+      ['Does a calibrated simulator produce the correct value at the I/O terminals?', [['Yes','Field wiring/device is upstream of the I/O.'],['No','Focus on channel wiring, card range or module.']]],
+      ['Is the I/O channel configured for the correct signal type/range?', [['Yes','Continue with scaling and card diagnostics.'],['No','Correct channel configuration.']]],
+      ['Does the raw input count/value match the expected signal?', [['Yes','Scaling/engineering-unit mapping is likely.'],['No','Channel hardware/configuration issue.']]],
+      ['Does another known-good channel read the same simulator correctly?', [['Yes','Suspect the original channel.'],['No','Check simulator/wiring/power/common supply.']]]
+    ],
+    nocurrent: [
+      ['Is loop power present at the field device?', [['Yes','Continue to field wiring/I/O.'],['No','Fix field power first.']]],
+      ['Is current measurable at the field end?', [['Yes','Focus between field and I/O.'],['No','Focus transmitter/loop.']]],
+      ['Does a loop calibrator injected directly into the card read correctly?', [['Yes','Field loop is implicated.'],['No','Focus I/O channel/configuration.']]],
+      ['Is the channel configured active/passive correctly?', [['Yes','Continue diagnostics.'],['No','Correct channel mode.']]]
+    ]
+  },
+  hmiscada: {
+    wrongvalue: [
+      ['Does the controller tag value match the field/I/O value?', [['Yes','Focus HMI scaling/display.'],['No','Focus I/O/controller/data acquisition.']]],
+      ['Is the HMI engineering-unit scaling identical to the controller configuration?', [['Yes','Continue tag/address checks.'],['No','Correct HMI scaling.']]],
+      ['Is the HMI tag/address mapped to the correct controller point?', [['Yes','Continue communications checks.'],['No','Correct the tag mapping.']]],
+      ['Is the displayed timestamp/data quality current?', [['Yes','Continue value/scaling checks.'],['No','Focus stale data/communication driver.']]]
+    ],
+    staledata: [
+      ['Does the controller itself show current data?', [['Yes','Focus HMI/driver/server.'],['No','Controller/input path is implicated.']]],
+      ['Is the HMI data quality/status good or stale?', [['Good','Continue tag/update-rate checks.'],['Stale','Focus communications/driver/server.']]],
+      ['Are other tags from the same controller updating?', [['Yes','Suspect the affected tag/configuration.'],['No','Suspect controller/network/driver path.']]],
+      ['Is the OPC/driver service healthy?', [['Yes','Continue network/tag checks.'],['No','Restore service per approved procedure.']]]
+    ]
+  },
+  alarmforce: {
+    nuisance: [
+      ['Did the process value genuinely cross the alarm setpoint?', [['Yes','Real process excursion may be the root cause.'],['No','Focus signal quality/configuration.']]],
+      ['Is the source signal noisy around the setpoint?', [['Yes','Fix measurement/noise first.'],['No','Continue alarm configuration checks.']]],
+      ['Is deadband/hysteresis configured as intended?', [['Yes','Continue process/signal investigation.'],['No','Review alarm configuration under management of change.']]],
+      ['Is the alarm being shelved/suppressed or repeatedly acknowledged?', [['Yes','Review alarm management state and reason.'],['No','Continue root-cause investigation.']]]
+    ],
+    stuckforce: [
+      ['Is a force/override currently active on the point?', [['Yes','Identify who/why/when before changing it.'],['No','This is not a force-related fault.']]],
+      ['Is the original maintenance/test condition still present?', [['Yes','Do not remove the force blindly.'],['No','Prepare controlled restoration.']]],
+      ['Does the point behave correctly when the force is removed under an approved test?', [['Yes','Force was masking the normal path.'],['No','Investigate underlying field/control fault.']]]
+    ]
+  },
+  solenoid: {
+    notenergise: [
+      ['Is the command present at the solenoid coil terminals?', [['Yes','Focus on coil/mechanical valve.'],['No','Focus on output, fuse, relay, wiring or logic.']]],
+      ['Is the voltage correct for the coil rating?', [['Yes','Continue coil/valve checks.'],['No','Correct supply/output configuration.']]],
+      ['Does coil resistance/condition match the manufacturer expectation?', [['Yes','Focus mechanical spool/valve.'],['No','Coil failure is likely.']]],
+      ['Does the solenoid actuate when tested by the approved method?', [['Yes','Focus upstream command path.'],['No','Focus solenoid/valve mechanics.']]]
+    ],
+    stuck: [
+      ['Does the coil energize/de-energize correctly?', [['Yes','Focus mechanical spool/plunger.'],['No','Focus electrical command/coil.']]],
+      ['Is instrument air/fluid clean and pressure correct?', [['Yes','Continue mechanical inspection.'],['No','Fix supply/filter/contamination issue.']]],
+      ['Is the valve mechanically free under the approved isolation procedure?', [['Yes','Focus internal wear/contamination.'],['No','Mechanical obstruction is likely.']]]
+    ]
+  }
+};
 
 function $(x){ return document.getElementById(x); }
 
@@ -15216,14 +15538,14 @@ function openModal(){
   state.device = null;
   state.symptom = null;
   state.step = 1;
-
+  state.answers = [];
+  state.questions = [];
   $('troubleModal').classList.add('open');
   $('troubleModal').setAttribute('aria-hidden','false');
   $('troubleResult').classList.remove('show');
   $('troubleDone').style.display='none';
   $('troubleNext').style.display='none';
   $('troubleBack').style.display='block';
-
   renderDevice();
   document.body.style.overflow='hidden';
 }
@@ -15234,9 +15556,14 @@ function closeModal(){
   document.body.style.overflow='';
 }
 
-function progress(n){
-  $('troubleProgress').querySelectorAll('span')
-    .forEach((x,i)=>x.classList.toggle('active',i<n));
+function progress(n,total){
+  const box=$('troubleProgress');
+  box.innerHTML='';
+  for(let i=0;i<total;i++){
+    const sp=document.createElement('span');
+    sp.className=i<n?'active':'';
+    box.appendChild(sp);
+  }
 }
 
 function options(items){
@@ -15251,15 +15578,7 @@ function options(items){
       box.querySelectorAll('button').forEach(x=>x.classList.remove('selected'));
       b.classList.add('selected');
       $('troubleNext').disabled=false;
-      setTimeout(()=>{
-        if(state.step===1){
-          state.device=b.dataset.id;
-          renderSymptoms();
-        }else if(state.step===2){
-          state.symptom=b.dataset.id;
-          showResult();
-        }
-      },160);
+      setTimeout(()=>advanceFromSelection(),120);
     };
     box.appendChild(b);
   });
@@ -15267,9 +15586,9 @@ function options(items){
 
 function renderDevice(){
   state.step = 1;
-  progress(1);
-  $('troubleStep').textContent='Step 1 of 2 · Device';
-  $('troubleQuestion').textContent='Which field device is showing the problem?';
+  progress(1,3);
+  $('troubleStep').textContent='Step 1 of 3 · Device';
+  $('troubleQuestion').textContent='Which field device or signal path is showing the problem?';
   options(devices);
   $('troubleNext').disabled=true;
 }
@@ -15277,34 +15596,123 @@ function renderDevice(){
 function renderSymptoms(){
   const d=D[state.device];
   state.step = 2;
-  progress(2);
-  $('troubleStep').textContent='Step 2 of 2 · Failure mode';
+  state.answers=[];
+  state.questions=[];
+  progress(2,3);
+  $('troubleStep').textContent='Step 2 of 3 · Failure mode';
   $('troubleQuestion').textContent='What is the actual failure mode of the '+d.n.toLowerCase()+'?';
   options(Object.entries(d.s).map(x=>[x[0],x[1][0]]));
   $('troubleNext').disabled=true;
+}
+
+function renderAdvancedQuestion(){
+  const qs=state.questions;
+  const idx=state.step-3;
+  if(idx>=qs.length){ showResult(); return; }
+  const q=qs[idx];
+  const total=2+qs.length+1;
+  progress(3+idx,total);
+  $('troubleStep').textContent='Step '+(3+idx)+' of '+total+' · Diagnostic question';
+  $('troubleQuestion').textContent=q[0];
+  options(q[1].map((x,i)=>[String(i),x[0]]));
+  $('troubleNext').disabled=true;
+}
+
+function advanceFromSelection(){
+  const selected=$('troubleOptions').querySelector('.selected');
+  if(!selected) return;
+  if(state.step===1){
+    state.device=selected.dataset.id;
+    renderSymptoms();
+    return;
+  }
+  if(state.step===2){
+    state.symptom=selected.dataset.id;
+    state.questions=(ADV[state.device]&&ADV[state.device][state.symptom])||[];
+    state.answers=[];
+    if(state.questions.length){
+      state.step=3;
+      renderAdvancedQuestion();
+    }else{
+      showResult();
+    }
+    return;
+  }
+  if(state.step>=3){
+    const idx=state.step-3;
+    const q=state.questions[idx];
+    const answer=q[1][Number(selected.dataset.id)];
+    state.answers.push({question:q[0],answer:answer[0],focus:answer[1]});
+    state.step++;
+    if(state.step-3<state.questions.length) renderAdvancedQuestion();
+    else showResult();
+  }
 }
 
 function showResult(){
   const d=D[state.device];
   const r=d && d.s ? d.s[state.symptom] : null;
   if(!d || !r) return;
-
-  state.step = 3;
-  progress(3);
-  $('troubleStep').textContent='Diagnostic direction';
-  $('troubleQuestion').textContent='Start with the device-specific check below. Do not assume the fault is in the instrument until the signal path has been proved.';
+  state.step = 3 + state.questions.length;
+  const total=state.step+1;
+  progress(total,total);
+  $('troubleStep').textContent='Diagnostic conclusion';
+  $('troubleQuestion').textContent='Use the answers below to decide where to focus first. Do not assume the instrument is faulty until the signal path has been proved.';
   $('troubleOptions').innerHTML='';
   $('troubleResult').classList.add('show');
-
   $('troubleResultTitle').textContent=r[0];
   $('troubleCheck').textContent=r[1];
   $('troubleCause').textContent=r[2];
   $('troubleVerify').textContent=r[3];
-
+  const decision=$('troubleDecision');
+  if(decision){
+    const lines=state.answers.map((a,i)=>(i+1)+'. '+a.answer+' → '+a.focus);
+    decision.textContent=lines.length?lines.join('\n'):'No additional decision questions were required for this fault.';
+  }
   $('troubleNext').style.display='none';
   $('troubleBack').style.display='inline-flex';
   $('troubleDone').style.display='block';
 }
+
+$('troubleStartBtn').onclick=()=>openModal();
+
+document.querySelectorAll('[data-close-trouble]').forEach(x=>{
+  x.onclick=closeModal;
+});
+
+$('troubleBack').onclick=()=>{
+  if(state.step>=3){
+    $('troubleResult').classList.remove('show');
+    $('troubleDone').style.display='none';
+    $('troubleNext').style.display='none';
+    if(state.questions.length && state.step>3){
+      state.answers.pop();
+      state.step=Math.max(3,state.step-1);
+      renderAdvancedQuestion();
+    }else{
+      renderSymptoms();
+    }
+    return;
+  }
+  if(state.step===2){
+    state.device=null;
+    state.symptom=null;
+    renderDevice();
+  }
+};
+
+$('troubleNext').onclick=()=>advanceFromSelection();
+$('troubleDone').onclick=closeModal;
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape' && $('troubleModal').classList.contains('open')) closeModal();
+  if(e.key==='Escape'){
+    const rm=document.getElementById('rptModal');
+    if(rm && rm.classList.contains('open')){
+      rm.classList.remove('open'); rm.setAttribute('aria-hidden','true'); document.body.style.overflow='';
+    }
+  }
+});
 
 $('troubleStartBtn').onclick=()=>openModal();
 
