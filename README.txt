@@ -1,17 +1,15 @@
-InstrumentPro icon replacement set
+InstrumentPro Responsive Master Update
 
-Replace the existing repository assets with:
-- icon-16.png
-- icon-32.png
-- icon-48.png
-- icon-64.png
-- icon-72.png
-- icon-96.png
-- icon-128.png
-- icon-180.png
-- icon-192.png
-- icon-512.png
-- maskable-icon-512.png
-- favicon.ico
+This version adds STYLE-20: UNIVERSAL RESPONSIVE / DEVICE ADAPTIVE LAYOUT.
 
-These assets are based on the new InstrumentPro field-engineering visual identity.
+The existing application logic and page structure are preserved. The update:
+- removes the global 480px body restriction
+- makes the app shell fluid from small phones through large desktop screens
+- keeps content readable with a desktop max-width
+- makes bottom navigation adapt to viewport width
+- adds safe-area support for iPhone/notched and gesture-navigation devices
+- handles narrow phones, tablets, desktops, and landscape windows
+- prevents common horizontal overflow from long labels, inputs and media
+- preserves the existing mobile layout behavior where possible
+
+Replace the repository's existing index.html with the included index.html.

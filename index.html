@@ -4097,7 +4097,286 @@ body.dark #ipBoot{
 body:not(.dark) #ipBoot .ipb-node{color:#172033}
 body:not(.dark) #ipBoot .ipb-row{background:rgba(255,255,255,.62);border:1px solid color-mix(in srgb,var(--boot-accent) 10%,var(--boot-line))}
 
-</style></head>
+</style>
+<!-- =====================================================================
+     STYLE-20: UNIVERSAL RESPONSIVE / DEVICE ADAPTIVE LAYOUT
+     Keeps the existing InstrumentPro UI intact while allowing the shell
+     to fluidly use phones, tablets and desktop displays.
+     ===================================================================== -->
+<style id="instrumentpro-universal-responsive" data-ip-style="CSS-20">
+/* ---------- viewport foundation ---------- */
+html, body {
+  width: 100%;
+  max-width: none !important;
+  min-width: 0 !important;
+  margin: 0;
+}
+
+html {
+  min-height: 100%;
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  width: 100%;
+  max-width: none !important;
+  min-width: 0 !important;
+  min-height: 100dvh;
+  height: 100dvh;
+  overflow: hidden;
+  margin: 0 auto;
+  padding: 0;
+}
+
+/* ---------- fluid application shell ---------- */
+.app-shell {
+  width: 100% !important;
+  max-width: 1280px !important;
+  min-width: 0 !important;
+  min-height: 100dvh;
+  margin: 0 auto;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.page-container {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  padding-left: clamp(8px, 1.8vw, 24px);
+  padding-right: clamp(8px, 1.8vw, 24px);
+  padding-bottom: calc(104px + env(safe-area-inset-bottom));
+  overflow-x: hidden;
+  overscroll-behavior-x: none;
+}
+
+/* Keep each page readable on very wide monitors rather than stretching
+   individual controls across the entire screen. */
+.page-container > .page {
+  width: 100%;
+  max-width: 1180px;
+  min-width: 0;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ---------- cards / common content: never force a minimum desktop width ---------- */
+.page-container .card,
+.page-container .search-bar,
+.page-container .quick-item,
+.page-container .recent-item,
+.page-container .analytical-card,
+.page-container .gc-panel,
+.page-container .fault-panel,
+.page-container .table-wrap,
+.page-container .upload-zone,
+.page-container .scanner-preview,
+.page-container .report-preview,
+.page-container .sub-panel {
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* Long labels and generated device names must wrap instead of pushing the
+   whole page wider than the device viewport. */
+.page-container label,
+.page-container h1,
+.page-container h2,
+.page-container h3,
+.page-container h4,
+.page-container p,
+.page-container span,
+.page-container .chip,
+.page-container .tag-item {
+  overflow-wrap: anywhere;
+}
+
+.page-container input,
+.page-container select,
+.page-container textarea,
+.page-container button {
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.page-container img,
+.page-container svg,
+.page-container canvas,
+.page-container video {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Tables remain usable on small screens without making the document itself
+   horizontally scroll. */
+.page-container .table-wrap {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.page-container table {
+  max-width: 100%;
+}
+
+/* ---------- top greeting / header ---------- */
+.greeting {
+  width: auto;
+  max-width: 1180px;
+  margin-left: clamp(8px, 1.8vw, 24px) !important;
+  margin-right: clamp(8px, 1.8vw, 24px) !important;
+}
+
+/* ---------- bottom navigation ---------- */
+.bottom-tabs {
+  left: 50% !important;
+  right: auto !important;
+  width: min(720px, calc(100% - 16px)) !important;
+  max-width: 720px !important;
+  margin: 0 !important;
+  transform: translateX(-50%);
+  padding-left: max(6px, env(safe-area-inset-left));
+  padding-right: max(6px, env(safe-area-inset-right));
+  padding-bottom: max(12px, env(safe-area-inset-bottom));
+  border-radius: 20px 20px 0 0;
+}
+
+.bottom-tabs .tab-item {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 150px;
+}
+
+/* ---------- narrow phones: compact without clipping ---------- */
+@media (max-width: 600px) {
+  .page-container {
+    padding-left: 0;
+    padding-right: 0;
+    padding-bottom: calc(98px + env(safe-area-inset-bottom));
+  }
+
+  .page-container > .page {
+    max-width: 100%;
+  }
+
+  .greeting {
+    margin-left: 8px !important;
+    margin-right: 8px !important;
+  }
+
+  .bottom-tabs {
+    width: calc(100% - 12px) !important;
+    max-width: none !important;
+    border-radius: 18px 18px 0 0;
+  }
+
+  .bottom-tabs .tab-item {
+    padding-left: 5px;
+    padding-right: 5px;
+    font-size: clamp(.52rem, 2vw, .62rem);
+  }
+
+  .bottom-tabs .tab-item i {
+    font-size: clamp(1rem, 4.5vw, 1.3rem);
+  }
+}
+
+/* Very narrow phones (including split-screen / small Android windows). */
+@media (max-width: 360px) {
+  .page-container {
+    padding-bottom: calc(94px + env(safe-area-inset-bottom));
+  }
+
+  .card {
+    margin-left: 6px !important;
+    margin-right: 6px !important;
+  }
+
+  .greeting {
+    margin-left: 6px !important;
+    margin-right: 6px !important;
+  }
+
+  .bottom-tabs {
+    width: calc(100% - 8px) !important;
+  }
+}
+
+/* ---------- tablets ---------- */
+@media (min-width: 601px) and (max-width: 1024px) {
+  .app-shell {
+    max-width: 100% !important;
+  }
+
+  .page-container {
+    padding-left: clamp(14px, 2vw, 24px);
+    padding-right: clamp(14px, 2vw, 24px);
+  }
+
+  .page-container > .page {
+    max-width: 960px;
+  }
+}
+
+/* ---------- desktops / laptops ---------- */
+@media (min-width: 1025px) {
+  .app-shell {
+    max-width: 1280px !important;
+  }
+
+  .page-container {
+    padding-left: clamp(20px, 2vw, 32px);
+    padding-right: clamp(20px, 2vw, 32px);
+  }
+
+  .page-container > .page {
+    max-width: 1180px;
+  }
+
+  .bottom-tabs {
+    width: min(720px, calc(100% - 48px)) !important;
+  }
+}
+
+/* ---------- landscape phones / tablets ---------- */
+@media (orientation: landscape) and (max-height: 600px) {
+  .page-container {
+    padding-top: 8px;
+    padding-bottom: calc(84px + env(safe-area-inset-bottom));
+  }
+
+  .greeting {
+    margin-top: 6px !important;
+  }
+
+  .bottom-tabs {
+    padding-top: 3px;
+    padding-bottom: max(6px, env(safe-area-inset-bottom));
+  }
+}
+
+/* ---------- safe-area support for notched / gesture-navigation devices ---------- */
+@supports (padding: max(0px)) {
+  .app-shell {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+}
+
+/* ---------- accessibility / zoom ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .page,
+  .bottom-tabs,
+  * {
+    scroll-behavior: auto !important;
+  }
+}
+</style>
+
+</head>
 <body>
 <div id="ipBoot" aria-label="InstrumentPro startup" role="dialog">
   <div class="ipb-grid"></div><div class="ipb-scan"></div>
