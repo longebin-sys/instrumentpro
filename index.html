@@ -5079,7 +5079,15 @@ body {
 </select></div>
 <div><label>Tag</label><input id="fnTaskTagInput" placeholder="PT-101"/></div>
 </div>
+<div class="fn-form-grid" style="margin-top:8px;">
+<div class="fn-wide"><label>Parent Asset <span style="font-weight:400;color:#94a3b8;">(optional — groups related components, e.g. "GT-1 Bently Nevada Rack")</span></label><input id="fnTaskParentInput" placeholder="Leave blank for a standalone task"/></div>
+<div><label>Standard <span style="font-weight:400;color:#94a3b8;">(optional)</span></label><select id="fnTaskStandardSelect"></select></div>
+</div>
 <button class="btn w-full fn-primary" id="fnTaskAddBtn" style="justify-content:center;margin-top:10px;" type="button"><i class="fas fa-plus-circle"></i> Add Task</button>
+</div>
+<div class="card" id="fnTaskAssetGroupsCard" style="display:none;">
+<div class="card-header"><i class="fas fa-layer-group"></i><h3>Asset Groups</h3></div>
+<div id="fnTaskAssetGroupsList"></div>
 </div>
 <div class="card">
 <div class="card-header"><i class="fas fa-hourglass-half"></i><h3>Outstanding</h3><span id="fnTaskOutstandingCount">0</span></div>
@@ -6660,22 +6668,32 @@ body {
 <div class="rptx-narrative">5 of 9 tasks completed as of 9:30 AM. 4 remaining.</div>
 </div>
 <div class="rptx-sec">
+<div class="rptx-sec-title">Asset Groups <small>2</small></div>
+<table class="rptx-table">
+<thead><tr><th>Parent Asset</th><th>Components</th><th>Complete</th><th>% Complete</th></tr></thead>
+<tbody>
+<tr><td>GT-1 Bently Nevada Rack</td><td>4</td><td>3</td><td><span class="rptx-pill rptx-pass">75%</span></td></tr>
+<tr><td>Fire &amp; Gas Panel FG-2</td><td>3</td><td>2</td><td><span class="rptx-pill rptx-pend">67%</span></td></tr>
+</tbody>
+</table>
+</div>
+<div class="rptx-sec">
 <div class="rptx-sec-title">Completed So Far <small>5</small></div>
 <table class="rptx-table">
-<thead><tr><th>Device</th><th>Tag</th><th>Result</th><th>Report ID</th></tr></thead>
+<thead><tr><th>Device</th><th>Tag</th><th>Asset</th><th>Result</th><th>Report ID</th></tr></thead>
 <tbody>
-<tr><td>Pressure Transmitter</td><td>PT-101</td><td><span class="rptx-pill rptx-pass">Pass</span></td><td>RS-88213</td></tr>
-<tr><td>Level Transmitter</td><td>LT-115</td><td><span class="rptx-pill rptx-fail">Fail</span></td><td>RS-88216</td></tr>
+<tr><td>Vibration Probe</td><td>VT-3A</td><td>GT-1 Bently Nevada Rack</td><td><span class="rptx-pill rptx-pass">Pass</span></td><td>RS-88213</td></tr>
+<tr><td>Level Transmitter</td><td>LT-115</td><td>—</td><td><span class="rptx-pill rptx-fail">Fail</span></td><td>RS-88216</td></tr>
 </tbody>
 </table>
 </div>
 <div class="rptx-sec">
 <div class="rptx-sec-title">Outstanding <small>4</small></div>
 <table class="rptx-table">
-<thead><tr><th>Device</th><th>Tag</th><th>Status</th><th>Note</th></tr></thead>
+<thead><tr><th>Device</th><th>Tag</th><th>Asset</th><th>Status</th><th>Note</th></tr></thead>
 <tbody>
-<tr><td>Flame Detector</td><td>FD-012</td><td><span class="rptx-pill rptx-pend">Pending</span></td><td>Waiting on purge cart</td></tr>
-<tr><td>Solenoid Valve</td><td>SV-071</td><td><span class="rptx-pill rptx-pend">Pending</span></td><td>Carried from yesterday</td></tr>
+<tr><td>Flame Detector</td><td>FD-012</td><td>Fire &amp; Gas Panel FG-2</td><td><span class="rptx-pill rptx-pend">Pending</span></td><td>Waiting on purge cart</td></tr>
+<tr><td>Solenoid Valve</td><td>SV-071</td><td>—</td><td><span class="rptx-pill rptx-pend">Pending</span></td><td>Carried from yesterday</td></tr>
 </tbody>
 </table>
 </div>
@@ -6752,12 +6770,31 @@ body {
 <div class="rptx-narrative">31 of 42 checklist items complete (74%). 4 item(s) failed and require attention. 11 item(s) remain pending.</div>
 </div>
 <div class="rptx-sec">
+<div class="rptx-sec-title">Rotating / Vibration <small>9 items</small></div>
+<div class="rptx-sec-title" style="font-weight:400;font-size:.68rem;color:#64748b;margin-top:-6px;margin-bottom:6px;">Parent Asset Rollup</div>
+<table class="rptx-table">
+<thead><tr><th>Parent Asset</th><th>Components</th><th>Complete</th><th>% Complete</th></tr></thead>
+<tbody>
+<tr><td>GT-1 Bently Nevada Rack</td><td>4</td><td>4</td><td><span class="rptx-pill rptx-pass">100%</span></td></tr>
+<tr><td>GT-1 Axial Thrust Assembly</td><td>3</td><td>1</td><td><span class="rptx-pill rptx-pend">33%</span></td></tr>
+</tbody>
+</table>
+<table class="rptx-table" style="margin-top:8px;">
+<thead><tr><th>Tag</th><th>Asset</th><th>Std</th><th>Assigned</th><th>Status</th><th>Result</th></tr></thead>
+<tbody>
+<tr><td>VT-3A</td><td>GT-1 Bently Nevada Rack</td><td>IEC</td><td>M. Alvarez</td><td><span class="rptx-pill rptx-pass">Complete</span></td><td><span class="rptx-pill rptx-pass">Pass</span></td></tr>
+<tr><td>VT-3B</td><td>GT-1 Bently Nevada Rack</td><td>IEC</td><td>M. Alvarez</td><td><span class="rptx-pill rptx-pass">Complete</span></td><td><span class="rptx-pill rptx-pass">Pass</span></td></tr>
+<tr><td>AD-1</td><td>GT-1 Axial Thrust Assembly</td><td>OEM Spec</td><td>R. Nakamura</td><td><span class="rptx-pill rptx-pend">Pending</span></td><td>—</td></tr>
+</tbody>
+</table>
+</div>
+<div class="rptx-sec">
 <div class="rptx-sec-title">Pressure Transmitters <small>9 items</small></div>
 <table class="rptx-table">
-<thead><tr><th>Tag</th><th>Assigned</th><th>Status</th><th>Result</th></tr></thead>
+<thead><tr><th>Tag</th><th>Asset</th><th>Assigned</th><th>Status</th><th>Result</th></tr></thead>
 <tbody>
-<tr><td>PT-101</td><td>M. Alvarez</td><td><span class="rptx-pill rptx-pass">Complete</span></td><td><span class="rptx-pill rptx-pass">Pass</span></td></tr>
-<tr><td>PT-118</td><td>R. Nakamura</td><td><span class="rptx-pill rptx-pend">Pending</span></td><td>—</td></tr>
+<tr><td>PT-101</td><td>—</td><td>M. Alvarez</td><td><span class="rptx-pill rptx-pass">Complete</span></td><td><span class="rptx-pill rptx-pass">Pass</span></td></tr>
+<tr><td>PT-118</td><td>—</td><td>R. Nakamura</td><td><span class="rptx-pill rptx-pend">Pending</span></td><td>—</td></tr>
 </tbody>
 </table>
 </div>
@@ -16765,6 +16802,8 @@ function iptTaskRow(t,isCompleted){
         '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">'+
         '<div><div style="font-weight:700;font-size:.8rem;">'+iptEsc(t.tag||'Untagged')+'</div>'+
         '<span style="display:inline-block;margin-top:3px;font-size:.6rem;font-weight:700;color:'+badgeColor+';background:'+badgeBg+';padding:2px 7px;border-radius:6px;">'+iptEsc(t.deviceType)+'</span>'+
+        (t.parentAsset?(' <span style="display:inline-block;margin-top:3px;font-size:.6rem;font-weight:700;color:#475569;background:#f1f5f9;padding:2px 7px;border-radius:6px;"><i class="fas fa-layer-group"></i> '+iptEsc(t.parentAsset)+'</span>'):'')+
+        (t.standard?(' <span style="display:inline-block;margin-top:3px;font-size:.6rem;font-weight:700;color:#475569;background:#f1f5f9;padding:2px 7px;border-radius:6px;">'+iptEsc(t.standard)+'</span>'):'')+
         '<div style="font-size:.6rem;color:#94a3b8;margin-top:4px;">'+metaLine+'</div></div>'+
         '<div style="display:flex;gap:6px;">'+actionBtn+
         '<button class="btn-outline btn" data-ipt-remove="'+iptEsc(t.id)+'" type="button" style="min-height:30px;padding:0 8px;font-size:.62rem;color:#dc2626;"><i class="fas fa-times"></i></button>'+
@@ -16807,12 +16846,44 @@ function iptRender(){
             ? completed.map(function(t){return iptTaskRow(t,true);}).join('')
             : '<div style="font-size:0.75rem;color:#94a3b8;text-align:center;padding:16px;">No completed tasks yet.</div>';
     }
+
+    var groupsCard=document.getElementById('fnTaskAssetGroupsCard');
+    var groupsList=document.getElementById('fnTaskAssetGroupsList');
+    if(groupsCard && groupsList){
+        var groupIndex={}, groups=[];
+        tasks.forEach(function(t){
+            var key=(t.parentAsset||'').trim();
+            if(!key) return;
+            if(!(key in groupIndex)){ groupIndex[key]=groups.length; groups.push({name:key, items:[]}); }
+            groups[groupIndex[key]].items.push(t);
+        });
+        if(groups.length){
+            groupsCard.style.display='';
+            groupsList.innerHTML = groups.map(function(g){
+                var total=g.items.length;
+                var complete=g.items.filter(function(t){return t.status==='Completed';}).length;
+                var pct=total?Math.round(complete/total*100):0;
+                var barColor = pct===100?'#059669':(pct===0?'#94a3b8':'#2563eb');
+                return '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;background:#f8fafc;border-radius:8px;margin-bottom:6px;">'
+                    +'<div style="font-size:.72rem;font-weight:700;"><i class="fas fa-layer-group" style="color:#64748b;margin-right:5px;"></i>'+iptEsc(g.name)+'</div>'
+                    +'<div style="display:flex;align-items:center;gap:6px;">'
+                    +'<div style="width:60px;height:6px;background:#e2e8f0;border-radius:3px;overflow:hidden;"><div style="width:'+pct+'%;height:100%;background:'+barColor+';"></div></div>'
+                    +'<span style="font-size:.62rem;font-weight:700;color:'+barColor+';">'+complete+'/'+total+' • '+pct+'%</span>'
+                    +'</div></div>';
+            }).join('');
+        } else {
+            groupsCard.style.display='none';
+            groupsList.innerHTML='';
+        }
+    }
 }
 
 // ---------------- Actions ----------------
 function iptAddTask(){
     var devSel=document.getElementById('fnTaskDeviceType');
     var tagInput=document.getElementById('fnTaskTagInput');
+    var parentInput=document.getElementById('fnTaskParentInput');
+    var stdSelect=document.getElementById('fnTaskStandardSelect');
     if(!devSel||!tagInput) return;
     var tag=tagInput.value.trim();
     var parts=devSel.value.split('|');
@@ -16827,6 +16898,8 @@ function iptAddTask(){
         tag: tag,
         deviceType: category,
         rsDeviceType: rsDeviceType,
+        parentAsset: (parentInput&&parentInput.value||'').trim(),
+        standard: (stdSelect&&stdSelect.value||'').trim(),
         status: 'Outstanding',
         addedAt: new Date().toISOString(),
         completedAt: null,
@@ -16837,6 +16910,7 @@ function iptAddTask(){
     iptSaveTasks(tasks);
     tagInput.value='';
     tagInput.focus();
+    // Parent Asset is intentionally left as-is so adding several components to the same asset is quick.
     iptRender();
 }
 
@@ -16973,21 +17047,41 @@ function iptQuickSummary(){
             {label:'Carried Over', value:tasks.filter(function(t){return t.carriedFrom;}).length}
         ]);
         y=window.iprNarrative(doc,y, completed.length+' of '+tasks.length+' tasks completed as of '+new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})+'.'+(outstanding.length?' '+outstanding.length+' remaining.':' All tasks complete.'));
+
+        var taskGroupIndex={}, taskGroups=[];
+        tasks.forEach(function(t){
+            var key=(t.parentAsset||'').trim(); if(!key) return;
+            if(!(key in taskGroupIndex)){ taskGroupIndex[key]=taskGroups.length; taskGroups.push({name:key, items:[]}); }
+            taskGroups[taskGroupIndex[key]].items.push(t);
+        });
+        if(taskGroups.length){
+            y=window.iprSectionTitle(doc,y,'Asset Groups',taskGroups.length);
+            y=window.iprTable(doc,y,
+                [{header:'Parent Asset',dataKey:'name'},{header:'Components',dataKey:'total',cellWidth:60},
+                 {header:'Complete',dataKey:'complete',cellWidth:60},{header:'% Complete',dataKey:'pct',cellWidth:60}],
+                taskGroups.map(function(g){
+                    var c=g.items.filter(function(t){return t.status==='Completed';}).length;
+                    return {name:g.name, total:g.items.length, complete:c, pct:(g.items.length?Math.round(c/g.items.length*100):0)+'%'};
+                }),
+                {}
+            );
+        }
+
         if(completed.length){
             y=window.iprSectionTitle(doc,y,'Completed So Far',completed.length);
             y=window.iprTable(doc,y,
-                [{header:'Device',dataKey:'device'},{header:'Tag',dataKey:'tag',cellWidth:80},
-                 {header:'Result',dataKey:'result',cellWidth:70},{header:'Report ID',dataKey:'reportId',cellWidth:90}],
-                completed.map(function(t){ return {device:t.deviceType, tag:t.tag, result:t.reportResult||'—', reportId:t.reportId||'—'}; }),
+                [{header:'Device',dataKey:'device'},{header:'Tag',dataKey:'tag',cellWidth:70},{header:'Asset',dataKey:'asset',cellWidth:70},
+                 {header:'Result',dataKey:'result',cellWidth:60},{header:'Report ID',dataKey:'reportId',cellWidth:80}],
+                completed.map(function(t){ return {device:t.deviceType, tag:t.tag, asset:t.parentAsset||'—', result:t.reportResult||'—', reportId:t.reportId||'—'}; }),
                 {badgeCols:['result']}
             );
         }
         if(outstanding.length){
             y=window.iprSectionTitle(doc,y,'Outstanding',outstanding.length);
             y=window.iprTable(doc,y,
-                [{header:'Device',dataKey:'device'},{header:'Tag',dataKey:'tag',cellWidth:80},
-                 {header:'Status',dataKey:'status',cellWidth:70},{header:'Note',dataKey:'note'}],
-                outstanding.map(function(t){ return {device:t.deviceType, tag:t.tag, status:'Pending', note:t.note||'—'}; }),
+                [{header:'Device',dataKey:'device'},{header:'Tag',dataKey:'tag',cellWidth:70},{header:'Asset',dataKey:'asset',cellWidth:70},
+                 {header:'Status',dataKey:'status',cellWidth:60},{header:'Note',dataKey:'note'}],
+                outstanding.map(function(t){ return {device:t.deviceType, tag:t.tag, asset:t.parentAsset||'—', status:'Pending', note:t.note||'—'}; }),
                 {badgeCols:['status']}
             );
         }
@@ -17120,6 +17214,10 @@ function iptFullReport(){
 // ---------------- Wiring ----------------
 document.addEventListener('DOMContentLoaded',function(){
     iptMeta(); // ensure initialized
+    var iptStdSelect=document.getElementById('fnTaskStandardSelect');
+    if(iptStdSelect && typeof IOC_STANDARDS!=='undefined'){
+        iptStdSelect.innerHTML='<option value="">— Default (IEC) —</option>'+IOC_STANDARDS.map(function(s){return '<option>'+s+'</option>';}).join('');
+    }
     iptRender();
 
     var logBtn=document.getElementById('fnTabLogBtn');
@@ -17280,6 +17378,7 @@ var iocOpenCategory=null;
 var iocOpenItem=null;
 
 function iocEsc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+var IOC_STANDARDS=['IEC','ISA','API','OEM Spec','Site-Specific','Other'];
 function iocId(){return 'OC-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,7);}
 function iocFmt(n){ return (n==null||isNaN(n))?'—':(Math.round(n*1000)/1000).toString(); }
 function iocTodayStr(){
@@ -17344,6 +17443,8 @@ function iocAddItem(catId){
     var urvEl=document.getElementById('iocNewUrv_'+catId);
     var lrvEl=document.getElementById('iocNewLrv_'+catId);
     var tolEl=document.getElementById('iocNewTol_'+catId);
+    var parentEl=document.getElementById('iocNewParent_'+catId);
+    var stdEl=document.getElementById('iocNewStandard_'+catId);
     var tag=(tagEl&&tagEl.value||'').trim();
     if(!tag){ alert('Enter a tag for this item.'); if(tagEl) tagEl.focus(); return; }
     var type=(typeEl&&typeEl.value)||cat.type;
@@ -17354,6 +17455,8 @@ function iocAddItem(catId){
         applicableState: (stateEl&&stateEl.value)||'Both',
         type: type,
         assignedTo: (assignEl&&assignEl.value||'').trim(),
+        parentAsset: (parentEl&&parentEl.value||'').trim(),
+        standard: (stdEl&&stdEl.value||'').trim(),
         status:'Pending',
         urv: type==='A' ? parseFloat(urvEl&&urvEl.value) : null,
         lrv: type==='A' ? parseFloat(lrvEl&&lrvEl.value) : null,
@@ -17364,6 +17467,7 @@ function iocAddItem(catId){
     };
     var items=iocItems(); items.push(item); iocSaveItems(items);
     if(tagEl) tagEl.value=''; if(descEl) descEl.value=''; if(assignEl) assignEl.value='';
+    // Parent Asset is intentionally left as-is so adding several components to the same asset is quick.
     iocRender();
 }
 function iocRemoveItem(id){
@@ -17418,6 +17522,10 @@ function iocSaveItemResult(id){
     }
     var assignEl=document.getElementById('iocAssignEdit_'+id);
     if(assignEl) it.assignedTo=assignEl.value.trim();
+    var stdEditEl=document.getElementById('iocStandardEdit_'+id);
+    if(stdEditEl) it.standard=stdEditEl.value.trim();
+    var parentEditEl=document.getElementById('iocParentEdit_'+id);
+    if(parentEditEl) it.parentAsset=parentEditEl.value.trim();
     it.status='Complete';
     it.checkedBy=job.tech||it.assignedTo||'—';
     it.timestamp=new Date().toISOString();
@@ -17437,7 +17545,8 @@ function iocNewJob(){
     var cloned=jobItems.map(function(it){
         return {
             id: iocId(), jobId: newJob.id, category: it.category, tag: it.tag, description: it.description,
-            applicableState: it.applicableState, type: it.type, assignedTo: it.assignedTo, status:'Pending',
+            applicableState: it.applicableState, type: it.type, assignedTo: it.assignedTo,
+            parentAsset: it.parentAsset||'', standard: it.standard||'', status:'Pending',
             urv: it.urv, lrv: it.lrv, tolerance: it.tolerance,
             checkpoints: it.type==='A' ? iocMakeCheckpoints(it.urv, it.lrv) : null,
             resultB:null, notes:'', checkedBy:null, timestamp:null, overallResult:null, addedAt:new Date().toISOString()
@@ -17485,6 +17594,12 @@ function iocCategorySelectHTML(){
     return options;
 }
 
+function iocStandardOptionsHTML(selected){
+    var opts='<option value=""'+(!selected?' selected':'')+'>— Default (IEC) —</option>';
+    opts+=IOC_STANDARDS.map(function(s){ return '<option'+(selected===s?' selected':'')+'>'+s+'</option>'; }).join('');
+    return opts;
+}
+
 function iocAddItemFormHTML(cat){
     var typeOptions = '<option value="A"'+(cat.type==='A'?' selected':'')+'>A — Range-based (5-pt cal)</option><option value="B"'+(cat.type==='B'?' selected':'')+'>B — Functional / Pass-Fail</option>';
     return '<div class="card" style="margin-top:8px;">'
@@ -17493,8 +17608,10 @@ function iocAddItemFormHTML(cat){
         +'<div><label>Tag</label><input id="iocNewTag_'+cat.id+'" placeholder="e.g. PT-201"/></div>'
         +'<div><label>Assigned To</label><input id="iocNewAssign_'+cat.id+'" placeholder="Tech name"/></div>'
         +'<div class="fn-wide"><label>Description</label><input id="iocNewDesc_'+cat.id+'" placeholder="Location / service description"/></div>'
+        +'<div class="fn-wide"><label>Parent Asset <span style="font-weight:400;color:#94a3b8;">(optional — groups related components, e.g. "GT-1 Bently Nevada Rack")</span></label><input id="iocNewParent_'+cat.id+'" placeholder="Leave blank for a standalone item"/></div>'
         +'<div><label>Applicable State</label><select id="iocNewState_'+cat.id+'"><option>Both</option><option>Shutdown</option><option>Running</option></select></div>'
         +'<div><label>Check Type</label><select id="iocNewType_'+cat.id+'" onchange="window.__iocToggleRangeFields(\''+cat.id+'\')">'+typeOptions+'</select></div>'
+        +'<div><label>Standard <span style="font-weight:400;color:#94a3b8;">(optional)</span></label><select id="iocNewStandard_'+cat.id+'">'+iocStandardOptionsHTML('')+'</select></div>'
         +'<div id="iocRangeFields_'+cat.id+'" style="display:'+(cat.type==='A'?'contents':'none')+';">'
         +'<div><label>LRV</label><input id="iocNewLrv_'+cat.id+'" placeholder="0" step="any" type="number"/></div>'
         +'<div><label>URV</label><input id="iocNewUrv_'+cat.id+'" placeholder="100" step="any" type="number"/></div>'
@@ -17510,7 +17627,7 @@ function iocItemRowHTML(it,cat){
     var head = '<div data-ioc-toggle-item="'+it.id+'" style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #f1f5f9;cursor:pointer;">'
         +'<div>'
         +'<div style="font-size:.75rem;font-weight:700;">'+iocEsc(it.tag)+' <span style="font-weight:400;color:#94a3b8;font-size:.62rem;">('+it.type+')</span></div>'
-        +'<div style="font-size:.62rem;color:#64748b;">'+iocEsc(it.description||'—')+' • '+iocEsc(it.applicableState)+(it.assignedTo?(' • '+iocEsc(it.assignedTo)):'')+'</div>'
+        +'<div style="font-size:.62rem;color:#64748b;">'+iocEsc(it.description||'—')+' • '+iocEsc(it.applicableState)+(it.assignedTo?(' • '+iocEsc(it.assignedTo)):'')+(it.standard?(' • '+iocEsc(it.standard)):'')+'</div>'
         +'</div>'
         +'<div style="display:flex;align-items:center;gap:8px;">'+iocStatusBadge(it.status,it.overallResult)+'<i class="fas fa-chevron-'+(open?'up':'down')+'" style="font-size:.6rem;color:#94a3b8;"></i></div>'
         +'</div>';
@@ -17535,7 +17652,7 @@ function iocItemRowHTML(it,cat){
             +'<div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;min-width:420px;">'
             +'<thead><tr style="color:#94a3b8;font-size:.58rem;text-align:left;"><th style="padding:4px;">%</th><th style="padding:4px;">Expected</th><th style="padding:4px;">As-Found</th><th style="padding:4px;">As-Left</th><th style="padding:4px;">Error</th><th style="padding:4px;">Result</th></tr></thead>'
             +'<tbody>'+rows+'</tbody></table></div>'
-            +'<div class="fn-form-grid" style="margin-top:8px;"><div><label>Assigned To</label><input id="iocAssignEdit_'+it.id+'" value="'+iocEsc(it.assignedTo)+'"/></div></div>'
+            +'<div class="fn-form-grid" style="margin-top:8px;"><div><label>Assigned To</label><input id="iocAssignEdit_'+it.id+'" value="'+iocEsc(it.assignedTo)+'"/></div><div><label>Standard</label><select id="iocStandardEdit_'+it.id+'">'+iocStandardOptionsHTML(it.standard)+'</select></div><div class="fn-wide"><label>Parent Asset</label><input id="iocParentEdit_'+it.id+'" placeholder="Leave blank for a standalone item" value="'+iocEsc(it.parentAsset||'')+'"/></div></div>'
             +'<div style="display:flex;gap:8px;margin-top:8px;">'
             +'<button class="btn fn-primary" data-ioc-save="'+it.id+'" style="flex:1;justify-content:center;" type="button"><i class="fas fa-check"></i> Save Result</button>'
             +'<button class="btn-outline btn" data-ioc-remove="'+it.id+'" style="justify-content:center;color:#dc2626;" type="button"><i class="fas fa-trash"></i></button>'
@@ -17548,6 +17665,8 @@ function iocItemRowHTML(it,cat){
             +'<div class="fn-form-grid">'
             +'<div><label>Result</label><select id="iocResultB_'+it.id+'"><option value="">— Select —</option>'+opts+'</select></div>'
             +'<div><label>Assigned To</label><input id="iocAssignEdit_'+it.id+'" value="'+iocEsc(it.assignedTo)+'"/></div>'
+            +'<div><label>Standard</label><select id="iocStandardEdit_'+it.id+'">'+iocStandardOptionsHTML(it.standard)+'</select></div>'
+            +'<div class="fn-wide"><label>Parent Asset</label><input id="iocParentEdit_'+it.id+'" placeholder="Leave blank for a standalone item" value="'+iocEsc(it.parentAsset||'')+'"/></div>'
             +'<div class="fn-wide"><label>Notes</label><textarea id="iocNoteB_'+it.id+'" placeholder="Findings, actions taken...">'+iocEsc(it.notes)+'</textarea></div>'
             +'</div>'
             +'<div style="display:flex;gap:8px;margin-top:8px;">'
@@ -17566,13 +17685,46 @@ function iocAddItemDetailHTML(){
     return iocAddItemFormHTML(cat);
 }
 
+function iocGroupByParentAsset(items){
+    // Groups items that share a non-blank parentAsset name, preserving order of first appearance.
+    // Items without a parentAsset are returned separately and render exactly as before (flat, ungrouped).
+    var groups=[]; var groupIndex={}; var ungrouped=[];
+    items.forEach(function(it){
+        var key=(it.parentAsset||'').trim();
+        if(!key){ ungrouped.push(it); return; }
+        if(!(key in groupIndex)){ groupIndex[key]=groups.length; groups.push({name:key, items:[]}); }
+        groups[groupIndex[key]].items.push(it);
+    });
+    return {groups:groups, ungrouped:ungrouped};
+}
+
+function iocAssetRollupHTML(group){
+    var total=group.items.length;
+    var complete=group.items.filter(function(it){return it.status==='Complete';}).length;
+    var pct=total?Math.round(complete/total*100):0;
+    var barColor = pct===100?'#059669':(pct===0?'#94a3b8':'#2563eb');
+    return '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;background:#f8fafc;border-radius:8px;margin:10px 0 4px;">'
+        +'<div style="font-size:.72rem;font-weight:700;"><i class="fas fa-layer-group" style="color:#64748b;margin-right:5px;"></i>'+iocEsc(group.name)+'</div>'
+        +'<div style="display:flex;align-items:center;gap:6px;">'
+        +'<div style="width:60px;height:6px;background:#e2e8f0;border-radius:3px;overflow:hidden;"><div style="width:'+pct+'%;height:100%;background:'+barColor+';"></div></div>'
+        +'<span style="font-size:.62rem;font-weight:700;color:'+barColor+';">'+complete+'/'+total+' • '+pct+'%</span>'
+        +'</div></div>';
+}
+
 function iocCategoryDetailHTML(){
     if(!iocOpenCategory) return '';
     var cat=iocCat(iocOpenCategory); if(!cat) return '';
     var items=iocFilteredItems(iocCategoryItems(cat.id));
-    var listHTML = items.length
-        ? items.map(function(it){ return iocItemRowHTML(it,cat); }).join('')
-        : '<div style="font-size:0.72rem;color:#94a3b8;text-align:center;padding:14px;">No items in this category yet (or none match the current filter).</div>';
+    var grouped=iocGroupByParentAsset(items);
+    var listHTML='';
+    if(!items.length){
+        listHTML='<div style="font-size:0.72rem;color:#94a3b8;text-align:center;padding:14px;">No items in this category yet (or none match the current filter).</div>';
+    } else {
+        grouped.groups.forEach(function(g){
+            listHTML += iocAssetRollupHTML(g) + g.items.map(function(it){ return iocItemRowHTML(it,cat); }).join('');
+        });
+        listHTML += grouped.ungrouped.map(function(it){ return iocItemRowHTML(it,cat); }).join('');
+    }
     return '<div class="card">'
         +'<div class="card-header"><i class="fas '+cat.icon+'"></i><h3>'+iocEsc(cat.name)+'</h3><span>'+items.length+'</span></div>'
         +listHTML
@@ -17668,13 +17820,27 @@ function iocBuildReport(items, title, scopeLabel){
         IOC_CATEGORIES.forEach(function(cat){
             var list=byCat[cat.id]; if(!list||!list.length) return;
             y=window.iprSectionTitle(doc,y,cat.name,list.length+' items');
+
+            var catGroups=iocGroupByParentAsset(list).groups;
+            if(catGroups.length){
+                y=window.iprTable(doc,y,
+                    [{header:'Parent Asset',dataKey:'name'},{header:'Components',dataKey:'total',cellWidth:60},
+                     {header:'Complete',dataKey:'complete',cellWidth:60},{header:'% Complete',dataKey:'pct',cellWidth:60}],
+                    catGroups.map(function(g){
+                        var complete=g.items.filter(function(it){return it.status==='Complete';}).length;
+                        return {name:g.name, total:g.items.length, complete:complete, pct:(g.items.length?Math.round(complete/g.items.length*100):0)+'%'};
+                    }),
+                    {}
+                );
+            }
+
             y=window.iprTable(doc,y,
-                [{header:'Tag',dataKey:'tag',cellWidth:60},{header:'Type',dataKey:'type',cellWidth:40},
-                 {header:'Assigned',dataKey:'assigned',cellWidth:60},{header:'Status',dataKey:'status',cellWidth:55},
-                 {header:'Result',dataKey:'result',cellWidth:45},{header:'Notes / Description',dataKey:'notes'}],
+                [{header:'Tag',dataKey:'tag',cellWidth:55},{header:'Asset',dataKey:'asset',cellWidth:55},{header:'Type',dataKey:'type',cellWidth:35},
+                 {header:'Std',dataKey:'standard',cellWidth:35},{header:'Assigned',dataKey:'assigned',cellWidth:50},{header:'Status',dataKey:'status',cellWidth:50},
+                 {header:'Result',dataKey:'result',cellWidth:40},{header:'Notes / Description',dataKey:'notes'}],
                 list.map(function(it){ return {
-                    tag:it.tag, type:it.type==='A'?'Range':'Func.', assigned:it.assignedTo||'—',
-                    status:it.status, result:it.overallResult||'—',
+                    tag:it.tag, asset:it.parentAsset||'—', type:it.type==='A'?'Range':'Func.', standard:it.standard||'IEC',
+                    assigned:it.assignedTo||'—', status:it.status, result:it.overallResult||'—',
                     notes:it.notes||it.description||'—'
                 }; }),
                 {badgeCols:['status','result']}
