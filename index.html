@@ -181,102 +181,6 @@
             color: white;
         }
 
-        /* ===== SPLASH SCREEN ===== */
-        #splashScreen {
-            position: fixed;
-            inset: 0;
-            z-index: 9999;
-            background: linear-gradient(160deg, #1e3a5f, #0f2b44);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
-        }
-        #splashScreen.fade-out {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-        }
-        .splash-content {
-            text-align: center;
-            color: white;
-            padding: 20px;
-        }
-        .splash-icon {
-            width: 92px;
-            height: 92px;
-            border-radius: 26px;
-            background: rgba(255, 255, 255, 0.08);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 18px auto;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            animation: splashGlow 1.8s ease-in-out infinite;
-        }
-        @keyframes splashGlow {
-            0%, 100% { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); }
-            50% { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 0 22px rgba(127, 201, 255, 0.45); }
-        }
-        #splashNeedle {
-            transform-origin: 50px 78px;
-            animation: splashNeedleSweep 1.6s cubic-bezier(0.45, 0, 0.55, 1) infinite;
-        }
-        @keyframes splashNeedleSweep {
-            0% { transform: rotate(-52deg); }
-            50% { transform: rotate(52deg); }
-            100% { transform: rotate(-52deg); }
-        }
-        .splash-title {
-            font-family: var(--font-heading);
-            font-size: 1.7rem;
-            font-weight: 700;
-            letter-spacing: -0.3px;
-            margin-bottom: 4px;
-            animation: splashFadeUp 0.6s ease both;
-        }
-        .splash-sub {
-            font-size: 0.8rem;
-            opacity: 0.7;
-            margin-bottom: 30px;
-            animation: splashFadeUp 0.6s ease 0.1s both;
-        }
-        @keyframes splashFadeUp {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .splash-loader {
-            width: 160px;
-            height: 6px;
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 10px;
-            overflow: hidden;
-            margin: 0 auto;
-        }
-        .splash-loader-bar {
-            width: 40%;
-            height: 100%;
-            background: linear-gradient(90deg, #7fc9ff, #2563eb);
-            border-radius: 10px;
-            animation: splashLoading 1.1s ease-in-out infinite;
-        }
-        @keyframes splashLoading {
-            0% { transform: translateX(-120%); }
-            100% { transform: translateX(360%); }
-        }
-        .splash-status {
-            font-size: 0.65rem;
-            opacity: 0.55;
-            margin-top: 14px;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-        }
-        @media (prefers-reduced-motion: reduce) {
-            .splash-icon, .splash-loader-bar, .splash-title, .splash-sub, #splashNeedle {
-                animation: none;
-            }
-        }
-
         /* ===== WHITE THEME OVERRIDE (contrast-safe) ===== */
         body.theme-light .greeting {
             color: #0f2b44;
@@ -4193,7 +4097,7 @@ body.dark #ipBoot{
 body:not(.dark) #ipBoot .ipb-node{color:#172033}
 body:not(.dark) #ipBoot .ipb-row{background:rgba(255,255,255,.62);border:1px solid color-mix(in srgb,var(--boot-accent) 10%,var(--boot-line))}
 
-</style></head>
+</style><style>#splashScreen,.splash-content,.splash-icon,.splash-title,.splash-sub,.splash-loader,.splash-status{display:none!important}</style></head>
 <body>
 <div id="ipBoot" aria-label="InstrumentPro startup" role="dialog">
   <div class="ipb-grid"></div><div class="ipb-scan"></div>
@@ -4483,27 +4387,7 @@ body:not(.dark) #ipBoot .ipb-row{background:rgba(255,255,255,.62);border:1px sol
     window.ipDraft = { save: save, load: load, clear: clear, flash: flash };
 })();
 </script>
-<!-- ============================================================
-    SPLASH / LOADING SCREEN
-    ============================================================ -->
-<div id="splashScreen">
-<div class="splash-content">
-<div class="splash-icon">
-<svg height="56" viewbox="0 0 100 100" width="56">
-<path d="M 18 78 A 36 36 0 1 1 82 78" fill="none" opacity="0.9" stroke="#ffffff" stroke-linecap="round" stroke-width="9"></path>
-<line stroke="#7fc9ff" stroke-linecap="round" stroke-width="3" x1="50" x2="50" y1="20" y2="28"></line>
-<line stroke="#7fc9ff" stroke-linecap="round" stroke-width="3" x1="14" x2="21" y1="78" y2="74"></line>
-<line stroke="#7fc9ff" stroke-linecap="round" stroke-width="3" x1="86" x2="79" y1="78" y2="74"></line>
-<line id="splashNeedle" stroke="#ffffff" stroke-linecap="round" stroke-width="4" x1="50" x2="50" y1="78" y2="38"></line>
-<circle cx="50" cy="78" fill="#ffffff" r="5.5"></circle>
-</svg>
-</div>
-<div class="splash-title">InstrumentPro</div>
-<div class="splash-sub">Field Toolbox for Technicians</div>
-<div class="splash-loader"><div class="splash-loader-bar"></div></div>
-<div class="splash-status" id="splashStatus">Loading tools…</div>
-</div>
-</div>
+
 <div class="app-shell">
 <!-- ============================================================
     SIDEBAR
@@ -8227,7 +8111,6 @@ body.dark .colorpick-hexwrap input{background:#0f172a;border-color:#334155;color
             // =============================================================
             // SPLASH SCREEN
             // =============================================================
-            const splashScreen = document.getElementById('splashScreen');
             const splashStatus = document.getElementById('splashStatus');
             const splashMessages = ['Loading tools…', 'Preparing calculators…', 'Almost ready…'];
             let splashMsgIndex = 0;
@@ -8239,10 +8122,7 @@ body.dark .colorpick-hexwrap input{background:#0f172a;border-color:#334155;color
             // Reveal the app after the first paint instead of waiting for every external
             // resource. Optional features must never block startup.
             function hideSplash() {
-                if (!splashScreen || splashScreen.classList.contains('fade-out')) return;
-                clearInterval(splashMsgInterval);
-                splashScreen.classList.add('fade-out');
-                setTimeout(function() { splashScreen.style.display = 'none'; }, 550);
+                clearInterval(splashMsgInterval); }, 550);
             }
             requestAnimationFrame(hideSplash);
             setTimeout(hideSplash, 1800); // fail-safe
