@@ -4880,6 +4880,7 @@ body.dark #reportpanel-loopcheck .card:has(#loopAlarmResult) .row > label {
 <div class="fn-section-note" style="margin-bottom:8px;">What are you working on right now?</div>
 <select id="iocCategorySelect" style="width:100%;"></select>
 </div>
+<div id="iocAddItemDetail"></div>
 <div class="card">
 <div class="fn-form-grid">
 <div><label>Show</label><select id="iocFilterMode">
@@ -16637,6 +16638,12 @@ function iocItemRowHTML(it,cat){
     return head+body;
 }
 
+function iocAddItemDetailHTML(){
+    if(!iocOpenCategory) return '';
+    var cat=iocCat(iocOpenCategory); if(!cat) return '';
+    return iocAddItemFormHTML(cat);
+}
+
 function iocCategoryDetailHTML(){
     if(!iocOpenCategory) return '';
     var cat=iocCat(iocOpenCategory); if(!cat) return '';
@@ -16647,8 +16654,7 @@ function iocCategoryDetailHTML(){
     return '<div class="card">'
         +'<div class="card-header"><i class="fas '+cat.icon+'"></i><h3>'+iocEsc(cat.name)+'</h3><span>'+items.length+'</span></div>'
         +listHTML
-        +'</div>'
-        +iocAddItemFormHTML(cat);
+        +'</div>';
 }
 
 function iocRender(){
@@ -16688,6 +16694,7 @@ function iocRender(){
     var catTotalBadge=document.getElementById('iocCatTotalBadge'); if(catTotalBadge) catTotalBadge.textContent=jobItems.length;
 
     var select=document.getElementById('iocCategorySelect'); if(select) select.innerHTML=iocCategorySelectHTML();
+    var addDetail=document.getElementById('iocAddItemDetail'); if(addDetail) addDetail.innerHTML=iocAddItemDetailHTML();
     var detail=document.getElementById('iocCategoryDetail'); if(detail) detail.innerHTML=iocCategoryDetailHTML();
 }
 
