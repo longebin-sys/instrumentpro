@@ -4097,7 +4097,7 @@ body.dark #ipBoot{
 body:not(.dark) #ipBoot .ipb-node{color:#172033}
 body:not(.dark) #ipBoot .ipb-row{background:rgba(255,255,255,.62);border:1px solid color-mix(in srgb,var(--boot-accent) 10%,var(--boot-line))}
 
-</style><style>#splashScreen,.splash-content,.splash-icon,.splash-title,.splash-sub,.splash-loader,.splash-status{display:none!important}</style></head>
+</style></head>
 <body>
 <div id="ipBoot" aria-label="InstrumentPro startup" role="dialog">
   <div class="ipb-grid"></div><div class="ipb-scan"></div>
@@ -8108,24 +8108,7 @@ body.dark .colorpick-hexwrap input{background:#0f172a;border-color:#334155;color
         (function() {
             'use strict';
 
-            // =============================================================
-            // SPLASH SCREEN
-            // =============================================================
-            const splashStatus = document.getElementById('splashStatus');
-            const splashMessages = ['Loading tools…', 'Preparing calculators…', 'Almost ready…'];
-            let splashMsgIndex = 0;
-            const splashMsgInterval = setInterval(function() {
-                splashMsgIndex = (splashMsgIndex + 1) % splashMessages.length;
-                splashStatus.textContent = splashMessages[splashMsgIndex];
-            }, 600);
-
-            // Reveal the app after the first paint instead of waiting for every external
-            // resource. Optional features must never block startup.
-            function hideSplash() {
-                clearInterval(splashMsgInterval); }, 550);
-            }
-            requestAnimationFrame(hideSplash);
-            setTimeout(hideSplash, 1800); // fail-safe
+            // Legacy splash screen removed. The Field Engineer Boot Sequence above is the only startup screen.
 
             // OCR is optional; load the large library only when the user scans a tag.
             let tesseractPromise = null;
