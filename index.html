@@ -4962,7 +4962,7 @@ body {
 <div class="fn-form-grid">
 <div><label>Type</label><select id="fnCategory"><option>Observation</option><option>Issue</option><option>Finding</option><option>Inspection</option><option>Handover</option><option>Safety</option><option>TODO</option><option>General</option></select></div>
 <div><label>Priority</label><select id="fnPriority"><option>Low</option><option selected="">Normal</option><option>High</option><option>Critical</option></select></div>
-<div><label>Status</label><select id="fnStatus"><option>Open</option><option>In Progress</option><option>Resolved</option><option>Deferred</option></select></div>
+<div><label>Status</label><select id="fnStatus"><option>Open</option><option>In Progress</option><option>Resolved</option><option>Deferred</option><option>Closed</option></select></div>
 <div><label>Discipline</label><select id="fnDiscipline"><option>Instrumentation</option><option>Electrical</option><option>Control</option><option>Mechanical</option><option>Process</option><option>Safety</option><option>Other</option></select></div>
 <div><label>Tag / Asset</label><input id="fnTag" placeholder="PT-101 / PLC-02"/></div>
 <div><label>Location</label><input id="fnLocation" placeholder="Area / Unit / Panel"/></div>
@@ -4976,7 +4976,7 @@ body {
 <div class="card-header"><i class="fas fa-layer-group"></i><h3>Field Log</h3><span id="noteCount">0</span></div>
 <div class="fn-log-tools">
 <input id="noteSearch" placeholder="Search tag, note, location, WO, keywords..."/>
-<select id="fnFilterStatus"><option value="">All status</option><option>Open</option><option>In Progress</option><option>Resolved</option><option>Deferred</option></select>
+<select id="fnFilterStatus"><option value="">All status</option><option>Open</option><option>In Progress</option><option>Resolved</option><option>Deferred</option><option>Closed</option></select>
 <select id="fnFilterPriority"><option value="">All priority</option><option>Critical</option><option>High</option><option>Normal</option><option>Low</option></select>
 </div>
 <div class="row" style="justify-content:space-between;margin-top:6px;">
@@ -13201,15 +13201,15 @@ body.dark .inv-attach-btn.attached{color:#4ade80;}
                     if(!filtered.length){el.innerHTML='<div style="font-size:.75rem;color:#94a3b8;text-align:center;padding:18px;">No matching field notes.</div>';updateSelectedCount();renderDailyDigest();return;}
                     el.innerHTML=filtered.map(n=>{
                         const due=n.dueDate?new Date(n.dueDate+'T00:00:00'):null;
-                        const overdue=due && due<new Date() && n.status!=='Resolved';
+                        const overdue=due && due<new Date() && n.status!=='Resolved' && n.status!=='Closed';
                         const isSel=selected.has(String(n.id));
                         return '<div class="fn-note-card">'+
                           '<div class="fn-note-top">'+
                           '<div class="fn-note-select"><input type="checkbox" class="fn-select" data-id="'+n.id+'" '+(isSel?'checked':'')+' /></div>'+
-                          '<div><div class="fn-note-tags"><span class="badge" style="background:'+colors[n.priority]+';color:'+fg[n.priority]+';">'+esc(n.priority)+'</span><span class="badge" style="background:#f1f5f9;color:#334155;">'+esc(n.category)+'</span><span class="badge" style="background:#f1f5f9;color:#334155;">'+esc(n.status)+'</span></div>'+ 
+                          '<div><div class="fn-note-tags"><span class="badge" style="background:'+colors[n.priority]+';color:'+fg[n.priority]+';">'+esc(n.priority)+'</span><span class="badge" style="background:#f1f5f9;color:#334155;">'+esc(n.category)+'</span><button type="button" class="badge fn-status-toggle" data-id="'+n.id+'" title="Tap to toggle Open / Closed" style="background:#f1f5f9;color:#334155;border:0;cursor:pointer;font:inherit;">'+esc(n.status)+'</button></div>'+ 
                           '<div class="fn-note-title">'+esc(n.tag||'Unassigned asset')+(n.location?' · '+esc(n.location):'')+'</div>'+ 
                           '<div class="fn-note-meta">'+fmt(n.ts)+' · '+esc(n.discipline)+(n.dueDate?' · Due '+esc(n.dueDate):'')+(overdue?' · <b style="color:#dc2626;">OVERDUE</b>':'')+'</div></div>'+ 
-                          '<div style="display:flex;gap:4px;"><button class="btn-outline btn fn-report" data-id="'+n.id+'" title="Report"><i class="fas fa-file-alt"></i></button><button class="btn-outline btn fn-delete" data-id="'+n.id+'" title="Delete"><i class="fas fa-trash"></i></button></div></div>'+ 
+                          '<div style="display:flex;gap:4px;"><button class="btn-outline btn fn-delete" data-id="'+n.id+'" title="Delete"><i class="fas fa-trash"></i></button></div></div>'+ 
                           '<div class="fn-note-body">'+esc(n.text)+'</div>'+ 
                           
                           
@@ -13217,7 +13217,16 @@ body.dark .inv-attach-btn.attached{color:#4ade80;}
                           '</div>';
                     }).join('');
                     el.querySelectorAll('.fn-delete').forEach(b=>b.onclick=()=>{ if(confirm('Delete this field note?')){save(all.filter(n=>String(n.id)!==String(b.dataset.id)));render();}});
-                    el.querySelectorAll('.fn-report').forEach(b=>b.onclick=()=>makeReport(notes().find(n=>String(n.id)===String(b.dataset.id))));
+                    el.querySelectorAll('.fn-status-toggle').forEach(b=>b.onclick=()=>{
+                        const id=String(b.dataset.id);
+                        const arr=notes();
+                        const n=arr.find(x=>String(x.id)===id);
+                        if(!n) return;
+                        n.status=(String(n.status).toLowerCase()==='closed')?'Open':'Closed';
+                        save(arr);
+                        try{window.syncReportToWebhooks({source:'InstrumentPro',type:'FieldNoteStatusUpdate',timestamp:new Date().toISOString(),id:n.id,status:n.status,category:n.category,priority:n.priority,discipline:n.discipline,tag:n.tag,location:n.location,dueDate:n.dueDate,keywords:n.keywords,text:n.text});}catch(e){}
+                        render();
+                    });
                     el.querySelectorAll('.fn-select').forEach(cb=>cb.onchange=()=>{ const id=String(cb.dataset.id); if(cb.checked) selected.add(id); else selected.delete(id); updateSelectedCount(); });
                     updateSelectedCount();
                     renderDailyDigest();
@@ -17737,16 +17746,16 @@ function iptRender(){
             groupsList.innerHTML = groups.map(function(g){
                 var total=g.items.length;
                 var complete=g.items.filter(function(t){return t.status==='Completed';}).length;
-                // Restore the parent-asset progress tracker: this is a LIVE roll-up of
-                // every component's Report Studio completeness, not just issued/completed count.
-                // Example: two components at 50% and 0% => parent asset shows 25%.
+                // Overall % blends each task's live report completeness (not just a binary
+                // done/not-done count), so a group shows real progress as reports fill in —
+                // e.g. one task at 100% and one at 0% shows 50% overall, not 0%.
                 var pct=total?Math.round(g.items.reduce(function(sum,t){return sum+iptTaskCompleteness(t);},0)/total):0;
-                var barColor = pct>=100?'#059669':(pct<=0?'#94a3b8':'#2563eb');
-                return '<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 10px;background:#f8fafc;border-radius:8px;margin-bottom:6px;">'
-                    +'<div style="font-size:.72rem;font-weight:700;min-width:0;flex:1;"><i class="fas fa-layer-group" style="color:#64748b;margin-right:5px;"></i>'+iptEsc(g.name)+'</div>'
-                    +'<div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">'
-                    +'<div aria-label="'+pct+'% complete" style="width:60px;min-width:60px;height:6px;background:#e2e8f0;border-radius:3px;overflow:hidden;display:block;"><div style="width:'+pct+'%;height:6px;background:'+barColor+';border-radius:3px;"></div></div>'
-                    +'<span style="font-size:.62rem;font-weight:700;color:'+barColor+';white-space:nowrap;">'+complete+'/'+total+' • '+pct+'%</span>'
+                var barColor = pct===100?'#059669':(pct===0?'#94a3b8':'#2563eb');
+                return '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;background:#f8fafc;border-radius:8px;margin-bottom:6px;">'
+                    +'<div style="font-size:.72rem;font-weight:700;"><i class="fas fa-layer-group" style="color:#64748b;margin-right:5px;"></i>'+iptEsc(g.name)+'</div>'
+                    +'<div style="display:flex;align-items:center;gap:6px;">'
+                    +'<div style="width:60px;height:6px;background:#e2e8f0;border-radius:3px;overflow:hidden;"><div style="width:'+pct+'%;height:100%;background:'+barColor+';"></div></div>'
+                    +'<span style="font-size:.62rem;font-weight:700;color:'+barColor+';">'+complete+'/'+total+' • '+pct+'%</span>'
                     +'</div></div>';
             }).join('');
         } else {
@@ -17988,136 +17997,110 @@ function iptFullReport(){
     var tasks=iptActiveTasks();
     var outstanding=tasks.filter(function(t){return t.status==='Outstanding';});
     var completed=tasks.filter(function(t){return t.status==='Completed';});
+
+    var sections=completed.map(function(t){
+        var snap=iptFindReportSnapshot(t.reportId);
+        var header='<div style="max-width:820px;margin:24px auto 6px;font-size:11px;color:#94a3b8;">Task: '+iptEsc(t.tag)+' • '+iptEsc(t.deviceType)+' • Completed '+(t.completedAt?new Date(t.completedAt).toLocaleString():'—')+(t.note?' • Note: '+iptEsc(t.note):'')+'</div>';
+        var body=(typeof window.rsBuildReportHTML==='function' && snap)
+            ? window.rsBuildReportHTML(snap)
+            : '<div style="max-width:820px;margin:auto;padding:18px;border:1px dashed #cbd5e1;border-radius:10px;font-size:12px;color:#64748b;">Full report detail for '+iptEsc(t.tag)+' ('+iptEsc(t.reportId||'no report id')+') is no longer available — it may be older than the last 30 saved reports.</div>';
+        return '<div style="page-break-after:always;">'+header+body+'</div>';
+    }).join('');
+
     var pct=tasks.length?Math.round(tasks.reduce(function(sum,t){return sum+iptTaskCompleteness(t);},0)/tasks.length):0;
 
-    // End-of-week uses the same PDF/report kit as the working Quick Summary.
-    // It must save a real PDF directly — never open a new about:blank tab.
-    window.iprLoadPdfLibs().then(function(){
-        var doc=window.iprNewDoc();
-        var y=window.iprHeader(doc,{
-            title:'End-of-Week Field Reports',
-            subtitle:iptPeriodLabel(meta.mode,meta.date)+' — all devices',
-            reportId:'EOP-'+Date.now(),
-            generated:new Date().toLocaleString()
-        });
+    var outstandingRows=outstanding.map(function(t){
+        return '<tr><td>'+iptEsc(t.tag)+'</td><td>'+iptEsc(t.deviceType)+'</td><td>'+iptTaskCompleteness(t)+'%</td><td><span class="badge-pill '+(iptTaskCompleteness(t)>=100?'b-ready':(iptTaskCompleteness(t)>0?'b-prog':'b-pend'))+'">'+iptTaskStatusLabel(t)+'</span></td><td>'+iptEsc(t.note||'Not stated')+'</td></tr>';
+    }).join('');
+    var outstandingBlock='<div class="sec">'+
+        '<div class="sec-title">Outstanding <small>'+outstanding.length+'</small></div>'+
+        (outstanding.length ? '<table class="rtable"><thead><tr><th>Tag</th><th>Device</th><th>% Complete</th><th>Status</th><th>Reason / Note</th></tr></thead><tbody>'+outstandingRows+'</tbody></table>' : '<p style="font-size:.72rem;color:var(--muted);">None — all tasks complete.</p>')+
+        '</div>';
 
-        y=window.iprInfoBar(doc,y,[
-            {label:'Technician', value:meta.technician||'—'},
-            {label:'Period', value:meta.mode==='day'?'Today':'This Week'},
-            {label:'Total Tasks', value:tasks.length},
-            {label:'Time Checked', value:new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}
-        ]);
+    var completedRows=completed.map(function(t){
+        return '<tr><td>'+iptEsc(t.deviceType)+'</td><td>'+iptEsc(t.tag)+'</td><td>'+(t.completedAt?new Date(t.completedAt).toLocaleString():'—')+'</td><td>'+iptEsc(t.note||'—')+'</td></tr>';
+    }).join('');
+    var completedTable=completed.length ? '<div class="sec"><div class="sec-title">Bundled Full Field Reports <small>'+completed.length+', one per completed device, page-broken</small></div>'+
+        '<table class="rtable"><thead><tr><th>Device</th><th>Tag</th><th>Completed</th><th>Note</th></tr></thead><tbody>'+completedRows+'</tbody></table></div>' : '';
 
-        y=window.iprSectionTitle(doc,y,'Summary');
-        y=window.iprStats(doc,y,[
-            {label:'Scheduled', value:tasks.length},
-            {label:'Issued', value:completed.length, tone:'pass'},
-            {label:'Outstanding', value:outstanding.length, tone:outstanding.length?'fail':'pass'},
-            {label:'Progress', value:pct+'%'},
-            {label:'Carried Over', value:tasks.filter(function(t){return t.carriedFrom;}).length}
-        ]);
-        y=window.iprNarrative(doc,y,
-            completed.length+' of '+tasks.length+' tasks issued for '+iptPeriodLabel(meta.mode,meta.date)+'.'+
-            (outstanding.length?' '+outstanding.length+' remaining ('+pct+'% overall progress), listed below with reasons.':' All tasks issued.')
-        );
+    var titleBlock='<div class="rhead">'+
+        '<span class="badge">END-OF-PERIOD</span>'+
+        '<h2>End of Period Field Reports</h2>'+
+        '<div class="sub">'+iptEsc(iptPeriodLabel(meta.mode,meta.date))+'</div>'+
+        '<div class="meta"><span>Report ID: EOP-'+Date.now()+'</span><span>Generated: '+new Date().toLocaleString()+'</span></div>'+
+        '</div>'+
+        '<div class="infobar">'+
+        '<div><label>Technician</label><span>'+iptEsc(meta.technician||'—')+'</span></div>'+
+        '<div><label>Period</label><span>'+(meta.mode==='day'?'Today':'This Week')+'</span></div>'+
+        '<div><label>Total Tasks</label><span>'+tasks.length+'</span></div>'+
+        '<div><label>Time Checked</label><span>'+new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})+'</span></div>'+
+        '</div>'+
+        '<div class="sec">'+
+        '<div class="sec-title">Summary</div>'+
+        '<div class="stats">'+
+        '<div class="stat"><b>'+tasks.length+'</b><span>Scheduled</span></div>'+
+        '<div class="stat pass"><b>'+completed.length+'</b><span>Issued</span></div>'+
+        '<div class="stat '+(outstanding.length?'fail':'')+'"><b>'+outstanding.length+'</b><span>Outstanding</span></div>'+
+        '<div class="stat"><b>'+pct+'%</b><span>Progress</span></div>'+
+        '<div class="stat"><b>'+tasks.filter(function(t){return t.carriedFrom;}).length+'</b><span>Carried Over</span></div>'+
+        '</div>'+
+        '<div class="narrative">'+completed.length+' of '+tasks.length+' tasks issued for '+iptEsc(iptPeriodLabel(meta.mode,meta.date))+'.'+(outstanding.length?' '+outstanding.length+' remaining ('+pct+'% overall progress), listed below with reasons.':' All tasks issued.')+'</div>'+
+        '</div>';
 
-        var taskGroupIndex={}, taskGroups=[];
-        tasks.forEach(function(t){
-            var key=(t.parentAsset||'').trim(); if(!key) return;
-            if(!(key in taskGroupIndex)){ taskGroupIndex[key]=taskGroups.length; taskGroups.push({name:key,items:[]}); }
-            taskGroups[taskGroupIndex[key]].items.push(t);
-        });
-        if(taskGroups.length){
-            y=window.iprSectionTitle(doc,y,'Asset Groups',taskGroups.length);
-            y=window.iprTable(doc,y,
-                [{header:'Parent Asset',dataKey:'name'},
-                 {header:'Components',dataKey:'total',cellWidth:60},
-                 {header:'Issued',dataKey:'complete',cellWidth:60},
-                 {header:'% Complete',dataKey:'pct',cellWidth:60}],
-                taskGroups.map(function(g){
-                    var c=g.items.filter(function(t){return t.status==='Completed';}).length;
-                    var gpct=g.items.length?Math.round(g.items.reduce(function(sum,t){return sum+iptTaskCompleteness(t);},0)/g.items.length):0;
-                    return {name:g.name,total:g.items.length,complete:c,pct:gpct+'%'};
-                }),{}
-            );
-        }
+    var footer='<div class="footer"><span>InstrumentPro — End of Period Field Reports</span><span>Print view</span></div>';
 
-        if(completed.length){
-            y=window.iprSectionTitle(doc,y,'Issued Field Reports',completed.length);
-            y=window.iprTable(doc,y,
-                [{header:'Device',dataKey:'device'},
-                 {header:'Tag',dataKey:'tag',cellWidth:70},
-                 {header:'Completed',dataKey:'completed',cellWidth:85},
-                 {header:'Result',dataKey:'result',cellWidth:55},
-                 {header:'Report ID',dataKey:'reportId',cellWidth:80}],
-                completed.map(function(t){
-                    return {
-                        device:t.deviceType||'—',
-                        tag:t.tag||'—',
-                        completed:t.completedAt?new Date(t.completedAt).toLocaleString():'—',
-                        result:t.reportResult||'PASS',
-                        reportId:t.reportId||'—'
-                    };
-                }),
-                {badgeCols:['result']}
-            );
+    var style='body{background:#f1f5f9;padding:20px;font-family:Arial,Helvetica,sans-serif;color:#1e293b;}'+
+        '.doc{max-width:820px;margin:0 auto;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 8px 24px rgba(15,23,42,.08);}'+
+        '.rhead{background:linear-gradient(135deg,#14253d,#1e3a5f);color:#fff;padding:20px 22px;}'+
+        '.rhead .badge{display:inline-block;font-size:.6rem;font-weight:800;letter-spacing:.04em;background:rgba(255,255,255,.14);padding:3px 9px;border-radius:99px;margin-bottom:8px;}'+
+        '.rhead h2{margin:0 0 3px;font-size:1.15rem;}'+
+        '.rhead .sub{font-size:.72rem;opacity:.85;}'+
+        '.rhead .meta{display:flex;justify-content:space-between;margin-top:12px;font-size:.62rem;opacity:.75;}'+
+        '.infobar{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid #e2e8f0;}'+
+        '.infobar div{padding:10px 12px;border-right:1px solid #e2e8f0;}'+
+        '.infobar div:last-child{border-right:0;}'+
+        '.infobar label{display:block;font-size:.55rem;text-transform:uppercase;color:#64748b;font-weight:700;margin-bottom:2px;}'+
+        '.infobar span{font-size:.72rem;font-weight:700;}'+
+        '.sec{padding:16px 20px;}'+
+        '.sec-title{font-size:.78rem;font-weight:800;color:#1e3a5f;border-bottom:2px solid #e2e8f0;padding-bottom:6px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:baseline;}'+
+        '.sec-title small{font-weight:600;color:#64748b;font-size:.62rem;}'+
+        '.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:6px;}'+
+        '.stat{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:9px 6px;text-align:center;}'+
+        '.stat b{display:block;font-size:1rem;}'+
+        '.stat span{font-size:.55rem;color:#64748b;text-transform:uppercase;font-weight:700;}'+
+        '.stat.pass b{color:#16a34a;} .stat.fail b{color:#dc2626;}'+
+        '.narrative{background:#f8fafc;border-left:3px solid #1e3a5f;padding:9px 12px;border-radius:8px;font-size:.72rem;line-height:1.5;color:#334155;margin:10px 0 0;}'+
+        'table.rtable{width:100%;border-collapse:collapse;font-size:.68rem;}'+
+        'table.rtable th{text-align:left;background:#f8fafc;color:#64748b;font-size:.58rem;text-transform:uppercase;padding:6px 8px;border-bottom:1px solid #e2e8f0;}'+
+        'table.rtable td{padding:7px 8px;border-bottom:1px solid #e2e8f0;}'+
+        'table.rtable tr:last-child td{border-bottom:0;}'+
+        '.badge-pill{display:inline-block;font-size:.6rem;font-weight:800;padding:2px 8px;border-radius:99px;}'+
+        '.b-pend{background:#fef3c7;color:#d97706;}'+
+        '.b-ready{background:#d1fae5;color:#059669;}'+
+        '.b-prog{background:#dbeafe;color:#2563eb;}'+
+        '.footer{padding:10px 20px 16px;font-size:.6rem;color:#64748b;display:flex;justify-content:space-between;border-top:1px solid #e2e8f0;}'+
+        '.ipt-print-bar{max-width:820px;margin:0 auto 14px;text-align:right;}'+
+        '.ipt-print-bar button{background:#1e3a5f;color:#fff;border:0;padding:8px 14px;border-radius:8px;font-size:12px;cursor:pointer;}'+
+        '@media print{body{background:#fff;padding:0;} .ipt-print-bar{display:none;} .page-break-after{page-break-after:always;} .doc{box-shadow:none;border-radius:0;}}';
 
-            // Include the key field-report information for each issued device,
-            // while keeping the same PDF typography/table system as Quick Summary.
-            completed.forEach(function(t){
-                var snap=iptFindReportSnapshot(t.reportId);
-                if(!snap) return;
-                y=window.iprSectionTitle(doc,y,(t.deviceType||'Device')+' — '+(t.tag||'—'));
-                y=window.iprTable(doc,y,[
-                    {header:'Field',dataKey:'field',cellWidth:95},
-                    {header:'Value',dataKey:'value'}
-                ],[
-                    {field:'Report ID',value:snap.id||t.reportId||'—'},
-                    {field:'Device',value:snap.deviceType||t.deviceType||'—'},
-                    {field:'Tag',value:snap.reportTag||t.tag||'—'},
-                    {field:'Model',value:snap.reportModel||'—'},
-                    {field:'Manufacturer',value:snap.rsManufacturer||'—'},
-                    {field:'Serial',value:snap.rsSerial||'—'},
-                    {field:'Location',value:snap.rsLocation||'—'},
-                    {field:'Technician',value:snap.rsTechnician||snap.rsTechSign||meta.technician||'—'},
-                    {field:'Test Type',value:snap.reportType||'—'},
-                    {field:'Range / Service',value:snap.rsRange||'—'},
-                    {field:'Unit',value:snap.rsUnit||'—'},
-                    {field:'Reference',value:snap.rsReference||'—'},
-                    {field:'Acceptance / Tolerance',value:snap.rsToleranceSpec||'—'},
-                    {field:'Observations',value:snap.rsObservations||'—'},
-                    {field:'Root Cause',value:snap.rsRootCause||'—'},
-                    {field:'Corrective Action',value:snap.rsCorrective||'—'},
-                    {field:'Verification',value:snap.rsVerification||'—'},
-                    {field:'Status',value:snap.status||'ISSUED'}
-                ],{});
-            });
-        }
+    var html='<!doctype html><html><head><meta charset="utf-8"><title>End of Period Field Reports</title>'+
+        '<style>'+style+'</style>'+
+        '</head><body>'+
+        '<div class="ipt-print-bar"><button onclick="window.print()">Print / Save as PDF</button></div>'+
+        '<div class="doc">'+
+        titleBlock+
+        completedTable+
+        (completed.length ? sections : '<p style="max-width:820px;margin:24px auto;font-family:Arial,sans-serif;font-size:12px;color:#64748b;">No tasks completed this period.</p>')+
+        outstandingBlock+
+        footer+
+        '</div>'+
+        '</body></html>';
 
-        if(outstanding.length){
-            y=window.iprSectionTitle(doc,y,'Outstanding',outstanding.length);
-            y=window.iprTable(doc,y,
-                [{header:'Device',dataKey:'device'},
-                 {header:'Tag',dataKey:'tag',cellWidth:70},
-                 {header:'% Complete',dataKey:'pct',cellWidth:60},
-                 {header:'Status',dataKey:'status',cellWidth:60},
-                 {header:'Note',dataKey:'note'}],
-                outstanding.map(function(t){
-                    return {
-                        device:t.deviceType||'—',
-                        tag:t.tag||'—',
-                        pct:iptTaskCompleteness(t)+'%',
-                        status:iptTaskStatusLabel(t),
-                        note:t.note||'—'
-                    };
-                }),
-                {badgeCols:['status']}
-            );
-        }
-
-        window.iprFooter(doc,'InstrumentPro — End-of-Week Field Reports');
-        doc.save('End-of-Week-Field-Reports-'+Date.now()+'.pdf');
-    }).catch(function(e){ alert(e.message); });
+    var w=window.open('','_blank');
+    if(!w){ alert('Allow pop-ups to view/print the end of period report.'); return; }
+    w.document.write(html);
+    w.document.close();
+    w.focus();
 }
 
 // ---------------- Wiring ----------------
