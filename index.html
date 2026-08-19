@@ -4462,7 +4462,7 @@ body {
 
     function iprBadgeColor(label){
         var l=(label==null?'':String(label)).toLowerCase();
-        if(l==='pass'||l==='complete'||l==='resolved'||l==='ok'||l==='yes') return {fg:IPR_COLOR.pass,bg:IPR_COLOR.passBg};
+        if(l==='pass'||l==='complete'||l==='completed'||l==='resolved'||l==='ok'||l==='yes'||l==='ready'||l==='ready to issue') return {fg:IPR_COLOR.pass,bg:IPR_COLOR.passBg};
         if(l==='fail'||l==='failed'||l==='critical') return {fg:IPR_COLOR.fail,bg:IPR_COLOR.failBg};
         if(l==='pending'||l==='open'||l==='in progress') return {fg:IPR_COLOR.pend,bg:IPR_COLOR.pendBg};
         if(l==='high') return {fg:IPR_COLOR.high,bg:IPR_COLOR.highBg};
@@ -17641,6 +17641,17 @@ function iptTaskCompleteness(t){
     }catch(e){}
     return 0;
 }
+// The report checklist can be 100% filled in before the report is actually
+// issued (that's a separate, deliberate step) — so an outstanding task's
+// status label should say "Completed" rather than "Pending" once its
+// completeness hits 100%, otherwise a fully-worked task looks untouched on
+// printed/exported reports.
+function iptTaskStatusLabel(t){
+    var pct=iptTaskCompleteness(t);
+    if(pct>=100) return 'Completed';
+    if(pct>0) return 'In Progress';
+    return 'Pending';
+}
 function iptTaskRow(t,isCompleted){
     var pct = isCompleted ? 100 : iptTaskCompleteness(t);
     var ready = !isCompleted && pct===100;
@@ -17951,7 +17962,7 @@ function iptQuickSummary(){
             y=window.iprTable(doc,y,
                 [{header:'Device',dataKey:'device'},{header:'Tag',dataKey:'tag',cellWidth:70},{header:'Asset',dataKey:'asset',cellWidth:70},
                  {header:'% Complete',dataKey:'pct',cellWidth:60},{header:'Status',dataKey:'status',cellWidth:60},{header:'Note',dataKey:'note'}],
-                outstanding.map(function(t){ return {device:t.deviceType, tag:t.tag, asset:t.parentAsset||'—', pct:iptTaskCompleteness(t)+'%', status:'Pending', note:t.note||'—'}; }),
+                outstanding.map(function(t){ return {device:t.deviceType, tag:t.tag, asset:t.parentAsset||'—', pct:iptTaskCompleteness(t)+'%', status:iptTaskStatusLabel(t), note:t.note||'—'}; }),
                 {badgeCols:['status']}
             );
         }
@@ -17990,7 +18001,7 @@ function iptFullReport(){
     var pct=tasks.length?Math.round(tasks.reduce(function(sum,t){return sum+iptTaskCompleteness(t);},0)/tasks.length):0;
 
     var outstandingRows=outstanding.map(function(t){
-        return '<tr><td>'+iptEsc(t.tag)+'</td><td>'+iptEsc(t.deviceType)+'</td><td>'+iptTaskCompleteness(t)+'%</td><td><span class="badge-pill b-pend">Pending</span></td><td>'+iptEsc(t.note||'Not stated')+'</td></tr>';
+        return '<tr><td>'+iptEsc(t.tag)+'</td><td>'+iptEsc(t.deviceType)+'</td><td>'+iptTaskCompleteness(t)+'%</td><td><span class="badge-pill '+(iptTaskCompleteness(t)>=100?'b-ready':(iptTaskCompleteness(t)>0?'b-prog':'b-pend'))+'">'+iptTaskStatusLabel(t)+'</span></td><td>'+iptEsc(t.note||'Not stated')+'</td></tr>';
     }).join('');
     var outstandingBlock='<div class="sec">'+
         '<div class="sec-title">Outstanding <small>'+outstanding.length+'</small></div>'+
@@ -18056,6 +18067,8 @@ function iptFullReport(){
         'table.rtable tr:last-child td{border-bottom:0;}'+
         '.badge-pill{display:inline-block;font-size:.6rem;font-weight:800;padding:2px 8px;border-radius:99px;}'+
         '.b-pend{background:#fef3c7;color:#d97706;}'+
+        '.b-ready{background:#d1fae5;color:#059669;}'+
+        '.b-prog{background:#dbeafe;color:#2563eb;}'+
         '.footer{padding:10px 20px 16px;font-size:.6rem;color:#64748b;display:flex;justify-content:space-between;border-top:1px solid #e2e8f0;}'+
         '.ipt-print-bar{max-width:820px;margin:0 auto 14px;text-align:right;}'+
         '.ipt-print-bar button{background:#1e3a5f;color:#fff;border:0;padding:8px 14px;border-radius:8px;font-size:12px;cursor:pointer;}'+
