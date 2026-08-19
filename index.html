@@ -5817,9 +5817,13 @@ body.dark #ipTechProfileModal .iptp-card{background:#111827;color:#e5e7eb}body.d
 <div class="card-header mt-1" style="border-top:1px solid rgba(148,163,184,.25);padding-top:8px;"><i class="fas fa-list-check"></i><h3 style="font-size:.8rem;">5 Test Points</h3></div>
 <div class="cal-points-grid" id="maCalPointsContainer"></div>
 <div class="card-header mt-1" style="border-top:1px solid rgba(148,163,184,.25);padding-top:8px;"><i class="fas fa-arrow-right-arrow-left"></i><h3 style="font-size:.8rem;">Reverse Lookup</h3></div>
-<div style="font-size:0.65rem;color:#64748b;margin-bottom:6px;">Enter a measured output value to find the % of range and corresponding input/process value.</div>
+<div class="segmented" id="maReverseModeSeg">
+<button class="active" data-mode="output">Measured Output</button>
+<button data-mode="input">Measured Input</button>
+</div>
+<div style="font-size:0.65rem;color:#64748b;margin-bottom:6px;" id="maReverseNote">Enter a measured output value to find the % of range and corresponding input/process value.</div>
 <div class="row">
-<label>Measured Output</label>
+<label id="maReverseInputLabel">Measured Output</label>
 <input id="maReverseInput" step="any" style="flex:0.6;" type="number" value="16"/>
 <span class="chip" id="maReverseUnitChip">mA</span>
 </div>
@@ -10260,6 +10264,9 @@ body.dark .inv-attach-btn.attached{color:#4ade80;}
             const maReverseLabel = document.getElementById('maReverseLabel');
             const maReverseResult = document.getElementById('maReverseResult');
             const maReverseUnitChip = document.getElementById('maReverseUnitChip');
+            const maReverseInputLabel = document.getElementById('maReverseInputLabel');
+            const maReverseNote = document.getElementById('maReverseNote');
+            let maReverseMode = 'output'; // 'output' = measured output entered, 'input' = measured input entered
             const maCalPts = [0, 25, 50, 75, 100];
             const MA_HANDOFF_KEY = 'instrumentpro_ma_handoff';
 
@@ -10483,20 +10490,43 @@ body.dark .inv-attach-btn.attached{color:#4ade80;}
                 updateMaOutputRangeUI();
                 const inLrv = num(maLRV, 0);
                 const inUrv = num(maURV, 100);
+                const inSpan = inUrv - inLrv;
                 const out = getMaOutputRange();
                 const outSpan = out.urv - out.lrv;
-                const measured = num(maReverseInput, out.lrv);
-                const rawPct = outSpan === 0 ? 0 : ((measured - out.lrv) / outSpan * 100);
-                const pct = Math.max(0, Math.min(100, rawPct));
-                const inputFraction = inputFractionFromOutputFraction(pct / 100);
-                const inputValue = inLrv + ((inUrv - inLrv) * inputFraction);
                 const inUnit = (maUnit.value || '').trim();
                 const outUnit = (maOutUnit.value || '').trim();
 
-                maReversePct.textContent = pct.toFixed(2) + ' %';
-                maReverseLabel.textContent = 'Input / Process Value';
-                maReverseResult.textContent = inputValue.toFixed(2) + (inUnit ? ' ' + inUnit : '');
-                maReverseUnitChip.textContent = outUnit || 'Output';
+                if (maReverseMode === 'input') {
+                    // Technician measured/entered the INPUT / PROCESS value; derive
+                    // the % of range and the resulting OUTPUT value from it.
+                    const measured = num(maReverseInput, inLrv);
+                    const rawPct = inSpan === 0 ? 0 : ((measured - inLrv) / inSpan * 100);
+                    const pct = Math.max(0, Math.min(100, rawPct));
+                    const outputFraction = outputFractionFromInputFraction(pct / 100);
+                    const outputValue = out.lrv + (outSpan * outputFraction);
+
+                    maReverseInputLabel.textContent = 'Measured Input';
+                    maReverseUnitChip.textContent = inUnit || 'Input';
+                    maReversePct.textContent = pct.toFixed(2) + ' %';
+                    maReverseLabel.textContent = 'Output Value';
+                    maReverseResult.textContent = outputValue.toFixed(2) + (outUnit ? ' ' + outUnit : '');
+                    if (maReverseNote) maReverseNote.textContent = 'Enter a measured input/process value to find the % of range and corresponding output value.';
+                } else {
+                    // Technician measured/entered the OUTPUT value; derive the
+                    // % of range and the corresponding INPUT / PROCESS value.
+                    const measured = num(maReverseInput, out.lrv);
+                    const rawPct = outSpan === 0 ? 0 : ((measured - out.lrv) / outSpan * 100);
+                    const pct = Math.max(0, Math.min(100, rawPct));
+                    const inputFraction = inputFractionFromOutputFraction(pct / 100);
+                    const inputValue = inLrv + (inSpan * inputFraction);
+
+                    maReverseInputLabel.textContent = 'Measured Output';
+                    maReverseUnitChip.textContent = outUnit || 'Output';
+                    maReversePct.textContent = pct.toFixed(2) + ' %';
+                    maReverseLabel.textContent = 'Input / Process Value';
+                    maReverseResult.textContent = inputValue.toFixed(2) + (inUnit ? ' ' + inUnit : '');
+                    if (maReverseNote) maReverseNote.textContent = 'Enter a measured output value to find the % of range and corresponding input/process value.';
+                }
                 updateMaRelationshipUI();
             }
 
@@ -10558,6 +10588,15 @@ body.dark .inv-attach-btn.attached{color:#4ade80;}
             if (maTestBasis) maTestBasis.addEventListener('change', () => { buildMaCalPoints(); updateMaReverse(); });
 
             maReverseInput.addEventListener('input', updateMaReverse);
+            document.querySelectorAll('#maReverseModeSeg button').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    if (this.dataset.mode === maReverseMode) return;
+                    document.querySelectorAll('#maReverseModeSeg button').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    maReverseMode = this.dataset.mode;
+                    updateMaReverse();
+                });
+            });
             buildMaCalPoints();
             updateMaReverse();
 
