@@ -9011,6 +9011,7 @@ body.dark .inv-attach-btn.attached{color:#4ade80;}
                 document.getElementById('sidebarOverlay').classList.remove('active');
                 document.getElementById('pageContainer').scrollTop = 0;
                 addRecent(pageId);
+                try { localStorage.setItem('instrumentpro_lastPage', pageId); } catch {}
                 if (typeof window.closeTripDiagnostic === 'function') window.closeTripDiagnostic();
             }
 
@@ -9060,6 +9061,7 @@ body.dark .inv-attach-btn.attached{color:#4ade80;}
                         container.querySelectorAll(':scope > .sub-tab').forEach(t => t.classList.remove('active'));
                         this.classList.add('active');
                         const panelId = this.dataset.tab;
+                        if (container.id) { try { localStorage.setItem('instrumentpro_subtab_' + container.id, panelId); } catch {} }
                         const scope = container.closest('.sub-panel') || container.closest('.ref-panel') || container.closest('.card');
                         scope.querySelectorAll(':scope > .sub-panel').forEach(p => {
                             p.classList.remove('active');
@@ -9076,6 +9078,27 @@ body.dark .inv-attach-btn.attached{color:#4ade80;}
                     });
                 });
             });
+
+            // =============================================================
+            // RESTORE LAST VIEWED PAGE / SUB-TAB (persists across refresh)
+            // =============================================================
+            (function restoreLastView() {
+                try {
+                    // Restore each sub-tab group to whichever tab was last selected,
+                    // regardless of which page it lives on.
+                    document.querySelectorAll('.sub-tabs[id]').forEach(container => {
+                        const savedTab = localStorage.getItem('instrumentpro_subtab_' + container.id);
+                        if (!savedTab) return;
+                        const tabEl = container.querySelector(':scope > .sub-tab[data-tab="' + savedTab + '"]');
+                        if (tabEl && !tabEl.classList.contains('active')) tabEl.click();
+                    });
+                    // Restore last active page (falls back to the default home page if none saved).
+                    const lastPage = localStorage.getItem('instrumentpro_lastPage');
+                    if (lastPage && document.getElementById('page-' + lastPage)) {
+                        navigateTo(lastPage);
+                    }
+                } catch {}
+            })();
 
             // =============================================================
             // DARK MODE & THEME COLORS
