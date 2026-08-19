@@ -14,9 +14,15 @@
        5. After JavaScript edits, run a syntax check before deployment.
 
      TOP-TO-BOTTOM MODULE MAP
-       HTML       Document metadata and external libraries
-       CSS-01..25 Base styles + intentional cascade/override layers
-       BODY-01..15 Application pages
+       HTML        Document metadata and external libraries
+       STYLE-01..27 Base styles + intentional cascade/override layers
+                    (search "STYLE-NN:" — labels are not always in
+                    strict page order; each block names the feature
+                    it styles, e.g. STYLE-25 = trip/event modal look)
+       BODY-01..16 Application pages (search "BODY-NN:" + its id="...")
+         BODY-13 = Trip / Event Investigation modal (id="tripModal"),
+                   styled by STYLE-25, driven by JS-09
+       JS-00      Report kit helpers (id="ip-report-kit")
        JS-01      Core draft storage helpers
        JS-02      Main application controller, navigation, calculators, reports
        JS-03      Report Studio / device configuration / Field Report handoff
@@ -25,6 +31,12 @@
        JS-06      HART communicator / package library
        JS-07      Task list / scheduling
        JS-08      Outage / instrument commissioning
+       JS-09      Trip / Event Investigation engine (id="trip-diagnostic-script")
+                  — device step library, evidence capture, Findings report
+                  + Investigator/Technician sign-off. Sub-tags JS-09-A..F
+                  inside the block itself; search "JS-09-" to jump to a
+                  specific part (device data, state, rendering, evidence
+                  capture, report engine, or modal wiring).
 
      4–20mA HANDOFF KEY
        instrumentpro_ma_handoff
@@ -397,6 +409,7 @@
 
         /* ===== PAGE CONTAINER ===== */
         .page-container {
+            position: relative;
             flex: 1;
             overflow-y: auto;
             overflow-x: hidden;
@@ -4099,7 +4112,7 @@ body:not(.dark) #ipBoot .ipb-row{background:rgba(255,255,255,.62);border:1px sol
 
 </style>
 <!-- =====================================================================
-     STYLE-20: UNIVERSAL RESPONSIVE / DEVICE ADAPTIVE LAYOUT
+     STYLE-21: UNIVERSAL RESPONSIVE / DEVICE ADAPTIVE LAYOUT
      Keeps the existing InstrumentPro UI intact while allowing the shell
      to fluidly use phones, tablets and desktop displays.
      ===================================================================== -->
@@ -5173,35 +5186,6 @@ body {
 <!-- ==========================================================
              SHIFT / HANDOVER REPORT MODAL
         ========================================================== -->
-<div aria-hidden="true" class="rpt-modal" id="rptModal">
-<div class="rpt-backdrop" data-close-rpt=""></div>
-<div class="rpt-dialog">
-<div class="rpt-head">
-<div><div class="rpt-title"><i class="fas fa-file-signature" style="color:#2563eb;margin-right:6px;"></i>Shift / Handover Report</div></div>
-<button class="rpt-close" data-close-rpt="" type="button"><i class="fas fa-times"></i></button>
-</div>
-<div class="rpt-range-row" id="rptRangeRow">
-<button class="rpt-range-chip active" data-range="shift" type="button">This Shift</button>
-<button class="rpt-range-chip" data-range="today" type="button">Today</button>
-<button class="rpt-range-chip" data-range="7days" type="button">Last 7 Days</button>
-<button class="rpt-range-chip" data-range="selected" type="button">Selected Notes</button>
-<button class="rpt-range-chip" data-range="all" type="button">All Notes</button>
-</div>
-<div class="rpt-field-row">
-<div><label>Reported by</label><input id="rptReportedBy" placeholder="Your name"/></div>
-<div><label>Handed over to</label><input id="rptHandoverTo" placeholder="Next shift / supervisor"/></div>
-</div>
-<div class="rpt-summary" id="rptSummary"></div>
-<div id="rptPreview"></div>
-<div class="rpt-footer">
-<button class="btn-outline btn" id="rptCopyBtn" type="button"><i class="fas fa-copy"></i> Copy Text</button>
-<button class="btn-outline btn" id="rptEmailBtn" type="button"><i class="fas fa-envelope"></i> Email</button>
-<button class="btn-outline btn" id="rptTxtBtn" type="button"><i class="fas fa-file-alt"></i> Download TXT</button>
-<button class="btn-outline btn" id="rptPdfBtn" type="button"><i class="fas fa-file-pdf"></i> Download PDF</button>
-<button class="btn rpt-share" id="rptShareBtn" type="button"><i class="fas fa-share-alt"></i> Share (WhatsApp, Email, etc.)</button>
-</div>
-</div>
-</div>
 <!-- ==========================================================
         PAGE: ANALYTICAL (short)
         ========================================================== -->
@@ -6605,7 +6589,7 @@ body {
         PAGE: REFERENCES
         ========================================================== -->
 <!-- =================================================================
-     STYLE-21: NEUTRAL LIGHT CONTENT BOXES
+     STYLE-22: NEUTRAL LIGHT CONTENT BOXES
      ================================================================= -->
 <style id="bending-modernize" data-ip-style="CSS-21">
 #page-bending .bend-run-input {
@@ -7883,7 +7867,7 @@ body {
 </div>
 </div>
 <!-- =================================================================
-     STYLE-22: COLOR PICKER MODAL
+     STYLE-23: COLOR PICKER MODAL
      ================================================================= -->
 <style id="references-modernize" data-ip-style="CSS-22">
 /* Neutral light content boxes (e.g. Fault Codes list items, badge chips) use
@@ -8027,7 +8011,7 @@ body.dark #page-references .chip {
 }
 </style>
 <!-- =================================================================
-     STYLE-23: REPORT / FINAL OVERRIDES
+     STYLE-24: REPORT / FINAL OVERRIDES
      ================================================================= -->
 <style id="colorpick-styles" data-ip-style="CSS-23">
 .colorpick-modal{display:none;position:fixed;inset:0;z-index:10050;align-items:flex-end;justify-content:center}
@@ -8063,6 +8047,307 @@ body.dark .colorpick-hexwrap input{background:#0f172a;border-color:#334155;color
 .colorpick-footer .btn,.colorpick-footer .btn-outline{min-height:46px;justify-content:center;font-size:.88rem}
 </style>
 <!-- ==========================================================
+     STYLE-25: TRIP / EVENT INVESTIGATION MODAL (scoped to #tripModal)
+     ========================================================== -->
+<style id="trip-diagnostic-styles" data-ip-style="CSS-24">
+#tripModal{
+  --bg:var(--ui-bg);
+  --card:#fff;
+  --card2:#f8fafc;
+  --border:var(--ui-border);
+  --text:var(--ui-text);
+  --text-dim:var(--ui-muted);
+}
+body.dark #tripModal{
+  --bg:#111827;
+  --card:#1f2937;
+  --card2:#1f2937;
+  --border:#374151;
+  --text:#e5e7eb;
+  --text-dim:#9ca3af;
+}
+#tripModal *{box-sizing:border-box;}
+#tripModal{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+.phone-frame{
+  max-width:430px;
+  margin:24px auto;
+  background:var(--bg);
+  min-height:90vh;
+  position:relative;
+  overflow:hidden;
+}
+.mock-banner{
+  max-width:430px;
+  margin:0 auto;
+  padding:10px 16px;
+  background:var(--card2);
+  color:var(--text-dim);
+  font-size:.72rem;
+  text-align:center;
+  border-radius:12px 12px 0 0;
+  border:1px dashed var(--border);
+  border-bottom:none;
+  letter-spacing:.02em;
+}
+
+.inv-top{
+  display:flex;justify-content:space-between;gap:12px;align-items:center;
+  padding:17px;margin:0 12px 14px 12px;border-radius:28px;
+  background:linear-gradient(135deg,var(--ui-accent,#2563eb), color-mix(in srgb, var(--ui-accent,#2563eb) 60%, #0f2744));
+  color:#fff;box-shadow:0 12px 28px rgba(15,39,68,.18);
+}
+.inv-kicker{font-size:.72rem;font-weight:900;letter-spacing:.08em;opacity:.85;display:flex;align-items:center;gap:6px;}
+.inv-title{font-size:1.32rem;font-weight:900;line-height:1.18;margin-top:4px;}
+.inv-sub{font-size:.85rem;opacity:.92;margin-top:5px;line-height:1.5;}
+.inv-top-icon{width:46px;height:46px;flex:0 0 46px;border-radius:15px;background:rgba(255,255,255,.14);display:grid;place-items:center;font-size:1.1rem;}
+
+.mode-switch{
+  display:flex;gap:6px;margin:0 12px 16px 12px;
+  background:var(--card2);padding:5px;border-radius:16px;border:1px solid var(--border);
+}
+.mode-switch button{
+  flex:1;border:0;background:transparent;color:var(--text-dim);
+  padding:10px 8px;border-radius:12px;font-size:.78rem;font-weight:800;
+  display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;
+}
+.mode-switch button.active{background:var(--ui-accent);color:#fff;box-shadow:0 4px 12px color-mix(in srgb,var(--ui-accent) 35%, transparent);}
+.mode-switch.blue button.active{background:var(--ui-accent);box-shadow:0 4px 12px color-mix(in srgb,var(--ui-accent) 35%, transparent);}
+
+.inv-section-label{
+  font-size:.72rem;font-weight:900;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--text-dim);margin:0 16px 8px 16px;
+}
+.inv-device-select{
+  margin:0 12px 16px 12px;border:1px solid var(--border);background:var(--card);
+  border-radius:16px;padding:13px 14px;display:flex;align-items:center;justify-content:space-between;
+  font-size:.9rem;font-weight:800;color:var(--text);cursor:pointer;
+}
+.inv-device-select .left{display:flex;align-items:center;gap:10px;}
+.inv-device-select .icon{width:34px;height:34px;border-radius:10px;background:color-mix(in srgb,var(--ui-accent) 15%, transparent);color:var(--ui-accent);display:grid;place-items:center;flex:0 0 34px;}
+
+.picker-backdrop{display:none;position:absolute;inset:0;background:rgba(2,8,23,.7);z-index:150;border-radius:inherit;}
+.picker-backdrop.open{display:block;}
+.picker-sheet{
+  position:absolute;left:0;right:0;bottom:0;background:var(--card);border-radius:22px 22px 0 0;
+  padding:14px;max-height:70%;overflow:auto;border:1px solid var(--border);
+}
+.picker-sheet h4{margin:2px 4px 10px;font-size:1rem;color:var(--text);}
+.picker-item{display:flex;align-items:center;gap:12px;padding:12px 10px;border-radius:14px;cursor:pointer;}
+.picker-item:hover,.picker-item.active{background:var(--card2);}
+.picker-item .icon{width:36px;height:36px;border-radius:10px;background:color-mix(in srgb,var(--ui-accent) 15%, transparent);color:var(--ui-accent);display:grid;place-items:center;flex:0 0 36px;}
+.picker-item b{font-size:.86rem;color:var(--text);display:block;}
+.picker-item span{font-size:.72rem;color:var(--text-dim);}
+.picker-cat{font-size:.68rem;font-weight:900;letter-spacing:.05em;text-transform:uppercase;color:var(--text-dim);margin:14px 6px 4px;}
+.picker-cat:first-of-type{margin-top:2px;}
+
+.inv-note{
+  display:flex;gap:10px;margin:0 12px 18px 12px;padding:11px 13px;
+  border:1px solid color-mix(in srgb,#f59e0b 35%, var(--border));background:color-mix(in srgb,#f59e0b 12%, var(--card));border-radius:16px;color:#b45309;
+}
+body.dark .inv-note{color:#fbbf24;}
+.inv-note i{font-size:1rem;margin-top:1px;color:inherit;}
+.inv-note span{font-size:.76rem;line-height:1.5;color:inherit;}
+
+
+/* ---- resume bar (shown on base page when modal is closed / dismissed) ---- */
+.resume-bar{
+  display:none;align-items:center;gap:10px;margin:0 12px 18px 12px;padding:13px 14px;
+  border-radius:18px;background:linear-gradient(135deg,var(--ui-accent,#2563eb),color-mix(in srgb,var(--ui-accent,#2563eb) 60%, #0f2744));border:1px solid var(--ui-accent,#2563eb);
+  cursor:pointer;
+}
+.resume-bar.show{display:flex;}
+.resume-bar .ic{width:38px;height:38px;flex:0 0 38px;border-radius:12px;background:rgba(255,255,255,.14);display:grid;place-items:center;color:#fff;}
+.resume-bar .txt b{display:block;font-size:.82rem;color:#fff;font-weight:900;}
+.resume-bar .txt span{display:block;font-size:.72rem;color:rgba(255,255,255,.75);margin-top:2px;}
+.resume-bar .go{margin-left:auto;color:#fff;font-size:.9rem;}
+
+/* ==================================================================
+   Q&A MODAL — appears centered over the whole screen, not inline
+   ================================================================== */
+.qa-modal-backdrop{
+  position:fixed;inset:0;z-index:300;
+  background:rgba(2,8,23,.82);
+  display:none;align-items:center;justify-content:center;
+  padding:24px 18px;
+}
+.qa-modal-backdrop.open{display:flex;}
+
+.qa-modal{
+  width:100%;max-width:400px;max-height:88vh;
+  display:flex;flex-direction:column;
+  background:var(--card);border:1px solid var(--border);border-radius:26px;
+  box-shadow:0 30px 90px rgba(0,0,0,.6);
+  overflow:hidden;
+}
+
+.qa-modal-head{
+  display:flex;align-items:center;gap:10px;padding:16px 16px 10px 16px;
+  border-bottom:1px solid var(--border);flex:0 0 auto;
+}
+.qa-modal-head-info{flex:1;min-width:0;}
+.qa-modal-device{display:flex;align-items:center;gap:8px;font-size:.72rem;font-weight:900;color:var(--text-dim);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px;}
+.qa-modal-device i{color:var(--ui-accent);}
+.qa-progress-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px;}
+.qa-progress-top b{font-size:.8rem;color:var(--text);font-weight:900;}
+.qa-progress-top span{font-size:.68rem;color:var(--text-dim);font-weight:700;}
+.qa-dots{display:flex;gap:5px;}
+.qa-dot{flex:1;height:5px;border-radius:4px;background:var(--card2);overflow:hidden;position:relative;}
+.qa-dot i{position:absolute;inset:0;background:var(--border);transform:scaleX(0);transform-origin:left;transition:transform .3s ease;}
+.qa-dot.done i{background:#22c55e;transform:scaleX(1);}
+.qa-dot.current i{background:var(--ui-accent);transform:scaleX(1);}
+.qa-modal-close{
+  width:32px;height:32px;flex:0 0 32px;border-radius:10px;background:var(--card2);border:1px solid var(--border);
+  color:var(--text-dim);display:grid;place-items:center;cursor:pointer;
+}
+
+.qa-stage{
+  position:relative;padding:16px;overflow-y:auto;flex:1 1 auto;
+}
+.qa-card{
+  opacity:1;
+  transform:none;
+}
+/* Question changes are intentionally instant — no slide/fade/transition. */
+.qa-card.leave-down,.qa-card.leave-up,.qa-card.enter-from,.qa-card.enter-active{
+  opacity:1;
+  transform:none;
+}
+
+.qa-card-head{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px;}
+.qa-step-badge{
+  width:34px;height:34px;flex:0 0 34px;border-radius:11px;background:var(--card2);
+  display:grid;place-items:center;font-size:.82rem;font-weight:900;color:var(--ui-accent);border:1px solid var(--border);
+}
+.qa-card-head b{font-size:1.02rem;font-weight:900;color:var(--text);line-height:1.35;flex:1;}
+
+.qa-row{padding:11px 13px;border-radius:14px;background:var(--card2);margin-bottom:9px;}
+.qa-row b{display:block;font-size:.7rem;color:var(--ui-accent);text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px;}
+.qa-row p{margin:0;font-size:.82rem;line-height:1.55;color:var(--text);}
+.qa-verify-row{display:flex;gap:9px;padding:11px 13px;border-radius:14px;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.25);margin-top:2px;margin-bottom:2px;}
+.qa-verify-row i{color:#15803d;font-size:.85rem;margin-top:2px;}
+.qa-verify-row p{margin:0;font-size:.8rem;line-height:1.55;color:#166534;}
+body.dark .qa-verify-row i{color:#4ade80;}
+body.dark .qa-verify-row p{color:#bbf7d0;}
+
+.qa-actions{display:flex;gap:8px;margin-top:16px;}
+.qa-btn-back{
+  flex:0 0 46px;border:1px solid var(--border);background:var(--card2);color:var(--text-dim);
+  border-radius:14px;display:grid;place-items:center;cursor:pointer;font-size:.9rem;
+}
+.qa-btn-back:disabled{opacity:.35;cursor:default;}
+.qa-btn-main{
+  flex:1;border:0;background:var(--ui-accent);color:#fff;
+  padding:13px;border-radius:14px;font-size:.85rem;font-weight:900;
+  display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;
+  box-shadow:0 6px 16px color-mix(in srgb,var(--ui-accent) 30%, transparent);
+}
+.qa-btn-main.done-look{background:#166534;box-shadow:0 6px 16px rgba(22,101,52,.3);}
+
+.qa-skip-link{
+  text-align:center;margin-top:10px;font-size:.74rem;color:var(--text-dim);cursor:pointer;
+  text-decoration:underline;text-underline-offset:3px;
+}
+
+.qa-summary-title{font-size:1.02rem;font-weight:900;color:var(--text);display:flex;align-items:center;gap:9px;margin-bottom:4px;}
+.qa-summary-sub{font-size:.78rem;color:var(--text-dim);line-height:1.55;margin-bottom:14px;}
+.inv-classify-opts{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-bottom:12px;}
+.inv-classify-opts button{
+  border:1px solid var(--border);background:var(--card2);color:var(--text-dim);
+  border-radius:13px;padding:10px 6px;font-size:.68rem;font-weight:800;text-align:center;line-height:1.3;cursor:pointer;
+}
+.inv-classify-opts button[data-c="real"]{border-color:#fca5a5;color:#b91c1c;}
+.inv-classify-opts button[data-c="false"]{border-color:#86efac;color:#15803d;}
+.inv-classify-opts button[data-c="indeterminate"]{border-color:#fcd34d;color:#b45309;}
+body.dark .inv-classify-opts button[data-c="real"]{border-color:#7f1d1d;color:#fca5a5;}
+body.dark .inv-classify-opts button[data-c="false"]{border-color:#14532d;color:#86efac;}
+body.dark .inv-classify-opts button[data-c="indeterminate"]{border-color:#3b3020;color:#fcd34d;}
+.inv-classify-opts button[data-c="real"].selected{background:#dc2626;border-color:#dc2626;color:#fff;}
+.inv-classify-opts button[data-c="false"].selected{background:#16a34a;border-color:#16a34a;color:#fff;}
+.inv-classify-opts button[data-c="indeterminate"].selected{background:#d97706;border-color:#d97706;color:#fff;}
+.inv-attach-btn{
+  width:100%;border:1px dashed var(--border);
+  background:transparent;color:var(--text-dim);padding:13px;border-radius:14px;
+  font-size:.82rem;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;
+  margin-bottom:10px;
+}
+.inv-attach-btn.attached{border-style:solid;border-color:#16a34a;color:#15803d;background:rgba(34,197,94,.1);}
+body.dark .inv-attach-btn.attached{color:#4ade80;}
+
+.qa-recap-row{
+  display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:14px;
+  background:var(--card2);border:1px solid var(--border);cursor:pointer;margin-bottom:8px;
+}
+.qa-recap-row .n{width:24px;height:24px;flex:0 0 24px;border-radius:8px;background:#14532d;color:#4ade80;display:grid;place-items:center;font-size:.68rem;font-weight:900;}
+.qa-recap-row .n.skipped{background:var(--border);color:var(--text-dim);}
+.qa-recap-row span{font-size:.8rem;font-weight:700;color:var(--text);flex:1;}
+.qa-recap-row i.status{font-size:.78rem;}
+
+.footer-note{margin:20px 20px 0 20px;font-size:.72rem;color:var(--text-dim);line-height:1.6;text-align:center;}
+
+.tb-placeholder{
+  margin:0 12px;padding:26px 18px;border-radius:20px;background:var(--card);border:1px solid var(--border);
+  text-align:center;color:var(--text-dim);
+}
+.tb-placeholder i{font-size:1.8rem;color:var(--ui-accent);margin-bottom:10px;display:block;}
+.tb-placeholder b{display:block;color:var(--text);font-size:.95rem;margin-bottom:6px;}
+.tb-placeholder p{font-size:.8rem;line-height:1.6;margin:0;}
+
+.summary-toast{
+  position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(120%);
+  background:#111827;border:1px solid var(--border);color:#fff;padding:11px 18px;border-radius:14px;
+  font-size:.8rem;font-weight:700;box-shadow:0 10px 30px rgba(0,0,0,.4);transition:transform .25s;z-index:400;
+  display:flex;align-items:center;gap:8px;white-space:nowrap;
+}
+.summary-toast.show{transform:translateX(-50%) translateY(0);}
+.summary-toast i{color:#4ade80;}
+
+@media (prefers-reduced-motion:reduce){
+  .qa-dot i, .qa-modal, .qa-modal-backdrop{transition:none !important;}
+}
+
+
+/* ===== Event facts captured inside Question 1 ===== */
+.event-facts-box{margin-bottom:12px;padding:13px;border:1px solid color-mix(in srgb,#f87171 35%, var(--border));border-radius:16px;background:color-mix(in srgb,#f87171 10%, var(--card2));}
+.event-facts-head{display:flex;gap:10px;align-items:flex-start;margin-bottom:12px;}
+.event-facts-icon{width:34px;height:34px;flex:0 0 34px;border-radius:10px;display:grid;place-items:center;background:rgba(248,113,113,.12);color:#f87171;border:1px solid rgba(248,113,113,.2);}
+.event-facts-head b{display:block;color:var(--text);font-size:.82rem;font-weight:900;}
+.event-facts-head span{display:block;color:var(--text-dim);font-size:.68rem;line-height:1.4;margin-top:2px;}
+.event-facts-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+.event-fact-field{min-width:0;}
+.event-fact-wide{margin-top:9px;}
+.event-fact-field label{display:block;font-size:.66rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.04em;font-weight:900;margin-bottom:5px;}
+.event-fact-field input,.event-fact-field textarea{width:100%;box-sizing:border-box;border:1px solid var(--border);background:var(--card);color:var(--text);border-radius:11px;padding:9px 10px;font:inherit;font-size:.76rem;outline:none;}
+.event-fact-field textarea{min-height:68px;resize:vertical;line-height:1.45;}
+.event-fact-field input:focus,.event-fact-field textarea:focus{border-color:#f87171;box-shadow:0 0 0 2px rgba(248,113,113,.08);}
+@media(max-width:380px){.event-facts-grid{grid-template-columns:1fr;}}
+
+/* ===== Field evidence + RCA report ===== */
+.evidence-box{margin-top:12px;padding:12px;border:1px solid var(--border);border-radius:14px;background:var(--card2)}
+.evidence-box label{display:block;font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-dim);font-weight:900;margin-bottom:6px}
+.evidence-box textarea{width:100%;min-height:74px;resize:vertical;background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:10px;padding:10px;font:inherit;outline:none}
+.evidence-box textarea:focus{border-color:var(--ui-accent)}
+.evidence-meta{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.evidence-meta select,.evidence-meta input{width:100%;background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:9px;padding:9px;font:inherit}
+.rca-banner{margin-top:12px;padding:13px 14px;border-radius:14px;background:var(--card2);border:1px solid var(--border)}
+.rca-banner b{color:#b45309}body.dark .rca-banner b{color:#fbbf24}.rca-report{padding:2px 0 16px}.rca-section{margin-top:12px;padding:14px;border-radius:14px;background:var(--card2);border:1px solid var(--border)}
+.rca-section h4{margin:0 0 9px;font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;color:#b45309}body.dark .rca-section h4{color:#fbbf24}
+.rca-kv{display:grid;grid-template-columns:130px 1fr;gap:6px;font-size:.78rem}.rca-kv span:first-child{color:var(--text-dim);font-weight:800}.rca-kv span:last-child{color:var(--text)}
+.why-row{display:grid;grid-template-columns:42px 1fr;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}.why-row:last-child{border-bottom:0}.why-num{font-weight:900;color:#b45309}body.dark .why-num{color:#fbbf24}.why-row p{margin:0;color:var(--text);font-size:.82rem;line-height:1.45}
+.conf-high{color:#16a34a;font-weight:900}.conf-med{color:#b45309;font-weight:900}.conf-low{color:#dc2626;font-weight:900}body.dark .conf-high{color:#4ade80}body.dark .conf-med{color:#fbbf24}body.dark .conf-low{color:#fb7185}
+.evidence-list{display:grid;gap:7px}.evidence-item{padding:9px;border-radius:10px;background:var(--card);font-size:.76rem}.evidence-item b{color:var(--text)}.report-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.report-actions button{border:0;border-radius:10px;padding:10px 13px;font-weight:900;cursor:pointer;background:var(--ui-accent);color:#fff}.report-actions button.secondary{background:var(--card2);color:var(--text);border:1px solid var(--border)}
+
+
+
+#tripModal{display:none;position:fixed;inset:0;z-index:500;-webkit-overflow-scrolling:touch;overflow-y:auto;}
+#tripModal.open{display:block;}
+</style>
+<!-- ==========================================================
         PAGE: TROUBLESHOOTING (short)
         ========================================================== -->
 <!-- -----------------------------------------------------------------
@@ -8081,6 +8366,10 @@ body.dark .colorpick-hexwrap input{background:#0f172a;border-color:#334155;color
 <span><i class="fas fa-magnifying-glass"></i> Begin Diagnostic</span>
 <i class="fas fa-chevron-right"></i>
 </button>
+<button class="trouble-start" id="tripStartBtn" style="margin-top:0;" type="button">
+<span><i class="fas fa-magnifying-glass-chart"></i> Begin Trip Diagnostic</span>
+<i class="fas fa-chevron-right"></i>
+</button>
 <div class="trouble-workflow-note">
 <i class="fas fa-route"></i>
 <div>
@@ -8088,44 +8377,16 @@ body.dark .colorpick-hexwrap input{background:#0f172a;border-color:#334155;color
 <span>Device → failure mode → guided field questions → diagnostic direction</span>
 </div>
 </div>
-<div aria-hidden="true" class="trouble-modal" id="troubleModal">
-<div class="trouble-backdrop" data-close-trouble=""></div>
-<div aria-modal="true" class="trouble-dialog" role="dialog">
-<div class="trouble-dialog-head">
-<div>
-<div class="trouble-kicker">FIELD ASSISTANT</div>
-<div class="trouble-dialog-title" id="troubleModalTitle">Field Diagnostic</div>
-</div>
-<button class="trouble-close" data-close-trouble="" type="button"><i class="fas fa-times"></i></button>
-</div>
-<div class="trouble-progress" id="troubleProgress"><span class="active"></span><span></span><span></span></div>
-<div class="trouble-step" id="troubleStep">Question 1 of 2</div>
-<div class="trouble-question" id="troubleQuestion">What are you troubleshooting?</div>
-<div class="trouble-options" id="troubleOptions"></div>
-<div class="trouble-result" id="troubleResult">
-<div class="trouble-result-tag"><i class="fas fa-lightbulb"></i> NEXT STEP</div>
-<div class="trouble-result-title" id="troubleResultTitle"></div>
-<div class="trouble-result-grid">
-<div><b><i class="fas fa-search"></i> Check first</b><p id="troubleCheck"></p></div>
-<div><b><i class="fas fa-microscope"></i> Possible cause</b><p id="troubleCause"></p></div>
-<div><b><i class="fas fa-vial"></i> Verify</b><p id="troubleVerify"></p></div>
-<div><b><i class="fas fa-route"></i> Decision path</b><p id="troubleDecision"></p></div>
-</div>
-<div class="trouble-safety"><i class="fas fa-shield-alt"></i><span>Use the approved isolation, permit, ESD/FGS and OEM procedures before intrusive testing. Never bypass a safety function to prove a fault.</span></div>
-</div>
-<div class="trouble-footer">
-<button class="btn-outline btn" id="troubleBack" type="button"><i class="fas fa-arrow-left"></i> Back</button>
-<button class="btn" disabled="" id="troubleNext" type="button">Next <i class="fas fa-arrow-right"></i></button>
-<button class="btn" id="troubleDone" style="display:none;" type="button">Done <i class="fas fa-check"></i></button>
-</div>
-</div>
-</div>
+<!-- -----------------------------------------------------------------
+     BODY-13: TRIP / EVENT INVESTIGATION MODAL | id="tripModal"
+     ----------------------------------------------------------------- -->
+<!-- /BODY-13: TRIP / EVENT INVESTIGATION MODAL -->
 </div>
 <!-- ==========================================================
         PAGE: AI CHAT
         ========================================================== -->
 <!-- -----------------------------------------------------------------
-     BODY-13: AI / ASSISTED TOOLS | id="page-ai"
+     BODY-14: AI / ASSISTED TOOLS | id="page-ai"
      ----------------------------------------------------------------- -->
 <div class="page" id="page-ai">
 <div class="page-title"><i class="fas fa-robot"></i> AI Technician</div>
@@ -8142,7 +8403,7 @@ body.dark .colorpick-hexwrap input{background:#0f172a;border-color:#334155;color
         PAGE: REPORT
         ========================================================== -->
 <!-- -----------------------------------------------------------------
-     BODY-14: FIELD REPORT / REPORT STUDIO | id="page-report"
+     BODY-15: FIELD REPORT / REPORT STUDIO | id="page-report"
      ----------------------------------------------------------------- -->
 <div class="page" id="page-report">
 <div class="page-title"><i class="fas fa-file-alt"></i> Report</div>
@@ -8423,7 +8684,7 @@ body.dark .colorpick-hexwrap input{background:#0f172a;border-color:#334155;color
         PAGE: SETTINGS
         ========================================================== -->
 <!-- -----------------------------------------------------------------
-     BODY-15: SETTINGS | id="page-settings"
+     BODY-16: SETTINGS | id="page-settings"
      ----------------------------------------------------------------- -->
 <div class="page" id="page-settings">
 <div class="page-title"><i class="fas fa-cog"></i> Settings</div>
@@ -8483,29 +8744,6 @@ body.dark .colorpick-hexwrap input{background:#0f172a;border-color:#334155;color
 <span class="tap-hex" id="themeActiveHex">#2563EB</span>
 </div>
 </div>
-<div aria-hidden="true" class="colorpick-modal" id="colorPickModal">
-<div class="colorpick-backdrop" data-close-colorpick=""></div>
-<div aria-modal="true" class="colorpick-dialog" role="dialog">
-<div class="colorpick-head">
-<div class="colorpick-title">Custom Color</div>
-<button class="colorpick-close" data-close-colorpick="" type="button"><i class="fas fa-times"></i></button>
-</div>
-<div class="colorpick-sat" id="colorpickSat"><div class="colorpick-sat-thumb" id="colorpickSatThumb"></div></div>
-<div class="colorpick-hue" id="colorpickHue"><div class="colorpick-hue-thumb" id="colorpickHueThumb"></div></div>
-<div class="colorpick-row">
-<div class="colorpick-preview" id="colorpickPreview"></div>
-<div class="colorpick-hexwrap">
-<label>HEX</label>
-<input id="colorpickHexInput" maxlength="7" type="text" value="#2563EB"/>
-</div>
-</div>
-<div class="colorpick-swatches" id="colorpickSwatches"></div>
-<div class="colorpick-footer">
-<button class="btn-outline btn" id="colorpickCancel" type="button">Cancel</button>
-<button class="btn" id="colorpickSet" type="button">Set Color</button>
-</div>
-</div>
-</div>
 <div class="card">
 <div class="card-header"><i class="fas fa-moon"></i><h3>Dark Mode</h3></div>
 <div class="row"><label>Theme</label><select id="themeSelect"><option value="light">Light</option><option value="dark">Dark</option><option value="system">System</option></select></div>
@@ -8533,6 +8771,176 @@ body.dark .colorpick-hexwrap input{background:#0f172a;border-color:#334155;color
 <button class="tab-item" data-page="report"><i class="fas fa-file-alt"></i> Report</button>
 <button class="tab-item" data-page="electrical"><i class="fas fa-bolt"></i> Electrical</button>
 </div>
+
+<!-- ==========================================================
+     RELOCATED FULL-SCREEN MODALS (moved out of .page-container)
+     .page-container has overflow-y:auto, which clips position:fixed
+     descendants (a standard CSS behavior: a non-root ancestor with
+     overflow:hidden/auto/scroll clips fixed-position children too).
+     These modals are full-screen overlays and must sit outside that
+     scroll container, as siblings of .page-container/.bottom-tabs,
+     so their content and action buttons are never cropped by the
+     bottom tab bar. IDs and JS bindings are unchanged.
+     ========================================================== -->
+<div aria-hidden="true" class="rpt-modal" id="rptModal">
+<div class="rpt-backdrop" data-close-rpt=""></div>
+<div class="rpt-dialog">
+<div class="rpt-head">
+<div><div class="rpt-title"><i class="fas fa-file-signature" style="color:#2563eb;margin-right:6px;"></i>Shift / Handover Report</div></div>
+<button class="rpt-close" data-close-rpt="" type="button"><i class="fas fa-times"></i></button>
+</div>
+<div class="rpt-range-row" id="rptRangeRow">
+<button class="rpt-range-chip active" data-range="shift" type="button">This Shift</button>
+<button class="rpt-range-chip" data-range="today" type="button">Today</button>
+<button class="rpt-range-chip" data-range="7days" type="button">Last 7 Days</button>
+<button class="rpt-range-chip" data-range="selected" type="button">Selected Notes</button>
+<button class="rpt-range-chip" data-range="all" type="button">All Notes</button>
+</div>
+<div class="rpt-field-row">
+<div><label>Reported by</label><input id="rptReportedBy" placeholder="Your name"/></div>
+<div><label>Handed over to</label><input id="rptHandoverTo" placeholder="Next shift / supervisor"/></div>
+</div>
+<div class="rpt-summary" id="rptSummary"></div>
+<div id="rptPreview"></div>
+<div class="rpt-footer">
+<button class="btn-outline btn" id="rptCopyBtn" type="button"><i class="fas fa-copy"></i> Copy Text</button>
+<button class="btn-outline btn" id="rptEmailBtn" type="button"><i class="fas fa-envelope"></i> Email</button>
+<button class="btn-outline btn" id="rptTxtBtn" type="button"><i class="fas fa-file-alt"></i> Download TXT</button>
+<button class="btn-outline btn" id="rptPdfBtn" type="button"><i class="fas fa-file-pdf"></i> Download PDF</button>
+<button class="btn rpt-share" id="rptShareBtn" type="button"><i class="fas fa-share-alt"></i> Share (WhatsApp, Email, etc.)</button>
+</div>
+</div>
+</div>
+<div aria-hidden="true" class="trouble-modal" id="troubleModal">
+<div class="trouble-backdrop" data-close-trouble=""></div>
+<div aria-modal="true" class="trouble-dialog" role="dialog">
+<div class="trouble-dialog-head">
+<div>
+<div class="trouble-kicker">FIELD ASSISTANT</div>
+<div class="trouble-dialog-title" id="troubleModalTitle">Field Diagnostic</div>
+</div>
+<button class="trouble-close" data-close-trouble="" type="button"><i class="fas fa-times"></i></button>
+</div>
+<div class="trouble-progress" id="troubleProgress"><span class="active"></span><span></span><span></span></div>
+<div class="trouble-step" id="troubleStep">Question 1 of 2</div>
+<div class="trouble-question" id="troubleQuestion">What are you troubleshooting?</div>
+<div class="trouble-options" id="troubleOptions"></div>
+<div class="trouble-result" id="troubleResult">
+<div class="trouble-result-tag"><i class="fas fa-lightbulb"></i> NEXT STEP</div>
+<div class="trouble-result-title" id="troubleResultTitle"></div>
+<div class="trouble-result-grid">
+<div><b><i class="fas fa-search"></i> Check first</b><p id="troubleCheck"></p></div>
+<div><b><i class="fas fa-microscope"></i> Possible cause</b><p id="troubleCause"></p></div>
+<div><b><i class="fas fa-vial"></i> Verify</b><p id="troubleVerify"></p></div>
+<div><b><i class="fas fa-route"></i> Decision path</b><p id="troubleDecision"></p></div>
+</div>
+<div class="trouble-safety"><i class="fas fa-shield-alt"></i><span>Use the approved isolation, permit, ESD/FGS and OEM procedures before intrusive testing. Never bypass a safety function to prove a fault.</span></div>
+</div>
+<div class="trouble-footer">
+<button class="btn-outline btn" id="troubleBack" type="button"><i class="fas fa-arrow-left"></i> Back</button>
+<button class="btn" disabled="" id="troubleNext" type="button">Next <i class="fas fa-arrow-right"></i></button>
+<button class="btn" id="troubleDone" style="display:none;" type="button">Done <i class="fas fa-check"></i></button>
+</div>
+</div>
+</div>
+<div aria-hidden="true" class="" id="tripModal">
+<div class="phone-frame" id="tripPhoneFrame">
+
+  <div class="inv-top" id="topHero">
+    <div>
+      <div class="inv-kicker" id="kickerText"><i class="fas fa-magnifying-glass-chart"></i> ROOT-CAUSE MODE</div>
+      <div class="inv-title" id="heroTitle">Trip / Event Investigation</div>
+      <div class="inv-sub" id="heroSub">For abnormal events, trips, alarms and repeat failures. Reconstruct what happened, prove the field evidence, then isolate the root cause.</div>
+    </div>
+    <div class="inv-top-icon"><i class="fas fa-file-shield" id="heroIcon"></i></div>
+  </div>
+
+  <div id="investigateView">
+
+    <div class="inv-section-label">Device / System</div>
+    <div class="inv-device-select" id="deviceSelectBtn">
+      <div class="left">
+        <div class="icon"><i class="fas fa-fire-extinguisher" id="deviceIcon"></i></div>
+        <span id="deviceName">FM200 Suppression System</span>
+      </div>
+      <i class="fas fa-chevron-down" style="color:#64748b;"></i>
+    </div>
+
+    <div class="inv-note">
+      <i class="fas fa-circle-info"></i>
+      <span>Investigation flows apply to devices that can trip, discharge, or activate a shutdown — fire &amp; gas, ESD, and rotating equipment protection. Transmitters and gauges stay in Troubleshoot.</span>
+    </div>
+
+    <div class="resume-bar" id="resumeBar">
+      <div class="ic"><i class="fas fa-magnifying-glass"></i></div>
+      <div class="txt">
+        <b>Continue investigation</b>
+        <span id="resumeBarSub">Question 1 of 8</span>
+      </div>
+      <i class="fas fa-chevron-right go"></i>
+    </div>
+
+  </div>
+
+  <div class="footer-note">The step-by-step flow opens as a centered dialog, so it's always in easy reach — no scrolling to find it. Close it any time; a "Continue investigation" bar keeps your place.</div>
+
+  <div class="picker-backdrop" id="pickerBackdrop">
+    <div class="picker-sheet">
+      <h4>Choose a device</h4>
+      <div id="pickerList"></div>
+    </div>
+  </div>
+
+  <!-- ===== Centered Q&A modal ===== -->
+  
+
+</div>
+
+  <!-- Q&A modal moved outside .phone-frame so its position:fixed dialog
+       is not clipped by phone-frame's overflow:hidden -->
+  <div class="qa-modal-backdrop" id="qaModalBackdrop">
+    <div class="qa-modal" id="qaModal">
+      <div class="qa-modal-head">
+        <div class="qa-modal-head-info">
+          <div class="qa-modal-device"><i class="fas fa-fire-extinguisher" id="qaModalDeviceIcon"></i><span id="qaModalDeviceName">FM200 Suppression System</span></div>
+          <div class="qa-progress-top">
+            <b id="qaProgressLabel">Question 1 of 8</b>
+            <span id="qaProgressPct">0% answered</span>
+          </div>
+          <div class="qa-dots" id="qaDots"></div>
+        </div>
+        <button class="qa-modal-close" id="qaModalClose"><i class="fas fa-xmark"></i></button>
+      </div>
+      <div class="qa-stage" id="qaStage"></div>
+    </div>
+  </div>
+
+<div class="summary-toast" id="toast"><i class="fas fa-circle-check"></i><span id="toastText"></span></div>
+</div>
+<div aria-hidden="true" class="colorpick-modal" id="colorPickModal">
+<div class="colorpick-backdrop" data-close-colorpick=""></div>
+<div aria-modal="true" class="colorpick-dialog" role="dialog">
+<div class="colorpick-head">
+<div class="colorpick-title">Custom Color</div>
+<button class="colorpick-close" data-close-colorpick="" type="button"><i class="fas fa-times"></i></button>
+</div>
+<div class="colorpick-sat" id="colorpickSat"><div class="colorpick-sat-thumb" id="colorpickSatThumb"></div></div>
+<div class="colorpick-hue" id="colorpickHue"><div class="colorpick-hue-thumb" id="colorpickHueThumb"></div></div>
+<div class="colorpick-row">
+<div class="colorpick-preview" id="colorpickPreview"></div>
+<div class="colorpick-hexwrap">
+<label>HEX</label>
+<input id="colorpickHexInput" maxlength="7" type="text" value="#2563EB"/>
+</div>
+</div>
+<div class="colorpick-swatches" id="colorpickSwatches"></div>
+<div class="colorpick-footer">
+<button class="btn-outline btn" id="colorpickCancel" type="button">Cancel</button>
+<button class="btn" id="colorpickSet" type="button">Set Color</button>
+</div>
+</div>
+</div>
+
 <!-- ============================================================
     JAVASCRIPT — Full Application
     ============================================================ -->
@@ -8591,6 +8999,7 @@ body.dark .colorpick-hexwrap input{background:#0f172a;border-color:#334155;color
                 document.getElementById('sidebarOverlay').classList.remove('active');
                 document.getElementById('pageContainer').scrollTop = 0;
                 addRecent(pageId);
+                if (typeof window.closeTripDiagnostic === 'function') window.closeTripDiagnostic();
             }
 
             navItems.forEach(item => item.addEventListener('click', function() { navigateTo(this.dataset.page); }));
@@ -13087,7 +13496,7 @@ body.dark .colorpick-hexwrap input{background:#0f172a;border-color:#334155;color
     </script>
 </div>
 <!-- =================================================================
-     STYLE-24: LOOP CHECK MOBILE IDENTIFICATION
+     STYLE-26: LOOP CHECK MOBILE IDENTIFICATION
      ================================================================= -->
 <style id="loopcheck-polished-mobile-ui" data-ip-style="CSS-24">
 /* ============================================================
@@ -13498,7 +13907,7 @@ body.dark #reportpanel-loopcheck .table-wrap thead th {
 }
 </style>
 <!-- =================================================================
-     STYLE-25: ADDITIONAL MOBILE OVERRIDES
+     STYLE-27: ADDITIONAL MOBILE OVERRIDES
      ================================================================= -->
 <style id="loopcheck-top-form-compact" data-ip-style="CSS-25">
 /* Loop Check — compact the identification / signal section on phones. */
@@ -18338,6 +18747,844 @@ document.addEventListener('DOMContentLoaded',function(){
     });
 });
 })();
+</script>
+
+
+<!-- =====================================================================
+     JS-09: TRIP / EVENT INVESTIGATION ENGINE (scoped to #tripModal, BODY-13)
+     =====================================================================
+     Powers the guided trip/event investigation flow: device step library,
+     step-by-step evidence capture, classification, and the printable
+     Investigation Report (findings + sign-off).
+
+     SUB-SECTIONS IN THIS FILE (search these tags to jump straight there):
+       JS-09-A  DEVICE LIBRARY    — DEVICES{}: per-device event fields +
+                                    investigation steps shown to the tech.
+       JS-09-B  STATE             — currentDeviceKey, stepStatus, stepAnswers,
+                                    currentIdx, classifyChoice, attached.
+       JS-09-C  CARD RENDERING    — renderDevice/openModal/closeModal/
+                                    renderDots/buildStepCardHTML/renderCard.
+                                    buildStepCardHTML() also builds the
+                                    "Establish the event first" fields
+                                    (event facts + Technician name input).
+       JS-09-D  EVIDENCE CAPTURE  — wireCard/saveStepEvidence. Reads the
+                                    Technician name field into
+                                    stepAnswers[0].technicianName.
+       JS-09-E  REPORT ENGINE     — buildRcaData()/openRcaReport(). Builds
+                                    the "Findings" section (root cause +
+                                    confidence, no 5-Why chain) and the
+                                    printable report HTML, incl. the
+                                    Investigator/Technician sign-off line
+                                    in section 7 (pre-filled from
+                                    technicianName). This is the function
+                                    pair to edit for any report content
+                                    change.
+       JS-09-F  NAV / MODAL WIRING — goTo/showToast/buildPicker + the
+                                    window.openTripDiagnostic /
+                                    closeTripDiagnostic entry points and
+                                    tripStartBtn / Escape-key handlers.
+
+     Storage: none persisted — state lives only in memory (stepAnswers,
+     stepStatus) for the duration of one investigation session.
+     ===================================================================== -->
+<script id="trip-diagnostic-script" data-ip-module="JS-09">
+(function(){
+/* JS-09-A: DEVICE LIBRARY — event fields + investigation steps per device */
+const DEVICES = {
+  fm200:{
+    name:'FM200 Suppression System', icon:'fa-fire-extinguisher', cat:'Fire & Gas / Suppression',
+    event:{ 'Discharge Time':'14:22:07', 'Interlock Result':'Trip confirmed OK', 'Zone':'Turbine Enclosure A', 'Trigger Type':'Single detector' },
+    steps:[
+      {t:'Pull the sequence of events', check:'Panel event log — which detector(s) tripped, cross-zone confirmation status, manual pull station activity, and discharge time, cross-checked against the turbine/DCS trip log.', verify:'Establish whether discharge was single-detector, cross-zone confirmed, or manual — this alone often points strongly toward real vs. false event.'},
+      {t:'Determine what triggered detection', check:'Specific detector(s) that activated — smoke, heat, or manual station.', cause:'Real fire, hot surface contact, welding/hot work, dust, or detector contamination.', verify:'Physically inspect the triggering detector(s) for soot, scorching, or physical damage.'},
+      {t:'Inspect the protected space for physical evidence of fire', check:'Scorching, soot, melted insulation/cabling, oil residue pooling near hot surfaces.', verify:'Absence of any marks strongly suggests false activation; even a brief flash fire usually leaves a trace.'},
+      {t:'Check cylinder weight/pressure', check:'Weigh cylinders against nameplate charge weight (pressure alone isn\'t conclusive).', verify:'Confirms agent was actually delivered — relevant to assessing whether the space was adequately protected.'},
+      {t:'Rule out false activation from contamination/environment', check:'Detector fouling (dust/oil film), recent hot work permits, steam or washing activity nearby.', verify:'Cross-reference conditions logged at trip time against known false-trigger causes for that detector type.'},
+      {t:'Check wiring/loop integrity', check:'Detector loop and cross-zone wiring, especially near VFD/power cabling or vibration-prone areas.', verify:'Megger/insulation-test the loop; a short or ground fault can present as a valid signal.'},
+      {t:'Confirm cross-zoning requirement was met', check:'Approved cause & effect matrix vs. what actually happened in the log.', verify:'If a single-detector system discharged from a system designed for cross-zone confirmation, that\'s a logic/config finding on its own.'},
+      {t:'Check maintenance / permit history', check:'Work permits and isolation records in the days before the trip.', cause:'Detector left in test mode, technician disturbance, incomplete system reset after prior testing.'}
+    ]
+  },
+  watermist_general:{
+    name:'Water Mist — General System', icon:'fa-droplet', cat:'Fire & Gas / Suppression',
+    event:{ 'Discharge Time':'09:41:52', 'Interlock Result':'Trip confirmed OK', 'Zone':'Pump Skid B', 'Trigger Type':'Zone detector' },
+    steps:[
+      {t:'Pull the sequence of events', check:'Deluge/detection panel log — which zone/detector initiated, section valve opening time, pump start time — cross-checked against the turbine/DCS trip log.'},
+      {t:'Determine trigger source', check:'Which detector or manual station initiated — flame, heat, linear heat cable, or manual pull.', cause:'Real fire/leak ignition, hot surface contact, or false activation (EMI, steam, dust, mechanical damage to heat cable).', verify:'Inspect the triggering detector or cable segment for damage or contamination.'},
+      {t:'Inspect for physical fire evidence', check:'Scorching, soot, oil pooling, melted components in the protected area.', verify:'No evidence found strongly suggests a false or spurious trip.'},
+      {t:'Check for a fuel/oil leak as ignition source', check:'Fittings, hoses, gaskets in the protected area, and whether they were recently disturbed by maintenance.', verify:'A leak found near a hot surface is a very likely root cause — document leak location and proximity.'},
+      {t:'Verify actual water delivery occurred', check:'Pump run log (start time, discharge pressure achieved), section valve confirmed-open status.', verify:'Confirms whether the system actually delivered water mist or only the detection/trip signal fired.'},
+      {t:'Rule out false activation from contamination/environment', check:'Linear heat cable condition (chafing, moisture ingress), detector fouling, hot work permits nearby.', verify:'Isolate cable segments if a heat-cable fault is suspected, rather than assuming full cable failure.'},
+      {t:'Check wiring/loop integrity', check:'Detection loop and pilot/solenoid wiring for shorts or induced noise.', verify:'Megger-test and inspect cable glands for moisture ingress.'},
+      {t:'Check maintenance / permit history', check:'Permits and isolation certs for the days leading up to the trip.'}
+    ]
+  },
+  watermist_turbine:{
+    name:'Water Mist — Turbine Enclosure', icon:'fa-wind', cat:'Fire & Gas / Suppression',
+    event:{ 'Discharge Time':'21:03:14', 'Interlock Result':'Trip confirmed OK', 'Zone':'GT Package 2 Enclosure', 'Trigger Type':'Linear heat cable' },
+    steps:[
+      {t:'Pull the sequence of events', check:'Fire panel log and turbine control system (Mark VIe/Turbotronic) trip log, time-synced, showing detector activation → discharge → turbine trip signal received.', verify:'Confirms the trip interlock functioned correctly and pins down exactly what triggered detection first.'},
+      {t:'Determine trigger source inside the enclosure', check:'Which detector activated — optical flame, linear heat cable, or smoke.', cause:'Real fire/leak, hot exhaust duct contact, oil mist ignition, or detector fouling/vibration-related cable damage.', verify:'Inspect the specific detector/cable segment for scorching, soot, or chafe damage from enclosure vibration.'},
+      {t:'Inspect the enclosure interior for fire evidence', check:'Scorching or soot near exhaust ducting, lagging, or fuel/oil lines; melted cable insulation.', verify:'Check hot-surface areas specifically first — enclosures often show localized damage even from a brief flash.'},
+      {t:'Check for a fuel or lube oil leak (most common real cause)', check:'Fittings, flex hoses, and seals near the hot gas path or exhaust duct; recent maintenance history.', verify:'A fitting spraying onto a hot surface is the leading real ignition source in gas turbine enclosures.'},
+      {t:'Confirm nozzles weren\'t blocked at time of discharge', check:'Nozzle condition post-event — oil mist/dust contamination is common in acoustic enclosures.', verify:'If nozzles were blocked, detection worked but suppression may have been ineffective — a separate finding.'},
+      {t:'Rule out false activation from enclosure environment', check:'Detector fouling, condensation/moisture ingress, or vibration-induced false signal on heat-sensing cable.', verify:'Compare enclosure temperature trend and any recent washdown/hot-work activity against the trip time.'},
+      {t:'Check the fuel/oil isolation portion of the trip sequence', check:'Whether fuel and lube oil supply were isolated as part of the sequence, not just ignition/turbine shutdown.', verify:'Relevant if there\'s any sign the fire continued after discharge — points to a design-level gap.'},
+      {t:'Check wiring/interlock integrity', check:'Detector loop and discharge-confirm signal wiring back to the turbine controller.'},
+      {t:'Check maintenance / permit history', check:'Enclosure panel removal, hot work, or washdown activity logged before the trip.'}
+    ]
+  },
+  esd_valve:{
+    name:'Emergency Shut Down Valve', icon:'fa-power-off', cat:'Process Safety / ESD',
+    event:{ 'Trip Time':'03:15:40', 'Interlock Result':'Trip confirmed OK', 'System':'Inlet Separator ESD', 'Trigger Type':'2oo3 voted' },
+    steps:[
+      {t:'Pull the sequence of events', check:'Logic solver/SIS event log and DCS historian, time-synced, to confirm which input(s) drove the trip.'},
+      {t:'Confirm which ESD input initiated', check:'Process trip (PSHH/LSHH etc.), manual pushbutton, or spurious signal.', cause:'Genuine process excursion, a single transmitter fault, or an operator-initiated trip.', verify:'Check the voting logic if this is a 2oo3 architecture — one bad transmitter alone shouldn\'t trip a voted system.'},
+      {t:'Check the field transmitter(s) that drove the trip', check:'As-found reading vs. process conditions at the time, and transmitter health/diagnostics.', verify:'Compare against a second, independent reading if available before concluding it was a real process event.'},
+      {t:'Confirm valve action matched design intent', check:'Valve fail-safe action and confirmed end position vs. what the trip called for.'},
+      {t:'Check for forces/overrides active at time of trip', check:'Force/override log on the logic solver.', verify:'An active force can mask or cause unexpected behavior — review against MOC records.'},
+      {t:'Check maintenance / permit history', check:'Work permits and isolation records in the days before the trip.'}
+    ]
+  },
+  vib_probe:{
+    name:'Vibration Probe (Turbine/Pump Trip)', icon:'fa-wave-square', cat:'Electrical / Rotating Equipment',
+    event:{ 'Trip Time':'17:58:03', 'Interlock Result':'Trip confirmed OK', 'Machine':'GT-2 Compressor', 'Reading at Trip':'18.4 mm/s' },
+    steps:[
+      {t:'Pull the sequence of events', check:'Bentley Nevada / monitor rack log and DCS historian, time-synced, showing the trend leading up to the trip.'},
+      {t:'Pull the spectrum/waveform at time of trip', check:'Frequency-domain data, not just the overall trend value.', verify:'Confirm genuine mechanical event vs. a probe/cable fault — a real bearing or unbalance issue shows a distinct spectral signature.'},
+      {t:'Cross-check with speed and process trend', check:'Machine speed, load, and any process upset around the trip time.'},
+      {t:'Check probe/cable and gap voltage', check:'Gap voltage at the monitor and cable/connector condition.', cause:'A step-change with no corresponding process event often points to a probe/cable disturbance rather than a real fault.'},
+      {t:'Check for bypass/inhibit status on other channels', check:'Bypass/inhibit status across the rack.', verify:'Confirm no other channel was masked at the time, which could hide a related symptom.'},
+      {t:'Check maintenance / permit history', check:'Recent work near the probe, cabling, or monitor rack before the trip.'}
+    ]
+  },
+  co2_system:{
+    name:'CO2 Total Flood System', icon:'fa-cloud', cat:'Fire & Gas / Suppression',
+    event:{ 'Discharge Time':'02:47:19', 'Interlock Result':'Trip confirmed OK', 'Zone':'Switchgear Room 2', 'Trigger Type':'Cross-zone confirmed' },
+    steps:[
+      {t:'Pull the sequence of events', check:'Panel event log — detector activation, pre-discharge alarm/timer duration, abort station usage, and discharge time, cross-checked against the DCS/BMS trip log.', verify:'Confirm whether the pre-discharge delay and abort sequence ran per design or was bypassed — this shapes the whole timeline.'},
+      {t:'Determine what triggered detection', check:'Specific detector(s) or manual pull station that activated.', cause:'Real fire, hot surface contact, hot work, dust, or detector contamination/EMI.', verify:'Physically inspect the triggering detector(s) for soot, scorching, or damage.'},
+      {t:'Inspect the protected space for physical evidence of fire', check:'Scorching, soot, melted insulation, arc damage on switchgear or cabling.', verify:'Absence of any marks strongly suggests false or premature activation.'},
+      {t:'Check cylinder/bank weight', check:'Weigh cylinders or check bank pressure against nameplate charge.', verify:'Confirms CO2 was actually released — distinguishes a full discharge from a trip-only event.'},
+      {t:'Confirm room integrity and hold time', check:'Door/damper auto-closures, ventilation shutdown, and last room integrity (door-fan) test results.', verify:'Poor room integrity can cause suppression to fail even in a genuine fire — a separate finding from the trigger cause.'},
+      {t:'Rule out false activation from contamination/environment', check:'Detector fouling, recent hot work permits, EMI sources, or dust from nearby work.', verify:'Cross-reference conditions logged at trip time against known false-trigger causes for that detector type.'},
+      {t:'Check wiring/loop integrity', check:'Detector loop and cross-zone wiring, especially near switchgear or high-current cabling.', verify:'Megger/insulation-test the loop; a short or ground fault can present as a valid signal.'},
+      {t:'Check maintenance / permit history', check:'Work permits and isolation records in the days before the trip.', cause:'Detector left in test mode, technician disturbance, or incomplete system reset after prior testing.'}
+    ]
+  },
+  gas_detector:{
+    name:'Gas Detector (Toxic/Combustible)', icon:'fa-smog', cat:'Fire & Gas / Detection',
+    event:{ 'Alarm Time':'11:06:33', 'Interlock Result':'Alarm confirmed OK', 'Location':'Compressor Skid 3', 'Reading at Alarm':'42% LEL' },
+    steps:[
+      {t:'Pull the sequence of events', check:'Gas panel/DCS historian trend in the minutes before the alarm, and which threshold (low or high) tripped first.'},
+      {t:'Confirm the reading is valid, not a sensor fault', check:'Sensor self-diagnostics, fault status, and calibration due date at the time of alarm.', cause:'A real gas release, sensor drift, contamination of the sensor element, or an overdue calibration.', verify:'Cross-check against adjacent detectors or a portable gas meter reading taken on scene, if available.'},
+      {t:'Inspect the area for a release source', check:'Nearby fittings, flanges, valves, seals, and any recent work in the zone.', verify:'Use a portable gas detector to confirm or rule out gas actually being present before assuming a false alarm.'},
+      {t:'Check wind and weather conditions (outdoor detectors)', check:'Wind direction/speed at alarm time and proximity to vents, flares, or other release points.', verify:'Helps establish whether a real release elsewhere could plausibly have reached this detector.'},
+      {t:'Rule out known false-alarm sources', check:'Recent calibration/bump-test gas exposure, washdown, steam, or other interferents specific to this sensor type.', verify:'Cross-reference the maintenance log against the exact alarm timestamp.'},
+      {t:'Check sensor and cable condition', check:'Sensor head condition, moisture ingress, and cable/connector integrity.', verify:'Bump-test the sensor on site if it is safe to do so.'},
+      {t:'Check maintenance / permit history', check:'Work permits and calibration records in the days before the alarm.'}
+    ]
+  },
+  generator_trip:{
+    name:'Generator / Engine Protection Trip', icon:'fa-gauge-high', cat:'Electrical / Rotating Equipment',
+    event:{ 'Trip Time':'06:12:51', 'Interlock Result':'Trip confirmed OK', 'Machine':'Emergency Generator 1', 'Trip Parameter':'High Jacket Water Temp' },
+    steps:[
+      {t:'Pull the sequence of events', check:'Governor/protection relay event log and DCS historian, time-synced, showing the parameter trend leading up to the trip.'},
+      {t:'Identify the exact trip parameter', check:'Which protection function actually operated — overspeed, high jacket water temp, low oil pressure, differential, etc.', cause:'A real mechanical or process fault, versus a sensor or wiring fault presenting as one.', verify:'Compare the tripping sensor\'s reading against a second, independent reading if one is available.'},
+      {t:'Check sensor/transmitter health', check:'As-found calibration, diagnostics, and wiring condition for the sensor that drove the trip.', verify:'A step-change with no corresponding load or process event often points to a sensor or wiring fault rather than a real one.'},
+      {t:'Cross-check load and speed trend', check:'Load, speed, and any upstream process upset around the time of the trip.'},
+      {t:'Inspect the physical machine for evidence', check:'Oil or coolant leaks, visible damage, or unusual noise/vibration reported before the trip.'},
+      {t:'Check for bypass/inhibit status on other channels', check:'Bypass/inhibit status across the protection panel at the time of the trip.', verify:'Confirm no related channel was masked, which could hide a developing fault.'},
+      {t:'Check maintenance / permit history', check:'Recent work near the engine, sensors, or protection panel before the trip.'}
+    ]
+  },
+  deluge_sprinkler:{
+    name:'Deluge / Sprinkler System', icon:'fa-shower', cat:'Fire & Gas / Suppression',
+    event:{ 'Discharge Time':'13:38:02', 'Interlock Result':'Trip confirmed OK', 'Zone':'Process Area 4', 'Trigger Type':'Heat detector' },
+    steps:[
+      {t:'Pull the sequence of events', check:'Deluge valve panel log — detector activation, valve-open confirmation, and pump start time, cross-checked against the DCS trip log.'},
+      {t:'Determine what triggered activation', check:'Which element activated — sprinkler fusible link, heat detector, flame detector, or manual station.', cause:'Real fire, hot surface contact, hot work, or detector/link fault.', verify:'Inspect the triggering element or detector for damage, corrosion, or scorching.'},
+      {t:'Inspect the protected area for fire evidence', check:'Scorching, soot, or melted components near the activated zone.', verify:'Absence of any marks strongly suggests false or premature activation.'},
+      {t:'Verify actual water delivery occurred', check:'Pump run log (start time, discharge pressure achieved) and deluge valve confirmed-open status.', verify:'Confirms whether water was actually delivered or only the detection/trip signal fired.'},
+      {t:'Check individual sprinkler heads or nozzles', check:'Head condition — corrosion, mechanical damage, or a weakened fusible link that could operate prematurely.', cause:'Mechanical damage, corrosion-weakened link, or freeze/thaw stress on the head.'},
+      {t:'Rule out false activation from environment', check:'Detector fouling, hot work permits nearby, steam or washdown activity, or freeze conditions.', verify:'Cross-reference conditions logged at trip time against known false-trigger causes.'},
+      {t:'Check wiring/loop integrity', check:'Detector loop and deluge valve solenoid wiring.', verify:'Megger/insulation-test the loop; a short or ground fault can present as a valid signal.'},
+      {t:'Check maintenance / permit history', check:'Work permits and isolation records in the days before the trip.'}
+    ]
+  },
+  foam_system:{
+    name:'Foam Suppression System', icon:'fa-water', cat:'Fire & Gas / Suppression',
+    event:{ 'Discharge Time':'19:52:44', 'Interlock Result':'Trip confirmed OK', 'Zone':'Tank Farm Bund 2', 'Trigger Type':'Zone detector' },
+    steps:[
+      {t:'Pull the sequence of events', check:'Foam panel/proportioner log — detector activation and foam pump start time, cross-checked against the DCS trip log.'},
+      {t:'Determine what triggered activation', check:'Which detector or manual station initiated.', cause:'Real fire, hot surface contact, hot work, or detector fouling.', verify:'Inspect the triggering detector for soot or damage.'},
+      {t:'Inspect the protected area for fire evidence', check:'Scorching, soot, or residue near the tank or bund.', verify:'Absence of any marks strongly suggests false activation.'},
+      {t:'Verify foam concentrate delivery and proportioning ratio', check:'Concentrate tank level before/after the event and the proportioner\'s logged mix ratio.', verify:'Confirms whether the correct foam solution was actually delivered, not just water.'},
+      {t:'Check foam quality at point of discharge, if data exists', check:'Expansion ratio and drainage time from any available test records.', verify:'Relevant if suppression effectiveness is in question, separate from what triggered it.'},
+      {t:'Rule out false activation from contamination/environment', check:'Detector fouling, hot work permits, or a vapor cloud that could false-trigger a flame or gas detector nearby.', verify:'Cross-reference conditions logged at trip time.'},
+      {t:'Check wiring/loop integrity', check:'Detector loop and proportioner control wiring.'},
+      {t:'Check maintenance / permit history', check:'Work permits and concentrate tank inspection records before the trip.'}
+    ]
+  },
+  flame_detector:{
+    name:'Flame Detector', icon:'fa-fire', cat:'Fire & Gas / Detection',
+    event:{ 'Alarm Time':'15:20:11', 'Interlock Result':'Alarm confirmed OK', 'Location':'Loading Rack 1', 'Trigger Type':'UV/IR' },
+    steps:[
+      {t:'Pull the sequence of events', check:'Panel/DCS log — whether this was a single detector or a voted (2oo2/2oo3) activation.'},
+      {t:'Confirm detector type and its known false-alarm sensitivities', check:'UV, IR, or combined UV/IR, and the typical false-trigger sources for that type — welding arcs, lightning, hot objects, sunlight or reflections.'},
+      {t:'Inspect the field of view for real fire evidence or false-trigger sources', check:'Line of sight for welding activity, flares, sun angle/reflection, or another IR/UV source active at alarm time.', cause:'Real fire, welding/hot work in the field of view, sunlight or reflection, or lightning.', verify:'Review site CCTV footage for the alarm time window, if available.'},
+      {t:'Check the detector lens/window condition', check:'Dirt, condensation, or physical damage that could cause a fault-driven alarm.', verify:'A clean-window test, if the detector is accessible, can help isolate this.'},
+      {t:'Rule out false activation from known interferents', check:'Recent hot work permits, welding nearby, or lightning activity in the area at alarm time.'},
+      {t:'Check wiring/loop integrity', check:'Detector loop wiring and power supply.', verify:'Megger/insulation-test the loop.'},
+      {t:'Check maintenance / permit history', check:'Work permits and detector test records before the alarm.'}
+    ]
+  },
+  esd_pushbutton:{
+    name:'ESD Pushbutton / Manual Call Point', icon:'fa-hand', cat:'Process Safety / ESD',
+    event:{ 'Trip Time':'08:04:27', 'Interlock Result':'Trip confirmed OK', 'System':'Unit 3 ESD', 'Trigger Type':'Manual' },
+    steps:[
+      {t:'Pull the sequence of events', check:'SIS/logic solver event log showing the exact pushbutton input and time, cross-checked against the operator log.'},
+      {t:'Confirm which pushbutton or station was activated', check:'Location and station ID as logged by the logic solver.'},
+      {t:'Establish whether this was a deliberate operator action', check:'Whether the trip was a considered response to a real condition, or accidental/inadvertent contact.', cause:'A genuine emergency response, accidental contact, mis-identified station, or a wiring/contact fault presenting as a press.', verify:'Cross-reference against operator logs, radio traffic, or active work permits at the time.'},
+      {t:'Inspect the physical pushbutton/station', check:'Guard cover condition and any sign of accidental contact or damage.'},
+      {t:'Check wiring/contact integrity', check:'Pushbutton contact and field wiring for a spurious closure not caused by an actual press.', verify:'A contact or wiring fault can present identically to a genuine press in the event log.'},
+      {t:'Check maintenance / permit history', check:'Work permits or testing activity near the station before the trip.'}
+    ]
+  },
+  motor_overload:{
+    name:'Motor / Pump Overload Trip', icon:'fa-fan', cat:'Electrical / Rotating Equipment',
+    event:{ 'Trip Time':'12:29:58', 'Interlock Result':'Trip confirmed OK', 'Machine':'Cooling Water Pump 2', 'Trip Parameter':'Thermal Overload' },
+    steps:[
+      {t:'Pull the sequence of events', check:'MCC/relay event log and DCS historian, time-synced, showing the current/thermal trend leading to the trip.'},
+      {t:'Identify the exact trip parameter', check:'Thermal overload, instantaneous overcurrent, ground fault, or phase loss/imbalance.', cause:'Real mechanical binding or overload, a process upset increasing load, or a relay/CT/wiring fault.', verify:'Compare the tripping relay\'s recorded current against an independent reading (VFD or power meter) if available.'},
+      {t:'Check motor/pump mechanical condition', check:'Bearing condition, coupling alignment, and any reported binding or blockage.'},
+      {t:'Cross-check process conditions at time of trip', check:'Flow, pressure, or any process upset that could explain an increased load.'},
+      {t:'Check relay/CT health and settings', check:'Overload relay calibration, CT ratio, and whether trip settings match the motor nameplate.', verify:'An incorrectly set overload relay can trip well within the motor\'s real capability — a config finding on its own.'},
+      {t:'Check for repeated or trending trips', check:'Trip history over recent weeks to see if this is a new issue or a recurring/degrading one.'},
+      {t:'Check maintenance / permit history', check:'Recent work on the motor, pump, or starter before the trip.'}
+    ]
+  },
+  ups_trip:{
+    name:'UPS / Battery System Trip', icon:'fa-car-battery', cat:'Electrical / Power Systems',
+    event:{ 'Trip Time':'23:10:36', 'Interlock Result':'Transfer confirmed OK', 'System':'Control Room UPS', 'Trip Parameter':'Battery Fault' },
+    steps:[
+      {t:'Pull the sequence of events', check:'UPS event log and BMS/DCS historian, time-synced, showing the parameter trend leading to the trip or transfer.'},
+      {t:'Identify the exact trip/alarm parameter', check:'Output overload, inverter fault, battery low voltage, battery fault, or bypass failure.', cause:'A real load event, an aging or failed battery string, or an internal UPS fault.', verify:'Compare the UPS\'s internal log against downstream load readings if available.'},
+      {t:'Check battery string health', check:'Most recent battery test results, individual cell/block voltages, and the age of the string.'},
+      {t:'Check load conditions at time of trip', check:'Connected load versus UPS rated capacity, and any sudden load step change.'},
+      {t:'Confirm bypass/transfer operated correctly', check:'Whether the static or maintenance bypass took over as designed.', verify:'Relevant to whether downstream equipment actually lost power or transferred cleanly.'},
+      {t:'Rule out environmental factors', check:'Room temperature and ventilation at the UPS, which affect both battery life and inverter thermal trips.'},
+      {t:'Check maintenance / permit history', check:'Recent battery testing, firmware updates, or work near the UPS before the event.'}
+    ]
+  },
+
+  control_valve_hunting:{
+    name:'Control Valve / Positioner Hunting', icon:'fa-sliders', cat:'Control Valves / Final Elements',
+    event:{ 'Event Time':'10:17:42', 'Loop Status':'Output stable / PV hunting', 'Valve':'FCV-204', 'Observed':'Stem movement / cycling' },
+    steps:[
+      {t:'Pull the sequence of events', check:'DCS trend of SP, PV, controller output, valve command, and position feedback with a tight time scale around the event.', verify:'Separate process-induced hunting from a valve/positioner problem before touching tuning.'},
+      {t:'Freeze the controller and watch the valve', check:'With the process made safe, place the loop in manual and make small controlled output changes while recording command versus actual stem/position feedback.', cause:'If the valve moves in jumps, has deadband, or responds late, suspect friction, linkage, actuator, or positioner rather than PID tuning.', verify:'A clean command-to-position response with the loop still hunting points back toward process dynamics/tuning.'},
+      {t:'Check instrument air at the positioner', check:'Supply pressure at the positioner during movement, regulator condition, filter/drain condition, and signs of wet or contaminated air.', cause:'Wet/dirty air or a regulator that droops under demand can make a pneumatic positioner stutter or hunt.', verify:'Record supply pressure at rest and while stroking — not just a static gauge reading.'},
+      {t:'Inspect stem, packing and linkage', check:'Loose linkage, worn pins, excessive packing compression, bent stem, actuator travel, and mechanical binding.', verify:'Look for stick-slip movement and compare commanded travel with actual travel.'},
+      {t:'Check positioner configuration', check:'Valve action, travel calibration, feedback linkage, characterization, split range, input signal, and any recent configuration changes.', cause:'Incorrect initialization or valve characterization can create apparent hunting after a positioner replacement.', verify:'Compare configuration against the approved datasheet/MOC, not just the positioner display.'},
+      {t:'Check for air leakage', check:'Actuator diaphragm/piston, tubing, fittings, relay/booster and positioner exhaust.', verify:'A steady control signal with a valve that continually repositions can indicate loss of actuator power gas.'},
+      {t:'Check process conditions before blaming the valve', check:'Upstream/downstream pressure, flow regime, cavitation/flashing, compressor or pump interaction, and nearby control loops.', verify:'If the valve tracks command correctly but PV oscillates, investigate the process loop before replacing the final element.'},
+      {t:'Review maintenance / permit history', check:'Recent positioner replacement, packing adjustment, actuator work, air-system maintenance or tuning changes.', verify:'Look for what changed immediately before the problem appeared.'}
+    ]
+  },
+  dp_transmitter_false:{
+    name:'DP Transmitter / False Level or Flow', icon:'fa-arrows-left-right', cat:'Transmitters / Primary Elements',
+    event:{ 'Event Time':'14:06:18', 'Transmitter':'LT-302', 'Output':'8.0 mA', 'Field Indication':'Stable / DCS mismatch' },
+    steps:[
+      {t:'Compare the transmitter, DCS and independent indication', check:'Record transmitter display, measured mA, DCS value, local gauge/level glass and any independent reference.', verify:'This divides the problem into process/primary element, transmitter, loop, or receiving-system territory.'},
+      {t:'Verify the impulse manifold and root valves', check:'Confirm HP/LP root valves, equalizing valve and manifold configuration against the approved operating arrangement.', cause:'A closed root valve or open equalizer can produce a believable but wrong DP.', verify:'Do not assume valve positions from handles alone — confirm against the site standard and process condition.'},
+      {t:'Inspect impulse lines for blockage, leaks or trapped liquid/gas', check:'Look for plugged lines, condensate, gas pockets, leaking fittings, heat-trace issues and abnormal temperature.', cause:'Debris, condensate or gas migration can create a false DP or a sluggish response.', verify:'Compare both legs and document which side is affected.'},
+      {t:'Check process connection / primary element', check:'Orifice, nozzle, seal, diaphragm, vessel tap and upstream/downstream condition.', verify:'If DP exists at the transmitter ports but the process condition says otherwise, move the investigation upstream of the transmitter.'},
+      {t:'Check zero / static pressure behaviour', check:'With the correct isolation and safe process condition, verify zero behaviour and whether both sides equalize as expected.', verify:'A zero check should be interpreted against the application; do not blindly trim away an installation problem.'},
+      {t:'Check transmitter configuration and range', check:'LRV/URV, square-root extraction, units, damping, sensor mode, trim history and alarm limits.', cause:'A transmitter can be electrically healthy while configured for the wrong application.', verify:'Compare configuration to the approved instrument data sheet.'},
+      {t:'Check loop and receiver separately', check:'Measure actual loop current and, if needed, inject a known mA signal at the AI to test the receiving channel.', verify:'If a known 8/12/16 mA signal is displayed incorrectly, the fault is downstream of the transmitter.'},
+      {t:'Review recent work and environmental history', check:'Impulse-line work, transmitter removal, calibration, flushing, heat tracing, process changes or maintenance permits.', verify:'Capture what was changed and when.'}
+    ]
+  },
+  loop_4_20_fault:{
+    name:'4–20 mA Loop / Receiver Mismatch', icon:'fa-wave-square', cat:'Electrical / Instrument Loops',
+    event:{ 'Event Time':'07:33:21', 'Field mA':'12.4 mA', 'DCS Value':'0%', 'Loop':'PT-118' },
+    steps:[
+      {t:'Establish where the signal becomes wrong', check:'Measure loop current at the field device, marshalling/JB, and receiving end where safe and permitted.', verify:'The first location where the value changes or disappears identifies the fault boundary.'},
+      {t:'Verify loop power and compliance', check:'Measure DC voltage at the transmitter under load, not only at the power supply terminals.', cause:'Excessive loop resistance or a failing supply can leave a transmitter powered but unable to regulate the requested current.', verify:'Record voltage and current together.'},
+      {t:'Inspect terminations and junction boxes', check:'Loose terminals, corrosion, moisture, damaged glands, incorrect ferrules, polarity and recent termination work.', verify:'Intermittent faults often appear only when the cable or terminal is disturbed.'},
+      {t:'Check shield, grounding and noise sources', check:'Shield termination, accidental field-end grounding, nearby VFD/power cables, and AC ripple/noise.', cause:'A loop can read correctly until a drive or high-current load starts.', verify:'Correlate the bad signal with equipment start/stop events.'},
+      {t:'Separate field device from AI channel', check:'Use an approved loop calibrator/simulator at the receiving input to verify the AI scaling and channel.', verify:'Known-good current into the AI removes the transmitter and field cable from the equation.'},
+      {t:'Check signal scaling and engineering units', check:'AI range, LRV/URV, square root, damping, fail mode and PLC/DCS scaling.', cause:'A healthy 4–20 mA signal can still display the wrong process value because of configuration.', verify:'Compare configuration to the instrument index and I/O database.'},
+      {t:'Check for intermittent faults', check:'Trend the current while gently observing accessible connections, vibration, temperature changes and equipment cycling.', verify:'Record the exact condition that makes the fault appear; do not just retighten everything and close the job.'},
+      {t:'Review maintenance history', check:'Recent cable work, I/O card replacement, fuse changes, transmitter replacement or power-supply work.', verify:'A fault that began immediately after a change should be investigated as a change-related event first.'}
+    ]
+  },
+  hart_comm_fault:{
+    name:'HART Communication Failure / Intermittent', icon:'fa-tower-broadcast', cat:'Communications / Smart Instrumentation',
+    event:{ 'Event Time':'16:44:09', '4–20 mA':'Normal', 'HART':'Intermittent / No response', 'Device':'FT-411' },
+    steps:[
+      {t:'Confirm analog signal is healthy first', check:'Measure/observe the 4–20 mA signal and verify the process indication is stable.', verify:'HART can fail while the analog loop remains perfectly healthy; treat them as two layers of the same circuit.'},
+      {t:'Check loop resistance and communication path', check:'Verify the loop has the required impedance for the HART installation and identify any recently added isolators, barriers or multiplexers.', cause:'Insufficient loop impedance or an altered signal path can prevent reliable HART communication.', verify:'Document the actual loop architecture, not just the transmitter wiring.'},
+      {t:'Inspect terminals, JB and cable condition', check:'Loose/corroded terminals, moisture, damaged pairs and shield/grounding issues.', verify:'An analog loop may continue working while the higher-frequency HART signal becomes unreliable.'},
+      {t:'Check electrical noise and VFD influence', check:'Compare communication failures with nearby drives, switching equipment, power changes or grounding events.', verify:'Capture a time correlation rather than assuming the communicator is faulty.'},
+      {t:'Check HART master conflicts', check:'Look for another primary/secondary master, multiplexer activity or maintenance communicator connected at the same time.', verify:'Record which master was connected during the failed attempt.'},
+      {t:'Test with a known-good communicator/modem', check:'Repeat the same connection using another approved communicator and the correct DD/DTM where applicable.', verify:'If one communicator works consistently, move the investigation toward the original communicator, lead set or configuration.'},
+      {t:'Check device revision / DD compatibility', check:'Manufacturer, model, device revision and installed DD/EDD/DTM version.', cause:'An incompatible device description can look like a communication or feature failure even when the HART layer is working.', verify:'Record the exact device revision before changing DD files.'},
+      {t:'Review recent work', check:'Transmitter replacement, loop modifications, barrier/isolator changes, MUX work or software/firmware updates.', verify:'Compare the current loop drawing with the installed field wiring.'}
+    ]
+  },
+  rtd_tc_fault:{
+    name:'RTD / Thermocouple Investigation', icon:'fa-temperature-half', cat:'Temperature Measurement',
+    event:{ 'Event Time':'12:51:06', 'PV':'Frozen / Erratic', 'Sensor':'TT-207', 'Process':'Steam / Hot Oil' },
+    steps:[
+      {t:'Compare field temperature with an independent reference', check:'Use an appropriate calibrated reference thermometer or safe comparison point and record location/time.', verify:'Do not judge the transmitter alone; establish whether the process temperature itself is credible.'},
+      {t:'Inspect the sensor and thermowell installation', check:'Insertion depth, loose sensor, thermowell damage, vibration, process deposits and mechanical condition.', cause:'A sensor can be electrically correct but poorly coupled to the process.', verify:'Look for changes following maintenance or thermowell work.'},
+      {t:'Check sensor wiring and terminal condition', check:'RTD lead configuration, TC polarity, extension/compensating cable type, terminals, moisture and junction-box condition.', cause:'Wrong TC extension wire or a reversed junction can create persistent offset; loose RTD leads can create jumps.', verify:'Compare installed wiring with the instrument drawing.'},
+      {t:'Check resistance / millivolt signal at the sensor', check:'Measure the sensor circuit using the correct method for RTD or TC and account for lead resistance where applicable.', verify:'Compare the field measurement with the expected value from the sensor characteristics.'},
+      {t:'Check transmitter configuration', check:'Sensor type, curve, 2/3/4-wire selection, burnout direction, damping and range.', cause:'A replacement transmitter can be configured for the wrong sensor type while still producing a believable output.', verify:'Record as-found settings.'},
+      {t:'Look for electrical interference', check:'Nearby VFDs, heaters, welding, grounding and shield termination.', verify:'Correlate erratic readings with equipment switching.'},
+      {t:'Review calibration and replacement history', check:'Last calibration, sensor replacement, thermowell work and any recent process upset.', verify:'A sudden change after maintenance is important evidence, not background information.'}
+    ]
+  },
+  solenoid_valve_fail:{
+    name:'Solenoid / On-Off Valve Failed to Move', icon:'fa-toggle-on', cat:'Final Elements / On-Off',
+    event:{ 'Event Time':'05:26:44', 'Command':'OPEN', 'Feedback':'CLOSED', 'Valve':'XV-115' },
+    steps:[
+      {t:'Pull command and feedback sequence', check:'DCS/PLC command, solenoid output, limit-switch feedback and valve position trend with timestamps.', verify:'Establish whether the failure is command-side, solenoid-side, actuator-side or feedback-side.'},
+      {t:'Check actual voltage/current at the solenoid', check:'Measure the field output at the solenoid terminals during a controlled command.', cause:'A PLC output can indicate ON while the field device receives insufficient voltage because of a fuse, terminal or cable problem.', verify:'Measure at the device, not only at the panel.'},
+      {t:'Inspect solenoid and pilot air', check:'Coil condition, correct voltage, manual override position, pilot pressure, filter/regulator and exhaust path.', verify:'A healthy coil with no pilot pressure can still leave the valve stationary.'},
+      {t:'Check actuator and valve mechanically', check:'Stem/shaft movement, actuator diaphragm/piston, spring return, packing, corrosion and mechanical obstruction.', verify:'Determine whether the actuator can move the valve independently of the control signal, using the site-approved test method.'},
+      {t:'Check limit switches / proximity feedback', check:'Switch alignment, damaged targets, wiring, debounce/configuration and actual valve position.', cause:'A valve can move correctly while the DCS still reports CLOSED because feedback has failed.', verify:'Compare physical position with electrical feedback.'},
+      {t:'Check permissives/interlocks and overrides', check:'PLC/SIS logic, interlocks, forces, maintenance bypasses and permissives active at the event time.', verify:'Do not condemn the field valve until the command was proven to be legitimately issued.'},
+      {t:'Review recent work', check:'Solenoid replacement, tubing changes, actuator overhaul, limit-switch adjustment or loop modifications.', verify:'Compare the current wiring and pneumatic arrangement with the approved drawing.'}
+    ]
+  },
+  speed_probe_trip:{
+    name:'Speed Probe / Overspeed Trip Investigation', icon:'fa-gauge-high', cat:'Rotating Equipment Protection',
+    event:{ 'Trip Time':'18:02:17', 'Speed':'9,840 rpm', 'Protection':'Overspeed / Speed mismatch', 'Machine':'GT-2' },
+    steps:[
+      {t:'Reconstruct the speed event', check:'Protection relay/monitor, controller historian and independent speed indication with synchronized timestamps.', verify:'Find which speed channel moved first and whether the trip logic saw a genuine overspeed.'},
+      {t:'Compare all speed channels', check:'Individual probe values, voting logic, channel health and disagreement between channels.', cause:'A single bad probe or cable can create a false overspeed in an incorrectly configured or non-voted system.', verify:'Record channel-by-channel values at the event time.'},
+      {t:'Inspect probe installation and target condition', check:'Probe gap, mounting security, target teeth/keyway condition, tip damage and evidence of rub.', verify:'Mechanical movement of the probe or target can create intermittent pulses.'},
+      {t:'Check cable, connector and shielding', check:'Probe extension cable, connectors, bends, moisture, shield termination and routing near high-current equipment.', verify:'A vibration-sensitive cable fault may only appear at operating speed.'},
+      {t:'Check monitor input / signal quality', check:'Pulse amplitude/frequency, monitor diagnostics and input channel condition.', verify:'If the signal is clean at the field interface but wrong at the monitor, move downstream.'},
+      {t:'Check bypass/inhibit and test mode', check:'Protection bypasses, test switches, maintenance overrides and recent proof-test activity.', verify:'An unusual protection state at the time of trip is a finding in itself.'},
+      {t:'Review recent maintenance', check:'Probe replacement, gap adjustment, coupling work, bearing work or protection-system testing.', verify:'Pay particular attention to work completed immediately before the first abnormal event.'}
+    ]
+  },
+  flame_scanner:{
+    name:'Burner Flame Scanner / Flame Failure', icon:'fa-fire-flame-simple', cat:'Combustion / Burner Management',
+    event:{ 'Trip Time':'03:47:29', 'Flame Signal':'Lost', 'Burner':'B-204', 'Fuel':'Gas' },
+    steps:[
+      {t:'Pull the burner management sequence', check:'Flame signal, fuel valve command/feedback, ignition sequence, purge state and permissives with synchronized timestamps.', verify:'Determine whether flame actually disappeared or only the flame detector signal disappeared.'},
+      {t:'Inspect flame scanner sight path', check:'Lens condition, soot, fouling, alignment, purge air and sight-tube condition.', cause:'A dirty or misaligned scanner can lose flame signal while combustion remains established.', verify:'Record the physical condition before cleaning or adjustment.'},
+      {t:'Check scanner signal quality', check:'Scanner strength/diagnostic value, supply, wiring and grounding at the time of the event.', verify:'Look for signal dropout correlated with vibration, temperature or electrical switching.'},
+      {t:'Check actual combustion evidence', check:'Burner condition, ignition hardware, fuel pressure, air flow and operator observations, following site safety procedures.', verify:'Corroborate the instrument signal with the physical process.'},
+      {t:'Check fuel valve and ignition sequence', check:'Valve command versus feedback, solenoid status, ignition transformer and permissives.', cause:'A genuine flame failure may originate upstream of the scanner.', verify:'Build the causal chain rather than treating the scanner as the root cause automatically.'},
+      {t:'Review recent burner/scanner work', check:'Scanner replacement, lens cleaning, alignment, purge-air changes or combustion tuning.', verify:'Compare as-found alignment and configuration with the approved setup.'}
+    ]
+  },
+  analyzer_sample_fault:{
+    name:'Process Analyzer / Sample System Investigation', icon:'fa-flask', cat:'Analyzers / Sample Systems',
+    event:{ 'Alarm Time':'20:14:55', 'Analyzer':'A-510', 'PV':'High / unstable', 'Sample System':'Available' },
+    steps:[
+      {t:'Compare analyzer result with an independent sample', check:'Laboratory or portable reference where approved, plus process conditions and analyzer diagnostics.', verify:'Establish whether the analyzer is wrong or the process really changed.'},
+      {t:'Trace the sample from process tap to analyzer', check:'Root valve, probe/filter, heat tracing, tubing, pressure reduction, coalescer, flow control and drains.', cause:'A sample system fault can produce a perfectly healthy analyzer reading from a bad sample.', verify:'Treat the sample system as part of the instrument.'},
+      {t:'Check sample flow and pressure', check:'Actual flow, pressure and temperature at the analyzer inlet versus the required operating window.', verify:'Record as-found values rather than only checking that a rotameter is moving.'},
+      {t:'Inspect for condensation, plugging and leaks', check:'Water/condensate, blocked filters, sticky components, cracked tubing and leaks pulling in ambient air.', verify:'Document where the sample condition changes along the path.'},
+      {t:'Check calibration gas and regulator condition', check:'Gas identity, expiry, regulator, tubing and calibration history.', cause:'Incorrect or contaminated calibration gas can create a convincing but false calibration result.', verify:'Record cylinder identification and calibration sequence.'},
+      {t:'Review analyzer configuration and recent maintenance', check:'Range, compensation, sample conditioning changes, firmware/configuration and recent calibration.', verify:'Compare as-found settings with the approved analyzer configuration.'}
+    ]
+  },
+  io_channel_mismatch:{
+    name:'PLC / DCS I/O Channel Mismatch', icon:'fa-microchip', cat:'Control System / I-O',
+    event:{ 'Event Time':'09:18:31', 'Field Signal':'Correct', 'I/O':'Unexpected', 'Tag':'PT-701' },
+    steps:[
+      {t:'Prove the field signal at the I/O boundary', check:'Measure the actual field current/voltage at the marshalling or I/O termination point.', verify:'Do not use the DCS display as proof of the field signal.'},
+      {t:'Inject a known test signal', check:'With the loop safely isolated and approved for testing, inject a known signal at the AI channel and record the displayed value.', verify:'This separates channel hardware/scaling from the field instrument.'},
+      {t:'Check channel configuration', check:'AI type, range, scaling, filtering, square root, fail state and channel assignment.', cause:'A channel can be electrically healthy and still report the wrong engineering value.', verify:'Compare against the I/O database and approved drawings.'},
+      {t:'Check marshalling and terminal routing', check:'Crossed pairs, wrong terminal, spare channel wiring, loose links and recent cabinet work.', verify:'Trace the physical pair end-to-end instead of relying only on wire numbers.'},
+      {t:'Check redundancy / channel swap history', check:'Redundant I/O, channel swaps, hot-swap events and module replacement records.', verify:'A wiring fault may follow the field pair while an I/O fault stays with the channel.'},
+      {t:'Review system changes', check:'Recent logic download, I/O card replacement, cabinet modification or tag database change.', verify:'Capture the exact change revision/time before concluding hardware failure.'}
+    ]
+  }
+};
+
+/* JS-09-B: STATE — in-memory only, reset per session */
+let currentDeviceKey = 'fm200';
+let stepStatus = {};   // idx -> 'done' | 'skipped'
+let stepAnswers = {};  // idx -> {observation,evidence,measurement}
+let currentIdx = 0;    // 0..steps.length-1, then steps.length = summary screen
+let classifyChoice = null;
+let attached = false;
+let recapShown = false;
+
+const el = id => document.getElementById(id);
+
+/* JS-09-C: CARD RENDERING — steps, dots, progress, and the event-facts /
+   Technician-name card shown on step 1 */
+function totalScreens(){ return DEVICES[currentDeviceKey].steps.length + 1; } // +1 summary screen
+
+function renderDevice(key){
+  currentDeviceKey = key;
+  stepStatus = {};
+  stepAnswers = {};
+  currentIdx = 0;
+  classifyChoice = null;
+  attached = false;
+  recapShown = false;
+
+  const d = DEVICES[key];
+  el('deviceName').textContent = d.name;
+  el('deviceIcon').className = 'fas ' + d.icon;
+  el('qaModalDeviceName').textContent = d.name;
+  el('qaModalDeviceIcon').className = 'fas ' + d.icon;
+  renderDots();
+  renderCard(currentIdx, null);
+}
+
+function openModal(){
+  el('qaModalBackdrop').classList.add('open');
+  el('resumeBar').classList.remove('show');
+}
+function closeModal(){
+  el('qaModalBackdrop').classList.remove('open');
+  updateResumeBar();
+  el('resumeBar').classList.add('show');
+}
+function updateResumeBar(){
+  const d = DEVICES[currentDeviceKey];
+  if(recapShown){
+    el('resumeBarSub').textContent = 'Investigation complete — review classification';
+  } else if(currentIdx < d.steps.length){
+    el('resumeBarSub').textContent = `Question ${currentIdx+1} of ${d.steps.length}`;
+  } else {
+    el('resumeBarSub').textContent = 'Wrap-up — classify this event';
+  }
+}
+
+el('qaModalClose').addEventListener('click', closeModal);
+el('resumeBar').addEventListener('click', openModal);
+
+function renderDots(){
+  const total = totalScreens();
+  const wrap = el('qaDots');
+  wrap.innerHTML = '';
+  for(let i=0;i<total;i++){
+    const dot = document.createElement('div');
+    dot.className = 'qa-dot';
+    if(i < currentIdx || stepStatus[i]) dot.classList.add('done');
+    if(i === currentIdx) dot.classList.add('current');
+    dot.innerHTML = '<i></i>';
+    wrap.appendChild(dot);
+  }
+  updateProgressLabel();
+}
+
+function updateProgressLabel(){
+  const d = DEVICES[currentDeviceKey];
+  const answered = Object.keys(stepStatus).length;
+  if(currentIdx < d.steps.length){
+    el('qaProgressLabel').textContent = `Question ${currentIdx+1} of ${d.steps.length}`;
+  } else {
+    el('qaProgressLabel').textContent = `Wrap-up`;
+  }
+  el('qaProgressPct').textContent = Math.round((answered/d.steps.length)*100) + '% answered';
+}
+
+function buildStepCardHTML(i){
+  const d = DEVICES[currentDeviceKey];
+  const s = d.steps[i];
+  const a = stepAnswers[i] || {};
+  let body = '';
+
+  // The event summary is intentionally part of Question 1 now.
+  // The investigator must establish the event facts before moving into
+  // the deeper diagnostic questions. Nothing is shown on the base screen.
+  if(i === 0){
+    const facts = a.eventFacts || {};
+    body += `<div class="event-facts-box">
+      <div class="event-facts-head">
+        <div class="event-facts-icon"><i class="fas fa-triangle-exclamation"></i></div>
+        <div><b>Establish the event first</b><span>Record what actually happened before investigating why it happened.</span></div>
+      </div>
+      <div class="event-facts-grid">
+        <div class="event-fact-field">
+          <label>Technician</label>
+          <input data-role="technician-name" value="${escapeHtml(a.technicianName||'')}" placeholder="Enter technician name">
+        </div>`;
+
+    Object.entries(d.event).forEach(([k,v])=>{
+      const value = facts[k] ?? v ?? '';
+      body += `<div class="event-fact-field">
+        <label>${k}</label>
+        <input data-role="event-fact" data-key="${escapeHtml(k)}" value="${escapeHtml(value)}" placeholder="Enter ${escapeHtml(k.toLowerCase())}">
+      </div>`;
+    });
+
+    body += `</div>
+      <div class="event-fact-field event-fact-wide">
+        <label>What was observed / reported?</label>
+        <textarea data-role="event-description" placeholder="Describe the event in plain field terms — what happened, what was seen/heard, what tripped, what stopped, or what alarm appeared.">${escapeHtml(a.eventDescription||'')}</textarea>
+      </div>
+    </div>`;
+  }
+
+  body += `<div class="qa-row"><b>Check</b><p>${s.check}</p></div>`;
+  if(s.cause) body += `<div class="qa-row"><b>Possible cause</b><p>${s.cause}</p></div>`;
+  if(s.verify) body += `<div class="qa-verify-row"><i class="fas fa-circle-check"></i><p>${s.verify}</p></div>`;
+  body += `<div class="evidence-box">
+    <label>Field observation / answer</label>
+    <textarea data-role="observation" placeholder="What did you actually find, measure, see, hear or verify in the field?">${escapeHtml(a.observation||'')}</textarea>
+    <div class="evidence-meta">
+      <select data-role="evidence"><option value="">Evidence status...</option><option ${a.evidence==='confirmed'?'selected':''} value="confirmed">Confirmed by test / observation</option><option ${a.evidence==='notfound'?'selected':''} value="notfound">Checked — not found</option><option ${a.evidence==='unknown'?'selected':''} value="unknown">Not checked / unknown</option></select>
+      <input data-role="measurement" value="${escapeHtml(a.measurement||'')}" placeholder="Measurement / reference (optional)">
+    </div>
+  </div>`;
+
+  return `
+    <div class="qa-card-head"><div class="qa-step-badge">${i+1}</div><b>${s.t}</b></div>
+    ${body}
+    <div class="qa-actions">
+      <button class="qa-btn-back" data-role="back" ${i===0?'disabled':''}><i class="fas fa-chevron-left"></i></button>
+      <button class="qa-btn-main" data-role="main"><i class="fas fa-check"></i> Save evidence — next</button>
+    </div>
+    <div class="qa-skip-link" data-role="skip">Skip this step for now</div>`;
+}
+
+function escapeHtml(value){
+  return String(value ?? '').replace(/[&<>'"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]));
+}
+
+function buildSummaryCardHTML(){
+  const d = DEVICES[currentDeviceKey];
+  const answered = Object.values(stepStatus).filter(v=>v==='done').length;
+  const skipped = Object.values(stepStatus).filter(v=>v==='skipped').length;
+  return `
+    <div class="qa-summary-title"><i class="fas fa-clipboard-check"></i> Classify this event</div>
+    <div class="qa-summary-sub">${answered} of ${d.steps.length} steps checked${skipped? `, ${skipped} skipped`:''}. Based on what you found, how do you classify this event?</div>
+    <div class="inv-classify-opts" data-role="classify-opts">
+      <button data-c="real" class="${classifyChoice==='real'?'selected':''}">Confirmed<br/>Real Event</button>
+      <button data-c="false" class="${classifyChoice==='false'?'selected':''}">False<br/>Activation</button>
+      <button data-c="indeterminate" class="${classifyChoice==='indeterminate'?'selected':''}">Indeterminate</button>
+    </div>
+    <button class="inv-attach-btn ${attached?'attached':''}" data-role="attach-btn">
+      <i class="fas ${attached?'fa-circle-check':'fa-paperclip'}"></i> ${attached?'Attached to Field Report':'Attach photos / logs to Field Report'}
+    </button>
+    <div class="qa-actions" style="margin-top:2px;">
+      <button class="qa-btn-back" data-role="back"><i class="fas fa-chevron-left"></i></button>
+      <button class="qa-btn-main done-look" data-role="finish-btn"><i class="fas fa-flag-checkered"></i> Generate Findings Report</button>
+    </div>
+  `;
+}
+
+function buildRecapHTML(){
+  const d = DEVICES[currentDeviceKey];
+  const labelMap = {real:'Confirmed Real Event', false:'False Activation', indeterminate:'Indeterminate'};
+  let rows='';
+  d.steps.forEach((s,idx)=>{ const status=stepStatus[idx]||'skipped'; const a=stepAnswers[idx]||{}; rows+=`<div class="qa-recap-row" data-jump="${idx}"><div class="n ${status==='skipped'?'skipped':''}">${idx+1}</div><span>${s.t}${a.observation?' — evidence recorded':''}</span><i class="fas ${status==='done'?'fa-circle-check':'fa-circle-minus'} status"></i></div>`; });
+  return `<div class="qa-summary-title"><i class="fas fa-flag-checkered"></i> Investigation complete</div>
+    <div class="qa-summary-sub">Review the evidence captured. The RCA engine will only treat observations marked confirmed as strong evidence.</div>
+    ${rows}
+    <div class="rca-banner"><b><i class="fas fa-diagram-project"></i> Ready to generate findings report</b><div style="font-size:.75rem;color:var(--text-dim);margin-top:4px">Answers, evidence status, event classification and recent-work findings will be carried into the report.</div></div>
+    <div class="qa-actions"><button class="qa-btn-back" data-role="back"><i class="fas fa-chevron-left"></i></button><button class="qa-btn-main" data-role="report-btn"><i class="fas fa-file-lines"></i> Build Report</button></div>`;
+}
+
+let transitioning = false;
+
+function renderCard(i, direction){
+  const stage = el('qaStage');
+  const isSummary = i >= DEVICES[currentDeviceKey].steps.length;
+  const html = recapShown ? buildRecapHTML() : (isSummary ? buildSummaryCardHTML() : buildStepCardHTML(i));
+
+  // Instant question rendering: no transition, animation, timeout, or
+  // overlapping old/new cards. This keeps every tap immediate and reliable.
+  transitioning = false;
+  stage.innerHTML = '';
+
+  const card = document.createElement('div');
+  card.className = 'qa-card';
+  card.innerHTML = html;
+  stage.appendChild(card);
+  wireCard(card, i, isSummary);
+}
+
+/* JS-09-D: EVIDENCE CAPTURE — button wiring + saveStepEvidence(), which
+   also reads the Technician name field (step 1 only) into
+   stepAnswers[0].technicianName */
+function wireCard(card, i, isSummary){
+  const backBtn=card.querySelector('[data-role="back"]');
+  if(backBtn) backBtn.onclick=()=>{ if(transitioning)return; if(recapShown){recapShown=false;goTo(DEVICES[currentDeviceKey].steps.length,'back')}else goTo(i-1,'back'); };
+  if(recapShown){
+    card.querySelectorAll('[data-jump]').forEach(row=>row.onclick=()=>{if(transitioning)return;recapShown=false;goTo(parseInt(row.dataset.jump,10),'back')});
+    const rb=card.querySelector('[data-role="report-btn"]'); if(rb) rb.onclick=()=>openRcaReport();
+    return;
+  }
+  if(isSummary){
+    card.querySelectorAll('[data-role="classify-opts"] button').forEach(btn=>btn.onclick=()=>{classifyChoice=btn.dataset.c;card.querySelectorAll('[data-role="classify-opts"] button').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');showToast('Classified as: '+({real:'Confirmed Real Event',false:'False Activation',indeterminate:'Indeterminate'})[btn.dataset.c]);});
+    const ab=card.querySelector('[data-role="attach-btn"]'); if(ab) ab.onclick=()=>{attached=!attached;renderCard(i,null);if(attached)showToast('Attached to Field Report (mock)')};
+    card.querySelector('[data-role="finish-btn"]').onclick=()=>{if(!classifyChoice){showToast('Pick a classification first');return;}recapShown=true;renderCard(i,'forward');showToast('Investigation evidence saved')};
+  }else{
+    card.querySelector('[data-role="main"]').onclick=()=>{if(transitioning)return;saveStepEvidence(i,card);stepStatus[i]='done';renderDots();goTo(i+1,'forward')};
+    card.querySelector('[data-role="skip"]').onclick=()=>{if(transitioning)return;saveStepEvidence(i,card);stepStatus[i]='skipped';renderDots();goTo(i+1,'forward')};
+  }
+}
+function saveStepEvidence(i,card){
+  stepAnswers[i]={observation:card.querySelector('[data-role="observation"]')?.value.trim()||'',evidence:card.querySelector('[data-role="evidence"]')?.value||'',measurement:card.querySelector('[data-role="measurement"]')?.value.trim()||''};
+
+  if(i === 0){
+    const eventFacts = {};
+    card.querySelectorAll('[data-role="event-fact"]').forEach(input=>{
+      eventFacts[input.dataset.key] = input.value.trim();
+    });
+    const eventDescription = card.querySelector('[data-role="event-description"]')?.value.trim() || '';
+    const technicianName = card.querySelector('[data-role="technician-name"]')?.value.trim() || '';
+    stepAnswers[i].eventFacts = eventFacts;
+    stepAnswers[i].eventDescription = eventDescription;
+    stepAnswers[i].technicianName = technicianName;
+  }
+}
+/* JS-09-E: REPORT ENGINE — edit here for any Findings/report content
+   change. buildRcaData() assembles the data (root cause, confidence,
+   confirmed evidence, technicianName); openRcaReport() renders the
+   printable HTML (Findings section 4, sign-off section 7). */
+function buildRcaData(){
+  const d=DEVICES[currentDeviceKey];
+  const confirmed=d.steps.map((s,i)=>({s,a:stepAnswers[i]||{}})).filter(x=>x.a.observation && x.a.evidence==='confirmed');
+  const notes=d.steps.map((s,i)=>({s,a:stepAnswers[i]||{}})).filter(x=>x.a.observation);
+  const joined=confirmed.map(x=>x.a.observation).join(' ');
+  let root='Root cause not yet proven'; let confidence='Low'; let contributing=[];
+  const heuristics={
+    valve_positioner:['positioner','linkage','stiction','air','hunting','actuator'],
+    dp_level:['impulse','manifold','plug','tap','dp'],
+    hart_comm:['hart','communicator','modem','noise','impedance','dd','edd'],
+    rtd_tc:['thermocouple','rtd','polarity','extension','resistance','mv'],
+    onoff_valve:['solenoid','pilot','air','limit switch','feedback'],
+    speed_probe_trip:['probe','gap','target','speed','cable','overspeed'],
+    flame_scanner:['scanner','lens','flame','purge','soot','alignment'],
+    analyzer_sample_fault:['sample','condensate','filter','flow','calibration gas','probe'],
+    io_channel_mismatch:['scaling','i/o','marshalling','terminal','channel','injection']
+  };
+  const text=joined.toLowerCase();
+  const key=currentDeviceKey;
+  const hits=(heuristics[key]||[]).filter(w=>text.includes(w));
+  if(confirmed.length>=2 && hits.length){ root=hits.slice(0,2).join(' / ')+' related field fault'; confidence=hits.length>=2?'High':'Medium'; }
+  else if(confirmed.length>=2){ root='Field condition identified from confirmed evidence; verify the causal link before closing the RCA'; confidence='Medium'; }
+  else if(confirmed.length===1){ root='Insufficient confirmed evidence to prove the root cause'; confidence='Low'; }
+  const recent=notes.filter(x=>/recent|maintenance|replaced|changed|work|calibrat|adjust|repair/i.test(x.a.observation)).map(x=>x.a.observation).slice(0,3);
+  contributing=recent;
+  const eventFacts=stepAnswers[0]?.eventFacts||{};
+  const eventDescription=stepAnswers[0]?.eventDescription||'';
+  const technicianName=stepAnswers[0]?.technicianName||'';
+  return {d,confirmed,notes,root,confidence,contributing,eventFacts,eventDescription,technicianName};
+}
+function openRcaReport(){
+  const data=buildRcaData();
+  const conf=data.confidence==='High'?'High':data.confidence==='Medium'?'Medium':'Low';
+  const classLabel=({real:'Confirmed Real Event',false:'False Activation',indeterminate:'Indeterminate'})[classifyChoice]||'Not classified';
+  const classColor=({real:'#dc2626',false:'#15803d',indeterminate:'#b45309'})[classifyChoice]||'#64748b';
+  const reportId='INV-'+new Date().toISOString().slice(0,10).replace(/-/g,'')+'-'+Math.random().toString(36).slice(2,7).toUpperCase();
+  const generated=new Date().toLocaleString();
+
+  const safe=(v)=>escapeHtml(v==null?'':String(v));
+
+  const statusLabel=(i)=>{
+    const st=stepStatus[i];
+    if(st==='done') return 'Confirmed / checked';
+    if(st==='skipped') return 'Skipped / not completed';
+    return 'Not recorded';
+  };
+  const statusColor=(i)=>{
+    const st=stepStatus[i];
+    return st==='done'?'#15803d':st==='skipped'?'#b45309':'#64748b';
+  };
+
+  const eventFactRows=Object.entries(data.eventFacts||{}).map(([k,v])=>
+    `<tr><td style="padding:6px 8px;border-bottom:1px solid #e2e8f0;width:34%;"><b>${safe(k)}</b></td><td style="padding:6px 8px;border-bottom:1px solid #e2e8f0;">${safe(v||'Not recorded')}</td></tr>`
+  ).join('');
+
+  const evidenceRows=data.d.steps.map((s,i)=>{
+    const a=stepAnswers[i]||{};
+    const observation=a.observation||'No field observation recorded.';
+    const measurement=a.measurement||'—';
+    return `<tr>
+      <td style="padding:6px 8px;border-bottom:1px solid #e2e8f0;width:5%;">${i+1}</td>
+      <td style="padding:6px 8px;border-bottom:1px solid #e2e8f0;width:22%;"><b>${safe(s.t)}</b></td>
+      <td style="padding:6px 8px;border-bottom:1px solid #e2e8f0;width:14%;color:${statusColor(i)};font-weight:700;">${safe(statusLabel(i))}</td>
+      <td style="padding:6px 8px;border-bottom:1px solid #e2e8f0;width:44%;">${safe(observation)}</td>
+      <td style="padding:6px 8px;border-bottom:1px solid #e2e8f0;width:15%;">${safe(measurement)}</td>
+    </tr>`;
+  }).join('');
+
+  const confirmedRows=data.confirmed.length
+    ? `<table style="width:100%;font-size:11px;border-collapse:collapse;margin-top:6px;">
+        <thead><tr style="background:#f1f5f9;"><th style="padding:6px 8px;text-align:left;width:26%;">Investigation item</th><th style="padding:6px 8px;text-align:left;">Confirmed evidence</th><th style="padding:6px 8px;text-align:left;width:20%;">Measurement / reference</th></tr></thead>
+        <tbody>${data.confirmed.map(x=>`<tr><td style="padding:6px 8px;border-bottom:1px solid #e2e8f0;"><b>${safe(x.s.t)}</b></td><td style="padding:6px 8px;border-bottom:1px solid #e2e8f0;">${safe(x.a.observation)}</td><td style="padding:6px 8px;border-bottom:1px solid #e2e8f0;">${safe(x.a.measurement||'—')}</td></tr>`).join('')}</tbody>
+       </table>`
+    : `<div style="margin-top:8px;padding:10px;background:#fef2f2;border-left:4px solid #dc2626;font-size:11px;"><b>No confirmed field evidence</b><br>The investigation record does not contain an observation explicitly marked as confirmed.</div>`;
+
+  const contributing=data.contributing.length
+    ? data.contributing.map(x=>`<li>${safe(x)}</li>`).join('')
+    : '<li>No specific recent-change evidence was recorded.</li>';
+
+  const report=`<div class="qa-card rca-report">
+    <div id="tripReportDoc" style="font-family:Arial,sans-serif;color:#172033;background:#fff;padding:18px;border-radius:10px;max-width:900px;margin:auto;">
+
+      <div style="display:flex;justify-content:space-between;border-bottom:2px solid #1e3a5f;padding-bottom:10px;">
+        <div>
+          <div style="font-size:11px;color:#64748b;letter-spacing:1px;">INSTRUMENTPRO</div>
+          <h2 style="margin:3px 0;">ROOT CAUSE INVESTIGATION REPORT</h2>
+          <div style="font-size:11px;color:#64748b;">${safe(reportId)} • REV 1 • ${safe(data.d.name)}</div>
+        </div>
+        <div style="font-size:16px;font-weight:800;color:${classColor};text-align:right;white-space:nowrap;">${safe(classLabel).toUpperCase()}</div>
+      </div>
+
+      <table style="width:100%;font-size:12px;margin:12px 0;border-collapse:collapse;">
+        <tr><td style="padding:4px 6px 4px 0;"><b>Equipment / System</b><br>${safe(data.d.name)}</td><td style="padding:4px 6px;"><b>Classification</b><br>${safe(classLabel)}</td><td style="padding:4px 0 4px 6px;"><b>RCA Confidence</b><br>${safe(conf)}</td></tr>
+        <tr><td style="padding:4px 6px 4px 0;"><b>Evidence Basis</b><br>${data.confirmed.length} confirmed / ${data.notes.length} observations</td><td style="padding:4px 6px;"><b>Report ID</b><br>${safe(reportId)}</td><td style="padding:4px 0 4px 6px;"><b>Generated</b><br>${safe(generated)}</td></tr>
+      </table>
+
+      <p style="font-size:11px;color:#64748b;margin:0 0 4px;">Formal record of event reconstruction, field evidence, causal analysis and recommended corrective / preventive actions.</p>
+
+      <h4 style="margin:16px 0 6px;font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:#1e3a5f;border-bottom:1px solid #e2e8f0;padding-bottom:4px;">1. Event Establishment</h4>
+      <table style="width:100%;font-size:11px;border-collapse:collapse;">
+        <thead><tr style="background:#f1f5f9;"><th style="padding:6px 8px;text-align:left;width:34%;">Event field</th><th style="padding:6px 8px;text-align:left;">Recorded information</th></tr></thead>
+        <tbody>${eventFactRows || '<tr><td colspan="2" style="padding:6px 8px;">No event facts were recorded.</td></tr>'}</tbody>
+      </table>
+      <div style="margin-top:8px;padding:10px;background:#f8fafc;border-left:4px solid #1e3a5f;font-size:11px;"><b>Event description</b><br>${safe(data.eventDescription || 'No event description was recorded.')}</div>
+
+      <h4 style="margin:16px 0 6px;font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:#1e3a5f;border-bottom:1px solid #e2e8f0;padding-bottom:4px;">2. Investigation Evidence Register</h4>
+      <table style="width:100%;font-size:11px;border-collapse:collapse;">
+        <thead><tr style="background:#f1f5f9;"><th style="padding:6px 8px;text-align:left;">No.</th><th style="padding:6px 8px;text-align:left;">Investigation step</th><th style="padding:6px 8px;text-align:left;">Status</th><th style="padding:6px 8px;text-align:left;">Field observation / finding</th><th style="padding:6px 8px;text-align:left;">Measurement / reference</th></tr></thead>
+        <tbody>${evidenceRows}</tbody>
+      </table>
+
+      <h4 style="margin:16px 0 6px;font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:#1e3a5f;border-bottom:1px solid #e2e8f0;padding-bottom:4px;">3. Confirmed Field Evidence</h4>
+      ${confirmedRows}
+
+      <!-- Findings section: root cause + confidence only (5-Why removed) -->
+      <h4 style="margin:16px 0 6px;font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:#1e3a5f;border-bottom:1px solid #e2e8f0;padding-bottom:4px;">4. Findings</h4>
+      <div style="padding:10px;background:#f8fafc;border-left:4px solid #1e3a5f;font-size:11px;">
+        <b>Root Cause Assessment</b><br>${safe(data.root)}<br><br>
+        <b>Confidence:</b> ${safe(conf)} &nbsp; <b>Evidence rule:</b> A suspected cause is not treated as confirmed unless the field evidence supports the causal link.
+      </div>
+
+      <h4 style="margin:16px 0 6px;font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:#1e3a5f;border-bottom:1px solid #e2e8f0;padding-bottom:4px;">5. Contributing Factors / Recent Changes</h4>
+      <div style="padding:10px;background:#f8fafc;border-left:4px solid #1e3a5f;font-size:11px;"><ul style="margin:0;padding-left:18px;">${contributing}</ul></div>
+
+      <h4 style="margin:16px 0 6px;font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:#1e3a5f;border-bottom:1px solid #e2e8f0;padding-bottom:4px;">6. Corrective &amp; Preventive Actions</h4>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:11px;">
+        <div><b>Corrective action</b><br>Record the physical repair, adjustment, replacement or configuration change actually completed.<br><br><b>Preventive action</b><br>Update procedure, inspection interval, calibration/test step, training, design or configuration where supported by the investigation.</div>
+        <div><b>Verification</b><br>Document the post-repair test, functional result and return-to-service status before closure.</div>
+      </div>
+
+      <!-- Sign-off: Investigator/Technician only (Ops/Engineering/RCA
+           close-out sign-off boxes intentionally removed per request) -->
+      <h4 style="margin:16px 0 6px;font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:#1e3a5f;border-bottom:1px solid #e2e8f0;padding-bottom:4px;">7. Review &amp; Approval</h4>
+      <div style="font-size:11px;margin-bottom:4px;">
+        <div style="padding-top:14px;border-top:1px solid #64748b;max-width:340px;">Investigator / Technician<br><span style="color:#64748b;">${safe(data.technicianName || 'Name / signature / date')}</span></div>
+      </div>
+
+      <div style="margin-top:16px;border-top:1px solid #ddd;padding-top:10px;font-size:10px;color:#64748b;">InstrumentPro • Field Investigation Report • ${safe(reportId)} • Controlled copy when printed • Status: DRAFT</div>
+    </div>
+
+    <div class="report-actions" style="max-width:900px;margin:12px auto 0;">
+      <button data-role="close-rca">Back to investigation</button>
+      <button class="secondary" data-role="print-rca">Print / Save PDF</button>
+    </div>
+  </div>`;
+
+  el('qaStage').innerHTML=report;
+  const card=el('qaStage').querySelector('.qa-card');
+  card.querySelector('[data-role="close-rca"]').onclick=()=>renderCard(DEVICES[currentDeviceKey].steps.length,'back');
+  card.querySelector('[data-role="print-rca"]').onclick=()=>{
+    const docHtml=el('tripReportDoc').outerHTML;
+    const w=window.open('','_blank');
+    if(!w){ showToast('Allow pop-ups to print the report.'); return; }
+    w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>'+safe(reportId)+'</title><style>body{font-family:Arial,sans-serif;margin:24px;background:#fff;}@page{size:A4 portrait;margin:10mm;}table{border-collapse:collapse;}</style></head><body>'+docHtml+'</body></html>');
+    w.document.close();
+    w.focus();
+    w.print();
+  };
+}
+
+/* JS-09-F: NAV / MODAL WIRING — screen navigation, toast, device picker,
+   and the openTripDiagnostic/closeTripDiagnostic entry points used by
+   tripStartBtn and the Escape key */
+function goTo(i, direction){
+  const total = totalScreens();
+  if(i < 0 || i >= total) return;
+  currentIdx = i;
+  renderDots();
+  renderCard(i, direction);
+}
+
+function showToast(msg){
+  el('toastText').textContent = msg;
+  const t = el('toast');
+  t.classList.add('show');
+  clearTimeout(window.__toastTimer);
+  window.__toastTimer = setTimeout(()=>t.classList.remove('show'), 2200);
+}
+
+function buildPicker(){
+  const list = el('pickerList');
+  list.innerHTML = '';
+  const cats = {};
+  Object.entries(DEVICES).forEach(([key,d])=>{
+    cats[d.cat] = cats[d.cat] || [];
+    cats[d.cat].push([key,d]);
+  });
+  Object.entries(cats).forEach(([cat, items])=>{
+    const catLabel = document.createElement('div');
+    catLabel.className = 'picker-cat';
+    catLabel.textContent = cat;
+    list.appendChild(catLabel);
+    items.forEach(([key,d])=>{
+      const row = document.createElement('div');
+      row.className = 'picker-item' + (key===currentDeviceKey ? ' active':'');
+      row.innerHTML = `<div class="icon"><i class="fas ${d.icon}"></i></div><div><b>${d.name}</b><span>${d.steps.length} investigation steps</span></div>`;
+      row.onclick = ()=>{
+        renderDevice(key);
+        el('pickerBackdrop').classList.remove('open');
+        openModal();
+      };
+      list.appendChild(row);
+    });
+  });
+}
+
+el('deviceSelectBtn').addEventListener('click', ()=>{
+  buildPicker();
+  el('pickerBackdrop').classList.add('open');
+});
+el('pickerBackdrop').addEventListener('click', (e)=>{
+  if(e.target.id === 'pickerBackdrop') el('pickerBackdrop').classList.remove('open');
+});
+
+
+document.getElementById('tripModal').addEventListener('click', function(e){
+  if(e.target.id === 'tripModal') { /* click on empty overlay area does nothing extra */ }
+});
+
+renderDevice('fm200');
+
+window.openTripDiagnostic = function(){
+  document.getElementById('tripModal').classList.add('open');
+  document.getElementById('tripModal').setAttribute('aria-hidden','false');
+};
+window.closeTripDiagnostic = function(){
+  document.getElementById('tripModal').classList.remove('open');
+  document.getElementById('tripModal').setAttribute('aria-hidden','true');
+};
+})();
+document.getElementById('tripStartBtn').onclick = function(){ window.openTripDiagnostic(); };
+document.addEventListener('keydown', function(e){
+  if(e.key === 'Escape' && document.getElementById('tripModal').classList.contains('open')) {
+    window.closeTripDiagnostic();
+  }
+});
 </script>
 
 </body>
