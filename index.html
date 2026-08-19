@@ -4413,7 +4413,29 @@ body {
     <div class="ipb-ready">FIELD SYSTEM READY</div><button class="ipb-enter" type="button" id="ipBootEnter">ENTER FIELD MODE</button>
   </div><div class="ipb-skip" id="ipBootSkip">SKIP INTRO</div>
 </div>
-<script>(function(){var b=document.getElementById('ipBoot');function close(){if(!b)return;b.classList.add('ipBootOut');setTimeout(function(){if(b.parentNode)b.parentNode.removeChild(b)},600)}document.getElementById('ipBootEnter').addEventListener('click',close);document.getElementById('ipBootSkip').addEventListener('click',close);setTimeout(close,5200);})();</script>
+<style id="ipTechnicianProfileStyle">
+#ipTechProfileModal{position:fixed;inset:0;z-index:10050;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(15,23,42,.58);backdrop-filter:blur(6px)}
+#ipTechProfileModal.active{display:flex}
+#ipTechProfileModal .iptp-card{width:min(420px,100%);background:var(--card,#fff);color:var(--text,#1f2937);border-radius:24px;padding:22px;box-shadow:0 24px 60px rgba(0,0,0,.28);border:1px solid rgba(148,163,184,.22)}
+#ipTechProfileModal .iptp-icon{width:56px;height:56px;border-radius:18px;display:grid;place-items:center;background:linear-gradient(145deg,#1e3a5f,#2563eb);color:#fff;font-size:24px;margin:0 auto 12px}
+#ipTechProfileModal h3{text-align:center;margin:0 0 6px;font-size:1.18rem}#ipTechProfileModal p{text-align:center;color:#64748b;font-size:.78rem;line-height:1.45;margin:0 0 18px}
+#ipTechProfileModal label{display:block;font-size:.72rem;font-weight:700;margin-bottom:6px;color:#475569}#ipTechProfileModal input{width:100%;box-sizing:border-box;font-size:1rem;padding:13px 14px;border-radius:14px;border:1px solid #cbd5e1;outline:none}
+#ipTechProfileModal input:focus{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.12)}#ipTechProfileModal .iptp-error{display:none;color:#dc2626;font-size:.68rem;margin-top:7px}
+#ipTechProfileModal .iptp-save{width:100%;margin-top:14px;border:0;border-radius:14px;padding:13px 16px;background:#1e3a5f;color:#fff;font-weight:800;font-size:.88rem;cursor:pointer}
+body.dark #ipTechProfileModal .iptp-card{background:#111827;color:#e5e7eb}body.dark #ipTechProfileModal p,body.dark #ipTechProfileModal label{color:#cbd5e1}body.dark #ipTechProfileModal input{background:#0f172a;color:#e5e7eb;border-color:#334155}
+</style>
+<div id="ipTechProfileModal" role="dialog" aria-modal="true" aria-labelledby="ipTechProfileTitle">
+  <div class="iptp-card">
+    <div class="iptp-icon"><i class="fas fa-user-gear"></i></div>
+    <h3 id="ipTechProfileTitle">Welcome to InstrumentPro</h3>
+    <p>Before you begin, enter the technician's name once. InstrumentPro will automatically use it in your reports and greeting.</p>
+    <label for="ipTechProfileInput">Technician Name</label>
+    <input id="ipTechProfileInput" autocomplete="name" placeholder="e.g. Valentino Raimbuse" type="text"/>
+    <div class="iptp-error" id="ipTechProfileError">Please enter the technician's name.</div>
+    <button class="iptp-save" id="ipTechProfileSave" type="button"><i class="fas fa-check-circle"></i> Save & Continue</button>
+  </div>
+</div>
+<script>(function(){var b=document.getElementById('ipBoot');function close(){if(!b)return;b.classList.add('ipBootOut');setTimeout(function(){if(b.parentNode)b.parentNode.removeChild(b);window.dispatchEvent(new Event('instrumentpro:bootComplete'));},600)}document.getElementById('ipBootEnter').addEventListener('click',close);document.getElementById('ipBootSkip').addEventListener('click',close);setTimeout(close,5200);})();</script>
 
 <!-- =================================================================
      SCRIPT-00: SHARED PDF REPORT KIT (professional layout: header band,
@@ -8721,6 +8743,13 @@ body.dark .inv-attach-btn.attached{color:#4ade80;}
 </div>
 </div>
 </details>
+<div class="card" id="ipTechnicianSettingsCard">
+<div class="card-header"><i class="fas fa-user"></i><h3>Technician Profile</h3></div>
+<div style="font-size:0.68rem;color:#64748b;margin-bottom:10px;">Your name is used automatically in Field Reports, Field Notes, Daily/Weekly reports and Outage checklists.</div>
+<div class="row"><label>Technician Name</label><input id="ipTechnicianName" placeholder="Enter your full name" style="flex:1;" type="text"/></div>
+<button class="btn w-full" id="ipTechnicianSaveBtn" style="justify-content:center;"><i class="fas fa-save"></i> Save Technician</button>
+<div style="font-size:0.6rem;color:#94a3b8;margin-top:8px;">The greeting uses your first name only.</div>
+</div>
 <div class="card">
 <div class="card-header"><i class="fas fa-palette"></i><h3>Theme Color</h3></div>
 <div style="font-size:0.68rem;color:#64748b;margin-bottom:10px;">Pick an accent — it updates buttons, highlights, tabs and charts across the whole app.</div>
@@ -19696,5 +19725,117 @@ document.addEventListener('keydown', function(e){
 });
 </script>
 
+\n<!-- InstrumentPro Technician Profile: first-run name, greeting and autofill -->
+<script data-ip-module="JS-TECHNICIAN-PROFILE">
+(function(){
+  'use strict';
+  var KEY='instrumentpro_technician_profile_v1';
+  var modal=document.getElementById('ipTechProfileModal');
+  var input=document.getElementById('ipTechProfileInput');
+  var saveBtn=document.getElementById('ipTechProfileSave');
+  var err=document.getElementById('ipTechProfileError');
+  var targetIds=['rsTechnician','rsTechSign','fnTaskTech','iocTech','commTechnician','loopTech','rptReportedBy'];
+  var applying=false;
+
+  function readStore(k){
+    try { return (window.localStorage.getItem(k)||'').trim(); } catch(e) {}
+    try { return (window.sessionStorage.getItem(k)||'').trim(); } catch(e) {}
+    return '';
+  }
+  function writeStore(k,v){
+    var ok=false;
+    try { window.localStorage.setItem(k,v); ok=true; } catch(e) {}
+    try { window.sessionStorage.setItem(k,v); } catch(e) {}
+    return ok;
+  }
+  function getName(){ return readStore(KEY); }
+  function firstName(name){ return String(name||'').trim().split(/\s+/)[0]||''; }
+  function greet(){
+    var el=document.getElementById('greetingText'); if(!el)return;
+    var h=new Date().getHours(), base=h<12?'Good Morning':(h<17?'Good Afternoon':'Good Evening');
+    var n=firstName(getName()); el.textContent=n?base+', '+n:base;
+  }
+  function dispatchValue(el){
+    if(!el)return;
+    try{el.dispatchEvent(new Event('input',{bubbles:true}));el.dispatchEvent(new Event('change',{bubbles:true}));}catch(e){}
+  }
+  function syncStores(name){
+    if(!name)return;
+    try{
+      var raw=localStorage.getItem('instrumentpro_tasks_meta');
+      if(raw){var m=JSON.parse(raw); if(m && !String(m.technician||'').trim()){m.technician=name;localStorage.setItem('instrumentpro_tasks_meta',JSON.stringify(m));}}
+    }catch(e){}
+    try{
+      var raw2=localStorage.getItem('instrumentpro_outage_job');
+      if(raw2){var j=JSON.parse(raw2); if(j && !String(j.tech||'').trim()){j.tech=name;localStorage.setItem('instrumentpro_outage_job',JSON.stringify(j));}}
+    }catch(e){}
+  }
+  function fillAll(force){
+    if(applying)return; applying=true;
+    var n=getName();
+    if(n){
+      syncStores(n);
+      targetIds.forEach(function(id){var el=document.getElementById(id); if(!el)return; if(force || !String(el.value||'').trim()){ if(String(el.value||'')!==n){el.value=n; dispatchValue(el);} }});
+      var set=document.getElementById('ipTechnicianName'); if(set && (force || !String(set.value||'').trim())) set.value=n;
+    }
+    greet(); applying=false;
+  }
+  function closeModal(){
+    if(!modal)return;
+    modal.classList.remove('active');
+    modal.style.display='none';
+    modal.setAttribute('aria-hidden','true');
+  }
+  function saveName(){
+    var n=String((input&&input.value)||'').trim().replace(/\s+/g,' ');
+    if(!n){ if(err)err.style.display='block'; if(input)input.focus(); return false; }
+    if(err)err.style.display='none';
+    writeStore(KEY,n);
+    if(input) input.value=n;
+    var set=document.getElementById('ipTechnicianName'); if(set)set.value=n;
+    closeModal();
+    fillAll(true);
+    return false;
+  }
+  window.ipTechnicianProfile={
+    getName:getName,
+    getFirstName:function(){return firstName(getName());},
+    setName:function(n){var v=String(n||'').trim().replace(/\s+/g,' ');if(v)writeStore(KEY,v);fillAll(true);},
+    fill:fillAll,
+    greeting:greet,
+    save:saveName
+  };
+  // Use both onclick and addEventListener so the first-run button remains reliable
+  // when the HTML is opened directly from an Android content:// provider.
+  if(saveBtn){
+    saveBtn.onclick=saveName;
+    saveBtn.addEventListener('click',saveName);
+  }
+  if(input)input.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();saveName();}});
+  function openIfNeeded(){
+    if(getName()) { closeModal(); fillAll(false); return; }
+    if(modal){
+      modal.style.display='flex';
+      modal.classList.add('active');
+      modal.setAttribute('aria-hidden','false');
+      setTimeout(function(){if(input){input.focus();try{input.select();}catch(e){}}},80);
+    }
+  }
+  window.addEventListener('instrumentpro:bootComplete',openIfNeeded);
+  function init(){
+    var settingsInput=document.getElementById('ipTechnicianName'), settingsSave=document.getElementById('ipTechnicianSaveBtn');
+    if(settingsInput)settingsInput.value=getName();
+    if(settingsSave)settingsSave.addEventListener('click',function(){
+      var n=String(settingsInput.value||'').trim().replace(/\s+/g,' ');
+      if(!n){alert('Enter the technician name first.'); settingsInput.focus(); return;}
+      writeStore(KEY,n); fillAll(true); alert('Technician name saved.');
+    });
+    fillAll(false);
+    if(!getName() && modal && !modal.classList.contains('active')) setTimeout(openIfNeeded,0);
+    document.addEventListener('focusin',function(e){ if(e.target && targetIds.indexOf(e.target.id)!==-1 && getName() && !String(e.target.value||'').trim()){ e.target.value=getName(); dispatchValue(e.target);} });
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init); else init();
+})();
+</script>
 </body>
 </html>
