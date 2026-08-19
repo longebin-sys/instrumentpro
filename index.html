@@ -17921,12 +17921,12 @@ function iptQuickSummary(){
         y=window.iprSectionTitle(doc,y,'Summary');
         y=window.iprStats(doc,y,[
             {label:'Scheduled', value:tasks.length},
-            {label:'Completed', value:completed.length, tone:'pass'},
+            {label:'Issued', value:completed.length, tone:'pass'},
             {label:'Outstanding', value:outstanding.length, tone:outstanding.length?'fail':'pass'},
             {label:'Progress', value:pct+'%'},
             {label:'Carried Over', value:tasks.filter(function(t){return t.carriedFrom;}).length}
         ]);
-        y=window.iprNarrative(doc,y, completed.length+' of '+tasks.length+' tasks completed as of '+new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})+'.'+(outstanding.length?' '+outstanding.length+' remaining.':' All tasks complete.'));
+        y=window.iprNarrative(doc,y, completed.length+' of '+tasks.length+' tasks issued as of '+new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})+'.'+(outstanding.length?' '+outstanding.length+' remaining ('+pct+'% overall progress).':' All tasks issued.'));
 
         var taskGroupIndex={}, taskGroups=[];
         tasks.forEach(function(t){
@@ -17938,7 +17938,7 @@ function iptQuickSummary(){
             y=window.iprSectionTitle(doc,y,'Asset Groups',taskGroups.length);
             y=window.iprTable(doc,y,
                 [{header:'Parent Asset',dataKey:'name'},{header:'Components',dataKey:'total',cellWidth:60},
-                 {header:'Complete',dataKey:'complete',cellWidth:60},{header:'% Complete',dataKey:'pct',cellWidth:60}],
+                 {header:'Issued',dataKey:'complete',cellWidth:60},{header:'% Complete',dataKey:'pct',cellWidth:60}],
                 taskGroups.map(function(g){
                     var c=g.items.filter(function(t){return t.status==='Completed';}).length;
                     var gpct=g.items.length?Math.round(g.items.reduce(function(sum,t){return sum+iptTaskCompleteness(t);},0)/g.items.length):0;
@@ -17949,7 +17949,7 @@ function iptQuickSummary(){
         }
 
         if(completed.length){
-            y=window.iprSectionTitle(doc,y,'Completed So Far',completed.length);
+            y=window.iprSectionTitle(doc,y,'Issued So Far',completed.length);
             y=window.iprTable(doc,y,
                 [{header:'Device',dataKey:'device'},{header:'Tag',dataKey:'tag',cellWidth:70},{header:'Asset',dataKey:'asset',cellWidth:70},
                  {header:'Result',dataKey:'result',cellWidth:60},{header:'Report ID',dataKey:'reportId',cellWidth:80}],
@@ -18030,12 +18030,12 @@ function iptFullReport(){
         '<div class="sec-title">Summary</div>'+
         '<div class="stats">'+
         '<div class="stat"><b>'+tasks.length+'</b><span>Scheduled</span></div>'+
-        '<div class="stat pass"><b>'+completed.length+'</b><span>Completed</span></div>'+
+        '<div class="stat pass"><b>'+completed.length+'</b><span>Issued</span></div>'+
         '<div class="stat '+(outstanding.length?'fail':'')+'"><b>'+outstanding.length+'</b><span>Outstanding</span></div>'+
         '<div class="stat"><b>'+pct+'%</b><span>Progress</span></div>'+
         '<div class="stat"><b>'+tasks.filter(function(t){return t.carriedFrom;}).length+'</b><span>Carried Over</span></div>'+
         '</div>'+
-        '<div class="narrative">'+completed.length+' of '+tasks.length+' tasks completed for '+iptEsc(iptPeriodLabel(meta.mode,meta.date))+'.'+(outstanding.length?' '+outstanding.length+' remaining, listed below with reasons.':' All tasks complete.')+'</div>'+
+        '<div class="narrative">'+completed.length+' of '+tasks.length+' tasks issued for '+iptEsc(iptPeriodLabel(meta.mode,meta.date))+'.'+(outstanding.length?' '+outstanding.length+' remaining ('+pct+'% overall progress), listed below with reasons.':' All tasks issued.')+'</div>'+
         '</div>';
 
     var footer='<div class="footer"><span>InstrumentPro — End of Period Field Reports</span><span>Print view</span></div>';
