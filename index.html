@@ -63,6 +63,7 @@
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&amp;family=Inter:wght@400;500;600;700&amp;family=IBM+Plex+Mono:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
 <!-- Tesseract (OCR) is loaded lazily by loadTesseract() only when the
          user scans a tag, instead of blocking here on every page load. -->
 <!-- =================================================================
@@ -4394,6 +4395,150 @@ body {
 }
 </style>
 
+<!-- =================================================================
+     STYLE-28: VISUAL REFRESH — CALIBRATION DESIGN SYSTEM v2
+     ---------------------------------------------------------------
+     Global re-skin applied on top of STYLE-01..27. Loaded last so its
+     rules win the cascade without deleting/rewriting the 27 legacy
+     layers underneath (which many pages still depend on for spacing,
+     mobile fixes and report-print layouts). It works by:
+       1. Re-pointing the two existing token systems (:root --primary/
+          --accent and :root --ui-*) at a new palette — everything
+          already wired to those variables (buttons, tabs, accents,
+          the in-app theme-color picker) updates automatically and the
+          picker's ability to override --ui-accent per-user is left
+          intact.
+       2. Restyling the shared chrome/components that every one of the
+          16 pages reuses (header, sidebar, bottom tabs, cards, chips,
+          inputs, segmented controls, result readouts, tables) so one
+          pass visually upgrades the whole app at once.
+     Design language: "calibration bench" — an instrument's own visual
+     vocabulary (tick scales, mono numeric readouts, hairline dividers)
+     applied to the UI chrome itself. Signature element: a tick-mark
+     scale rule (echoing the app's own 0/25/50/75/100% test points)
+     used as a header divider and as the left edge of every reading.
+     ================================================================= -->
+<style data-ip-style="CSS-28">
+/* ---------- Fonts & type tokens ---------- */
+:root{
+  --font-heading: 'Space Grotesk', 'Sora', -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-body: 'Inter', -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+}
+* { font-family: var(--font-body); }
+h1,h2,h3,.card-header h3,.page-title,.greeting h1,.sub-tab,.tab-scroll .tab,
+.segmented button,.btn,.nav-item,.quick-item,.badge { font-family: var(--font-heading) !important; }
+.result-box span:last-child,.chip,.cal-point,.cal-point span,td,
+input[type="number"],input[type="tel"],.dp-diagram,#maReversePct,#maReverseResult { font-family: var(--font-mono) !important; }
+
+/* ---------- Palette: Calibration Amber + Gauge Teal on Ink/Paper ---------- */
+:root{
+  --primary: #EA6A12;
+  --primary-2: #C4550C;
+  --accent: #0E7C86;
+  --surface: rgba(255,255,255,0.86);
+  --surface-dark: rgba(19,31,48,0.82);
+  --ui-bg: #F5F6F3;
+  --ui-border: #E4E2DC;
+  --ui-border-strong: #CFCCC3;
+  --ui-text: #201C16;
+  --ui-muted: #6B675E;
+  --ui-accent: #EA6A12;
+  --ui-accent-soft: #FCE9DA;
+  --ink: #0B1420;
+  --ink-2: #131F30;
+  --tick: repeating-linear-gradient(90deg, currentColor 0 2px, transparent 2px 14px);
+}
+body.dark{
+  --ui-bg: #0B1420;
+  --ui-border: #253449;
+  --ui-border-strong: #34455E;
+  --ui-text: #EEF1F5;
+  --ui-muted: #93A1B7;
+  --ui-accent: #F0812D;
+  --ui-accent-soft: rgba(240,129,45,0.16);
+}
+
+/* ---------- Base surfaces ---------- */
+html,body{background:var(--ui-bg);color:var(--ui-text);}
+body.dark{background:var(--ink);color:var(--ui-text);}
+body.dark .page-container{background:var(--ink);}
+
+/* ---------- Signature: tick-scale rule, reused as a header + divider motif ---------- */
+.greeting{position:relative;background:linear-gradient(160deg,var(--ink) 0%, #1B2C42 100%) !important;border-radius:0 0 20px 20px !important;box-shadow:0 10px 28px rgba(11,20,32,.22) !important;}
+.greeting::after{content:"";position:absolute;left:16px;right:16px;bottom:0;height:3px;background-image:var(--tick);color:var(--primary);opacity:.9;}
+.greeting h1{font-weight:600 !important;letter-spacing:.01em;}
+.greeting h1 i{color:var(--primary) !important;}
+.greeting .dark-toggle,.greeting .menu-toggle{background:rgba(255,255,255,.10) !important;border-radius:10px !important;}
+.card-header{border-bottom:1px dashed var(--ui-border) !important;}
+.card-header i{background:var(--ui-accent-soft) !important;color:var(--ui-accent) !important;border-radius:9px !important;padding:4px;}
+
+/* ---------- Cards: structured, hairline, quieter shadow (less "bubble", more bench-instrument) ---------- */
+.card,.search-bar,.quick-item,.recent-item,.analytical-card,.gc-panel,.fault-panel,
+.table-wrap,.dp-diagram,.upload-zone,.scanner-preview,.report-preview{
+  border-radius: 16px !important;
+  border: 1px solid var(--ui-border) !important;
+}
+.card{box-shadow:0 1px 2px rgba(20,20,15,.04), 0 8px 20px rgba(20,20,15,.05) !important;}
+body.dark .card,body.dark .search-bar,body.dark .quick-item,body.dark .recent-item,
+body.dark .analytical-card,body.dark .gc-panel,body.dark .fault-panel,body.dark .table-wrap,
+body.dark .scanner-preview,body.dark .report-preview{
+  background: var(--ink-2) !important; border-color: var(--ui-border) !important; box-shadow:none !important;
+}
+
+/* ---------- Buttons: precise radius instead of full pill, amber/ink gradient ---------- */
+.btn{--btn-c1:var(--primary);--btn-c2:var(--primary-2);border-radius:12px !important;font-weight:600 !important;letter-spacing:.01em;box-shadow:0 3px 10px rgba(234,106,18,.22) !important;}
+.btn-outline{border-radius:12px !important;border-color:var(--ui-border-strong) !important;color:var(--ink) !important;}
+body.dark .btn-outline{color:#EEF1F5 !important;}
+.segmented{border-radius:12px !important;background:var(--ui-accent-soft) !important;}
+.segmented button{border-radius:9px !important;color:var(--ui-muted) !important;}
+.segmented button.active{background:var(--ink) !important;color:#fff !important;box-shadow:0 2px 6px rgba(11,20,32,.25) !important;}
+body.dark .segmented{background:rgba(240,129,45,.10) !important;}
+body.dark .segmented button.active{background:var(--primary) !important;}
+
+/* ---------- Chips, badges, tabs: quieter pills, amber active state ---------- */
+.chip{border-radius:8px !important;background:var(--ui-accent-soft) !important;color:var(--primary-2) !important;font-weight:600 !important;letter-spacing:.02em;}
+body.dark .chip{background:rgba(240,129,45,.14) !important;color:#F6B27A !important;}
+.sub-tab,.tab-scroll .tab{border-radius:10px !important;}
+.sub-tab.active,.tab-scroll .tab.active{background:linear-gradient(135deg,var(--primary),var(--primary-2)) !important;border-color:var(--primary) !important;color:#fff !important;}
+
+/* ---------- Result readouts: mono numerals, tick-accent left edge (the signature applied to data) ---------- */
+.result-box{border-radius:10px !important;border-left:3px solid var(--primary) !important;background:var(--ui-accent-soft) !important;}
+body.dark .result-box{background:rgba(240,129,45,.08) !important;}
+.result-box span:last-child{color:var(--ink) !important;letter-spacing:.01em;}
+body.dark .result-box span:last-child{color:#fff !important;}
+.cal-point{border-radius:10px !important;border-left:3px solid var(--accent) !important;}
+
+/* ---------- Inputs: crisper corners, amber focus ring ---------- */
+.row input,.row select,.row textarea,input,select,textarea,.custom-select-trigger{border-radius:10px !important;}
+.row input:focus,.row select:focus,.row textarea:focus,.custom-select-trigger:focus-within,
+input:focus,select:focus,textarea:focus{border-color:var(--primary) !important;box-shadow:0 0 0 3px var(--ui-accent-soft) !important;}
+
+/* ---------- Sidebar drawer ---------- */
+.sidebar{background:var(--ink) !important;color:#EEF1F5 !important;border-right:1px solid var(--ui-border) !important;}
+.sidebar h2{color:#fff !important;font-family:var(--font-heading) !important;}
+.sidebar h2 i{color:var(--primary) !important;}
+.sidebar .nav-section-label{color:#7C8AA0 !important;letter-spacing:.08em;}
+.sidebar .nav-item{color:#C9D2DF !important;border-radius:10px !important;}
+.sidebar .nav-item.active{background:rgba(234,106,18,.18) !important;color:#fff !important;border-left:3px solid var(--primary) !important;}
+.sidebar hr{border-color:var(--ui-border) !important;}
+
+/* ---------- Bottom tab bar ---------- */
+.bottom-tabs{border-top:1px solid var(--ui-border) !important;}
+.bottom-tabs .tab-item{border-radius:10px !important;}
+.bottom-tabs .tab-item.active{background:var(--ui-accent-soft) !important;color:var(--primary) !important;}
+body.dark .bottom-tabs .tab-item.active{background:rgba(240,129,45,.16) !important;color:#F6B27A !important;}
+
+/* ---------- Tables ---------- */
+.table-wrap,table{border-radius:12px !important;}
+th{background:var(--ui-accent-soft) !important;color:var(--primary-2) !important;letter-spacing:.04em;}
+body.dark th{background:rgba(240,129,45,.10) !important;color:#F6B27A !important;}
+
+/* ---------- Quick access / recent tools ---------- */
+.quick-item i{color:var(--primary) !important;}
+.trouble-item{border-left:4px solid var(--primary) !important;border-radius:12px !important;}
+</style>
+
 </head>
 <body>
 <div id="ipBoot" aria-label="InstrumentPro startup" role="dialog">
@@ -4788,11 +4933,11 @@ body.dark #ipTechProfileModal .iptp-card{background:#111827;color:#e5e7eb}body.d
 </div>
 <div class="home-kpi">
 <div class="home-kpi-value" id="homeFavoritesCount">0</div>
-<div class="home-kpi-label">Favorites</div>
+<div class="home-kpi-label">Outage Items</div>
 </div>
 <div class="home-kpi">
 <div class="home-kpi-value" id="homeRecentCount">0</div>
-<div class="home-kpi-label">Recent</div>
+<div class="home-kpi-label">Daily/Weekly Tasks</div>
 </div>
 </div>
 </div>
@@ -9046,6 +9191,7 @@ body.dark .inv-attach-btn.attached{color:#4ade80;}
                 addRecent(pageId);
                 try { localStorage.setItem('instrumentpro_lastPage', pageId); } catch {}
                 if (typeof window.closeTripDiagnostic === 'function') window.closeTripDiagnostic();
+                if (pageId === 'home' && typeof window.updateHomeDashboard === 'function') window.updateHomeDashboard();
             }
 
             navItems.forEach(item => item.addEventListener('click', function() { navigateTo(this.dataset.page); }));
@@ -15163,18 +15309,34 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
     }catch(e){ return 0; }
   }
 
+  function homeOutageItemsCount(){
+    try{
+      const raw=localStorage.getItem('instrumentpro_outage_items');
+      const items=raw?JSON.parse(raw):[];
+      return Array.isArray(items) ? items.length : 0;
+    }catch(e){ return 0; }
+  }
+
+  function homeDailyWeeklyTasksCount(){
+    try{
+      const raw=localStorage.getItem('instrumentpro_tasks');
+      const tasks=raw?JSON.parse(raw):[];
+      return Array.isArray(tasks) ? tasks.length : 0;
+    }catch(e){ return 0; }
+  }
+
   function updateHomeDashboard(){
     const notes=homeNotesCount();
-    const fav=homeStorage('favorites',[]);
-    const recent=homeStorage('recent',[]);
+    const outageCount=homeOutageItemsCount();
+    const taskCount=homeDailyWeeklyTasksCount();
 
     const notesEl=document.getElementById('homeNotesCount');
     const favEl=document.getElementById('homeFavoritesCount');
     const recentEl=document.getElementById('homeRecentCount');
 
     if(notesEl) notesEl.textContent=String(notes);
-    if(favEl) favEl.textContent=String(Array.isArray(fav)?fav.length:0);
-    if(recentEl) recentEl.textContent=String(Array.isArray(recent)?recent.length:0);
+    if(favEl) favEl.textContent=String(outageCount);
+    if(recentEl) recentEl.textContent=String(taskCount);
 
     const status=document.getElementById('homeStatusText');
     if(status){
@@ -15198,6 +15360,8 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
     updateHomeDashboard();
     window.addEventListener('storage',updateHomeDashboard);
   }
+
+  window.updateHomeDashboard = updateHomeDashboard;
 
   if(document.readyState==='loading'){
     document.addEventListener('DOMContentLoaded',initHomeActions);
