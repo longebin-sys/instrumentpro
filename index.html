@@ -5985,6 +5985,9 @@ body.dark #ipTechProfileModal .iptp-card{background:#111827;color:#e5e7eb}body.d
 <div class="card-header mt-1" style="border-top:1px solid rgba(148,163,184,.25);padding-top:8px;"><i class="fas fa-list-check"></i><h3 style="font-size:.8rem;">5 Test Points</h3></div>
 <div class="cal-points-grid" id="maCalPointsContainer"></div>
 <div class="card-header mt-1" style="border-top:1px solid rgba(148,163,184,.25);padding-top:8px;"><i class="fas fa-arrow-right-arrow-left"></i><h3 style="font-size:.8rem;">Reverse Lookup</h3></div>
+<div id="maReverseSqrtBadge" class="hidden" style="display:none;font-size:0.65rem;font-weight:700;color:#0b5cab;background:rgba(37,99,235,.1);border:1px solid rgba(37,99,235,.3);border-radius:6px;padding:4px 8px;margin-bottom:6px;">
+<i class="fas fa-square-root-alt"></i> Square-root relationship applied to all three fields (DP → flow)
+</div>
 <div class="segmented" id="maReverseModeSeg">
 <button class="active" data-mode="output">Signal to Process</button>
 <button data-mode="input">Process to Signal</button>
@@ -10438,6 +10441,7 @@ body.dark .inv-attach-btn.attached{color:#4ade80;}
             const maReverseUnitChip = document.getElementById('maReverseUnitChip');
             const maReverseInputLabel = document.getElementById('maReverseInputLabel');
             const maReverseNote = document.getElementById('maReverseNote');
+            const maReverseSqrtBadge = document.getElementById('maReverseSqrtBadge');
             let maReverseMode = 'output'; // 'output' = measured output entered, 'input' = measured input entered
             const maCalPts = [0, 25, 50, 75, 100];
             const MA_HANDOFF_KEY = 'instrumentpro_ma_handoff';
@@ -10683,10 +10687,19 @@ body.dark .inv-attach-btn.attached{color:#4ade80;}
                 const measuredSpan = maReverseMode === 'input' ? inSpan : outSpan;
                 const resultLrv = maReverseMode === 'input' ? out.lrv : inLrv;
                 const resultSpan = maReverseMode === 'input' ? outSpan : inSpan;
+                // The raw 4-20 mA (or other electrical) signal is only sqrt-related to the
+                // process value when the TRANSMITTER itself performs the extraction — that's
+                // the "Process/Input Points" test basis. When the test basis is "Output/DCS
+                // Indication Points", the transmitter is linear and the DCS applies sqrt for
+                // display, so the actual measured signal is linear with the process value.
+                const sqrtActive = getMaRelationship() === 'sqrt' && getMaTestBasis() === 'input';
+                const clamp01 = v => Math.max(0, Math.min(1, v));
+                const procFracToSigFrac = p => sqrtActive ? Math.sqrt(clamp01(p)) : p; // process fraction -> signal fraction
+                const sigFracToProcFrac = p => sqrtActive ? Math.pow(clamp01(p), 2) : p; // signal fraction -> process fraction
                 // fraction->fraction converter from the Measured-field domain to the Result-field domain
-                const fracToResult = maReverseMode === 'input' ? outputFractionFromInputFraction : inputFractionFromOutputFraction;
+                const fracToResult = maReverseMode === 'input' ? procFracToSigFrac : sigFracToProcFrac;
                 // fraction->fraction converter from the Result-field domain back to the Measured-field domain
-                const fracToMeasured = maReverseMode === 'input' ? inputFractionFromOutputFraction : outputFractionFromInputFraction;
+                const fracToMeasured = maReverseMode === 'input' ? sigFracToProcFrac : procFracToSigFrac;
 
                 if (source === 'percent') {
                     pct = clampPct(num(maReversePctVal, 0));
@@ -10713,18 +10726,25 @@ body.dark .inv-attach-btn.attached{color:#4ade80;}
                 if (source !== 'result') maReverseResultVal.value = resultValue.toFixed(2);
                 maReverseSyncing = false;
 
+                if (maReverseSqrtBadge) maReverseSqrtBadge.style.display = sqrtActive ? 'block' : 'none';
+                const sqrtButLinearSignal = getMaRelationship() === 'sqrt' && !sqrtActive;
+
                 if (maReverseMode === 'input') {
                     maReverseInputLabel.textContent = 'Measured Process';
                     maReverseUnitChip.textContent = inUnit || 'Process';
                     maReverseLabel.textContent = 'Signal Value';
                     maReverseResultUnit.textContent = outUnit || '';
-                    if (maReverseNote) maReverseNote.textContent = 'Edit any value below — Measured Process, % of Range, or Signal Value — and the others update automatically.';
+                    if (maReverseNote) maReverseNote.textContent = sqrtButLinearSignal
+                        ? 'Edit any value below — the electrical signal is linear here (Output/DCS Indication Points test basis); the DCS applies √ downstream.'
+                        : 'Edit any value below — Measured Process, % of Range, or Signal Value — and the others update automatically.';
                 } else {
                     maReverseInputLabel.textContent = 'Measured Signal';
                     maReverseUnitChip.textContent = outUnit || 'Signal';
                     maReverseLabel.textContent = 'Process Value';
                     maReverseResultUnit.textContent = inUnit || '';
-                    if (maReverseNote) maReverseNote.textContent = 'Edit any value below — Measured Signal, % of Range, or Process Value — and the others update automatically.';
+                    if (maReverseNote) maReverseNote.textContent = sqrtButLinearSignal
+                        ? 'Edit any value below — the electrical signal is linear here (Output/DCS Indication Points test basis); the DCS applies √ downstream.'
+                        : 'Edit any value below — Measured Signal, % of Range, or Process Value — and the others update automatically.';
                 }
                 updateMaRelationshipUI();
             }
