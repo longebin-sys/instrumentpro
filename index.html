@@ -9038,7 +9038,8 @@ body.dark .inv-attach-btn.attached{color:#4ade80;}
 <div class="row"><label>Subject</label><input id="contactSubject" placeholder="Short summary" style="flex:1;" type="text"/></div>
 <div class="row" style="align-items:flex-start;"><label style="margin-top:8px;">Message</label><textarea id="contactMessage" placeholder="What's on your mind?" rows="4" style="flex:1;"></textarea></div>
 <button class="btn w-full" id="contactSendBtn" style="justify-content:center;"><i class="fas fa-paper-plane"></i> Send Email</button>
-<div style="font-size:0.6rem;color:#94a3b8;margin-top:8px;">Opens your device's email app addressed to the developer, with your type, subject, and message already filled in — nothing is sent until you tap Send there.</div>
+<div class="hidden" id="contactStatus" style="font-size:0.65rem;margin-top:8px;"></div>
+<div style="font-size:0.6rem;color:#94a3b8;margin-top:8px;">Sends straight to the developer in the background — no email app opens.</div>
 </div>
 <div class="card">
 <div class="card-header"><i class="fas fa-database"></i><h3>Data</h3></div>
@@ -13291,7 +13292,21 @@ body.dark .inv-attach-btn.attached{color:#4ade80;}
                 const contactSubject = document.getElementById('contactSubject');
                 const contactMessage = document.getElementById('contactMessage');
                 const contactSendBtn = document.getElementById('contactSendBtn');
+                const contactStatus = document.getElementById('contactStatus');
                 if (!contactSendBtn) return;
+
+                function setStatus(text, kind) {
+                    if (!contactStatus) return;
+                    contactStatus.textContent = text;
+                    contactStatus.classList.toggle('hidden', !text);
+                    contactStatus.style.display = text ? 'block' : 'none';
+                    contactStatus.style.color = kind === 'error' ? '#dc2626' : (kind === 'success' ? '#16a34a' : '#64748b');
+                }
+
+                function sendViaMailto(subject, bodyLines) {
+                    const mailto = `mailto:${encodeURIComponent(CONTACT_EMAIL)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyLines.join('\n'))}`;
+                    window.location.href = mailto;
+                }
 
                 contactSendBtn.addEventListener('click', function() {
                     const type = contactType.value;
@@ -13312,8 +13327,38 @@ body.dark .inv-attach-btn.attached{color:#4ade80;}
                         `Type: ${type}`,
                         `App: InstrumentPro`
                     ];
-                    const mailto = `mailto:${encodeURIComponent(CONTACT_EMAIL)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyLines.join('\n'))}`;
-                    window.location.href = mailto;
+
+                    contactSendBtn.disabled = true;
+                    contactSendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+                    setStatus('Sending in the background…', 'info');
+
+                    fetch(`https://formsubmit.co/ajax/${encodeURIComponent(CONTACT_EMAIL)}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                        body: JSON.stringify({
+                            _subject: subject,
+                            _template: 'box',
+                            _captcha: 'false',
+                            Type: type,
+                            Subject: subjectText || '(none)',
+                            Message: messageText,
+                            App: 'InstrumentPro'
+                        })
+                    })
+                    .then(res => res.ok ? res.json() : Promise.reject(new Error('Request failed')))
+                    .then(() => {
+                        setStatus('Sent — thanks for the feedback!', 'success');
+                        contactSubject.value = '';
+                        contactMessage.value = '';
+                    })
+                    .catch(() => {
+                        setStatus("Couldn't send in the background — opening your email app instead so it still goes through.", 'error');
+                        sendViaMailto(subject, bodyLines);
+                    })
+                    .finally(() => {
+                        contactSendBtn.disabled = false;
+                        contactSendBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Email';
+                    });
                 });
             })();
 
