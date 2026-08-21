@@ -6612,6 +6612,7 @@ body.dark #ipTechProfileModal .iptp-card{background:#111827;color:#e5e7eb}body.d
 <div class="sub-tab" data-tab="elec-conduit">Conduit Fill</div>
 <div class="sub-tab" data-tab="elec-unit-conversion">Unit Conversion</div>
 <div class="sub-tab" data-tab="elec-power-conversion">Power Conversion</div>
+<div class="sub-tab" data-tab="elec-resistor">Resistor Colors</div>
 </div>
 <div class="sub-panel active" id="elec-ohm">
 <div class="card-header" style="margin-bottom:8px;">
@@ -6738,6 +6739,31 @@ body.dark #ipTechProfileModal .iptp-card{background:#111827;color:#e5e7eb}body.d
 <div class="row"><label>From</label><select id="powerConvFrom"><option value="w">W</option><option selected="" value="kw">kW</option><option value="mw">MW</option><option value="gw">GW</option><option value="hp">HP</option><option value="btuh">BTU/hr</option></select><input id="powerConvValue" step="any" type="number" value="100"/></div>
 <div class="row"><label>To</label><select id="powerConvTo"><option value="w">W</option><option value="kw">kW</option><option value="mw">MW</option><option value="gw">GW</option><option selected="" value="hp">HP</option><option value="btuh">BTU/hr</option></select><button class="btn" id="powerConvBtn">Convert</button></div>
 <div class="result-box"><span>Result</span><span id="powerConvResult">—</span></div>
+</div>
+<div class="sub-panel hidden" id="elec-resistor">
+<div class="card-header" style="margin-bottom:8px;"><i class="fas fa-circle-dot"></i><h3 style="font-size:0.85rem;">Resistor Colour Code</h3><span>Barrier / pull-up ID</span></div>
+<div style="font-size:0.72rem;margin-bottom:8px;">Pick the band colors to read a resistor's value — handy for barrier/pull-up resistors, loop resistors, and general field ID.</div>
+<div class="segmented" id="resistorBandSeg">
+<button class="active" data-bands="4">4-Band</button>
+<button data-bands="5">5-Band</button>
+</div>
+<div id="resistorPreview" style="display:flex;align-items:center;justify-content:center;gap:3px;background:#e7d5ad;border:1px solid #c9ad74;border-radius:10px;padding:14px 10px;margin:10px 0;">
+<div style="flex:1;height:2px;background:#94a3b8;"></div>
+<div id="resSwatch1" style="width:10px;height:34px;border-radius:2px;"></div>
+<div id="resSwatch2" style="width:10px;height:34px;border-radius:2px;"></div>
+<div id="resSwatch3" style="width:10px;height:34px;border-radius:2px;display:none;"></div>
+<div id="resSwatchMult" style="width:10px;height:34px;border-radius:2px;"></div>
+<div style="width:6px;"></div>
+<div id="resSwatchTol" style="width:10px;height:34px;border-radius:2px;"></div>
+<div style="flex:1;height:2px;background:#94a3b8;"></div>
+</div>
+<div class="row"><label id="resBand1Label">Band 1</label><select id="resBand1"></select></div>
+<div class="row"><label id="resBand2Label">Band 2</label><select id="resBand2"></select></div>
+<div class="row hidden" id="resBand3Row"><label>Band 3</label><select id="resBand3"></select></div>
+<div class="row"><label>Multiplier</label><select id="resBandMult"></select></div>
+<div class="row"><label>Tolerance</label><select id="resBandTol"></select></div>
+<div class="result-box"><span>Resistance</span><span id="resResultValue">—</span></div>
+<div class="result-box"><span>Range</span><span id="resResultRange">—</span></div>
 </div></div>
 </div>
 <!-- ==========================================================
@@ -6840,7 +6866,6 @@ body.dark #ipTechProfileModal .iptp-card{background:#111827;color:#e5e7eb}body.d
 <div class="tab" data-ref="orifice">Orifice Sizing</div>
 <div class="tab" data-ref="torque">Torque Specs</div>
 <div class="tab" data-ref="threads">Thread Sizes</div>
-<div class="tab" data-ref="resistor">Resistor Colors</div>
 <div class="tab" data-ref="report-samples">Report Samples</div>
 </div>
 <style id="report-samples-ref-styles">
@@ -7321,30 +7346,6 @@ body.dark #ipTechProfileModal .iptp-card{background:#111827;color:#e5e7eb}body.d
 <div class="chip">BSP flanks are 55° — thread crest is rounded (Whitworth form)</div>
 <div class="chip">Best field test: try a known NPT and known BSP fitting of the same nominal size — a mismatched thread will feel gritty/binding and won't seat flush</div>
 <div style="font-size:0.6rem;color:#94a3b8;margin-top:8px;">Reference values only — always confirm against the vendor datasheet or a thread gauge before machining, ordering fittings, or force-fitting a connection.</div>
-</div>
-<div class="ref-panel hidden" id="ref-resistor">
-<div style="font-size:0.72rem;margin-bottom:8px;">Pick the band colors to read a resistor's value — handy for barrier/pull-up resistors, loop resistors, and general field ID.</div>
-<div class="segmented" id="resistorBandSeg">
-<button class="active" data-bands="4">4-Band</button>
-<button data-bands="5">5-Band</button>
-</div>
-<div id="resistorPreview" style="display:flex;align-items:center;justify-content:center;gap:3px;background:#e7d5ad;border:1px solid #c9ad74;border-radius:10px;padding:14px 10px;margin:10px 0;">
-<div style="flex:1;height:2px;background:#94a3b8;"></div>
-<div id="resSwatch1" style="width:10px;height:34px;border-radius:2px;"></div>
-<div id="resSwatch2" style="width:10px;height:34px;border-radius:2px;"></div>
-<div id="resSwatch3" style="width:10px;height:34px;border-radius:2px;display:none;"></div>
-<div id="resSwatchMult" style="width:10px;height:34px;border-radius:2px;"></div>
-<div style="width:6px;"></div>
-<div id="resSwatchTol" style="width:10px;height:34px;border-radius:2px;"></div>
-<div style="flex:1;height:2px;background:#94a3b8;"></div>
-</div>
-<div class="row"><label id="resBand1Label">Band 1</label><select id="resBand1"></select></div>
-<div class="row"><label id="resBand2Label">Band 2</label><select id="resBand2"></select></div>
-<div class="row hidden" id="resBand3Row"><label>Band 3</label><select id="resBand3"></select></div>
-<div class="row"><label>Multiplier</label><select id="resBandMult"></select></div>
-<div class="row"><label>Tolerance</label><select id="resBandTol"></select></div>
-<div class="result-box"><span>Resistance</span><span id="resResultValue">—</span></div>
-<div class="result-box"><span>Range</span><span id="resResultRange">—</span></div>
 </div>
 <div class="ref-panel hidden" id="ref-sensors">
 <div class="sub-tabs" id="sensorsRefTabs">
