@@ -6839,6 +6839,8 @@ body.dark #ipTechProfileModal .iptp-card{background:#111827;color:#e5e7eb}body.d
 <div class="tab" data-ref="grounding">Grounding &amp; Bonding</div>
 <div class="tab" data-ref="orifice">Orifice Sizing</div>
 <div class="tab" data-ref="torque">Torque Specs</div>
+<div class="tab" data-ref="threads">Thread Sizes</div>
+<div class="tab" data-ref="resistor">Resistor Colors</div>
 <div class="tab" data-ref="report-samples">Report Samples</div>
 </div>
 <style id="report-samples-ref-styles">
@@ -7286,6 +7288,63 @@ body.dark #ipTechProfileModal .iptp-card{background:#111827;color:#e5e7eb}body.d
 <div class="ref-section-head"><strong>Tightening Sequence</strong></div>
 <div style="font-size:0.72rem;margin:6px 0;">Use a star/cross pattern (never sequential around the flange), applied in stages — typically ~30% → 60% → 100% of target torque — to keep gasket compression even and avoid flange rotation or misalignment.</div>
 <div style="background:#fee2e2;color:#991b1b;padding:10px 14px;border-radius:14px;font-size:0.68rem;margin-top:8px;">⚠️ This is not a substitute for a real torque value. Actual target torque depends on flange class, gasket type, bolt material/grade, and lubricant — always use the project's engineering spec or the gasket/flange manufacturer's torque chart (e.g. per ASME PCC-1) for the actual number used on a real joint.</div>
+</div>
+<div class="ref-panel hidden" id="ref-threads">
+<div style="font-size:0.72rem;margin-bottom:6px;"><strong>NPT (National Pipe Taper)</strong> — thread flanks seal on contact (tapered), typically needs PTFE tape or thread sealant. Sizes below are nominal, not actual OD.</div>
+<div class="table-wrap"><table><thead><tr><th>Nominal</th><th>OD</th><th>TPI</th></tr></thead>
+<tbody>
+<tr><td>1/16"</td><td>0.313"</td><td>27</td></tr>
+<tr><td>1/8"</td><td>0.405"</td><td>27</td></tr>
+<tr><td>1/4"</td><td>0.540"</td><td>18</td></tr>
+<tr><td>3/8"</td><td>0.675"</td><td>18</td></tr>
+<tr><td>1/2"</td><td>0.840"</td><td>14</td></tr>
+<tr><td>3/4"</td><td>1.050"</td><td>14</td></tr>
+<tr><td>1"</td><td>1.315"</td><td>11.5</td></tr>
+<tr><td>1 1/4"</td><td>1.660"</td><td>11.5</td></tr>
+<tr><td>1 1/2"</td><td>1.900"</td><td>11.5</td></tr>
+<tr><td>2"</td><td>2.375"</td><td>11.5</td></tr>
+</tbody></table></div>
+<div class="chip">1/2" NPT — most common process connection: pressure gauges, transmitters, thermowells</div>
+<div class="chip">1/4" NPT — common on small gauges, test/vent/drain connections, manifold ports</div>
+<div style="font-size:0.72rem;margin:10px 0 6px;"><strong>BSP (British Standard Pipe)</strong> — parallel (BSPP, seals on a bonded washer/O-ring) or tapered (BSPT, seals on the thread like NPT). BSPT and NPT are NOT interchangeable — same nominal size, different thread angle and pitch.</div>
+<div class="table-wrap"><table><thead><tr><th>Nominal (G)</th><th>OD</th><th>TPI</th></tr></thead>
+<tbody>
+<tr><td>G 1/8</td><td>0.383"</td><td>28</td></tr>
+<tr><td>G 1/4</td><td>0.518"</td><td>19</td></tr>
+<tr><td>G 3/8</td><td>0.656"</td><td>19</td></tr>
+<tr><td>G 1/2</td><td>0.825"</td><td>14</td></tr>
+<tr><td>G 3/4</td><td>1.041"</td><td>14</td></tr>
+<tr><td>G 1</td><td>1.309"</td><td>11</td></tr>
+</tbody></table></div>
+<div class="ref-section-head"><strong>Quick ID Check</strong></div>
+<div class="chip">NPT flanks are 60° with a slight taper — thread crest looks slightly rounded/flat</div>
+<div class="chip">BSP flanks are 55° — thread crest is rounded (Whitworth form)</div>
+<div class="chip">Best field test: try a known NPT and known BSP fitting of the same nominal size — a mismatched thread will feel gritty/binding and won't seat flush</div>
+<div style="font-size:0.6rem;color:#94a3b8;margin-top:8px;">Reference values only — always confirm against the vendor datasheet or a thread gauge before machining, ordering fittings, or force-fitting a connection.</div>
+</div>
+<div class="ref-panel hidden" id="ref-resistor">
+<div style="font-size:0.72rem;margin-bottom:8px;">Pick the band colors to read a resistor's value — handy for barrier/pull-up resistors, loop resistors, and general field ID.</div>
+<div class="segmented" id="resistorBandSeg">
+<button class="active" data-bands="4">4-Band</button>
+<button data-bands="5">5-Band</button>
+</div>
+<div id="resistorPreview" style="display:flex;align-items:center;justify-content:center;gap:3px;background:#e7d5ad;border:1px solid #c9ad74;border-radius:10px;padding:14px 10px;margin:10px 0;">
+<div style="flex:1;height:2px;background:#94a3b8;"></div>
+<div id="resSwatch1" style="width:10px;height:34px;border-radius:2px;"></div>
+<div id="resSwatch2" style="width:10px;height:34px;border-radius:2px;"></div>
+<div id="resSwatch3" style="width:10px;height:34px;border-radius:2px;display:none;"></div>
+<div id="resSwatchMult" style="width:10px;height:34px;border-radius:2px;"></div>
+<div style="width:6px;"></div>
+<div id="resSwatchTol" style="width:10px;height:34px;border-radius:2px;"></div>
+<div style="flex:1;height:2px;background:#94a3b8;"></div>
+</div>
+<div class="row"><label id="resBand1Label">Band 1</label><select id="resBand1"></select></div>
+<div class="row"><label id="resBand2Label">Band 2</label><select id="resBand2"></select></div>
+<div class="row hidden" id="resBand3Row"><label>Band 3</label><select id="resBand3"></select></div>
+<div class="row"><label>Multiplier</label><select id="resBandMult"></select></div>
+<div class="row"><label>Tolerance</label><select id="resBandTol"></select></div>
+<div class="result-box"><span>Resistance</span><span id="resResultValue">—</span></div>
+<div class="result-box"><span>Range</span><span id="resResultRange">—</span></div>
 </div>
 <div class="ref-panel hidden" id="ref-sensors">
 <div class="sub-tabs" id="sensorsRefTabs">
@@ -8966,6 +9025,20 @@ body.dark .inv-attach-btn.attached{color:#4ade80;}
 <div id="installUnavailable" style="font-size:0.75rem;color:#64748b;margin-bottom:8px;">Save InstrumentPro to your home screen for offline, full-screen access.</div>
 <div class="hidden" id="installIosHint" style="font-size:0.75rem;color:#64748b;margin-bottom:8px;">On iPhone/iPad: tap the <i class="fas fa-arrow-up-from-bracket"></i> Share button in Safari, then "Add to Home Screen".</div>
 <button class="btn w-full hidden" id="installAppBtn" style="justify-content:center;"><i class="fas fa-download"></i> Install App</button>
+</div>
+<div class="card" id="contactSettingsCard">
+<div class="card-header"><i class="fas fa-envelope"></i><h3>Contact &amp; Feedback</h3></div>
+<div style="font-size:0.68rem;color:#64748b;margin-bottom:10px;">Found a bug, have a feature idea, or just want to say something? Send it straight through — it'll open your email app pre-filled and addressed, so you just hit send.</div>
+<div class="row"><label>Type</label><select id="contactType">
+<option value="Suggestion">Suggestion</option>
+<option value="Bug Report">Bug Report</option>
+<option value="Feature Request">Feature Request</option>
+<option value="General Feedback">General Feedback</option>
+</select></div>
+<div class="row"><label>Subject</label><input id="contactSubject" placeholder="Short summary" style="flex:1;" type="text"/></div>
+<div class="row" style="align-items:flex-start;"><label style="margin-top:8px;">Message</label><textarea id="contactMessage" placeholder="What's on your mind?" rows="4" style="flex:1;"></textarea></div>
+<button class="btn w-full" id="contactSendBtn" style="justify-content:center;"><i class="fas fa-paper-plane"></i> Send Email</button>
+<div style="font-size:0.6rem;color:#94a3b8;margin-top:8px;">Opens your device's email app addressed to the developer, with your type, subject, and message already filled in — nothing is sent until you tap Send there.</div>
 </div>
 <div class="card">
 <div class="card-header"><i class="fas fa-database"></i><h3>Data</h3></div>
@@ -12711,6 +12784,129 @@ body.dark .inv-attach-btn.attached{color:#4ade80;}
                 });
             });
 
+            // =============================================================
+            // RESISTOR COLOUR CODE DECODER
+            // =============================================================
+            (function() {
+                const DIGIT_COLORS = [
+                    { name: 'Black',  hex: '#1a1a1a', value: 0 },
+                    { name: 'Brown',  hex: '#8b4513', value: 1 },
+                    { name: 'Red',    hex: '#e11d1d', value: 2 },
+                    { name: 'Orange', hex: '#f97316', value: 3 },
+                    { name: 'Yellow', hex: '#eab308', value: 4 },
+                    { name: 'Green',  hex: '#16a34a', value: 5 },
+                    { name: 'Blue',   hex: '#2563eb', value: 6 },
+                    { name: 'Violet', hex: '#7c3aed', value: 7 },
+                    { name: 'Grey',   hex: '#6b7280', value: 8 },
+                    { name: 'White',  hex: '#f8fafc', value: 9 }
+                ];
+                const MULT_COLORS = [
+                    { name: 'Black ×1',        hex: '#1a1a1a', value: 1 },
+                    { name: 'Brown ×10',       hex: '#8b4513', value: 10 },
+                    { name: 'Red ×100',        hex: '#e11d1d', value: 100 },
+                    { name: 'Orange ×1k',      hex: '#f97316', value: 1e3 },
+                    { name: 'Yellow ×10k',     hex: '#eab308', value: 1e4 },
+                    { name: 'Green ×100k',     hex: '#16a34a', value: 1e5 },
+                    { name: 'Blue ×1M',        hex: '#2563eb', value: 1e6 },
+                    { name: 'Violet ×10M',     hex: '#7c3aed', value: 1e7 },
+                    { name: 'Gold ×0.1',       hex: '#d4af37', value: 0.1 },
+                    { name: 'Silver ×0.01',    hex: '#c0c0c0', value: 0.01 }
+                ];
+                const TOL_COLORS = [
+                    { name: 'Brown ±1%',   hex: '#8b4513', value: 1 },
+                    { name: 'Red ±2%',     hex: '#e11d1d', value: 2 },
+                    { name: 'Green ±0.5%', hex: '#16a34a', value: 0.5 },
+                    { name: 'Blue ±0.25%', hex: '#2563eb', value: 0.25 },
+                    { name: 'Violet ±0.1%',hex: '#7c3aed', value: 0.1 },
+                    { name: 'Grey ±0.05%', hex: '#6b7280', value: 0.05 },
+                    { name: 'Gold ±5%',    hex: '#d4af37', value: 5 },
+                    { name: 'Silver ±10%', hex: '#c0c0c0', value: 10 },
+                    { name: 'None ±20%',   hex: '#ffffff', value: 20 }
+                ];
+
+                function fillSelect(sel, list, defaultIdx) {
+                    sel.innerHTML = list.map((c, i) => `<option value="${i}"${i === defaultIdx ? ' selected' : ''}>${c.name}</option>`).join('');
+                }
+
+                const resBand1 = document.getElementById('resBand1');
+                const resBand2 = document.getElementById('resBand2');
+                const resBand3 = document.getElementById('resBand3');
+                const resBand3Row = document.getElementById('resBand3Row');
+                const resBandMult = document.getElementById('resBandMult');
+                const resBandTol = document.getElementById('resBandTol');
+                const resBand1Label = document.getElementById('resBand1Label');
+                const resBand2Label = document.getElementById('resBand2Label');
+                const resSwatch1 = document.getElementById('resSwatch1');
+                const resSwatch2 = document.getElementById('resSwatch2');
+                const resSwatch3 = document.getElementById('resSwatch3');
+                const resSwatchMult = document.getElementById('resSwatchMult');
+                const resSwatchTol = document.getElementById('resSwatchTol');
+                const resResultValue = document.getElementById('resResultValue');
+                const resResultRange = document.getElementById('resResultRange');
+
+                fillSelect(resBand1, DIGIT_COLORS, 1);   // Brown
+                fillSelect(resBand2, DIGIT_COLORS, 0);   // Black
+                fillSelect(resBand3, DIGIT_COLORS, 0);   // Black
+                fillSelect(resBandMult, MULT_COLORS, 1); // ×10
+                fillSelect(resBandTol, TOL_COLORS, 6);   // Gold ±5%
+
+                let resBands = 4;
+
+                function formatOhms(v) {
+                    if (v >= 1e6) return (v / 1e6).toFixed(v % 1e6 === 0 ? 0 : 2) + ' MΩ';
+                    if (v >= 1e3) return (v / 1e3).toFixed(v % 1e3 === 0 ? 0 : 2) + ' kΩ';
+                    return v.toFixed(v % 1 === 0 ? 0 : 2) + ' Ω';
+                }
+
+                function updateResistor() {
+                    const c1 = DIGIT_COLORS[resBand1.value];
+                    const c2 = DIGIT_COLORS[resBand2.value];
+                    const mult = MULT_COLORS[resBandMult.value];
+                    const tol = TOL_COLORS[resBandTol.value];
+
+                    resSwatch1.style.background = c1.hex;
+                    resSwatch2.style.background = c2.hex;
+                    resSwatchMult.style.background = mult.hex;
+                    resSwatchTol.style.background = tol.hex;
+
+                    let significant;
+                    if (resBands === 5) {
+                        const c3 = DIGIT_COLORS[resBand3.value];
+                        resSwatch3.style.background = c3.hex;
+                        significant = (c1.value * 100) + (c2.value * 10) + c3.value;
+                    } else {
+                        significant = (c1.value * 10) + c2.value;
+                    }
+
+                    const ohms = significant * mult.value;
+                    resResultValue.textContent = formatOhms(ohms) + ' ±' + tol.value + '%';
+                    const lo = ohms * (1 - tol.value / 100);
+                    const hi = ohms * (1 + tol.value / 100);
+                    resResultRange.textContent = formatOhms(lo) + ' – ' + formatOhms(hi);
+                }
+
+                [resBand1, resBand2, resBand3, resBandMult, resBandTol].forEach(sel => {
+                    sel.addEventListener('change', updateResistor);
+                });
+
+                document.querySelectorAll('#resistorBandSeg button').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        if (parseInt(this.dataset.bands) === resBands) return;
+                        document.querySelectorAll('#resistorBandSeg button').forEach(b => b.classList.remove('active'));
+                        this.classList.add('active');
+                        resBands = parseInt(this.dataset.bands);
+                        const is5 = resBands === 5;
+                        resBand3Row.classList.toggle('hidden', !is5);
+                        resSwatch3.style.display = is5 ? 'block' : 'none';
+                        resBand1Label.textContent = 'Band 1';
+                        resBand2Label.textContent = 'Band 2';
+                        updateResistor();
+                    });
+                });
+
+                updateResistor();
+            })();
+
             // Report Samples sub-tabs (nested inside the References tab)
             document.querySelectorAll('#rptxSubTabs .rptx-subtab').forEach(tab => {
                 tab.addEventListener('click', function() {
@@ -13085,6 +13281,41 @@ body.dark .inv-attach-btn.attached{color:#4ade80;}
                     alert('Data cleared. Your settings were kept.');
                 }
             });
+
+            // =============================================================
+            // CONTACT & FEEDBACK
+            // =============================================================
+            (function() {
+                const CONTACT_EMAIL = 'myazux@gmail.com';
+                const contactType = document.getElementById('contactType');
+                const contactSubject = document.getElementById('contactSubject');
+                const contactMessage = document.getElementById('contactMessage');
+                const contactSendBtn = document.getElementById('contactSendBtn');
+                if (!contactSendBtn) return;
+
+                contactSendBtn.addEventListener('click', function() {
+                    const type = contactType.value;
+                    const subjectText = (contactSubject.value || '').trim();
+                    const messageText = (contactMessage.value || '').trim();
+
+                    if (!messageText) {
+                        alert('Add a quick message before sending.');
+                        contactMessage.focus();
+                        return;
+                    }
+
+                    const subject = `InstrumentPro ${type}${subjectText ? ' — ' + subjectText : ''}`;
+                    const bodyLines = [
+                        messageText,
+                        '',
+                        '---',
+                        `Type: ${type}`,
+                        `App: InstrumentPro`
+                    ];
+                    const mailto = `mailto:${encodeURIComponent(CONTACT_EMAIL)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyLines.join('\n'))}`;
+                    window.location.href = mailto;
+                });
+            })();
 
             // =============================================================
             // PWA INSTALL PROMPT
